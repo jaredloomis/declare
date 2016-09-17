@@ -1,4 +1,5 @@
-const Waterline = require("waterline");
+const bcrypt    = require("bcrypt")
+const Waterline = require("waterline")
 
 const User = Waterline.Collection.extend({
     identity: "user",
@@ -18,7 +19,21 @@ const User = Waterline.Collection.extend({
             type:     "string",
             required: true
         }
-    }
-});
+    },
 
-module.exports = User;
+    beforeCreate: function(values, cb) {
+        console.log("WASABI");
+        bcrypt.genSalt(10, function(err, salt) {
+            bcrypt.hash(values.password, salt, (err, hash) => {
+                if(err) {
+                    return cb(err)
+                }
+                values.passwordHash = hash
+                values.passwordSalt = salt
+                return cb()
+            })
+        })
+    }
+})
+
+module.exports = User
