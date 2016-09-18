@@ -1,39 +1,47 @@
-const bcrypt    = require("bcrypt")
-const Waterline = require("waterline")
+const Promise = require("bluebird")
+const bcrypt  = Promise.promisifyAll(require("bcrypt"))
 
-const User = Waterline.Collection.extend({
-    identity: "user",
-    connection: "myMongo",
-    attributes: {
+module.exports = (schema) => {
+    const User = schema.define('User', {
         email: {
-            type:     "string",
-            email:    true,
-            required: true,
-            unique:   true
+            type: schema.String,
+            limit: 155,
+            unique: true,
+            "null": false
+        },
+        password: {
+            type: schema.String,
+            "null": false
         },
         passwordHash: {
-            type:     "string",
-            required: true
+            type: schema.String,
+            "null": false
         },
         passwordSalt: {
-            type:     "string",
-            required: true
+            type: schema.String,
+            "null": false
         }
-    },
+    })
 
-    beforeCreate: function(values, cb) {
-        console.log("WASABI");
-        bcrypt.genSalt(10, function(err, salt) {
-            bcrypt.hash(values.password, salt, (err, hash) => {
+    User.afterCreate = function(next) {
+        bcrypt.genSalt(10, (err, salt) => {
+            bcrypt.hash(this.password, salt, (err, hash) => {
                 if(err) {
-                    return cb(err)
+                    return next(err)
                 }
-                values.passwordHash = hash
-                values.passwordSalt = salt
-                return cb()
+                this.password     = ""
+                this.passwordHash = hash
+                this.passwordSalt = salt
+                this.save()
+                next()
             })
         })
     }
-})
 
-module.exports = User
+    User.prototype.checkPassword = function(password) {
+        return bcrypt.hashAsync(password, this.passwordSalt)
+        .then(hash => hash === this.passwordHash)
+    }
+
+    return User
+}

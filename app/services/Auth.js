@@ -8,8 +8,8 @@ module.exports = (app) => {
             cb(null, user)
         })
     })
-    passport.use(new LocalStrategy((username, password, cb) => {
-        app.context.models.user.findOne({email: username}).exec((err, user) => {
+    passport.use(new LocalStrategy((email, password, cb) => {
+        app.context.models.user.findOne({email: email}).exec((err, user) => {
             if(err) {
                 return cb(err, false)
             }

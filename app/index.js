@@ -1,65 +1,64 @@
 const fs   = require("fs")
 const path = require("path")
+const Promise  = require("bluebird")
 
 const Koa      = require("koa")
-const app      = Koa()
+const app      = new Koa()
 const logger   = require("koa-logger")
-const body     = require("koa-body")
+const body     = require("koa-better-body")
 const mount    = require("koa-mount")
 const session  = require("koa-session")
 const passport = require("koa-passport")
 const graphql  = require("koa-graphql")
+const convert  = require("koa-convert")
 
 const Waterline    = require("waterline")
 const mongoAdapter = require("sails-mongo")
+const caminte = require("caminte")
+const Schema = caminte.Schema
+
+const dbConfig  = require("./config/database")
 
 /*
- * Waterline ORM
- */ 
+ * Models
+ */
 
-const orm = new Waterline()
-
-const config = {
-    adapters: {
-        mongo: mongoAdapter
-    },
-
-    connections: {
-        myMongo: {
-            adapter: "mongo",
-            host: "localhost",
-            user: "root",
-            database: "uqa"
-        }
-    }
-}
+/*
+const schema = new Schema(dbConfig.development.driver, dbConfig.development)
 
 // Read all models and set them up
 fs
 .readdirSync(path.join(__dirname, "model"))
 .filter(file => (file.indexOf(".") !== 0) && (file !== "index.js"))
 .forEach(file => {
-    const model = require(path.join(__dirname, "model", file))
-    orm.loadCollection(model)
+    require(path.join(__dirname, "model", file))(schema)
 })
-
-orm.initialize(config, (err, models) => {
-    if(err) {
-        console.log(err)
+// Promisify various methods
+const queryMethods = [
+    "all", "findOne", "findById", "create", "destroyAll"
+]
+for(const key in schema.models) {
+    const model = schema.models[key];
+    for(var i = 0; i < queryMethods.length; ++i) {
+        const methName = queryMethods[i]
+        schema.models[key][methName + "Async"] =
+            Promise.promisify(model[methName], {
+                context: schema.models[key]
+            })
     }
-    // Allow models and connections to be accessible via app
-    app.context.models = models.collections
-    app.context.connections = models.connections
-})
+}
+*/
+const schema = require("./model/schema")
+app.context.models = schema.models
 
 /*
  * Middleware
  */
 
-app.use(body())
+app.use(convert(body()))
 app.use(logger())
 app.keys = ["super-secret"]
-app.use(session(app))
+app.use(convert(session(app)))
 
 app.use(passport.initialize())
 app.use(passport.session())
@@ -78,6 +77,17 @@ fs
     app.use(router.routes())
        .use(router.allowedMethods())
 })
+
+var router = require('koa-router')();
+
+router.get('/', function(ctx, next) {
+    console.log("hello")
+    next()
+})
+
+app
+  .use(router.routes())
+  .use(router.allowedMethods());
 
 /*
  * Start

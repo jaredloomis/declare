@@ -1,34 +1,45 @@
 const Router   = require("koa-router")
 const passport = require("koa-passport")
+const Promise  = require("bluebird")
+const schema   = require("../model/schema")
 
 module.exports = function(app) {
-    const router = new Router()
+    const router = Router()
 
     // POST /User - Add User
-    router.post("/User", function*() {
+    router.post("/User", async (ctx) => {
         try {
-            this.body =
-                yield app.context.models.user.create(this.request.body)
+            ctx.body =
+                await app.context.models.User.createAsync(ctx.request.fields)
         } catch(ex) {
-            this.body = ex
+            ctx.body = ex
         }
     })
 
     // GET /User - List Users
-    router.get("/User", function*() {
+    router.get("/User", async (ctx) => {
         try {
-            this.body = yield app.context.models.user.find({})
+            ctx.body = await app.context.models.User.allAsync()
         } catch(ex) {
-            this.body = ex
+            ctx.status = 500
+            ctx.body = {error: ex}
         }
     })
 
+    router.get("/User/Test", async (ctx) => {
+        const users = await app.context.models.User.allAsync()
+        ctx.body = await users[0].checkPassword("test")
+    })
+
+    router.get("/User/Delete", async (ctx) => {
+        ctx.body = await app.context.models.User.destroyAllAsync()
+    })
+
     // POST /User/Login - Login
-    router.post("/User/Login", function*(next) {
-        const ctx = this;
-        yield passport.authenticate("local", function*(err, user, info) {
+    router.post("/User/Login", async (ctx, next) => {
+        await passport.authenticate("local", function*(err, user, info) {
             if(err) {
-                this.body = err
+                ctx.body = err
                 return
             }
             if(user === false) {
@@ -42,12 +53,12 @@ module.exports = function(app) {
     })
 
     // GET /User/:id - Read User
-    router.get("/User/:id", function*() {
+    router.get("/User/:id", async (ctx, next) => {
         try {
-            this.body =
-                yield app.context.models.user.findOne(this.params.id)
+            ctx.body =
+                await app.context.models.user.findOne(ctx.params.id)
         } catch(ex) {
-            this.body = ex
+            ctx.body = ex
         }
     })
 
