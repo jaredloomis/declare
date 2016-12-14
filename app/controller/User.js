@@ -1,64 +1,90 @@
 const Router   = require("koa-router")
 const passport = require("koa-passport")
-const Promise  = require("bluebird")
-const schema   = require("../model/schema")
+//const Promise  = require("bluebird")
+const User     = require("../model/User")
 
 module.exports = function(app) {
     const router = Router()
 
     // POST /User - Add User
-    router.post("/User", async (ctx) => {
+    router.post("/User", async ctx => {
         try {
-            ctx.body =
-                await app.context.models.User.createAsync(ctx.request.fields)
+            const user = new User(ctx.request.body)
+            ctx.body = await user.save()
         } catch(ex) {
-            ctx.body = ex
+            ctx.status = 500
+            ctx.body   = {
+                status: false,
+                error: ex
+            }
         }
     })
 
     // GET /User - List Users
-    router.get("/User", async (ctx) => {
+    router.get("/User", async ctx => {
         try {
-            ctx.body = await app.context.models.User.allAsync()
+            ctx.body = await User.find()
         } catch(ex) {
             ctx.status = 500
-            ctx.body = {error: ex}
+            ctx.body   = {
+                status: false,
+                error: ex
+            }
         }
-    })
-
-    router.get("/User/Test", async (ctx) => {
-        const users = await app.context.models.User.allAsync()
-        ctx.body = await users[0].checkPassword("test")
-    })
-
-    router.get("/User/Delete", async (ctx) => {
-        ctx.body = await app.context.models.User.destroyAllAsync()
     })
 
     // POST /User/Login - Login
     router.post("/User/Login", async (ctx, next) => {
-        await passport.authenticate("local", function*(err, user, info) {
-            if(err) {
-                ctx.body = err
-                return
-            }
+        await passport.authenticate("local", (err, user, info) => {
             if(user === false) {
                 ctx.status = 401
                 ctx.body = {success: false}
             } else {
-                yield ctx.login(user)
                 ctx.body = {success: true}
+                return ctx.login(user)
             }
-        }).call(this, next)
+        })(ctx, next)
+    })
+
+    // DELETE /User - Delete User
+    router.delete("/User/:id", async ctx => {
+        try {
+            ctx.body = await User.remove({_id: ctx.params.id})
+        } catch(ex) {
+            ctx.status = 500
+            ctx.body   = {
+                status: false,
+                error: ex
+            }
+        }
+    })
+
+    router.post("/User/Test", async ctx => {
+        try {
+            const body  = ctx.request.body
+            const pass  = body.password
+
+            const user  = await app.context.models.User.findOneAsync(body.id)
+            ctx.body    = await user.checkPassword(pass)
+        } catch(ex) {
+            ctx.status = 500
+            ctx.body   = {
+                status: false,
+                error: ex
+            }
+        }
     })
 
     // GET /User/:id - Read User
-    router.get("/User/:id", async (ctx, next) => {
+    router.get("/User/:id", async ctx => {
         try {
-            ctx.body =
-                await app.context.models.user.findOne(ctx.params.id)
+            ctx.body = await User.findById(ctx.params.id).exec()
         } catch(ex) {
-            ctx.body = ex
+            ctx.status = 500
+            ctx.body   = {
+                status: false,
+                error: ex
+            }
         }
     })
 

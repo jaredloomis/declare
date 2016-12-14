@@ -1,19 +1,24 @@
 const passport = require("koa-passport")
 const LocalStrategy = require("passport-local").Strategy
 
+const User = require("../model/User")
+
 module.exports = (app) => {
-    passport.serializeUser((user, cb) => cb(null, user.id))
+    passport.serializeUser((user, cb) => cb(null, user._id))
     passport.deserializeUser((id, cb) => {
-        app.context.models.user.findOne({id: id}).exec((err, user) => {
-            cb(null, user)
-        })
+        User.findById(id).exec().then((user) => cb(null, user))
     })
-    passport.use(new LocalStrategy((email, password, cb) => {
-        app.context.models.user.findOne({email: email}).exec((err, user) => {
+
+    const opts = {usernameField: "email"}
+    passport.use(new LocalStrategy(opts, (email, password, cb) => {
+        User.find({email: email}).exec().then((user) => cb(null, user))
+        /*
+        User.findOne({email: email}).exec((err, user) => {
             if(err) {
                 return cb(err, false)
             }
             cb(null, user)
         })
+        */
     }))
 }

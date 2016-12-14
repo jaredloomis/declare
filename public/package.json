@@ -1,0 +1,22 @@
+{
+  "name": "uqa-frontend",
+  "version": "0.0.1",
+  "description": "",
+  "main": "js/Main.js",
+  "scripts": {
+    "dev": "node dist/app/index.js",
+    "test": "mocha -r should -R spec"
+  },
+  "author": "Jared Loomis",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "css-loader": "^0.26.1",
+    "eslint-loader": "^1.6.1",
+    "file-loader": "^0.9.0",
+    "html-loader": "^0.4.4",
+    "webpack": "^2.1.0-beta.28",
+    "vue-loader": "^10.0.2",
+    "vue-template-compiler": "^2.1.6"
+  }
+}

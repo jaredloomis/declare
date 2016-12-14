@@ -1,47 +1,43 @@
-const Promise = require("bluebird")
-const bcrypt  = Promise.promisifyAll(require("bcrypt"))
+const Promise  = require("bluebird")
+const bcrypt   = Promise.promisifyAll(require("bcrypt"))
+const mongoose = require("mongoose")
 
-module.exports = (schema) => {
-    const User = schema.define('User', {
-        email: {
-            type: schema.String,
-            limit: 155,
-            unique: true,
-            "null": false
-        },
-        password: {
-            type: schema.String,
-            "null": false
-        },
-        passwordHash: {
-            type: schema.String,
-            "null": false
-        },
-        passwordSalt: {
-            type: schema.String,
-            "null": false
-        }
-    })
-
-    User.afterCreate = function(next) {
-        bcrypt.genSalt(10, (err, salt) => {
-            bcrypt.hash(this.password, salt, (err, hash) => {
-                if(err) {
-                    return next(err)
-                }
-                this.password     = ""
-                this.passwordHash = hash
-                this.passwordSalt = salt
-                this.save()
-                next()
-            })
-        })
+const userSchema = mongoose.Schema({
+    email: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    // This will be the password hash when stored in db
+    password: {
+        type: String,
+        required: true
+    },
+    passwordSalt: {
+        type: String
     }
+})
 
-    User.prototype.checkPassword = function(password) {
-        return bcrypt.hashAsync(password, this.passwordSalt)
-        .then(hash => hash === this.passwordHash)
-    }
-
-    return User
+userSchema.methods.checkPassword = async function(password) {
+    const hash = await bcrypt.hashAsync(password, this.passwordSalt)
+    return hash === this.passwordHash
 }
+
+// Before saving to db, hash password
+userSchema.pre("save", function(next) {
+    bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(this.password, salt, (err, hash) => {
+            if(err) {
+                return next(err)
+            }
+            this.password     = hash
+            this.passwordSalt = salt
+            this.save()
+            next()
+        })
+    })
+})
+
+const User = mongoose.model("User", userSchema)
+
+module.exports = User
