@@ -1,0 +1,5 @@
+*.swp
+dist/*
+node_modules/*
+public/dist/*
+public/node_modules/*
