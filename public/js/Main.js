@@ -1,3 +1,16 @@
+import React from "react"
+import {render} from "react-dom"
+import {Router, Route, Link, browserHistory} from "react-router"
+
+import TestPackView from "../view/TestPackView.jsx"
+
+render((
+  <Router history={browserHistory}>
+    <Route path="/" component={TestPackView}/>
+  </Router>
+), document.getElementById("app"))
+
+/*
 import Vue from "vue"
 import VueRouter from "vue-router"
 import VueResource from "vue-resource"
@@ -5,11 +18,6 @@ import VueResource from "vue-resource"
 // Apply Vue plugins
 Vue.use(VueRouter)
 Vue.use(VueResource)
-/*
-Vue.use(VueLokka, {
-    url: "/api/GraphQL"
-})
-*/
 
 // Import route components (lazily)
 const Page = component("Page", "/Page")
@@ -38,3 +46,4 @@ function component(name, chunk) {
         //require(["../view/templates/" + name + ".vue"], resolve)
     }
 }
+*/
