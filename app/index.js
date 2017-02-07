@@ -1,68 +1,56 @@
-const fs   = require("fs")
-const path = require("path")
-const Promise  = require("bluebird")
+import fs            from "fs"
+import path          from "path"
 
-const Koa      = require("koa")
-const app      = new Koa()
-const logger   = require("koa-logger")
-const body     = require("koa-better-body")
-const mount    = require("koa-mount")
-const session  = require("koa-session")
-const passport = require("koa-passport")
-const graphql  = require("koa-graphql")
-const convert  = require("koa-convert")
+import Koa           from "koa"
+import convert       from "koa-convert"
+import logger        from "koa-logger"
+import body          from "koa-bodyparser"
+import session       from "koa-session"
+import passport      from "koa-passport"
+import assets        from "koa-static"
 
-const Waterline    = require("waterline")
-const mongoAdapter = require("sails-mongo")
-const caminte = require("caminte")
-const Schema = caminte.Schema
+import mongoose      from "mongoose"
+//import Winston       from "./services/Winston.js"
+import {development as dbConfig} from "./config/database"
 
-const dbConfig  = require("./config/database")
+const app = new Koa()
 
 /*
- * Models
+ * Set up database
  */
 
-/*
-const schema = new Schema(dbConfig.development.driver, dbConfig.development)
+// Use bluebird promises
+mongoose.Promise = require("bluebird")
+// Conect to MongoDB server
+mongoose.connect("mongodb://" + dbConfig.host + "/" + dbConfig.database)
 
-// Read all models and set them up
-fs
-.readdirSync(path.join(__dirname, "model"))
-.filter(file => (file.indexOf(".") !== 0) && (file !== "index.js"))
-.forEach(file => {
-    require(path.join(__dirname, "model", file))(schema)
-})
-// Promisify various methods
-const queryMethods = [
-    "all", "findOne", "findById", "create", "destroyAll"
-]
-for(const key in schema.models) {
-    const model = schema.models[key];
-    for(var i = 0; i < queryMethods.length; ++i) {
-        const methName = queryMethods[i]
-        schema.models[key][methName + "Async"] =
-            Promise.promisify(model[methName], {
-                context: schema.models[key]
-            })
-    }
-}
-*/
-const schema = require("./model/schema")
-app.context.models = schema.models
+const db = mongoose.connection
+// Set up error logging
+db.on("error", console.error.bind(console, "connection error:"))
+db.once("open", function() {/* we're connected! */})
 
 /*
  * Middleware
  */
 
-app.use(convert(body()))
+// Body parser
+app.use(body())
+// Simple req/res logging
 app.use(logger())
+// Session
 app.keys = ["super-secret"]
 app.use(convert(session(app)))
-
+// Passport
 app.use(passport.initialize())
 app.use(passport.session())
 require("./services/Auth")(app)
+// Winston logging
+require("./services/Winston")(app)
+// Static assets
+app.use(assets(path.join(__dirname, "..", "..", "public", "dist"), {
+    // 1 week
+    maxage: 657000
+}))
 
 /*
  * Routes
@@ -71,23 +59,15 @@ require("./services/Auth")(app)
 // Read all controllers and set them up
 fs
 .readdirSync(path.join(__dirname, "controller"))
-.filter(file => (file.indexOf(".") !== 0) && (file !== "index.js"))
+.filter(file => file.indexOf(".") !== 0)
 .forEach(file => {
-    const router = require(path.join(__dirname, "controller", file))(app)
-    app.use(router.routes())
-       .use(router.allowedMethods())
+    const module = require(path.join(__dirname, "controller", file))
+    const router = typeof(module) === "function" ? module(app) : module
+    if(router.routes && router.allowedMethods) {
+        app.use(router.routes())
+           .use(router.allowedMethods())
+    }
 })
-
-var router = require('koa-router')();
-
-router.get('/', function(ctx, next) {
-    console.log("hello")
-    next()
-})
-
-app
-  .use(router.routes())
-  .use(router.allowedMethods());
 
 /*
  * Start

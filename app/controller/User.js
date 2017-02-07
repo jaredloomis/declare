@@ -1,7 +1,7 @@
-const Router   = require("koa-router")
-const passport = require("koa-passport")
+import Router   from "koa-router"
+import passport from "koa-passport"
 //const Promise  = require("bluebird")
-const User     = require("../model/User")
+import User     from "../model/User"
 
 module.exports = function(app) {
     const router = Router()

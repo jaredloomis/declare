@@ -1,3 +1,5 @@
+const path = require("path")
+
 const gulp = require("gulp")
 
 const babel = require("gulp-babel")
@@ -21,6 +23,10 @@ gulp.task(
 gulp.task("test", () => 
     gulp.src("app/tests/*.js")
     .pipe(mocha())
+)
+
+gulp.task("watch", () =>
+    gulp.watch(path.join(__dirname, "app"), ["default"])
 )
 
 gulp.task("clean", () =>

@@ -1,22 +1,26 @@
 const winston = require("winston")
 
-module.exports = app => new (winston.Logger)({
-    transports: [
-        new (winston.transports.Console)({
-            timestamp: true,
-            colorize: true,
-            prettyPrint: true,
-            depth: 10
-        }),
-        new (winston.transports.File)({
-            name: "info-file",
-            filename: "filelog-info.log",
-            level: "info"
-        }),
-        new (winston.transports.File)({
-            name: "error-file",
-            filename: "filelog-error.log",
-            level: "error"
+module.exports = app => {
+    app.context.logger = new (winston.Logger)({
+        transports: [
+            new (winston.transports.Console)({
+                timestamp: true,
+                colorize: true,
+                prettyPrint: true,
+                depth: 10
+            }),
+            new (winston.transports.File)({
+                filename: "logs/application.log"
+            })
+        ]
+    })
+
+    app.use(async (ctx, next) => {
+        const start = new Date()
+        await next()
+        const elapsed = new Date() - start
+        app.context.logger.info("", {
+            responseTime: elapsed
         })
-    ]
-})
+    })
+}
