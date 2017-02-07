@@ -4,6 +4,8 @@
   "description": "Web frontend for uQA",
   "main": "js/Main.js",
   "dependencies": {
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
     "vue": "^2.1.4",
     "vue-resource": "^1.0.3",
     "vue-router": "^2.1.1"

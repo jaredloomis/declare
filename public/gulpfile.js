@@ -1,5 +1,5 @@
 const gulp = require("gulp")
-const gutil = require("gulp-util")
+
 
 const webpack = require("webpack")
 const webpackStream = require("webpack-stream")
@@ -11,7 +11,7 @@ gulp.task(
     function() {}
 )
 
-gulp.task("webpack", cb => {
+gulp.task("webpack", () => {
     gulp.src("js/Main.js")
     .pipe(webpackStream(webpackConfig, webpack))
 })

@@ -20,7 +20,8 @@ module.exports = {
             // TypeScript for .ts files
             {test: /\.ts$/, loader: "ts-loader"},
             // Babel compile all .js files with latest preset
-            {test: /\.js$/, exclude: /node_modules/, loader: "babel-loader"},
+            {test: /\.(js|jsx)$/, exclude: /node_modules/,
+             loader: "babel-loader"},
             // Load .vue files
             {test: /\.vue$/, loader: "vue-loader"},
             // Load .html files

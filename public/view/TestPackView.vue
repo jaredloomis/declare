@@ -1,25 +1,57 @@
 <template>
 <div>
-    
+    <div v-for="(field, fieldIndex) in fields">
+        <template v-if="field.type === 'text'">
+            <input type="text"
+                   :id="'test-pack-' + packID + '-' + fieldIndex"
+                   v-model="userData[field.id]">
+            <label :for="'test-pack-' + packID + '-' + fieldIndex">
+                {{field.name}}
+            </label>
+        </template>
+        <template v-if="field.type === 'many'">
+            
+        </template>
+    </div>
 </div>
 </template>
 
 <script>
+/*
+ * processedFields : [{
+ *     id: String
+ *     type: String,
+ *     userData: Object (initialized to {})
+ * }]
+ */
+let processedFields = []
+
 export default {
     name: "TestPackView",
 
-    props: ["fields", "values"],
+    props: ["packID", "fields", "values"],
+
+    beforeCreate() {
+        processedFields = [] // TODO
+    },
 
     data() {
-        return {}
+        // TODO
+        const userData = {} // Must create an empty structure in form
+
+        return {
+            processedFields: processedFields,
+            userData
+        }
     },
 
     computed: {
         valuedFields() {
+            const vals = this.values
             return this.fields.map(field => {
                 return {
                     field: field,
-                    value: this.values.filter(val => val.name === field.name)
+                    value: vals.filter(val => val.name === field.name)
                 }
             })
         }
