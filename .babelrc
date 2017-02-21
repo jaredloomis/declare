@@ -2,6 +2,7 @@
     "presets": ["latest"],
     "plugins": [
         "transform-runtime",
-        "transform-react-jsx"
+        "transform-react-jsx",
+        "transform-class-properties"
     ]
 }

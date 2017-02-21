@@ -6,7 +6,8 @@
   "scripts": {
     "build": "gulp",
     "watch": "gulp watch & nodemon dist/app/index.js",
-    "test": "ava dist/app/tests"
+    "start": "npm build && (mongod & sleep 5) && node dist/app/index.js",
+    "test": "mocha dist/app/tests"
   },
   "author": "Jared Loomis",
   "license": "ISC",
@@ -37,7 +38,6 @@
     "winston": "^2.3.0"
   },
   "devDependencies": {
-    "ava": "^0.17.0",
     "babel-cli": "^6.18.0",
     "babel-loader": "^6.2.9",
     "babel-plugin-syntax-async-functions": "^6.13.0",

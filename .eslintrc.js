@@ -12,28 +12,29 @@ module.exports = {
         }
     },
     "rules": {
-        "indent": [
-            "warn",
-            4
-        ],
-        "linebreak-style": [
-            "warn",
-            "unix"
-        ],
-        "quotes": [
-            "warn",
-            "double"
-        ],
-        "semi": [
-            "warn",
-            "never"
-        ],
-        "no-unused-vars": [
-            "warn"
-        ],
-        "no-console": [
-            "warn"
-        ]
+        "indent": ["warn", 4],
+        "linebreak-style": ["warn", "unix"],
+        "quotes": ["warn", "double"],
+        "semi": ["warn", "never"],
+        "no-unused-vars": ["warn"],
+        "no-console": ["warn"],
+        "eqeqeq": ["warn"],
+        "no-magic-numbers": ["warn"],
+        "no-shadow": ["warn"],
+        "no-var": ["warn"],
+        "no-duplicate-imports": ["warn"],
+        "object-shorthand": ["warn"],
+        "prefer-arrow-callback": ["warn"],
+        "prefer-const": ["warn"],
+        "prefer-rest-params": ["warn"],
+        "prefer-spread": ["warn"],
+        "prefer-template": ["warn"],
+        "camelcase": ["warn"],
+        "brace-style": ["warn", "1tbs"],
+        "array-bracket-spacing": ["warn", "never"],
+        "no-labels": ["warn"],
+        "no-loop-func": ["warn"],
+        "yoda": ["warn", "never"]
     },
     "plugins": ["react"]
 }

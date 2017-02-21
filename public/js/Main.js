@@ -1,13 +1,14 @@
-import React from "react"
+import React    from "react"
 import {render} from "react-dom"
-import {Router, Route, Link, browserHistory} from "react-router"
 
-import TestPackView from "../view/TestPackView.jsx"
+import {Router, Route, Link, hashHistory} from "react-router"
+
+import App from "./components/App.js"
 
 render((
-  <Router history={browserHistory}>
-    <Route path="/" component={TestPackView}/>
-  </Router>
+    <Router history={hashHistory}>
+        <Route path="/" component={App}/>
+    </Router>
 ), document.getElementById("app"))
 
 /*

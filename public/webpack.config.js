@@ -1,5 +1,5 @@
-const webpack = require("webpack")
-const path    = require("path")
+const webpack              = require("webpack")
+const path                 = require("path")
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin
 
 module.exports = {
@@ -15,19 +15,20 @@ module.exports = {
     module: {
         rules: [
             // ESLint for all .js files
-            {enforce: "pre", test: /\.js$/,
-             loader: "eslint-loader", exclude: /node_modules/},
+            {enforce: "pre", test: /\.js$/, exclude: /node_modules/,
+             loader: "eslint-loader"},
+            {test: /\.js$/, exclude: /node_modules/,
+             loader: "babel-loader"},
             // TypeScript for .ts files
             {test: /\.ts$/, loader: "ts-loader"},
-            // Babel compile all .js files with latest preset
-            {test: /\.(js|jsx)$/, exclude: /node_modules/,
-             loader: "babel-loader"},
-            // Load .vue files
-            {test: /\.vue$/, loader: "vue-loader"},
+            // Load .scss files
+            {test: /\.scss$/,
+             use: ["style-loader", "css-loader", "sass-loader"]},
             // Load .html files
             {test: /\.html$/, loader: "html-loader"},
             // Load static files
-            {test: /\.(png|jpg|gif|svg|mp4|json)$/, loader: "file-loader"}
+            {test: /\.(png|jpg|gif|svg|mp4|json|ttf|woff|woff2|eot)$/,
+             loader: "file-loader"}
         ]
     },
     resolve: {
@@ -40,12 +41,11 @@ module.exports = {
         new webpack.optimize.CommonsChunkPlugin({
             name: "common",
             filename: "common.js",
-            //minChunks: 2,
             minChunks: (module, count) => {
-                const userReq = module.userRequest
-                return userReq && userReq.indexOf("node_modules") >= 0
+                const userRequest = module.userRequest
+                return userRequest && userRequest.indexOf("node_modules") >= 0
             }
-        }),
+        })/*,
         new webpack.optimize.UglifyJsPlugin({
             minimize: true,
             compress: {
@@ -53,5 +53,6 @@ module.exports = {
             }
         }),
         new BundleAnalyzerPlugin()
+        */
     ]
 }
