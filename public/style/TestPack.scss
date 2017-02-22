@@ -1,15 +1,27 @@
-.field-many > span {
+.field-many-name {
+    padding-top: 5px;
+    padding-bottom: 5px;
     font-size: 20px;
     font-weight: 300;
 }
 
 .field-many-form {
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     padding: 10px;
-    border: 1px solid color("grey", "base");
+    border: 1px solid color("grey", "lighten-1");
     border-radius: 2px;
 }
 
-.field-many-forms {
+.field-many-singular-name {
+    // Fit to size of text inside
+    display: table;
+    // Display inside border
+    margin-top: -20px;
+    text-align: center;
+    padding-left: 3px;
+    padding-right: 3px;
+    // Coloring
+    background: white;
+    color: color("grey", "darken-1");
 }

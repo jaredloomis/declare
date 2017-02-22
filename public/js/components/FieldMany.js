@@ -22,12 +22,20 @@ export default class FieldMany extends Component {
         const forms = [...Array(this.state.inputCount).keys()]
         .map(index =>
             <div className="field-many-form" key={index}>
+                <div className="field-many-singular-name">
+                    <span>
+                        {this.props.singularName ||
+                         this.props.name.slice(0, this.props.name.length-1)}
+                    </span>
+                </div>
                 {singleForm}
             </div>
         )
 
         return <div className="field field-many">
-            <span>{this.props.name}</span>
+            <div className="field-many-name">
+                <span>{this.props.name}</span>
+            </div>
             {forms}
             <button onClick={this.addInput} className="btn">
                 +
