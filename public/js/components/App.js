@@ -1,4 +1,4 @@
-import React, {Component} from "react"
+import React from "react"
 
 import Page from "./Page"
 import "../../style/materialize.scss"
@@ -8,6 +8,7 @@ import "../../node_modules/materialize-css/js/materialize"
 
 const TEST_PACKS = {
     destructiveInput: {
+        id: "destructiveInput",
         name: "Destructive Input",
         fields: {
             "startURL": {
@@ -74,6 +75,7 @@ const TEST_PACKS = {
         }
     },
     screenshotChange: {
+        id: "screenshotChange",
         name: "Screenshot Change",
         fields: {
             "maxPercent": {

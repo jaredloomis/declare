@@ -1,15 +1,22 @@
-import React, {Component} from "react"
+import React from "react"
 
 import FieldMany from "./FieldMany"
 import FieldText from "./FieldText"
 
-const Field = ({type, options, onChange}) => {
+const Field = ({uid, type, options, onChange}) => {
     if(typeof(type) === "object") {
         return <FieldMany {...options}
+                          uid={uid}
                           fields={type}
                           onChange={onChange}/>
     } else {
-        return <FieldText {...options} onChange={onChange}/>
+        if(type !== "text") {
+            console.warn("Field type not recognized in " +
+                         `${options.name}: "${type}". ` +
+                         "Rendering as FieldText."
+            )
+        }
+        return <FieldText {...options} uid={uid} onChange={onChange}/>
     }
 }
 

@@ -1,8 +1,8 @@
-import React, {Component} from "react"
+import React from "react"
 
-const FieldText = ({name, onChange}) => {
+const FieldText = ({uid, name, onChange}) => {
     return <div className="field input-field">
-        <input type="text" onChange={onChange}/>
+        <input type="text" id={uid} onChange={onChange(uid)}/>
         <label htmlFor={name}>{name}</label>
     </div>
 }

@@ -17,7 +17,8 @@ export default class Page extends Component {
             <div className="row" key={i}>
                 {row.map(tp =>
                     <div key={tp.name} className={"col s" + COL_WIDTH}>
-                        <TestPack name={tp.name}
+                        <TestPack packID={tp.id}
+                                  name={tp.name}
                                   fields={tp.fields}
                                   values={tp.values}/>
                     </div>

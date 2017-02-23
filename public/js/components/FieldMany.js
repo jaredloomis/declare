@@ -1,10 +1,10 @@
-import React, {Component, PropTypes} from "react"
+import React, {Component} from "react"
 import Field from "./Field"
 
 export default class FieldMany extends Component {
     constructor(props) {
         super(props)
-        this.addInput = this.addInput.bind(this);
+        this.addInput = this.addInput.bind(this)
 
         this.state = {
             inputCount: 1
@@ -12,11 +12,14 @@ export default class FieldMany extends Component {
     }
 
     render() {
-        const singleForm = Object.keys(this.props.fields).map(name => {
-            const field = this.props.fields[name]
-            return <Field type={field.type}
+        const singleForm = index => Object.keys(this.props.fields)
+        .map(id => {
+            const field = this.props.fields[id]
+            return <Field uid={this.childUID(id, index)}
+                          type={field.type}
                           options={field.options}
-                          key={name}/>
+                          onChange={this.props.onChange}
+                          key={id}/>
         })
 
         const forms = [...Array(this.state.inputCount).keys()]
@@ -26,9 +29,11 @@ export default class FieldMany extends Component {
                     <span>
                         {this.props.singularName ||
                          this.props.name.slice(0, this.props.name.length-1)}
+                        &nbsp;
+                        #{index+1}
                     </span>
                 </div>
-                {singleForm}
+                {singleForm(index)}
             </div>
         )
 
@@ -41,6 +46,10 @@ export default class FieldMany extends Component {
                 +
             </button>
         </div>
+    }
+
+    childUID(id, index) {
+        return `${this.props.uid}.${index}.${id}`
     }
 
     addInput(event) {

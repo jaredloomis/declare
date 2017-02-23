@@ -19,7 +19,6 @@ module.exports = {
         "no-unused-vars": ["warn"],
         "no-console": ["warn"],
         "eqeqeq": ["warn"],
-        "no-magic-numbers": ["warn"],
         "no-shadow": ["warn"],
         "no-var": ["warn"],
         "no-duplicate-imports": ["warn"],
