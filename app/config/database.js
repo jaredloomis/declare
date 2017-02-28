@@ -4,7 +4,7 @@ module.exports.production = {
     port       : "27017",
     username   : "root",
     password   : "",
-    database   : "test",
+    database   : "uqa",
     autoReconnect : true
 }
 
@@ -14,7 +14,7 @@ module.exports.development = {
     port       : "27017",
     username   : "root",
     password   : "",
-    database   : "test",
+    database   : "uqa-dev",
     autoReconnect : true
 }
 
@@ -24,7 +24,7 @@ module.exports.test = {
     port       : "27017",
     username   : "root",
     password   : "",
-    database   : "test",
+    database   : "uqa-test",
     autoReconnect : true
 }
 

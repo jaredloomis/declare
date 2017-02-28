@@ -8,7 +8,6 @@ const eslint = require("gulp-eslint")
 const mocha = require("gulp-mocha")
 
 const ts = require("gulp-typescript")
-const tsProject = ts.createProject("tsconfig.json")
 
 const psc = require("gulp-purescript").psc
 
@@ -40,13 +39,15 @@ gulp.task("javascript", () => {
 })
 
 gulp.task("typescript", () =>
+    /*
     tsProject.src()
     .pipe(tsProject())
     .js.pipe(gulp.dest("dist/app"))
-    //return gulp.src("app/**/*.ts")
-    //.pipe(ts({}))
-    //.pipe(babel())
-    //.pipe(gulp.dest("dist/app"))
+    */
+    gulp.src("app/**/*.ts")
+    .pipe(ts({}))
+    .pipe(babel())
+    .pipe(gulp.dest("dist/app"))
 )
 
 gulp.task("purescript", () =>

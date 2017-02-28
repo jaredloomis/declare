@@ -5,9 +5,10 @@
   "main": "app/index.js",
   "scripts": {
     "build": "gulp",
-    "watch": "gulp watch & nodemon dist/app/index.js",
-    "start": "npm build && (mongod & sleep 5) && node dist/app/index.js",
-    "test": "mocha dist/app/tests"
+    "watch": "gulp && gulp watch & (npm run startDB && nodemon dist/app/index.js)",
+    "start": "npm run build && npm run startDB && node dist/app/index.js",
+    "test": "mocha dist/app/tests",
+    "startDB": "mongod & sleep 5"
   },
   "author": "Jared Loomis",
   "license": "ISC",
@@ -17,6 +18,7 @@
     "bluebird": "^3.4.6",
     "generic-pool": "^2.4.2",
     "graphql": "^0.7.0",
+    "graphql-type-json": "^0.1.4",
     "koa": "^2.0.0-alpha.7",
     "koa-better-body": "^3.0.0",
     "koa-bodyparser": "^3.2.0",
@@ -31,6 +33,7 @@
     "moment": "^2.15.0",
     "mongodb": "latest",
     "mongoose": "^4.6.3",
+    "mongoose-schema-to-graphql": "^2.4.6",
     "nano": "^6.2.0",
     "passport-local": "^1.0.0",
     "underscore": "^1.8.3",
