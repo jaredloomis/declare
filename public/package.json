@@ -1,10 +1,11 @@
 {
-  "name": "uQA-frontend",
-  "version": "1.0.0",
-  "description": "Web frontend for uQA",
+  "name": "declare-ui",
+  "version": "0.0.1",
+  "description": "Web UI for uQA",
   "main": "js/Main.js",
   "dependencies": {
     "jquery": "^3.1.1",
+    "lokka": "^1.7.0",
     "materialize-css": "^0.98.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
@@ -31,8 +32,11 @@
   },
   "scripts": {
     "dev": "webpack-dev-server --open --inline --hot",
-    "build": "npm run build-static && webpack",
-    "build-static": "cp view/Main.html dist/view/Main.html"
+    "build": "npm run static && webpack",
+    "static": "npm run html && npm run style",
+    "html": "cp view/Main.html dist/view/Main.html",
+    "style": "sass style/materialize.scss > dist/style/materialize.css",
+    "jquery": "cp node_modules/jquery/dist/jquery.min.js dist/js"
   },
   "author": "Jared Loomis",
   "license": "All Rights Reserved"

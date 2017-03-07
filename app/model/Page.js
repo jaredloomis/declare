@@ -4,6 +4,7 @@ import {
     GraphQLObjectType,
     GraphQLNonNull,
     GraphQLString,
+    GraphQLList,
     GraphQLID
 } from "graphql"
 const ObjectId = mongoose.Schema.Types.ObjectId
@@ -17,7 +18,7 @@ const pageSchema = mongoose.Schema({
         type: String
     },
     testPacks: {
-        type: ObjectId,
+        type: [ObjectId],
         ref: "TestPack"
     }
 })
@@ -29,13 +30,13 @@ pageSchema.statics.graphQL = new GraphQLObjectType({
             type: new GraphQLNonNull(GraphQLID)
         },
         name: {
-            type: GraphQLString
+            type: new GraphQLNonNull(GraphQLString)
         },
         startURL: {
             type: GraphQLString
         },
         testPacks: {
-            type: require("./TestPack").graphQL
+            type: new GraphQLList(require("./TestPack").graphQL)
         }
     }
 })

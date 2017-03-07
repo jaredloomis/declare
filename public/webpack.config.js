@@ -1,10 +1,12 @@
+/* global __dirname, require, module */
 const webpack              = require("webpack")
 const path                 = require("path")
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin
 
 module.exports = {
     entry: {
-        app: "./js/Main.js"
+//        vendor: path.join(__dirname, "js", "Vendor.js"),
+        app:    path.join(__dirname, "js", "Main.js")
     },
     output: {
         filename: "[name].js",
@@ -43,7 +45,8 @@ module.exports = {
             filename: "common.js",
             minChunks: (module, count) => {
                 const userRequest = module.userRequest
-                return userRequest && userRequest.indexOf("node_modules") >= 0
+                return userRequest &&
+                       userRequest.indexOf("node_modules") >= 0
             }
         })/*,
         new webpack.optimize.UglifyJsPlugin({

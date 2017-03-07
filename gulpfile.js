@@ -25,7 +25,7 @@ gulp.task("test", () =>
 )
 
 gulp.task("watch", () =>
-    gulp.watch(path.join(__dirname, "app"), ["default"])
+    gulp.watch("app/**/*.js", ["javascript"])
 )
 
 gulp.task("clean", () =>

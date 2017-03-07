@@ -4,7 +4,7 @@ module.exports.production = {
     port       : "27017",
     username   : "root",
     password   : "",
-    database   : "uqa",
+    database   : "declare",
     autoReconnect : true
 }
 
@@ -14,17 +14,17 @@ module.exports.development = {
     port       : "27017",
     username   : "root",
     password   : "",
-    database   : "uqa-dev",
+    database   : "declare-dev",
     autoReconnect : true
 }
 
-module.exports.test = {
+module.exports.qa = {
     driver     : "mongo",
     host       : "localhost",
     port       : "27017",
     username   : "root",
     password   : "",
-    database   : "uqa-test",
+    database   : "declare-qa",
     autoReconnect : true
 }
 

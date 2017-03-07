@@ -5,6 +5,9 @@ import {Router, Route, Link, hashHistory} from "react-router"
 
 import App from "./components/App.js"
 
+import "../style/materialize.scss"
+import "../node_modules/materialize-css/dist/js/materialize.min.js"
+
 render((
     <Router history={hashHistory}>
         <Route path="/" component={App}/>
