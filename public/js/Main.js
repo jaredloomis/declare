@@ -1,18 +1,27 @@
-import React    from "react"
-import {render} from "react-dom"
+import React         from "react"
+import {render}      from "react-dom"
+import {Provider}    from "react-redux"
 
-import {Router, Route, Link, hashHistory} from "react-router"
-
-import App from "./components/App.js"
+import App   from "./components/App"
+import store from "./store"
 
 import "../style/materialize.scss"
 import "../node_modules/materialize-css/dist/js/materialize.min.js"
 
+render(
+    <Provider store={store}>
+        <App/>
+    </Provider>,
+    document.getElementById("app")
+)
+
+/*
 render((
     <Router history={hashHistory}>
         <Route path="/" component={App}/>
     </Router>
 ), document.getElementById("app"))
+*/
 
 /*
 import Vue from "vue"

@@ -1,4 +1,6 @@
-import React from "react"
+import React, {Component} from "react"
+import {Lokka}            from "lokka"
+import {Transport}        from "lokka-transport-http"
 
 import Page from "./Page"
 import "../../style/materialize.scss"
@@ -109,7 +111,48 @@ const PAGES_DOM = PAGES.map(page =>
 
 ///////////
 
-const App = () => <div className="container">{PAGES_DOM[0]}</div>
+const client = new Lokka({
+    transport: new Transport("/graphql")
+})
 
-App.displayName = "App"
-export default App
+class App extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            pages: []
+        }
+    }
+    
+    async componentDidMount() {
+        const data = await client.query(`{
+            pages {
+                _id name
+                startURL
+                testPacks {
+                    _id name
+                    fields values
+                }
+            }
+        }`)
+        this.setState(data)
+    }
+
+    render() {
+        console.log("WHATS UP" + JSON.stringify(this.state.pages))
+        return <div className="container">
+            {this.state.pages.map(page =>
+             <Page name={page.name} testPacks={page.testPacks} key={page.name}/>
+            )}
+        </div>
+        //return <div className="container">{this.state.pages[0]}</div>
+        //return <div className="container">{PAGES_DOM[0]}</div>
+    }
+}
+
+export default () => <div>
+    
+</div>
+
+///////
+
+

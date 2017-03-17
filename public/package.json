@@ -6,12 +6,15 @@
   "dependencies": {
     "jquery": "^3.1.1",
     "lokka": "^1.7.0",
+    "lokka-transport-http": "^1.6.1",
     "materialize-css": "^0.98.0",
+    "ramda": "^0.23.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-redux": "^5.0.2",
     "react-router": "^3.0.2",
-    "redux": "^3.6.0"
+    "redux": "^3.6.0",
+    "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
     "babel-core": "^6.18.2",
