@@ -20,6 +20,18 @@ const Query = new GraphQLObjectType({
             async resolve() {
                 return await Page.find({})
             }
+        },
+        page: {
+            type: Page.graphQL,
+            args: {
+                id: {
+                    name: "id",
+                    type: new GraphQLNonNull(GraphQLString)
+                }
+            },
+            async resolve(parent, args) {
+                return await Page.findById(args.id)
+            }
         }
     }
 })

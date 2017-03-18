@@ -6,6 +6,7 @@ import "../../style/Page.scss"
 export default class Page extends Component {
     constructor(props) {
         super(props)
+        this.fieldChange = this.fieldChange.bind(this)
     }
 
     render() {
@@ -16,10 +17,11 @@ export default class Page extends Component {
             (row, i) =>
                 <div className="row" key={i}>{row.map(tp =>
                     <div key={tp.name} className={"col s" + COL_WIDTH}>
-                        <TestPack packID={tp.id}
+                        <TestPack packID={this.props.pageID + "." + tp.id}
                                   name={tp.name}
                                   fields={tp.fields}
-                                  values={tp.values}/>
+                                  values={tp.values}
+                                  onChange={this.fieldChange}/>
                     </div>
                 )}</div>
         )
@@ -35,6 +37,10 @@ export default class Page extends Component {
             <div className="page-test-packs">{testPacksDOM}</div>
         </div>
         //<div className="packSelectContainer"><TestPackSelect/></div>
+    }
+
+    fieldChange(id) {
+        return this.props.onChange(`${this.props.pageID}.${id}`)
     }
 }
 

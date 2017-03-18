@@ -36,7 +36,10 @@ pageSchema.statics.graphQL = new GraphQLObjectType({
             type: GraphQLString
         },
         testPacks: {
-            type: new GraphQLList(require("./TestPack").graphQL)
+            type: new GraphQLList(
+                new GraphQLNonNull(GraphQLID)
+                //require("./TestPack").graphQL
+            )
         }
     }
 })

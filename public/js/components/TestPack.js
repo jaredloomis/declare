@@ -16,10 +16,11 @@ export default class TestPack extends Component {
     render() {
         const form = Object.keys(this.props.fields).map(id => {
             const field = this.props.fields[id]
-            return <Field uid={this.fieldUID(id)}
+            const uid   = this.fieldUID(id)
+            return <Field uid={uid}
                           type={field.type}
                           options={field.options}
-                          onChange={this.fieldChange}
+                          onChange={this.fieldChange(uid)}
                           key={id}/>
         })
 
@@ -40,6 +41,8 @@ export default class TestPack extends Component {
     }
 
     fieldChange(id) {
+        return this.props.onChange(`${this.props.packID}.${id}`)
+        /*
         return event => {
             const value = event.target.value
             this.setState(state => {
@@ -49,6 +52,7 @@ export default class TestPack extends Component {
                 return state
             })
         }
+        */
     }
 }
 

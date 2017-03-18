@@ -32,6 +32,7 @@
     "mongodb": "^2.2.0",
     "mongoose": "^4.6.3",
     "passport-local": "^1.0.0",
+    "redux-thunk": "^2.2.0",
     "winston": "^2.3.0"
   },
   "devDependencies": {
