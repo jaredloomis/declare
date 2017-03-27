@@ -4,6 +4,7 @@ import FieldMany from "./FieldMany"
 import FieldText from "./FieldText"
 
 const Field = ({uid, type, options, onChange}) => {
+    options = options || {}
     if(typeof(type) === "object") {
         return <FieldMany {...options}
                           uid={uid}

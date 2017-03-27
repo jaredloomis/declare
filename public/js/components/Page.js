@@ -1,5 +1,5 @@
 import React, {Component} from "react"
-import TestPack from "./TestPack"
+import TestPack from "../containers/TestPack"
 
 import "../../style/Page.scss"
 
@@ -13,16 +13,16 @@ export default class Page extends Component {
         const GRID_WIDTH = 1
         const COL_WIDTH  = 12 / GRID_WIDTH
 
-        const testPacksDOM = chunk(this.props.testPacks, GRID_WIDTH,
-            (row, i) =>
-                <div className="row" key={i}>{row.map(tp =>
-                    <div key={tp.name} className={"col s" + COL_WIDTH}>
-                        <TestPack packID={this.props.pageID + "." + tp.id}
-                                  name={tp.name}
-                                  fields={tp.fields}
-                                  values={tp.values}
-                                  onChange={this.fieldChange}/>
-                    </div>
+        const testPacksDOM = chunk(this.props.testPackData, GRID_WIDTH,
+            (row, rowI) =>
+                <div className="row" key={rowI}>{row.map((tp, colI) =>
+                    (tp && tp.testPack) ?
+                        (<div key={colI} className={"col s" + COL_WIDTH}>
+                            <TestPack packID={tp.testPack}
+                                      pageID={this.props.pageID}
+                                      onChange={this.fieldChange}/>
+                        </div>) :
+                        (<span key={colI}>Loading...</span>)
                 )}</div>
         )
 
@@ -36,7 +36,7 @@ export default class Page extends Component {
             <h3>Test Packs</h3>
             <div className="page-test-packs">{testPacksDOM}</div>
         </div>
-        //<div className="packSelectContainer"><TestPackSelect/></div>
+        //<div className="page-add-test-pack"><TestPackSelect/></div>
     }
 
     fieldChange(id) {

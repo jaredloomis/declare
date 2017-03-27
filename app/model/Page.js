@@ -7,6 +7,9 @@ import {
     GraphQLList,
     GraphQLID
 } from "graphql"
+
+import TestPackData from "./TestPackData"
+
 const ObjectId = mongoose.Schema.Types.ObjectId
 
 const pageSchema = mongoose.Schema({
@@ -17,9 +20,8 @@ const pageSchema = mongoose.Schema({
     startURL: {
         type: String
     },
-    testPacks: {
-        type: [ObjectId],
-        ref: "TestPack"
+    testPackData: {
+        type: [TestPackData.schema]
     }
 })
 
@@ -35,11 +37,8 @@ pageSchema.statics.graphQL = new GraphQLObjectType({
         startURL: {
             type: GraphQLString
         },
-        testPacks: {
-            type: new GraphQLList(
-                new GraphQLNonNull(GraphQLID)
-                //require("./TestPack").graphQL
-            )
+        testPackData: {
+            type: new GraphQLList(TestPackData.graphQL)
         }
     }
 })

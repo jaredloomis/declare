@@ -16,9 +16,6 @@ const testPackSchema = mongoose.Schema({
     fields: {
         type: Object,
         required: true
-    },
-    values: {
-        type: Object
     }
 })
 
@@ -32,9 +29,6 @@ testPackSchema.statics.graphQL = new GraphQLObjectType({
             type: GraphQLString
         },
         fields: {
-            type: GraphQLJSON
-        },
-        values: {
             type: GraphQLJSON
         }
     }

@@ -1,15 +1,14 @@
-import path        from "path"
-import fs          from "fs"
 import {
     GraphQLObjectType, GraphQLList, GraphQLString,
     GraphQLID, GraphQLNonNull, GraphQLSchema
 } from "graphql"
-import GraphQLJSON from "graphql-type-json"
-import graphqlHTTP from "koa-graphql"
-import convert     from "koa-convert"
-import Router      from "koa-router"
-import Page        from "../model/Page"
-import TestPack    from "../model/TestPack"
+import graphqlHTTP  from "koa-graphql"
+import convert      from "koa-convert"
+import Router       from "koa-router"
+
+import Page         from "../model/Page"
+import TestPack     from "../model/TestPack"
+import TestPackData from "../model/TestPackData"
 
 const Query = new GraphQLObjectType({
     name: "Query",
@@ -32,6 +31,25 @@ const Query = new GraphQLObjectType({
             async resolve(parent, args) {
                 return await Page.findById(args.id)
             }
+        },
+        /* TestPack Queries */
+        testPacks: {
+            type: new GraphQLList(TestPack.graphQL),
+            async resolve() {
+                return await TestPack.find({})
+            }
+        },
+        testPack: {
+            type: TestPack.graphQL,
+            args: {
+                id: {
+                    name: "id",
+                    type: new GraphQLNonNull(GraphQLString)
+                }
+            },
+            async resolve(parent, args) {
+                return await TestPack.findById(args.id)
+            }
         }
     }
 })
@@ -51,8 +69,8 @@ const Mutation = new GraphQLObjectType({
                     name: "startURL",
                     type: GraphQLString
                 },
-                testPacks: {
-                    name: "testPacks",
+                testPackData: {
+                    name: "testPackData",
                     type: new GraphQLList(GraphQLID)
                 }
             },
@@ -73,10 +91,34 @@ const Mutation = new GraphQLObjectType({
                 }
             },
             async resolve(parent, {pageID, packID}) {
-                return await Page.update(
+                const data = new TestPackData({
+                    testPack: packID,
+                    values: {}
+                })
+                return await Page.findOneAndUpdate(
                     {_id: pageID},
-                    {$addToSet: {testPacks: packID}}
+                    {$addToSet: {testPackData: data}}
                 )
+            }
+        },
+        removeTestPack: {
+            type: Page.graphQL,
+            args: {
+                pageID: {
+                    name: "pageID",
+                    type: new GraphQLNonNull(GraphQLID)
+                },
+                packID: {
+                    name: "packID",
+                    type: new GraphQLNonNull(GraphQLID)
+                }
+            },
+            async resolve(parent, {pageID, packID}) {
+                const page = await Page.findById(pageID)
+                page.testPackData = page.testPackData.filter(dat =>
+                    dat.packID.toString() !== packID.toString()
+                )
+                return await page.save()
             }
         },
         /* TestPack Mutations */
@@ -89,10 +131,11 @@ const Mutation = new GraphQLObjectType({
                 },
                 fields: {
                     name: "fields",
-                    type: new GraphQLNonNull(GraphQLJSON)
+                    type: new GraphQLNonNull(GraphQLString)
                 }
             },
             async resolve(parent, args) {
+                args.fields = JSON.parse(args.fields)
                 return await new TestPack(args).save()
             }
         }

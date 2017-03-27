@@ -7,10 +7,7 @@ export default class TestPack extends Component {
     constructor(props) {
         super(props)
         this.fieldChange = this.fieldChange.bind(this)
-
-        this.state = {
-            values: props.values
-        }
+        this.fieldUID    = this.fieldUID.bind(this)
     }
 
     render() {
@@ -20,7 +17,7 @@ export default class TestPack extends Component {
             return <Field uid={uid}
                           type={field.type}
                           options={field.options}
-                          onChange={this.fieldChange(uid)}
+                          onChange={this.props.onChange(uid)}
                           key={id}/>
         })
 
@@ -41,42 +38,6 @@ export default class TestPack extends Component {
     }
 
     fieldChange(id) {
-        return this.props.onChange(`${this.props.packID}.${id}`)
-        /*
-        return event => {
-            const value = event.target.value
-            this.setState(state => {
-                console.log(`Set ${id} to ${value}`)
-                assign(state, id, value)
-                console.log(JSON.stringify(state))
-                return state
-            })
-        }
-        */
-    }
-}
-
-// TODO Implement efficiently; this uses recursion
-function assign(obj, prop, value) {
-    if(typeof(prop) === "string") {
-        // Convert indexes to properties
-        prop = prop.replace(/\[(\w+)\]/g, ".$1")
-        // Strip leading dot
-        //prop = prop.replace(/^\./, "")
-        // Convert to array of props
-        prop = prop.split(".")
-    }
-
-    if(prop.length > 1) {
-        const e = prop.shift()
-        assign(obj[e] =
-            Object.prototype.toString.call(obj[e]) === "[object Object]" ?
-                obj[e] :
-                {},
-               prop,
-               value
-        )
-    } else {
-        obj[prop[0]] = value
+        return this.props.onChange(`${id}`)
     }
 }
