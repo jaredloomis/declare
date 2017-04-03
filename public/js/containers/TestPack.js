@@ -5,7 +5,16 @@ import {fetchPack} from "../actions/TestPack"
 import TestPackComponent from "../components/TestPack"
 
 const mapStateToProps = (state, ownProps) => {
+    // Copy over all TestPack props
     const props = state.testPacks[ownProps.packID] || {}
+    // Assign props.values based on page.testPackData
+    const page = state.pages[ownProps.pageID]
+    if(page) {
+        const testPackData = page.testPackData
+                         .filter(dat => dat.testPack === ownProps.packID)[0]
+        if(testPackData)
+            props.values = testPackData.values
+    }
     return props
 }
 

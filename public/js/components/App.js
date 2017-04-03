@@ -151,7 +151,7 @@ class App extends Component {
 
 import PageContainer from "../containers/Page"
 
-export default () => <div>
+export default () => <div className="container">
     <PageContainer pageID="58b74b85ada78d102247a58a"/>
 </div>
 

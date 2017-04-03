@@ -116,9 +116,30 @@ const Mutation = new GraphQLObjectType({
             async resolve(parent, {pageID, packID}) {
                 const page = await Page.findById(pageID)
                 page.testPackData = page.testPackData.filter(dat =>
-                    dat.packID.toString() !== packID.toString()
+                    dat.testPack.toString() !== packID
                 )
                 return await page.save()
+            }
+        },
+        updatePackData: {
+            type: Page.graphQL,
+            args: {
+                pageID: {
+                    name: "pageID",
+                    type: new GraphQLNonNull(GraphQLID)
+                },
+                data: {
+                    name: "data",
+                    type: GraphQLString
+                }
+            },
+            async resolve(parent, {pageID, data}) {
+                data = JSON.parse(data).map(pack => new TestPackData(pack))
+                const page = await Page.findOneAndUpdate(
+                    {_id: pageID},
+                    {$set: {testPackData: data}}
+                )
+                return page
             }
         },
         /* TestPack Mutations */

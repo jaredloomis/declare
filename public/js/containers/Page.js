@@ -1,11 +1,14 @@
 import React, {Component} from "react"
 import {connect} from "react-redux"
-import {updatePackValue, fetchPage} from "../actions/Page"
+import {
+    updatePackValue, fetchPage,
+    savePackData
+} from "../actions/Page"
 import PageComponent from "../components/Page"
-import keyCollection from "../lib/KeyCollection"
+//import keyCollection from "../lib/KeyCollection"
 
 const mapStateToProps = (state, ownProps) => {
-    const props = state.pages[ownProps.pageID] || {}
+    const props = (state.pages && state.pages[ownProps.pageID]) || {}
     if(props.testPackData) {
         props.testPacks = props.testPackData
         .map(dat => state.testPacks[dat.testPack])
@@ -18,6 +21,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onChange: uid => event => {
             dispatch(updatePackValue(uid, event.target.value))
+        },
+        onSave: () => {
+            dispatch(savePackData(ownProps.pageID))
         },
         fetchPage: () => {
             dispatch(fetchPage(ownProps.pageID))

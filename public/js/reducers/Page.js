@@ -1,9 +1,12 @@
 import R from "ramda"
 
+import client from "../graphQL/Client"
 import {
     PAGE_ADD_PACK, PAGE_FETCH,
-    PACK_UPDATE_VALUE, PACK_FETCH
+    PACK_UPDATE_VALUE, PACK_FETCH,
+    PAGE_SAVE_PACK_DATA
 } from "../actions/Types"
+import {deepSet} from "../lib/Deep"
 
 const pages = (state={
     pages: {},
@@ -21,6 +24,17 @@ const pages = (state={
         const pageVal = action.page ? action.page : {inProgress: true}
         return R.set(pageL, pageVal, state)
     }
+    // Save a Page's testPackData to database
+    else if(action.type === PAGE_SAVE_PACK_DATA) {
+        const data = JSON.stringify(state.pages[action.id].testPackData)
+                     .replace(new RegExp("\"", "g"), "\\\"")
+        client.mutate(`{
+            page: updatePackData(pageID: "${action.id}", data: "${data}") {
+                _id
+            }
+        }`)
+        return state
+    }
     // Change the value of a field of a Page's TestPack
     else if(action.type === PACK_UPDATE_VALUE) {
         const [pageID, packID, ...selector] = action.uid.split(".")
@@ -33,9 +47,14 @@ const pages = (state={
             }
             return -1
         })()
-        const valPath = ["pages", pageID, "testPackData", packIndex, ...selector]
+        const valPath = [
+            "pages", pageID, "testPackData", packIndex, "values", ...selector
+        ]
+        /*
         const valueL  = R.lensPath(valPath)
         return R.set(valueL, action.value, state)
+        */
+        return deepSet(valPath, action.value, state)
     }
     // Fetch TestPack requested, received, or errored
     else if(action.type === PACK_FETCH) {

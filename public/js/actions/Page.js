@@ -4,13 +4,10 @@ import {Transport} from "lokka-transport-http"
 
 import {
     PAGE_ADD_PACK, PAGE_FETCH,
-    PACK_UPDATE_VALUE
+    PACK_UPDATE_VALUE, PAGE_SAVE_PACK_DATA
 } from "./Types"
 import {fetchPack} from "./TestPack"
-
-const client = new Lokka({
-    transport: new Transport("/graphql")
-})
+import client from "../graphQL/Client"
 
 export const fetchPage = (id, fetchPacks=false) => async dispatch => {
     dispatch({
@@ -40,6 +37,11 @@ export const fetchPage = (id, fetchPacks=false) => async dispatch => {
         ))
     }
 }
+
+export const savePackData = id => ({
+    type: PAGE_SAVE_PACK_DATA,
+    id
+})
 
 export const addPack = (pageID, packID) => ({
     type: PAGE_ADD_PACK,

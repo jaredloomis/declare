@@ -3,12 +3,13 @@ import React from "react"
 import FieldMany from "./FieldMany"
 import FieldText from "./FieldText"
 
-const Field = ({uid, type, options, onChange}) => {
+const Field = ({uid, type, options, defaultValue, onChange}) => {
     options = options || {}
     if(typeof(type) === "object") {
         return <FieldMany {...options}
                           uid={uid}
                           fields={type}
+                          defaultValue={defaultValue}
                           onChange={onChange}/>
     } else {
         if(type !== "text") {
@@ -17,7 +18,8 @@ const Field = ({uid, type, options, onChange}) => {
                          "Rendering as FieldText."
             )
         }
-        return <FieldText {...options} uid={uid} onChange={onChange}/>
+        return <FieldText {...options} defaultValue={defaultValue}
+                          uid={uid} onChange={onChange}/>
     }
 }
 

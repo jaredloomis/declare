@@ -1,12 +1,13 @@
 import React, {Component} from "react"
 import Field from "./Field"
+import {deepGet} from "../lib/Deep"
 
 import "../../style/TestPack.scss"
 
 export default class TestPack extends Component {
     constructor(props) {
         super(props)
-        this.fieldChange = this.fieldChange.bind(this)
+        this.fieldValue  = this.fieldValue.bind(this)
         this.fieldUID    = this.fieldUID.bind(this)
     }
 
@@ -17,7 +18,8 @@ export default class TestPack extends Component {
             return <Field uid={uid}
                           type={field.type}
                           options={field.options}
-                          onChange={this.props.onChange(uid)}
+                          defaultValue={this.fieldValue(uid)}
+                          onChange={this.props.onChange}
                           key={id}/>
         })
 
@@ -33,11 +35,12 @@ export default class TestPack extends Component {
         </div>
     }
 
-    fieldUID(id) {
-        return `${this.props.packID}.${id}`
+    fieldValue(uid) {
+        const [pageID, packID, ...selector] = uid.split(".")
+        return deepGet(selector, this.props.values)
     }
 
-    fieldChange(id) {
-        return this.props.onChange(`${id}`)
+    fieldUID(id) {
+        return `${this.props.packID}.${id}`
     }
 }

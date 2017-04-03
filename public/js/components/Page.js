@@ -35,6 +35,7 @@ export default class Page extends Component {
             </div>
             <h3>Test Packs</h3>
             <div className="page-test-packs">{testPacksDOM}</div>
+            <button onClick={this.props.onSave} className="btn">Save</button>
         </div>
         //<div className="page-add-test-pack"><TestPackSelect/></div>
     }

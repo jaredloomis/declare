@@ -1,23 +1,31 @@
 import React, {Component} from "react"
 import Field from "./Field"
+import {deepGet} from "../lib/Deep"
 
 export default class FieldMany extends Component {
     constructor(props) {
         super(props)
+
         this.addInput = this.addInput.bind(this)
+        this.childUID = this.childUID.bind(this)
+        this.fieldValue = this.fieldValue.bind(this)
 
         this.state = {
-            inputCount: 1
+            inputCount: Math.max(1, this.props.defaultValue.length)
         }
     }
 
     render() {
         const singleForm = index => Object.keys(this.props.fields)
         .map(id => {
-            const field = this.props.fields[id]
-            return <Field uid={this.childUID(id, index)}
+            const field  = this.props.fields[id]
+            const uid    = this.childUID(id, index)
+            const defVal = this.fieldValue(uid)
+            console.log(defVal)
+            return <Field uid={uid}
                           type={field.type}
                           options={field.options}
+                          defaultValue={defVal}
                           onChange={this.props.onChange}
                           key={id}/>
         })
@@ -46,6 +54,18 @@ export default class FieldMany extends Component {
                 +
             </button>
         </div>
+    }
+
+    fieldValue(uid) {
+        const depth = this.props.uid.split(".").length
+        const shortSelector = uid.split(".").slice(depth, Infinity)
+        return deepGet(shortSelector, this.props.defaultValue)
+        /*
+        console.log(uid)
+        const [pageID, packID, self, ...selector] = uid.split(".")
+        console.log(`${selector} ${JSON.stringify(this.props.defaultValue)}`)
+        return deepGet(selector, this.props.defaultValue)
+        */
     }
 
     childUID(id, index) {
