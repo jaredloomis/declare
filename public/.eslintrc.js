@@ -1,4 +1,7 @@
 module.exports = {
+    "globals": {
+        "Materialize": true
+    },
 //    "extends": ["eslint:recommended", "plugin:react/recommended"],
     "env": {
         "node": false,

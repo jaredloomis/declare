@@ -34,9 +34,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 class Page extends Component {
     constructor(props) {
         super(props)
-    }
-
-    componentDidMount() {
         this.props.fetchPage()
     }
 

@@ -7,6 +7,7 @@ import {
 } from "graphql"
 import GraphQLJSON from "graphql-type-json"
 const ObjectId = mongoose.Schema.Types.ObjectId
+console.log(`OBJECT ID: ${JSON.stringify(mongoose.Schema.Types)}\n\n\n\n\n\n`)
 
 const testPackDataSchema = mongoose.Schema({
     testPack: {

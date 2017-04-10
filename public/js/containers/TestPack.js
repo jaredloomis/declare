@@ -1,3 +1,4 @@
+// eslint:global Materialize
 import React, {Component} from "react"
 import {connect} from "react-redux"
 import {updatePackValue} from "../actions/Page"
