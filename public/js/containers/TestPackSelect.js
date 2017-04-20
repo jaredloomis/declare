@@ -1,20 +1,21 @@
 import React, {Component} from "react"
 import {connect} from "react-redux"
+import {listPacks} from "../actions/TestPack"
+import Select from "../components/Select"
 
 const mapStateToProps = (state, ownProps) => {
-    const testPacks = state.testPacks || []
-    return {
-        testPacks
+    // Copy over all TestPack props
+    const props = {
+        testPacks: state.testPacks || {}
     }
+    return props
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onChange: uid => event => {
-            dispatch(updatePackValue(uid, event.target.value))
-        },
-        fetchPage: () => {
-            dispatch(fetchPage(ownProps.pageID))
+        onChange: ownProps.onChange,
+        listPacks() {
+            dispatch(listPacks)
         }
     }
 }
@@ -22,29 +23,24 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 class TestPackSelect extends Component {
     constructor(props) {
         super(props)
-        this.handleSelectChange = this.handleSelectChange.bind(this)
-        this.handleSubmit       = this.handleSubmit.bind(this)
+    }
+
+    componentDidMount() {
+        this.props.listPacks()
     }
 
     render() {
-        return <div className="test-pack-select">
-            <select onChange={this.handleSelectChange}>
-                {this.props.testPacks.map(pack =>
-                    <option value={pack.id}>{pack.name}</option>)}
-            </select>
-            <button onClick={this.handleSubmit}
-                    disabled={!this.state.selectedID}>
-                Add Test Pack
-            </button>
-        </div>
-    }
+        const packs = !this.props.testPacks ? {} :
+            Object.keys(this.props.testPacks).map(packID => {
+                const name = this.props.testPacks[packID].name
+                return <span value={packID} key={packID}>{name}</span>
+            })
 
-    handleSubmit() {
-        this.props.onSubmit(this.state.selectedID)
-    }
+        console.log(JSON.stringify(this.props.testPacks))
 
-    handleSelectChange(event) {
-        this.setState({selectedID: event.target.value})
+        return <Select name="Test Pack" onChange={this.props.onChange}>
+            {packs}
+        </Select>
     }
 }
 

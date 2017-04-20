@@ -12,7 +12,8 @@ export default class TestPack extends Component {
     }
 
     render() {
-        const form = Object.keys(this.props.fields).map(id => {
+        const fields = this.props.fields || {}
+        const form = Object.keys(fields).map(id => {
             const field = this.props.fields[id]
             const uid   = this.fieldUID(id)
             return <Field uid={uid}

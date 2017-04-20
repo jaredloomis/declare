@@ -1,5 +1,5 @@
 import {
-    PACK_FETCH
+    PACK_FETCH, PACK_LIST
 } from "./Types"
 
 import {Lokka} from "lokka"
@@ -28,3 +28,18 @@ export const fetchPack = id => async dispatch => {
     })
 }
 
+export const listPacks = async (dispatch, getState) => {
+    dispatch({
+        type: PACK_LIST
+    })
+    const {testPacks} = await client.query(`{
+        testPacks {
+            _id
+            name
+        }
+    }`)
+    dispatch({
+        type: PACK_LIST,
+        testPacks
+    })
+}

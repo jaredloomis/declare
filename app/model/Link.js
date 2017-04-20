@@ -1,31 +1,22 @@
-import Promise from "bluebird"
 import mongoose from "mongoose"
 import {
-    GraphQLObjectType,
-    GraphQLNonNull,
-    GraphQLString,
-    GraphQLList,
-    GraphQLID
+    GraphQLObjectType, GraphQLNonNull, GraphQLString,
+    GraphQLList, GraphQLID, GraphQLInputObjectType
 } from "graphql"
+import GraphQLJSON from "graphql-type-json"
+
+import Action from "./Action"
 
 const ObjectId = mongoose.Schema.Types.ObjectId
 
 const linkSchema = mongoose.Schema({
-    from: {
+    destination: {
         type: ObjectId,
         ref: "Page",
         required: true
     },
-    to: {
-        type: ObjectId,
-        ref: "Page",
-        required: true
-    },
-    action: {
-        type: {
-        
-        },
-        required: true
+    navigation: {
+        type: [Action.schema]
     }
 })
 
@@ -35,11 +26,23 @@ linkSchema.statics.graphQL = new GraphQLObjectType({
         _id: {
             type: new GraphQLNonNull(GraphQLID)
         },
-        from: {
+        destination: {
             type: new GraphQLNonNull(GraphQLID)
         },
-        to: {
+        navigation: {
+            type: new GraphQLList(Action.graphQL)
+        }
+    }
+})
+
+linkSchema.statics.graphQLInput = new GraphQLInputObjectType({
+    name: "LinkInput",
+    fields: {
+        destination: {
             type: new GraphQLNonNull(GraphQLID)
+        },
+        navigation: {
+            type: new GraphQLList(Action.graphQLInput)
         }
     }
 })

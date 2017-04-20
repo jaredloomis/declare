@@ -1,10 +1,9 @@
 import Promise from "bluebird"
-import {Lokka} from "lokka"
-import {Transport} from "lokka-transport-http"
 
 import {
     PAGE_ADD_PACK, PAGE_FETCH,
-    PACK_UPDATE_VALUE, PAGE_SAVE_PACK_DATA
+    PACK_UPDATE_VALUE, PAGE_SAVE_PACK_DATA,
+    LINK_UPDATE, PAGE_LINKS_SAVE, PAGE_ADD_LINK
 } from "./Types"
 import {fetchPack} from "./TestPack"
 import client from "../graphQL/Client"
@@ -19,6 +18,13 @@ export const fetchPage = (id, fetchPacks=false) => async dispatch => {
             _id
             name
             startURL
+            links {
+                destination
+                navigation {
+                    actionType
+                    values
+                }
+            }
             testPackData {
                 testPack
                 values
@@ -38,10 +44,19 @@ export const fetchPage = (id, fetchPacks=false) => async dispatch => {
     }
 }
 
-export const savePackData = id => ({
-    type: PAGE_SAVE_PACK_DATA,
-    id
-})
+export const savePackData = id => async (dispatch, getState) => {
+    const data = JSON.stringify(getState().pages[id].testPackData)
+                     .replace(new RegExp("\"", "g"), "\\\"")
+    dispatch({
+        type: PAGE_SAVE_PACK_DATA,
+        id
+    })
+    client.mutate(`{
+        page: updatePackData(pageID: "${id}", data: "${data}") {
+            _id
+        }
+    }`)
+}
 
 export const addPack = (pageID, packID) => ({
     type: PAGE_ADD_PACK,
@@ -54,3 +69,33 @@ export const updatePackValue = (uid, value) => ({
     uid,
     value
 })
+
+export const updateLinkAction = (pageID, linkI, actionI, actionStep) => ({
+    type: LINK_UPDATE,
+    pageID, linkI, actionI, actionStep
+})
+
+export const saveLinks = (pageID) => async (dispatch, getState) => {
+    const links = getState().pages[pageID].links
+    dispatch({
+        type: PAGE_LINKS_SAVE,
+        pageID
+    })
+    // Create requests to update each link
+    // (TODO: only update links that have changed)
+    const linkRequests = links.map(link => {
+        const linkStr = JSON.stringify(link)
+        return client.mutate(`{
+            page: updateLink(pageID: "${pageID}", \
+                             linkID: "${link._id}", link: ${linkStr}) {
+                _id
+            }
+        }`)
+    })
+    // Send off all requests in parallel
+    Promise.all(linkRequests)
+}
+
+export const addLink = (pageID, link) => async dispatch => {
+    //PAGE_ADD_LINK
+}

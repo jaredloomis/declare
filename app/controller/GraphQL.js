@@ -9,6 +9,7 @@ import Router       from "koa-router"
 import Page         from "../model/Page"
 import TestPack     from "../model/TestPack"
 import TestPackData from "../model/TestPackData"
+import Link         from "../model/Link"
 
 const Query = new GraphQLObjectType({
     name: "Query",
@@ -140,6 +141,53 @@ const Mutation = new GraphQLObjectType({
                     {$set: {testPackData: data}}
                 )
                 return page
+            }
+        },
+        addLink: {
+            type: Page.graphQL,
+            args: {
+                pageID: {
+                    name: "pageID",
+                    type: new GraphQLNonNull(GraphQLID)
+                },
+                link: {
+                    name: "link",
+                    type: Link.graphQLInput
+                }
+            },
+            async resolve(parent, {pageID, link}) {
+                // Parse all values if necessary
+                for(const action of link.navigation) {
+                    if(typeof(action.values) === "string")
+                        action.values = JSON.parse(action.values)
+                }
+                const linkModel = new Link(link)
+                return await Page.findOneAndUpdate(
+                    {_id: pageID},
+                    {$addToSet: {links: linkModel}}
+                )
+            }
+        },
+        updateLink: {
+            type: Page.graphQL,
+            args: {
+                pageID: {
+                    name: "pageID",
+                    type: new GraphQLNonNull(GraphQLID)
+                },
+                linkID: {
+                    name: "linkID",
+                    type: new GraphQLNonNull(GraphQLID)
+                },
+                link: {
+                    name: "link",
+                    type: Link.graphQLInput
+                }
+            },
+            async resolve(parent, {pageID, linkID, link}) {
+                const page = await Page.findById(pageID)
+                page.updateLink(linkID, link)
+                return await page.save()
             }
         },
         /* TestPack Mutations */

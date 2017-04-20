@@ -1,10 +1,13 @@
+// TODO: convert from Ramda lenses to deepSet because
+// - deepSet properly handles creation of array fields
+// - I'm not using ramda for anything else so would elim dep
 import R from "ramda"
 
 import client from "../graphQL/Client"
 import {
-    PAGE_ADD_PACK, PAGE_FETCH,
-    PACK_UPDATE_VALUE, PACK_FETCH,
-    PAGE_SAVE_PACK_DATA
+    PAGE_ADD_PACK, PAGE_FETCH, PACK_UPDATE_VALUE,
+    PACK_FETCH, PACK_LIST, PAGE_SAVE_PACK_DATA,
+    LINK_UPDATE_ACTION
 } from "../actions/Types"
 import {deepSet} from "../lib/Deep"
 
@@ -26,13 +29,6 @@ const pages = (state={
     }
     // Save a Page's testPackData to database
     else if(action.type === PAGE_SAVE_PACK_DATA) {
-        const data = JSON.stringify(state.pages[action.id].testPackData)
-                     .replace(new RegExp("\"", "g"), "\\\"")
-        client.mutate(`{
-            page: updatePackData(pageID: "${action.id}", data: "${data}") {
-                _id
-            }
-        }`)
         return state
     }
     // Change the value of a field of a Page's TestPack
@@ -50,10 +46,6 @@ const pages = (state={
         const valPath = [
             "pages", pageID, "testPackData", packIndex, "values", ...selector
         ]
-        /*
-        const valueL  = R.lensPath(valPath)
-        return R.set(valueL, action.value, state)
-        */
         return deepSet(valPath, action.value, state)
     }
     // Fetch TestPack requested, received, or errored
@@ -62,6 +54,26 @@ const pages = (state={
         const packL   = R.lensPath(["testPacks", action.id])
         const packVal = action.testPack ? action.testPack : {inProgress: true}
         return R.set(packL, packVal, state)
+    }
+    // Update an action step in a link
+    else if(action.type === LINK_UPDATE_ACTION) {
+        const {pageID, linkI, actionI, actionStep} = action
+        const actionPath = [
+            "pages", pageID, "links", linkI, "navigation", actionI
+        ]
+        return deepSet(actionPath, actionStep, state)
+    }
+    // Fetch the name and id of every Test Pack
+    else if(action.type === PACK_LIST) {
+        if(action.testPacks) {
+            return action.testPacks.reduce(((st, pack) =>
+                !st.testPacks[pack._id] ?
+                    deepSet(["testPacks", pack._id], pack, st) :
+                    st
+            ), state)
+        } else {
+            return state
+        }
     } else {
         return state
     }

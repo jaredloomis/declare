@@ -21,7 +21,6 @@ export default class FieldMany extends Component {
             const field  = this.props.fields[id]
             const uid    = this.childUID(id, index)
             const defVal = this.fieldValue(uid)
-            console.log(defVal)
             return <Field uid={uid}
                           type={field.type}
                           options={field.options}
