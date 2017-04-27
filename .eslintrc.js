@@ -35,5 +35,9 @@ module.exports = {
         "no-loop-func": ["warn"],
         "yoda": ["warn", "never"]
     },
-    "plugins": ["react"]
+    "plugins": ["react"],
+    "globals": {
+        "$": false,
+        "Materialize": false
+    }
 }

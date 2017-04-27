@@ -35,7 +35,7 @@ const pageSchema = mongoose.Schema({
 pageSchema.methods.updateLink = function(linkID, linkData) {
     this.links = this.links.map(link =>
         link._id.toString() === linkID.toString() ?
-            Object.assign({}, link, linkData) :
+            Object.assign({}, linkData, link) :
             link
     )
 }

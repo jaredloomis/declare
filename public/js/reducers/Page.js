@@ -7,7 +7,8 @@ import client from "../graphQL/Client"
 import {
     PAGE_ADD_PACK, PAGE_FETCH, PACK_UPDATE_VALUE,
     PACK_FETCH, PACK_LIST, PAGE_SAVE_PACK_DATA,
-    LINK_UPDATE_ACTION
+    LINK_UPDATE_ACTION, PAGE_LINKS_SAVE,
+    LINK_UPDATE_DEST
 } from "../actions/Types"
 import {deepSet} from "../lib/Deep"
 
@@ -63,6 +64,12 @@ const pages = (state={
         ]
         return deepSet(actionPath, actionStep, state)
     }
+    //
+    else if(action.type === LINK_UPDATE_DEST) {
+        const {pageID, linkI, dest} = action
+        const destPath = ["pages", pageID, "links", linkI, "destination"]
+        return deepSet(destPath, dest, state)
+    }
     // Fetch the name and id of every Test Pack
     else if(action.type === PACK_LIST) {
         if(action.testPacks) {
@@ -74,6 +81,10 @@ const pages = (state={
         } else {
             return state
         }
+    }
+    // Page.links save
+    else if(action.type === PAGE_LINKS_SAVE) {
+        return state
     } else {
         return state
     }

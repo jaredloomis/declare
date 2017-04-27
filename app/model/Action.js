@@ -36,7 +36,7 @@ actionSchema.statics.graphQLInput = new GraphQLInputObjectType({
             type: GraphQLString
         },
         values: {
-            type: GraphQLString
+            type: GraphQLJSON
         }
     }
 })

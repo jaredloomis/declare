@@ -156,11 +156,14 @@ const Mutation = new GraphQLObjectType({
                 }
             },
             async resolve(parent, {pageID, link}) {
+                /*
+                link = JSON.parse(link)
                 // Parse all values if necessary
                 for(const action of link.navigation) {
                     if(typeof(action.values) === "string")
                         action.values = JSON.parse(action.values)
                 }
+                */
                 const linkModel = new Link(link)
                 return await Page.findOneAndUpdate(
                     {_id: pageID},
@@ -185,9 +188,16 @@ const Mutation = new GraphQLObjectType({
                 }
             },
             async resolve(parent, {pageID, linkID, link}) {
+                try {
+                    console.log("link: " + JSON.stringify(link))
+                //link = JSON.parse(link)
                 const page = await Page.findById(pageID)
                 page.updateLink(linkID, link)
                 return await page.save()
+                } catch(ex) {
+                    console.log(ex)
+                    return ex
+                }
             }
         },
         /* TestPack Mutations */

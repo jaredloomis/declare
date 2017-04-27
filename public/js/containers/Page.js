@@ -3,7 +3,7 @@ import {connect} from "react-redux"
 import {
     updatePackValue, fetchPage,
     savePackData, updateLinkAction,
-    saveLinks
+    saveLinks, updateLinkDest
 } from "../actions/Page"
 import PageComponent from "../components/Page"
 //import keyCollection from "../lib/KeyCollection"
@@ -25,7 +25,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch(updatePackValue(uid, event.target.value))
         },
         onLinkActionChange(linkI, actionI, action) {
-            dispatch(updateLinkAction(linkI, actionI, action))
+            dispatch(
+                updateLinkAction(ownProps.pageID, linkI, actionI, action)
+            )
+        },
+        onLinkDestChange(linkI, dest) {
+            dispatch(updateLinkDest(ownProps.pageID, linkI, dest))
         },
         onLinksSave() {
             dispatch(saveLinks(ownProps.pageID))

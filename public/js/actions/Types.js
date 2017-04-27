@@ -9,3 +9,4 @@ export const PACK_LIST         = "PACK_LIST"
 export const PACK_UPDATE_VALUE = "PACK_UPDATE_VALUE"
 
 export const LINK_UPDATE_ACTION = "LINK_UPDATE_ACTION"
+export const LINK_UPDATE_DEST   = "LINK_UPDATE_DEST"

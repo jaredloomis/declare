@@ -3,7 +3,8 @@ import Promise from "bluebird"
 import {
     PAGE_ADD_PACK, PAGE_FETCH,
     PACK_UPDATE_VALUE, PAGE_SAVE_PACK_DATA,
-    LINK_UPDATE, PAGE_LINKS_SAVE, PAGE_ADD_LINK
+    LINK_UPDATE_ACTION, PAGE_LINKS_SAVE, PAGE_ADD_LINK,
+    LINK_UPDATE_DEST
 } from "./Types"
 import {fetchPack} from "./TestPack"
 import client from "../graphQL/Client"
@@ -19,6 +20,7 @@ export const fetchPage = (id, fetchPacks=false) => async dispatch => {
             name
             startURL
             links {
+                _id
                 destination
                 navigation {
                     actionType
@@ -71,31 +73,59 @@ export const updatePackValue = (uid, value) => ({
 })
 
 export const updateLinkAction = (pageID, linkI, actionI, actionStep) => ({
-    type: LINK_UPDATE,
+    type: LINK_UPDATE_ACTION,
     pageID, linkI, actionI, actionStep
 })
 
+export const updateLinkDest = (pageID, linkI, dest) => ({
+    type: LINK_UPDATE_DEST,
+    pageID, linkI, dest
+})
+
 export const saveLinks = (pageID) => async (dispatch, getState) => {
-    const links = getState().pages[pageID].links
+    // Dispatch a "Save Page Links Started" action
     dispatch({
         type: PAGE_LINKS_SAVE,
         pageID
     })
+    const links = getState().pages[pageID].links
     // Create requests to update each link
     // (TODO: only update links that have changed)
     const linkRequests = links.map(link => {
+        const linkID = link._id
+        delete link._id
         const linkStr = JSON.stringify(link)
-        return client.mutate(`{
-            page: updateLink(pageID: "${pageID}", \
-                             linkID: "${link._id}", link: ${linkStr}) {
-                _id
+                            .replace(new RegExp("\"", "g"), "\\\"")
+        return client.mutate(`($pageID: ID!, $linkID: ID!, $link: LinkInput!){
+            page: updateLink(pageID: $pageID, linkID: $linkID, link: $link) {
+                links {
+                    _id destination
+                    navigation {
+                        actionType values
+                    }
+                }
             }
-        }`)
+        }`, {
+            linkID,
+            pageID,
+            link
+        })
     })
     // Send off all requests in parallel
-    Promise.all(linkRequests)
+    await Promise.all(linkRequests)
+    // Dispatch a "Save Page Links Completed" action
+    dispatch({
+        type: PAGE_LINKS_SAVE,
+        success: true,
+        pageID
+    })
 }
 
 export const addLink = (pageID, link) => async dispatch => {
     //PAGE_ADD_LINK
+    await client.mutate(`{
+        page: addLink(pageID: "${pageID}", link: "${link}") {
+            _id
+        }
+    }`)
 }

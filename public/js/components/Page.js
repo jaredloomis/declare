@@ -65,11 +65,16 @@ export default class Page extends Component {
             const pages = this.props.pages
             return this.props.links.map((link, linkI) =>
                 <Link pages={pages} defaultValue={link} key={linkI}
-                      onActionChange={this.linkActionChange(linkI)}/>
+                      onActionChange={this.linkActionChange(linkI)}
+                      onDestChange={this.linkDestChange(linkI)}/>
             )
         } else {
             return <span>Links not loaded</span>
         }
+    }
+
+    linkDestChange(linkI) {
+        return value => this.props.onLinkDestChange(linkI, value)
     }
 
     linkActionChange(linkI) {
