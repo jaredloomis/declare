@@ -3,23 +3,45 @@
 // - I'm not using ramda for anything else so would elim dep
 import R from "ramda"
 
-import client from "../graphQL/Client"
 import {
     PAGE_ADD_PACK, PAGE_FETCH, PACK_UPDATE_VALUE,
     PACK_FETCH, PACK_LIST, PAGE_SAVE_PACK_DATA,
     LINK_UPDATE_ACTION, PAGE_LINKS_SAVE,
-    LINK_UPDATE_DEST
+    LINK_UPDATE_DEST, PAGE_REMOVE_PACK, LINK_REMOVE_ACTION,
+    LINK_ADD_ACTION, PAGE_REMOVE_LINK, PACK_REMOVE_MANY
 } from "../actions/Types"
-import {deepSet} from "../lib/Deep"
+import {deepSet, deepGet} from "../lib/Deep"
 
 const pages = (state={
     pages: {},
     testPacks: {}
 }, action) => {
-    // Add a TestPack to a Page
+    //if(action.type !== PAGE_FETCH && action.type !== PACK_LIST)
+    //    return state
+    // Add a Test Pack to a Page
     if(action.type === PAGE_ADD_PACK) {
-        const testPacksL = R.lensPath(["pages", action.pageID, "testPacks"])
-        return R.over(testPacksL, R.append(action.packID), state)
+        const {pageID, packID} = action
+        const dataL = R.lensPath(["pages", pageID, "testPackData"])
+        const datum = {testPack: packID, values: {}}
+        return R.over(dataL, R.append(datum), state)
+    }
+    // Remove a Test Pack from a Page
+    else if(action.type === PAGE_REMOVE_PACK) {
+        const {pageID, packID} = action
+        const dataPath = ["pages", pageID, "testPackData"]
+        const filteredData = deepGet(pagePath, state).filter(tp =>
+            tp.testPack !== packID
+        )
+        return deepSet(dataPath, filteredData, state)
+    }
+    // Remove a Link from a Page
+    else if(action.type === PAGE_REMOVE_LINK) {
+        const {pageID, linkI} = action
+        const linksPath = ["pages", pageID, "links"]
+        const newLinks = deepGet(linksPath, state).filter((lnk, i) =>
+            i !== linkI
+        )
+        return deepSet(linksPath, newLinks, state)
     }
     // Fetch Page requested, received, or errored
     else if(action.type === PAGE_FETCH) {
@@ -56,6 +78,28 @@ const pages = (state={
         const packVal = action.testPack ? action.testPack : {inProgress: true}
         return R.set(packL, packVal, state)
     }
+    // Remove an element from a FieldMany in a Page's TestPacks
+    else if(action.type === PACK_REMOVE_MANY) {
+        const [pageID, packID, ...selector] = action.uid.split(".")
+        const fieldIndex = parseInt(selector[selector.length-1])
+        selector.splice(-1, 1)
+        const packIndex = (() => {
+            const data = state.pages[pageID].testPackData
+            for(let i = 0; i < data.length; ++i) {
+                const datum = data[i]
+                if(datum.testPack.toString() === packID.toString())
+                    return i
+            }
+            return -1
+        })()
+        const manyPath = [
+            "pages", pageID, "testPackData", packIndex, "values", ...selector
+        ]
+        const newMany = deepGet(manyPath, state).filter((x, i) =>
+            i !== fieldIndex
+        )
+        return deepSet(manyPath, newMany, state)
+    }
     // Update an action step in a link
     else if(action.type === LINK_UPDATE_ACTION) {
         const {pageID, linkI, actionI, actionStep} = action
@@ -63,6 +107,23 @@ const pages = (state={
             "pages", pageID, "links", linkI, "navigation", actionI
         ]
         return deepSet(actionPath, actionStep, state)
+    }
+    else if(action.type === LINK_ADD_ACTION) {
+        const {pageID, linkI} = action
+        const curNav = state.pages[pageID].links[linkI].navigation
+        const newNav = [...curNav, {actionType: "click", values: {}}]
+        const navPath = ["pages", pageID, "links", linkI, "navigation"]
+        return deepSet(navPath, newNav, state)
+    }
+    // Remove an action step in a link
+    else if(action.type === LINK_REMOVE_ACTION) {
+        const {pageID, linkI, actionI} = action
+        const page = state.pages[pageID]
+        const newNav = page.links[linkI].navigation.filter((lnk, i) =>
+            i !== actionI
+        )
+        const navPath = ["pages", pageID, "links", linkI, "navigation"]
+        return deepSet(navPath, newNav, state)
     }
     //
     else if(action.type === LINK_UPDATE_DEST) {

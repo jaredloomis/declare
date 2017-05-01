@@ -26,23 +26,27 @@ export default class FieldMany extends Component {
                           options={field.options}
                           defaultValue={defVal}
                           onChange={this.props.onChange}
+                          onManyRemove={this.props.onInputRemove}
                           key={id}/>
         })
 
         const forms = [...Array(this.state.inputCount).keys()]
-        .map(index =>
-            <div className="field-many-form" key={index}>
+        .map(index => {
+            const uid = Math.random() //this.props.fields[]
+            return <div className="field-many-form" key={uid}>
                 <div className="field-many-singular-name">
                     <span>
                         {this.props.singularName ||
                          this.props.name.slice(0, this.props.name.length-1)}
                         &nbsp;
                         #{index+1}
+                        <i onClick={this.removeInput(index)}
+                           className="material-icons">delete</i>
                     </span>
                 </div>
                 {singleForm(index)}
             </div>
-        )
+        })
 
         return <div className="field field-many">
             <div className="field-many-name">
@@ -59,12 +63,6 @@ export default class FieldMany extends Component {
         const depth = this.props.uid.split(".").length
         const shortSelector = uid.split(".").slice(depth, Infinity)
         return deepGet(shortSelector, this.props.defaultValue)
-        /*
-        console.log(uid)
-        const [pageID, packID, self, ...selector] = uid.split(".")
-        console.log(`${selector} ${JSON.stringify(this.props.defaultValue)}`)
-        return deepGet(selector, this.props.defaultValue)
-        */
     }
 
     childUID(id, index) {
@@ -76,5 +74,16 @@ export default class FieldMany extends Component {
             ++state.inputCount
             return state
         })
+    }
+
+    removeInput(index) {
+        return () => {
+            this.setState(state => {
+                --state.inputCount
+                return state
+            })
+            console.log(`REMOVE ${this.props.uid}.${index}`)
+            this.props.onInputRemove(`${this.props.uid}.${index}`)
+        }
     }
 }

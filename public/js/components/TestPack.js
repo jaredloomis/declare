@@ -7,6 +7,8 @@ import "../../style/TestPack.scss"
 export default class TestPack extends Component {
     constructor(props) {
         super(props)
+        this.remove      = this.remove.bind(this)
+        this.manyRemove  = this.manyRemove.bind(this)
         this.fieldValue  = this.fieldValue.bind(this)
         this.fieldUID    = this.fieldUID.bind(this)
     }
@@ -21,6 +23,7 @@ export default class TestPack extends Component {
                           options={field.options}
                           defaultValue={this.fieldValue(uid)}
                           onChange={this.props.onChange}
+                          onManyRemove={this.manyRemove}
                           key={id}/>
         })
 
@@ -29,11 +32,23 @@ export default class TestPack extends Component {
                 <span className="test-pack-name card-title">
                     {this.props.name}
                 </span>
+                <button onClick={this.remove}
+                        className="btn-floating btn-small red right">
+                    <i className="large material-icons">delete</i>
+                </button>
                 <div className="test-pack-form">
                     {form}
                 </div>
             </div>
         </div>
+    }
+
+    manyRemove(uid) {
+        return this.props.onManyRemove(uid)
+    }
+
+    remove() {
+        return this.props.onRemove()
     }
 
     fieldValue(uid) {

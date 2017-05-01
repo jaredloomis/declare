@@ -38,7 +38,6 @@ export const deepSet = (selectorArr, value, obj) => {
                         }
 
                         if(pseudoArr) {
-                            console.log(JSON.stringify(realArr))
                             root[field] = realArr
                         }
                     }
@@ -49,7 +48,6 @@ export const deepSet = (selectorArr, value, obj) => {
         // If field doesn't already exist in an object
         if(!(field in root) && !validArray) {
             // Create field (using info from next field in selector)
-            const nextField = selectorArr[i+1]
             root[field] = isNumeric(nextField) ? [] : {}
         }
         root = root[field]

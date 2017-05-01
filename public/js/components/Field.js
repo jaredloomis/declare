@@ -3,14 +3,16 @@ import React from "react"
 import FieldMany from "./FieldMany"
 import FieldText from "./FieldText"
 
-const Field = ({uid, type, options, defaultValue, onChange}) => {
+const Field = ({uid, type, options, defaultValue,
+                onChange, onManyRemove}) => {
     options = options || {}
     if(typeof(type) === "object") {
         return <FieldMany {...options}
                           uid={uid}
                           fields={type}
                           defaultValue={defaultValue}
-                          onChange={onChange}/>
+                          onChange={onChange}
+                          onInputRemove={onManyRemove}/>
     } else {
         if(type !== "text") {
             console.warn("Field type not recognized in " +

@@ -25,3 +25,8 @@
     background: white;
     color: color("grey", "darken-1");
 }
+
+// Allow delete icon to be displayed inline with Pack name
+.test-pack-name {
+    display: inline !important;
+}

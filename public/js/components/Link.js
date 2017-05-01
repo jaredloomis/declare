@@ -4,26 +4,10 @@ import Select from "./Select"
 export default class Link extends Component {
     constructor(props) {
         super(props)
-        this.addAction    = this.addAction.bind(this)
-        this.changeDest   = this.changeDest.bind(this)
         this.renderAction = this.renderAction.bind(this)
-
-        this.state = {
-            actionCount: Math.max(
-                1, this.props.defaultValue.navigation.length
-            )
-        }
-    }
-
-    addAction(event) {
-        this.setState(state => {
-            ++state.actionCount
-            return state
-        })
-    }
-
-    changeDest(dest) {
-        this.props.onDestChange(dest)
+        this.addAction    = this.addAction.bind(this)
+        this.removeAction = this.removeAction.bind(this)
+        this.changeDest   = this.changeDest.bind(this)
     }
 
     render() {
@@ -31,9 +15,13 @@ export default class Link extends Component {
         const destName = dest ? dest.name : ""
         return <div className="page-link card">
             <div className="card-content">
-            <span className="card-title">
+            <span className="card-title left">
                 {destName}
             </span>
+            <button onClick={this.props.onRemove}
+                    className="btn btn-floating red right">
+                delete
+            </button>
             <Select label="Destination" onChange={this.changeDest}>
                 {Object.keys(this.props.pages).map(pageID =>
                     <span value={pageID} key={pageID}>
@@ -42,7 +30,7 @@ export default class Link extends Component {
                 )}
             </Select>
             <div>
-                {[...Array(this.state.actionCount).keys()].map(
+                {this.props.defaultValue.navigation.map(
                     this.renderAction
                 )}
             </div>
@@ -51,9 +39,8 @@ export default class Link extends Component {
         </div>
     }
 
-    renderAction(index) {
+    renderAction(action, index) {
         const randID = Math.random()
-        const action = this.props.defaultValue.navigation[index]
         const val    = action ? action.values.element : ""
         const change = event => {
             this.props.onActionChange(index, {
@@ -61,7 +48,7 @@ export default class Link extends Component {
                 values: {element: event.target.value}
             })
         }
-        return <div key={index}>
+        return <div key={randID}>
             <Select label="Action" onChange={() => {}}>
                 <span value="click">Click</span>
             </Select>
@@ -70,6 +57,24 @@ export default class Link extends Component {
                        id={randID}/>
                 <label htmlFor={randID}>Element</label>
             </div>
+            <button onClick={this.removeAction(index)}
+                    className="btn btn-floating red">
+                <i className="material-icons">delete</i>
+            </button>
         </div>
+    }
+
+    addAction() {
+        this.props.onActionAdd()
+    }
+
+    removeAction(index) {
+        return () => {
+            this.props.onActionRemove(index)
+        }
+    }
+
+    changeDest(dest) {
+        this.props.onDestChange(dest)
     }
 }

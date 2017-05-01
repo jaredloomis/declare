@@ -6,7 +6,7 @@ import Select from "../components/Select"
 const mapStateToProps = (state, ownProps) => {
     // Copy over all TestPack props
     const props = {
-        testPacks: state.testPacks || {}
+        testPacks: Object.assign({}, state.testPacks || {})
     }
     return props
 }
@@ -36,9 +36,7 @@ class TestPackSelect extends Component {
                 return <span value={packID} key={packID}>{name}</span>
             })
 
-        console.log(JSON.stringify(this.props.testPacks))
-
-        return <Select name="Test Pack" onChange={this.props.onChange}>
+        return <Select label="Test Pack" onChange={this.props.onChange}>
             {packs}
         </Select>
     }

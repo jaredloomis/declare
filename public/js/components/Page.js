@@ -10,21 +10,14 @@ export default class Page extends Component {
         super(props)
         this.fieldChange = this.fieldChange.bind(this)
         this.linkActionChange = this.linkActionChange.bind(this)
-    }
+        this.linkActionAdd = this.linkActionAdd.bind(this)
+        this.addPack = this.addPack.bind(this)
+        this.manyRemove = this.manyRemove.bind(this)
+        this.addPackChange = this.addPackChange.bind(this)
 
-    renderRow(row, rowI, colWidth) {
-        const columns = row.map((tp, colI) => {
-            if(tp && tp.testPack) {
-                return <div key={colI} className={"col s" + colWidth}>
-                    <TestPack packID={tp.testPack}
-                              pageID={this.props.pageID}
-                              onChange={this.fieldChange}/>
-                </div>
-            } else {
-                return <span key={colI}>Loading...</span>
-            }
-        })
-        return <div className="row" key={rowI}>{columns}</div>
+        this.state = {
+            addPackSelection: ""
+        }
     }
 
     render() {
@@ -53,11 +46,33 @@ export default class Page extends Component {
             <h3>Test Packs</h3>
             <div className="page-test-packs">
                 {testPacksDOM}
-                <TestPackSelect/>
+                <div className="page-test-pack-add">
+                    <TestPackSelect label="Test Pack"
+                        onChange={this.addPackChange}/>
+                    <button onClick={this.addPack} className="btn">+</button>
+                </div>
             </div>
-            <button onClick={this.props.onPacksSave} className="btn">Save</button>
+            <button onClick={this.props.onPacksSave} className="btn">
+                Save
+            </button>
         </div>
-        //<div className="page-add-test-pack"><TestPackSelect/></div>
+    }
+
+    renderRow(row, rowI, colWidth) {
+        const columns = row.map((tp, colI) => {
+            if(tp && tp.testPack) {
+                return <div key={colI} className={"col s" + colWidth}>
+                    <TestPack packID={tp.testPack}
+                              pageID={this.props.pageID}
+                              onChange={this.fieldChange}
+                              onRemove={this.packRemove(tp.testPack)}
+                              onManyRemove={this.manyRemove}/>
+                </div>
+            } else {
+                return <span key={colI}>Loading...</span>
+            }
+        })
+        return <div className="row" key={rowI}>{columns}</div>
     }
 
     renderLinks() {
@@ -66,11 +81,22 @@ export default class Page extends Component {
             return this.props.links.map((link, linkI) =>
                 <Link pages={pages} defaultValue={link} key={linkI}
                       onActionChange={this.linkActionChange(linkI)}
-                      onDestChange={this.linkDestChange(linkI)}/>
+                      onDestChange={this.linkDestChange(linkI)}
+                      onActionRemove={this.linkActionRemove(linkI)}
+                      onActionAdd={this.linkActionAdd(linkI)}
+                      onRemove={this.linkRemove(linkI)}/>
             )
         } else {
-            return <span>Links not loaded</span>
+            return <span>Loading...</span>
         }
+    }
+
+    packRemove(packID) {
+        return () => this.props.onPackRemove(packID)
+    }
+
+    linkRemove(linkI) {
+        return () => this.props.onLinkRemove(linkI)
     }
 
     linkDestChange(linkI) {
@@ -82,8 +108,28 @@ export default class Page extends Component {
             this.props.onLinkActionChange(linkI, actionI, action)
     }
 
+    linkActionAdd(linkI) {
+        return () => this.props.onLinkActionAdd(linkI)
+    }
+
+    linkActionRemove(linkI) {
+        return actionI => this.props.onLinkActionRemove(linkI, actionI)
+    }
+
     fieldChange(id) {
         return this.props.onTestPackChange(`${this.props.pageID}.${id}`)
+    }
+
+    manyRemove(index) {
+        return this.props.onPackManyRemove(index)
+    }
+
+    addPack(event) {
+        this.props.onPackAdd(this.state.addPackSelection)
+    }
+
+    addPackChange(selection) {
+        this.setState({addPackSelection: selection})
     }
 }
 
