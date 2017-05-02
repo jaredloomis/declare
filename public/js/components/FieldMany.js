@@ -86,4 +86,8 @@ export default class FieldMany extends Component {
             this.props.onInputRemove(`${this.props.uid}.${index}`)
         }
     }
+
+    generateKey(index) {
+        return Math.random()
+    }
 }

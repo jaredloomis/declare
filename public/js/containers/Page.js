@@ -5,7 +5,7 @@ import {
     savePackData, updateLinkAction,
     saveLinks, updateLinkDest, addPack,
     removePack, removeLinkAction, addLinkAction,
-    removeLink, removePackMany
+    removeLink, removePackMany, addLink
 } from "../actions/Page"
 import PageComponent from "../components/Page"
 //import keyCollection from "../lib/KeyCollection"
@@ -30,6 +30,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         onPackManyRemove(uid) {
             dispatch(removePackMany(uid))
+        },
+        onLinkAdd() {
+            dispatch(addLink(ownProps.pageID))
         },
         onLinkRemove(linkI) {
             dispatch(removeLink(ownProps.pageID, linkI))

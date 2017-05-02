@@ -148,11 +148,7 @@ export const saveLinks = (pageID) => async (dispatch, getState) => {
     })
 }
 
-export const addLink = (pageID, link) => async dispatch => {
-    //PAGE_ADD_LINK
-    await client.mutate(`{
-        page: addLink(pageID: "${pageID}", link: "${link}") {
-            _id
-        }
-    }`)
-}
+export const addLink = pageID => ({
+    type: PAGE_ADD_LINK,
+    pageID
+})

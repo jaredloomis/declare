@@ -11,6 +11,7 @@ export default class Page extends Component {
         this.fieldChange = this.fieldChange.bind(this)
         this.linkActionChange = this.linkActionChange.bind(this)
         this.linkActionAdd = this.linkActionAdd.bind(this)
+        this.linkAdd = this.linkAdd.bind(this)
         this.addPack = this.addPack.bind(this)
         this.manyRemove = this.manyRemove.bind(this)
         this.addPackChange = this.addPackChange.bind(this)
@@ -78,7 +79,7 @@ export default class Page extends Component {
     renderLinks() {
         if(this.props.links) {
             const pages = this.props.pages
-            return this.props.links.map((link, linkI) =>
+            const links = this.props.links.map((link, linkI) =>
                 <Link pages={pages} defaultValue={link} key={linkI}
                       onActionChange={this.linkActionChange(linkI)}
                       onDestChange={this.linkDestChange(linkI)}
@@ -86,6 +87,12 @@ export default class Page extends Component {
                       onActionAdd={this.linkActionAdd(linkI)}
                       onRemove={this.linkRemove(linkI)}/>
             )
+            return <div>
+                {links}
+                <button onClick={this.linkAdd} className="btn">
+                    +
+                </button>
+            </div>
         } else {
             return <span>Loading...</span>
         }
@@ -93,6 +100,10 @@ export default class Page extends Component {
 
     packRemove(packID) {
         return () => this.props.onPackRemove(packID)
+    }
+
+    linkAdd() {
+        return this.props.onLinkAdd()
     }
 
     linkRemove(linkI) {

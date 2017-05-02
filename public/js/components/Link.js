@@ -8,6 +8,14 @@ export default class Link extends Component {
         this.addAction    = this.addAction.bind(this)
         this.removeAction = this.removeAction.bind(this)
         this.changeDest   = this.changeDest.bind(this)
+
+        const inputKeys = this.props.defaultValue.navigation.map((n, i) =>
+            this.generateKey(i)
+        )
+
+        this.state = {
+            inputKeys
+        }
     }
 
     render() {
@@ -40,7 +48,6 @@ export default class Link extends Component {
     }
 
     renderAction(action, index) {
-        const randID = Math.random()
         const val    = action ? action.values.element : ""
         const change = event => {
             this.props.onActionChange(index, {
@@ -48,7 +55,9 @@ export default class Link extends Component {
                 values: {element: event.target.value}
             })
         }
-        return <div key={randID}>
+        const randID = Math.random()
+        const key = this.state.inputKeys[index]
+        return <div key={key}>
             <Select label="Action" onChange={() => {}}>
                 <span value="click">Click</span>
             </Select>
@@ -65,16 +74,28 @@ export default class Link extends Component {
     }
 
     addAction() {
+        this.setState(state => {
+            state.inputKeys = [...state.inputKeys, Math.random()]
+            return state
+        })
         this.props.onActionAdd()
     }
 
     removeAction(index) {
         return () => {
+            this.setState(state => {
+                state.inputKeys.splice(index, 1)
+                return state
+            })
             this.props.onActionRemove(index)
         }
     }
 
     changeDest(dest) {
         this.props.onDestChange(dest)
+    }
+
+    generateKey(index) {
+        return Math.random()
     }
 }

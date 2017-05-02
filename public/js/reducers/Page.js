@@ -8,7 +8,8 @@ import {
     PACK_FETCH, PACK_LIST, PAGE_SAVE_PACK_DATA,
     LINK_UPDATE_ACTION, PAGE_LINKS_SAVE,
     LINK_UPDATE_DEST, PAGE_REMOVE_PACK, LINK_REMOVE_ACTION,
-    LINK_ADD_ACTION, PAGE_REMOVE_LINK, PACK_REMOVE_MANY
+    LINK_ADD_ACTION, PAGE_REMOVE_LINK, PACK_REMOVE_MANY,
+    PAGE_ADD_LINK
 } from "../actions/Types"
 import {deepSet, deepGet} from "../lib/Deep"
 
@@ -33,6 +34,14 @@ const pages = (state={
             tp.testPack !== packID
         )
         return deepSet(dataPath, filteredData, state)
+    }
+    // Add a Link to a Page
+    else if(action.type === PAGE_ADD_LINK) {
+        const {pageID} = action
+        const linksPath = ["pages", pageID, "links"]
+        const defaultLink = {destination: "", navigation: []}
+        const newLinks = [...deepGet(linksPath, state), defaultLink]
+        return deepSet(linksPath, newLinks, state)
     }
     // Remove a Link from a Page
     else if(action.type === PAGE_REMOVE_LINK) {
