@@ -10,8 +10,13 @@ export default class FieldMany extends Component {
         this.childUID = this.childUID.bind(this)
         this.fieldValue = this.fieldValue.bind(this)
 
+        const inputCount = Math.max(1, this.props.defaultValue.length)
+        const inputKeys = [...Array(inputCount).keys()].map(() =>
+            Math.random()
+        )
         this.state = {
-            inputCount: Math.max(1, this.props.defaultValue.length)
+            inputCount,
+            inputKeys
         }
     }
 
@@ -32,7 +37,7 @@ export default class FieldMany extends Component {
 
         const forms = [...Array(this.state.inputCount).keys()]
         .map(index => {
-            const uid = Math.random() //this.props.fields[]
+            const uid = this.state.inputKeys[index]
             return <div className="field-many-form" key={uid}>
                 <div className="field-many-singular-name">
                     <span>
@@ -71,6 +76,10 @@ export default class FieldMany extends Component {
 
     addInput(event) {
         this.setState(state => {
+            state.inputKeys.push(this.generateKey())
+            return state
+        })
+        this.setState(state => {
             ++state.inputCount
             return state
         })
@@ -78,6 +87,10 @@ export default class FieldMany extends Component {
 
     removeInput(index) {
         return () => {
+            this.setState(state => {
+                state.inputKeys.splice(index, 1)
+                return state
+            })
             this.setState(state => {
                 --state.inputCount
                 return state

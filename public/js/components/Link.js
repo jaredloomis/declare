@@ -23,13 +23,15 @@ export default class Link extends Component {
         const destName = dest ? dest.name : ""
         return <div className="page-link card">
             <div className="card-content">
-            <span className="card-title left">
-                {destName}
-            </span>
-            <button onClick={this.props.onRemove}
-                    className="btn btn-floating red right">
-                delete
-            </button>
+            <div className="page-link-header">
+                <span className="card-title left">
+                    {destName}
+                </span>
+                <button onClick={this.props.onRemove}
+                        className="btn btn-floating red right">
+                    delete
+                </button>
+            </div>
             <Select label="Destination" onChange={this.changeDest}>
                 {Object.keys(this.props.pages).map(pageID =>
                     <span value={pageID} key={pageID}>
