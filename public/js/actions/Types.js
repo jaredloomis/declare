@@ -1,4 +1,5 @@
 export const PAGE_ADD_PACK       = "PAGE_ADD_PACK"
+export const PAGE_LIST           = "PAGE_LIST"
 export const PAGE_REMOVE_PACK    = "PAGE_REMOVE_PACK"
 export const PAGE_ADD_LINK       = "PAGE_ADD_LINK"
 export const PAGE_FETCH          = "PAGE_FETCH"

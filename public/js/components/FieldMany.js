@@ -10,7 +10,8 @@ export default class FieldMany extends Component {
         this.childUID = this.childUID.bind(this)
         this.fieldValue = this.fieldValue.bind(this)
 
-        const inputCount = Math.max(1, this.props.defaultValue.length)
+        const inputCount = this.props.defaultValue ?
+            Math.max(1, this.props.defaultValue.length) : 1
         const inputKeys = [...Array(inputCount).keys()].map(() =>
             Math.random()
         )

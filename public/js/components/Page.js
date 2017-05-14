@@ -145,6 +145,7 @@ export default class Page extends Component {
 }
 
 function chunk(xs, chunkSize, func) {
+    if(!xs) return []
     const ret = [], len = xs.length
     for(let i = 0; i < len; i += chunkSize)
         ret.push(func(xs.slice(i, i + chunkSize), i))

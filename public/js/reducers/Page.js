@@ -9,11 +9,11 @@ import {
     LINK_UPDATE_ACTION, PAGE_LINKS_SAVE,
     LINK_UPDATE_DEST, PAGE_REMOVE_PACK, LINK_REMOVE_ACTION,
     LINK_ADD_ACTION, PAGE_REMOVE_LINK, PACK_REMOVE_MANY,
-    PAGE_ADD_LINK
+    PAGE_ADD_LINK, PAGE_LIST
 } from "../actions/Types"
 import {deepSet, deepGet} from "../lib/Deep"
 
-const pages = (state={
+const pagesReducer = (state={
     pages: {},
     testPacks: {}
 }, action) => {
@@ -30,7 +30,7 @@ const pages = (state={
     else if(action.type === PAGE_REMOVE_PACK) {
         const {pageID, packID} = action
         const dataPath = ["pages", pageID, "testPackData"]
-        const filteredData = deepGet(pagePath, state).filter(tp =>
+        const filteredData = deepGet(dataPath, state).filter(tp =>
             tp.testPack !== packID
         )
         return deepSet(dataPath, filteredData, state)
@@ -58,6 +58,22 @@ const pages = (state={
         const pageL   = R.lensPath(["pages", action.id])
         const pageVal = action.page ? action.page : {inProgress: true}
         return R.set(pageL, pageVal, state)
+    }
+    // Fetch basic info about all Pages
+    else if(action.type === PAGE_LIST) {
+        const {pages} = action
+        if(pages) {
+            return pages.reduce((st, page) => {
+                const stPage = st.pages[page._id]
+                if(!stPage)
+                    st.pages[page._id] = page
+                else
+                    Object.assign(st.pages[page._id], page)
+                return st
+            }, state)
+        } else {
+            return state
+        }
     }
     // Save a Page's testPackData to database
     else if(action.type === PAGE_SAVE_PACK_DATA) {
@@ -160,4 +176,4 @@ const pages = (state={
     }
 }
 
-export default pages
+export default pagesReducer

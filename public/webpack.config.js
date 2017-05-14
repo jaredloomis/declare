@@ -48,14 +48,14 @@ module.exports = {
                 return userRequest &&
                        userRequest.indexOf("node_modules") >= 0
             }
-        })/*,
+        }),
+        /*
         new webpack.optimize.UglifyJsPlugin({
             minimize: true,
             compress: {
                 warnings: false
             }
-        }),
-        new BundleAnalyzerPlugin()
-        */
+        }),*/
+        //new BundleAnalyzerPlugin()
     ]
 }

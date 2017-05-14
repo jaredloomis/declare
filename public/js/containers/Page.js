@@ -77,11 +77,9 @@ class Page extends Component {
 
     render() {
         if(this.props.name)
-            return <PageComponent
-                        {...this.props}
-                        testPackData={this.props.testPackData}/>
+            return <PageComponent {...this.props}/>
         else
-            return <p>Loading...</p>
+            return <span>Loading...</span>
     }
 
     keyedTestPackData() {

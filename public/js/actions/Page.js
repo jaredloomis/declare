@@ -5,7 +5,8 @@ import {
     PACK_UPDATE_VALUE, PAGE_SAVE_PACK_DATA,
     LINK_UPDATE_ACTION, PAGE_LINKS_SAVE, PAGE_ADD_LINK,
     LINK_UPDATE_DEST, PAGE_REMOVE_PACK, LINK_REMOVE_ACTION,
-    LINK_ADD_ACTION, PAGE_REMOVE_LINK, PACK_REMOVE_MANY
+    LINK_ADD_ACTION, PAGE_REMOVE_LINK, PACK_REMOVE_MANY,
+    PAGE_LIST
 } from "./Types"
 import {fetchPack} from "./TestPack"
 import client from "../graphQL/Client"
@@ -45,6 +46,22 @@ export const fetchPage = (id, fetchPacks=false) => async dispatch => {
             fetchPack(data.testPack)(dispatch)
         ))
     }
+}
+
+export const listPages = async dispatch => {
+    dispatch({
+        type: PAGE_LIST
+    })
+    const {pages} = await client.query(`{
+        pages {
+            _id
+            name
+        }
+    }`)
+    dispatch({
+        type: PAGE_LIST,
+        pages
+    })
 }
 
 export const savePackData = id => async (dispatch, getState) => {

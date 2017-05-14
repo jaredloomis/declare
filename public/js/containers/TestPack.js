@@ -6,10 +6,10 @@ import TestPackComponent from "../components/TestPack"
 
 const mapStateToProps = (state, ownProps) => {
     // Copy over all TestPack props
-    const props = state.testPacks[ownProps.packID] || {}
+    const props = Object.assign({}, state.testPacks[ownProps.packID]) || {}
     // Assign props.values based on page.testPackData
     const page = state.pages[ownProps.pageID]
-    if(page) {
+    if(page && page.testPackData) {
         const testPackData = page.testPackData
                          .filter(dat => dat.testPack === ownProps.packID)[0]
         if(testPackData)
