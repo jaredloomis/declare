@@ -13,12 +13,12 @@ import {
 } from "../actions/Types"
 import {deepSet, deepGet} from "../lib/Deep"
 
-const pagesReducer = (state={
+const defaultState = {
     pages: {},
     testPacks: {}
-}, action) => {
-    //if(action.type !== PAGE_FETCH && action.type !== PACK_LIST)
-    //    return state
+}
+
+const pagesReducer = (state=defaultState, action) => {
     // Add a Test Pack to a Page
     if(action.type === PAGE_ADD_PACK) {
         const {pageID, packID} = action
@@ -55,6 +55,8 @@ const pagesReducer = (state={
     // Fetch Page requested, received, or errored
     else if(action.type === PAGE_FETCH) {
         // Set the page value, or indicate in progress
+        // TODO: Don't ever overwrite a page as inProgress if we already
+        //       have it in state
         const pageL   = R.lensPath(["pages", action.id])
         const pageVal = action.page ? action.page : {inProgress: true}
         return R.set(pageL, pageVal, state)
@@ -65,11 +67,12 @@ const pagesReducer = (state={
         if(pages) {
             return pages.reduce((st, page) => {
                 const stPage = st.pages[page._id]
-                if(!stPage)
-                    st.pages[page._id] = page
-                else
-                    Object.assign(st.pages[page._id], page)
-                return st
+                const newPage = !stPage ?
+                    page :
+                    Object.assign({}, page, stPage)
+                const newPages = Object.assign({[page._id]: newPage}, st.pages)
+                const ret = Object.assign({}, st, {pages: newPages})
+                return ret
             }, state)
         } else {
             return state

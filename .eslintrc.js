@@ -1,4 +1,5 @@
 module.exports = {
+    "parser": "babel-eslint",
     "env": {
         "es6": true,
         "node": true
@@ -12,7 +13,6 @@ module.exports = {
         }
     },
     "rules": {
-        "indent": ["warn", 4],
         "linebreak-style": ["warn", "unix"],
         "quotes": ["warn", "double"],
         "semi": ["warn", "never"],
@@ -35,7 +35,7 @@ module.exports = {
         "no-loop-func": ["warn"],
         "yoda": ["warn", "never"]
     },
-    "plugins": ["react"],
+    "plugins": ["react", "flowtype"],
     "globals": {
         "$": false,
         "Materialize": false

@@ -1,3 +1,4 @@
+// @flow
 import Promise from "bluebird"
 
 import {
@@ -11,7 +12,9 @@ import {
 import {fetchPack} from "./TestPack"
 import client from "../graphQL/Client"
 
-export const fetchPage = (id, fetchPacks=false) => async dispatch => {
+import {Func} from "../flow"
+
+export const fetchPage = (id: string, fetchPacks: boolean=false) => async (dispatch: Func) => {
     dispatch({
         type: PAGE_FETCH,
         id
@@ -48,7 +51,7 @@ export const fetchPage = (id, fetchPacks=false) => async dispatch => {
     }
 }
 
-export const listPages = async dispatch => {
+export async function listPages(dispatch: Func) {
     dispatch({
         type: PAGE_LIST
     })
@@ -64,7 +67,7 @@ export const listPages = async dispatch => {
     })
 }
 
-export const savePackData = id => async (dispatch, getState) => {
+export const savePackData = (id: string) => async (dispatch: Func, getState: Func) => {
     const data = JSON.stringify(getState().pages[id].testPackData)
                      .replace(new RegExp("\"", "g"), "\\\"")
     dispatch({
@@ -78,45 +81,46 @@ export const savePackData = id => async (dispatch, getState) => {
     }`)
 }
 
-export const removeLink = (pageID, linkI) => ({
+export const removeLink = (pageID: string, linkI: number) => ({
     type: PAGE_REMOVE_LINK,
     pageID, linkI
 })
 
-export const addPack = (pageID, packID) => ({
+export const addPack = (pageID: string, packID: string) => ({
     type: PAGE_ADD_PACK,
     pageID,
     packID
 })
 
-export const removePack = (pageID, packID) => ({
+export const removePack = (pageID: string, packID: string) => ({
     type: PAGE_REMOVE_PACK,
     pageID,
     packID
 })
 
-export const updatePackValue = (uid, value) => ({
+export const updatePackValue = (uid: string, value: string) => ({
     type: PACK_UPDATE_VALUE,
     uid,
     value
 })
 
-export const removePackMany = uid => ({
+export const removePackMany = (uid: string) => ({
     type: PACK_REMOVE_MANY,
     uid
 })
 
-export const updateLinkAction = (pageID, linkI, actionI, actionStep) => ({
+export const updateLinkAction = (pageID: string, linkI: number,
+                                 actionI: number, actionStep: any) => ({
     type: LINK_UPDATE_ACTION,
     pageID, linkI, actionI, actionStep
 })
 
-export const addLinkAction = (pageID, linkI) => ({
+export const addLinkAction = (pageID: string, linkI: number) => ({
     type: LINK_ADD_ACTION,
     pageID, linkI
 })
 
-export const removeLinkAction = (pageID, linkI, actionI) => ({
+export const removeLinkAction = (pageID: string, linkI: number, actionI: number) => ({
     type: LINK_REMOVE_ACTION,
     pageID, linkI, actionI
 })
@@ -165,7 +169,7 @@ export const saveLinks = (pageID) => async (dispatch, getState) => {
     })
 }
 
-export const addLink = pageID => ({
+export const addLink = (pageID: string) => ({
     type: PAGE_ADD_LINK,
     pageID
 })

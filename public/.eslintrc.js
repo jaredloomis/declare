@@ -11,5 +11,5 @@ module.exports = {
         "react/jsx-uses-react": ["warn"],
         "react/jsx-uses-vars": ["warn"],
     },
-    "plugins": ["react"]
+    "plugins": ["react", "flowtype"]
 }
