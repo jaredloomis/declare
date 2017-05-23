@@ -5,7 +5,8 @@ import {
     savePackData, updateLinkAction,
     saveLinks, updateLinkDest, addPack,
     removePack, removeLinkAction, addLinkAction,
-    removeLink, removePackMany, addLink
+    removeLink, removePackMany, addLink,
+    removePage, executePack
 } from "../actions/Page"
 import PageComponent from "../components/Page"
 //import keyCollection from "../lib/KeyCollection"
@@ -25,6 +26,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
+        onPageDelete() {
+            dispatch(removePage(ownProps.pageID))
+        },
         onTestPackChange: uid => event => {
             dispatch(updatePackValue(uid, event.target.value))
         },
@@ -65,6 +69,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         onPackRemove(packID) {
             dispatch(removePack(ownProps.pageID, packID))
+        },
+        onPackExecute(packID) {
+            dispatch(executePack(ownProps.pageID, packID))
         }
     }
 }

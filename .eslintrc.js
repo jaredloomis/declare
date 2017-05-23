@@ -38,6 +38,7 @@ module.exports = {
     "plugins": ["react", "flowtype"],
     "globals": {
         "$": false,
-        "Materialize": false
+        "Materialize": false,
+        "array": false
     }
 }

@@ -7,14 +7,15 @@ import {
     LINK_UPDATE_ACTION, PAGE_LINKS_SAVE, PAGE_ADD_LINK,
     LINK_UPDATE_DEST, PAGE_REMOVE_PACK, LINK_REMOVE_ACTION,
     LINK_ADD_ACTION, PAGE_REMOVE_LINK, PACK_REMOVE_MANY,
-    PAGE_LIST
+    PAGE_LIST, PAGE_CREATE, PAGE_REMOVE, PACK_EXECUTE
 } from "./Types"
 import {fetchPack} from "./TestPack"
 import client from "../graphQL/Client"
 
-import {Func} from "../flow"
+import type {Func} from "../flow"
 
-export const fetchPage = (id: string, fetchPacks: boolean=false) => async (dispatch: Func) => {
+export const fetchPage = (id: string, fetchPacks: boolean=false) =>
+                         async (dispatch: Func) => {
     dispatch({
         type: PAGE_FETCH,
         id
@@ -67,7 +68,8 @@ export async function listPages(dispatch: Func) {
     })
 }
 
-export const savePackData = (id: string) => async (dispatch: Func, getState: Func) => {
+export const savePackData = (id: string) =>
+                            async (dispatch: Func, getState: Func) => {
     const data = JSON.stringify(getState().pages[id].testPackData)
                      .replace(new RegExp("\"", "g"), "\\\"")
     dispatch({
@@ -120,17 +122,20 @@ export const addLinkAction = (pageID: string, linkI: number) => ({
     pageID, linkI
 })
 
-export const removeLinkAction = (pageID: string, linkI: number, actionI: number) => ({
+export const removeLinkAction = (pageID: string, linkI: number,
+                                 actionI: number) => ({
     type: LINK_REMOVE_ACTION,
     pageID, linkI, actionI
 })
 
-export const updateLinkDest = (pageID, linkI, dest) => ({
+export const updateLinkDest = (pageID: string, linkI: number,
+                               dest: string) => ({
     type: LINK_UPDATE_DEST,
     pageID, linkI, dest
 })
 
-export const saveLinks = (pageID) => async (dispatch, getState) => {
+export const saveLinks = (pageID: string) =>
+                   async (dispatch: Func, getState: Func) => {
     // Dispatch a "Save Page Links Started" action
     dispatch({
         type: PAGE_LINKS_SAVE,
@@ -173,3 +178,41 @@ export const addLink = (pageID: string) => ({
     type: PAGE_ADD_LINK,
     pageID
 })
+
+export const createPage = (name: string) => async (dispatch: Func) => {
+    dispatch({
+        type: PAGE_CREATE,
+        name
+    })
+    const {page} = await client.mutate(`{
+        page: createPage(name: "${name}", startURL: "", testPackData: []) {
+            _id
+        }
+    }`)
+    await fetchPage(page._id)(dispatch)
+}
+
+export const removePage = (pageID: string) => async (dispatch: Func) => {
+    dispatch({
+        type: PAGE_REMOVE,
+        pageID
+    })
+    const {page} = await client.mutate(`{
+        page: removePage(pageID: "${pageID}") {
+            _id
+        }
+    }`)
+}
+
+export const executePack = (pageID: string, packID: string) =>
+                     async (dispatch: Func) => {
+    dispatch({
+        type: PACK_EXECUTE,
+        pageID, packID
+    })
+    const {page} = await client.mutate(`{
+        page: executePack(pageID: "${pageID}", packID: "${packID}") {
+            _id
+        }
+    }`)
+}

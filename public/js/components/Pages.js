@@ -1,18 +1,19 @@
 import React, {Component} from "react"
 
+import PageAdd from "./PageAdd"
+
 export default class Pages extends Component {
     constructor(props) {
         super(props)
 
         this.renderPageItem = this.renderPageItem.bind(this)
+        this.createPage     = this.createPage.bind(this)
     }
 
     render() {
         return <div>
             {Object.keys(this.props.pages).map(this.renderPageItem)}
-            <button onClick={this.createPage} className="btn">
-                Create Page
-            </button>
+            <PageAdd onCreatePage={this.createPage}/>
         </div>
     }
 
@@ -28,7 +29,7 @@ export default class Pages extends Component {
         </div>
     }
 
-    createPage() {
-    
+    createPage(name) {
+        return this.props.createPage(name)
     }
 }

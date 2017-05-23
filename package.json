@@ -33,8 +33,7 @@
     "mongodb": "^2.2.0",
     "mongoose": "^4.6.3",
     "passport-local": "^1.0.0",
-    "phantom": "^4.0.1",
-    "redux-thunk": "^2.2.0",
+    "selenium-webdriver": "^3.4.0",
     "winston": "^2.3.0"
   },
   "devDependencies": {

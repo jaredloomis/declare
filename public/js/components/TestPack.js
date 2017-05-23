@@ -36,6 +36,10 @@ export default class TestPack extends Component {
                         className="btn-floating btn-small red right">
                     <i className="large material-icons">delete</i>
                 </button>
+                <button onClick={this.props.onExecute}
+                        className="btn-floating btn-small green right">
+                    <i className="large material-icons">play_arrow</i>
+                </button>
                 <div className="test-pack-form">
                     {form}
                 </div>

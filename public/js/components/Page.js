@@ -54,7 +54,10 @@ export default class Page extends Component {
                 </div>
             </div>
             <button onClick={this.props.onPacksSave} className="btn">
-                Save
+                Save Pack Data
+            </button>
+            <button onClick={this.props.onPageDelete} className="btn">
+                Delete Page
             </button>
         </div>
     }
@@ -67,7 +70,8 @@ export default class Page extends Component {
                               pageID={this.props.pageID}
                               onChange={this.fieldChange}
                               onRemove={this.packRemove(tp.testPack)}
-                              onManyRemove={this.manyRemove}/>
+                              onManyRemove={this.manyRemove}
+                              onExecute={this.packExecute(tp.testPack)}/>
                 </div>
             } else {
                 return <span key={colI}>Loading...</span>
@@ -96,6 +100,10 @@ export default class Page extends Component {
         } else {
             return <span>Loading...</span>
         }
+    }
+
+    packExecute(packID) {
+        return () => this.props.onPackExecute(packID)
     }
 
     packRemove(packID) {

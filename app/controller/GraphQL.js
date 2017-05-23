@@ -11,6 +11,8 @@ import TestPack     from "../model/TestPack"
 import TestPackData from "../model/TestPackData"
 import Link         from "../model/Link"
 
+import Executor     from "../worker/executor"
+
 const Query = new GraphQLObjectType({
     name: "Query",
     fields: {
@@ -77,6 +79,38 @@ const Mutation = new GraphQLObjectType({
             },
             async resolve(obj, args) {
                 return await new Page(args).save()
+            }
+        },
+        removePage: {
+            type: Page.graphQL,
+            args: {
+                pageID: {
+                    name: "pageID",
+                    type: new GraphQLNonNull(GraphQLID)
+                }
+            },
+            async resolve(object, {pageID}) {
+                return await Page.findByIdAndRemove(pageID)
+            }
+        },
+        executePack: {
+            type: TestPack.graphQL,
+            args: {
+                pageID: {
+                    name: "pageID",
+                    type: GraphQLID
+                },
+                packID: {
+                    name: "packID",
+                    type: new GraphQLNonNull(GraphQLID)
+                }
+            },
+            async resolve(parent, {pageID, packID}) {
+                Executor.execute(pageID, packID)
+                .then(url => {
+                    console.log(`\n\n\n\n\nGOT A URL ${url}\n\n\n\n`)
+                })
+                return TestPack.findById(packID)
             }
         },
         addTestPack: {

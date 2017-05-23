@@ -9,7 +9,8 @@ import {
     LINK_UPDATE_ACTION, PAGE_LINKS_SAVE,
     LINK_UPDATE_DEST, PAGE_REMOVE_PACK, LINK_REMOVE_ACTION,
     LINK_ADD_ACTION, PAGE_REMOVE_LINK, PACK_REMOVE_MANY,
-    PAGE_ADD_LINK, PAGE_LIST
+    PAGE_ADD_LINK, PAGE_LIST, PAGE_CREATE, PAGE_REMOVE,
+    PACK_EXECUTE
 } from "../actions/Types"
 import {deepSet, deepGet} from "../lib/Deep"
 
@@ -25,6 +26,18 @@ const pagesReducer = (state=defaultState, action) => {
         const dataL = R.lensPath(["pages", pageID, "testPackData"])
         const datum = {testPack: packID, values: {}}
         return R.over(dataL, R.append(datum), state)
+    }
+    // Create a new Page
+    else if(action.type === PAGE_CREATE) {
+        return state
+    }
+    else if(action.type === PAGE_REMOVE) {
+        const newPages = {}
+        Object.keys(state.pages).forEach(pageID => {
+            if(pageID !== action.pageID)
+                newPages[pageID] = state.pages[pageID]
+        })
+        return Object.assign({}, state, {pages: newPages})
     }
     // Remove a Test Pack from a Page
     else if(action.type === PAGE_REMOVE_PACK) {
@@ -170,6 +183,10 @@ const pagesReducer = (state=defaultState, action) => {
         } else {
             return state
         }
+    }
+    // Execute a TestPack
+    else if(action.type === PACK_EXECUTE) {
+        return state
     }
     // Page.links save
     else if(action.type === PAGE_LINKS_SAVE) {

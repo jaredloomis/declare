@@ -1,3 +1,5 @@
+export const PAGE_CREATE         = "PAGE_CREATE"
+export const PAGE_REMOVE         = "PAGE_REMOVE"
 export const PAGE_ADD_PACK       = "PAGE_ADD_PACK"
 export const PAGE_LIST           = "PAGE_LIST"
 export const PAGE_REMOVE_PACK    = "PAGE_REMOVE_PACK"
@@ -11,6 +13,7 @@ export const PACK_FETCH        = "PACK_FETCH"
 export const PACK_LIST         = "PACK_LIST"
 export const PACK_UPDATE_VALUE = "PACK_UPDATE_VALUE"
 export const PACK_REMOVE_MANY  = "PACK_REMOVE_MANY"
+export const PACK_EXECUTE      = "PACK_EXECUTE"
 
 export const LINK_UPDATE_ACTION = "LINK_UPDATE_ACTION"
 export const LINK_UPDATE_DEST   = "LINK_UPDATE_DEST"

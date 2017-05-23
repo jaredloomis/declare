@@ -2,6 +2,7 @@
 const webpack              = require("webpack")
 const path                 = require("path")
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin
+const PrepackWebpackPlugin = require("prepack-webpack-plugin").default
 
 module.exports = {
     entry: {
@@ -40,6 +41,7 @@ module.exports = {
         }
     },
     plugins: [
+        //new PrepackWebpackPlugin({}),
         new webpack.optimize.CommonsChunkPlugin({
             name: "common",
             filename: "common.js",
