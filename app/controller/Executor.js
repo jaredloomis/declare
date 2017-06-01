@@ -2,11 +2,9 @@
 import Router    from "koa-router"
 import WebSocket from "ws"
 
-module.exports = (app: any) => {
-    const router = Router()
-
+module.exports = new Router()
     // POST /Execute
-    router.post("/Execute", async ctx => {
+    .post("/Execute", async ctx => {
         try {
             ctx.body = {}
         } catch(ex) {
@@ -17,6 +15,3 @@ module.exports = (app: any) => {
             }
         }
     })
-
-    return router
-}

@@ -3,6 +3,8 @@ import passport from "koa-passport"
 //const Promise  = require("bluebird")
 import User     from "../model/User"
 
+module.exports = new Router()
+/*
 module.exports = function(app) {
     const router = Router()
 
@@ -90,3 +92,4 @@ module.exports = function(app) {
 
     return router
 }
+*/
