@@ -29,8 +29,41 @@ const pageSchema = mongoose.Schema({
     },
     testPackData: {
         type: [TestPackData.schema]
-    }
+    },
+    reports: [{
+        type: ObjectId,
+        ref: "Report"
+    }]
 })
+
+pageSchema.methods.setPackData = function(packID, data) {
+    Object.keys(data).forEach(key =>
+        this.setPackDatum(packID, key, data[key])
+    )
+}
+
+pageSchema.methods.setPackDatum = function(packID, name, value) {
+    this.testPackData = this.testPackData.map(packFull => {
+        const pack = packFull.toObject()
+        if(pack.testPack.toString() === packID) {
+            return {
+                ...pack,
+                data: {
+                    ...pack.data,
+                    [name]: value
+                }
+            }
+        } else {
+            return pack
+        }
+    })
+}
+
+pageSchema.methods.getPackData = function(packID) {
+    return this.testPackData
+        .filter(pack => pack.testPack.toString() === packID)[0]
+        .data
+}
 
 pageSchema.methods.updateLink = function(linkID, linkData) {
     this.links = this.links.map(link =>
@@ -60,6 +93,9 @@ pageSchema.statics.graphQL = new GraphQLObjectType({
         },
         testPackData: {
             type: new GraphQLList(TestPackData.graphQL)
+        },
+        reports: {
+            type: new GraphQLList(GraphQLID)
         }
     }
 })

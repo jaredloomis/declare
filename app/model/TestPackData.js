@@ -7,7 +7,6 @@ import {
 } from "graphql"
 import GraphQLJSON from "graphql-type-json"
 const ObjectId = mongoose.Schema.Types.ObjectId
-console.log(`OBJECT ID: ${JSON.stringify(mongoose.Schema.Types)}\n\n\n\n\n\n`)
 
 const testPackDataSchema = mongoose.Schema({
     testPack: {
@@ -19,6 +18,9 @@ const testPackDataSchema = mongoose.Schema({
     values: {
         type: Object,
         default: {}
+    },
+    data: {
+        type: Object
     }
 })
 
@@ -32,6 +34,9 @@ testPackDataSchema.statics.graphQL = new GraphQLObjectType({
             type: new GraphQLNonNull(GraphQLID) //require("./TestPack").graphQL
         },
         values: {
+            type: GraphQLJSON
+        },
+        data: {
             type: GraphQLJSON
         }
     }

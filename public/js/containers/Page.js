@@ -62,7 +62,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch(savePackData(ownProps.pageID))
         },
         fetchPage() {
-            dispatch(fetchPage(ownProps.pageID))
+            dispatch(fetchPage(ownProps.pageID, false, true))
         },
         onPackAdd(packID) {
             dispatch(addPack(ownProps.pageID, packID))

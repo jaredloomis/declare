@@ -33,12 +33,12 @@ module.exports = {
         "array-bracket-spacing": ["warn", "never"],
         "no-labels": ["warn"],
         "no-loop-func": ["warn"],
-        "yoda": ["warn", "never"]
+        "yoda": ["warn", "never"],
+        "require-await": ["warn"]
     },
     "plugins": ["react", "flowtype"],
     "globals": {
         "$": false,
-        "Materialize": false,
-        "array": false
+        "Materialize": false
     }
 }

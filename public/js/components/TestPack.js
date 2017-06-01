@@ -1,5 +1,6 @@
 import React, {Component} from "react"
 import Field from "./Field"
+import Report from "./Report"
 import {deepGet} from "../lib/Deep"
 
 import "../../style/TestPack.scss"
@@ -43,8 +44,19 @@ export default class TestPack extends Component {
                 <div className="test-pack-form">
                     {form}
                 </div>
+                <div className="test-pack-reports">
+                    {this.renderReports()}
+                </div>
             </div>
         </div>
+    }
+
+    renderReports() {
+        const rawReports = this.props.reports || []
+        const reports = sortReports(rawReports).slice(0, 5)
+        return reports.map(report =>
+            <Report {...report} key={report._id}/>
+        )
     }
 
     manyRemove(uid) {
@@ -63,4 +75,14 @@ export default class TestPack extends Component {
     fieldUID(id) {
         return `${this.props.packID}.${id}`
     }
+}
+
+const sortReports = reports => {
+    return reports.sort((a, b) => {
+        const timeA = new Date(a.steps[0].time).getTime()
+        const timeB = new Date(b.steps[0].time).getTime()
+        return timeA < timeB ?  1 :
+               timeA > timeB ? -1 :
+                                0
+    })
 }

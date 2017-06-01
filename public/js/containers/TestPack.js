@@ -15,6 +15,14 @@ const mapStateToProps = (state, ownProps) => {
         if(testPackData)
             props.values = testPackData.values
     }
+    // Assign reports based on page.reports
+    if(page && page.reports) {
+        props.reports = page.reports
+            .map(reportID => state.reports[reportID])
+            .filter(report => report)
+    } else {
+        props.reports = []
+    }
     return props
 }
 

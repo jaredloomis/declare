@@ -7,14 +7,16 @@ import {
     LINK_UPDATE_ACTION, PAGE_LINKS_SAVE, PAGE_ADD_LINK,
     LINK_UPDATE_DEST, PAGE_REMOVE_PACK, LINK_REMOVE_ACTION,
     LINK_ADD_ACTION, PAGE_REMOVE_LINK, PACK_REMOVE_MANY,
-    PAGE_LIST, PAGE_CREATE, PAGE_REMOVE, PACK_EXECUTE
+    PAGE_LIST, PAGE_CREATE, PAGE_REMOVE, PACK_EXECUTE,
+    REPORT_FETCH
 } from "./Types"
 import {fetchPack} from "./TestPack"
 import client from "../graphQL/Client"
 
 import type {Func} from "../flow"
 
-export const fetchPage = (id: string, fetchPacks: boolean=false) =>
+export const fetchPage = (id: string, fetchPacks: boolean=false,
+                                      fetchReports: boolean=false) =>
                          async (dispatch: Func) => {
     dispatch({
         type: PAGE_FETCH,
@@ -37,6 +39,7 @@ export const fetchPage = (id: string, fetchPacks: boolean=false) =>
                 testPack
                 values
             }
+            reports
         }
     }`)
     dispatch({
@@ -48,6 +51,11 @@ export const fetchPage = (id: string, fetchPacks: boolean=false) =>
     if(fetchPacks) {
         await Promise.all(page.testPackData.map(data =>
             fetchPack(data.testPack)(dispatch)
+        ))
+    }
+    if(fetchReports) {
+        await Promise.all(page.reports.map(reportID =>
+            fetchReport(reportID)(dispatch)
         ))
     }
 }
@@ -215,4 +223,23 @@ export const executePack = (pageID: string, packID: string) =>
             _id
         }
     }`)
+}
+
+export const fetchReport = (reportID: string) => async (dispatch: Func) => {
+    const {report} = await client.query(`query _($reportID: ID!){
+        report(id: $reportID) {
+            _id
+            name
+            pageID packID
+            summary
+            steps {
+                status time message data
+            }
+        }
+    }`, {reportID})
+    dispatch({
+        type: REPORT_FETCH,
+        reportID,
+        report
+    })
 }

@@ -10,13 +10,14 @@ import {
     LINK_UPDATE_DEST, PAGE_REMOVE_PACK, LINK_REMOVE_ACTION,
     LINK_ADD_ACTION, PAGE_REMOVE_LINK, PACK_REMOVE_MANY,
     PAGE_ADD_LINK, PAGE_LIST, PAGE_CREATE, PAGE_REMOVE,
-    PACK_EXECUTE
+    PACK_EXECUTE, REPORT_FETCH
 } from "../actions/Types"
 import {deepSet, deepGet} from "../lib/Deep"
 
 const defaultState = {
     pages: {},
-    testPacks: {}
+    testPacks: {},
+    reports: {}
 }
 
 const pagesReducer = (state=defaultState, action) => {
@@ -71,8 +72,10 @@ const pagesReducer = (state=defaultState, action) => {
         // TODO: Don't ever overwrite a page as inProgress if we already
         //       have it in state
         const pageL   = R.lensPath(["pages", action.id])
+        const curPage = state.pages[action.id]
         const pageVal = action.page ? action.page : {inProgress: true}
-        return R.set(pageL, pageVal, state)
+        const newPage = Object.assign({}, curPage, pageVal)
+        return R.set(pageL, newPage, state)
     }
     // Fetch basic info about all Pages
     else if(action.type === PAGE_LIST) {
@@ -191,6 +194,14 @@ const pagesReducer = (state=defaultState, action) => {
     // Page.links save
     else if(action.type === PAGE_LINKS_SAVE) {
         return state
+    }
+    // Report was fetched
+    else if(action.type === REPORT_FETCH) {
+        const {reportID, report} = action
+        const reports = Object.assign(state.reports, {
+            [reportID]: report
+        })
+        return Object.assign({}, state, {reports})
     } else {
         return state
     }

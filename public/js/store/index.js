@@ -3,7 +3,7 @@ import {
     applyMiddleware
 } from "redux"
 
-import thunk   from "redux-thunk"
+import thunk       from "redux-thunk"
 import pageReducer from "../reducers/Page"
 
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore)

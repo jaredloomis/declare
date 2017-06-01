@@ -46,7 +46,7 @@ export default class Link extends Component {
                     )}
                 </Select>
                 </div>
-                <div className="col s10">
+                <div className="col s10 link-actions">
                     {this.props.defaultValue.navigation.map(
                         this.renderAction
                     )}

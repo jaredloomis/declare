@@ -10,8 +10,9 @@ import Page         from "../model/Page"
 import TestPack     from "../model/TestPack"
 import TestPackData from "../model/TestPackData"
 import Link         from "../model/Link"
+import Report       from "../model/Report"
 
-import Executor     from "../worker/executor"
+import {execute}    from "../worker/executor"
 
 const Query = new GraphQLObjectType({
     name: "Query",
@@ -47,11 +48,29 @@ const Query = new GraphQLObjectType({
             args: {
                 id: {
                     name: "id",
-                    type: new GraphQLNonNull(GraphQLString)
+                    type: new GraphQLNonNull(GraphQLID)
                 }
             },
             async resolve(parent, args) {
                 return await TestPack.findById(args.id)
+            }
+        },
+        reports: {
+            type: new GraphQLList(Report.graphQL),
+            async resolve() {
+                return await Report.find({})
+            }
+        },
+        report: {
+            type: Report.graphQL,
+            args: {
+                id: {
+                    name: "id",
+                    type: new GraphQLNonNull(GraphQLID)
+                }
+            },
+            async resolve(parent, {id}) {
+                return await Report.findById(id)
             }
         }
     }
@@ -106,9 +125,17 @@ const Mutation = new GraphQLObjectType({
                 }
             },
             async resolve(parent, {pageID, packID}) {
-                Executor.execute(pageID, packID)
-                .then(url => {
-                    console.log(`\n\n\n\n\nGOT A URL ${url}\n\n\n\n`)
+                execute(pageID, packID)
+                .then(async result => {
+                    try {
+                    const report = await new Report(result.report).save()
+                    const page = await Page.findOne({_id: pageID})
+                    page.reports.push(report._id)
+                    page.setPackData(packID, result.data)
+                    await page.save()
+                    } catch(ex) {
+                        console.log(JSON.stringify(ex))
+                    }
                 })
                 return TestPack.findById(packID)
             }
@@ -190,14 +217,6 @@ const Mutation = new GraphQLObjectType({
                 }
             },
             async resolve(parent, {pageID, link}) {
-                /*
-                link = JSON.parse(link)
-                // Parse all values if necessary
-                for(const action of link.navigation) {
-                    if(typeof(action.values) === "string")
-                        action.values = JSON.parse(action.values)
-                }
-                */
                 const linkModel = new Link(link)
                 return await Page.findOneAndUpdate(
                     {_id: pageID},
@@ -251,6 +270,18 @@ const Mutation = new GraphQLObjectType({
                 args.fields = JSON.parse(args.fields)
                 return await new TestPack(args).save()
             }
+        }
+    },
+    removeReport: {
+        type: Report.graphQL,
+        args: {
+            reportID: {
+                name: "name",
+                type: new GraphQLNonNull(GraphQLID)
+            }
+        },
+        async resolve(parent, {reportID}) {
+            return await Report.findByIdAndRemove(reportID)
         }
     }
 })

@@ -1,5 +1,6 @@
 import fs            from "fs"
 import path          from "path"
+import http          from "http"
 
 import Koa           from "koa"
 import convert       from "koa-convert"
@@ -72,4 +73,7 @@ fs
  * Start
  */
 
-app.listen(3000)
+const server = http.createServer(app.callback())
+require("./socket")(server)
+server.listen(3000)
+//app.listen(3000)

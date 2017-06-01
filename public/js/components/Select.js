@@ -66,8 +66,8 @@ export default class Select extends Component {
     }
 
     children() {
-        return Array.isArray(this.props.children) ?
-            this.props.children :
-            [this.props.children]
+        return !this.props.children                ? [] :
+               !Array.isArray(this.props.children) ? [this.props.children] :
+               this.props.children
     }
 }

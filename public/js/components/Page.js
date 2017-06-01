@@ -17,7 +17,8 @@ export default class Page extends Component {
         this.addPackChange = this.addPackChange.bind(this)
 
         this.state = {
-            addPackSelection: ""
+            addPackSelection: "",
+            packOpen: null
         }
     }
 

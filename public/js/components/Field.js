@@ -1,7 +1,8 @@
 import React from "react"
 
-import FieldMany from "./FieldMany"
-import FieldText from "./FieldText"
+import FieldMany   from "./FieldMany"
+import FieldText   from "./FieldText"
+import FieldSelect from "./FieldSelect"
 
 const Field = ({uid, type, options, defaultValue,
                 onChange, onManyRemove}) => {
@@ -13,6 +14,9 @@ const Field = ({uid, type, options, defaultValue,
                           defaultValue={defaultValue}
                           onChange={onChange}
                           onInputRemove={onManyRemove}/>
+    } else if(type === "select" || type === "dropdown") {
+        return <FieldSelect {...options} uid={uid}
+                            defaultValue={defaultValue}/>
     } else {
         if(type !== "text") {
             console.warn("Field type not recognized in " +
