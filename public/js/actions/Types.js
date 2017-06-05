@@ -8,6 +8,7 @@ export const PAGE_FETCH          = "PAGE_FETCH"
 export const PAGE_SAVE_PACK_DATA = "PAGE_SAVE_PACK_DATA"
 export const PAGE_LINKS_SAVE     = "PAGE_LINKS_SAVE"
 export const PAGE_REMOVE_LINK    = "PAGE_REMOVE_LINK"
+export const PAGE_SET_BASELINE_SCREENSHOT = "PAGE_SET_BASELINE_SCREENSHOT"
 
 export const PACK_FETCH        = "PACK_FETCH"
 export const PACK_LIST         = "PACK_LIST"

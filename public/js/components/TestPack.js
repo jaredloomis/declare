@@ -1,6 +1,6 @@
 import React, {Component} from "react"
 import Field from "./Field"
-import Report from "./Report"
+import Report from "../containers/Report"
 import {deepGet} from "../lib/Deep"
 
 import "../../style/TestPack.scss"
@@ -8,10 +8,15 @@ import "../../style/TestPack.scss"
 export default class TestPack extends Component {
     constructor(props) {
         super(props)
-        this.remove      = this.remove.bind(this)
-        this.manyRemove  = this.manyRemove.bind(this)
-        this.fieldValue  = this.fieldValue.bind(this)
-        this.fieldUID    = this.fieldUID.bind(this)
+        this.remove        = this.remove.bind(this)
+        this.manyRemove    = this.manyRemove.bind(this)
+        this.fieldValue    = this.fieldValue.bind(this)
+        this.fieldUID      = this.fieldUID.bind(this)
+        this.toggleReports = this.toggleReports.bind(this)
+
+        this.state = {
+            reportsExpanded: false
+        }
     }
 
     render() {
@@ -45,6 +50,9 @@ export default class TestPack extends Component {
                     {form}
                 </div>
                 <div className="test-pack-reports">
+                    <button className="btn-flat" onClick={this.toggleReports}>
+                        {this.state.reportsExpanded ? "Hide" : "Show"} Reports
+                    </button>
                     {this.renderReports()}
                 </div>
             </div>
@@ -52,11 +60,21 @@ export default class TestPack extends Component {
     }
 
     renderReports() {
-        const rawReports = this.props.reports || []
-        const reports = sortReports(rawReports).slice(0, 5)
-        return reports.map(report =>
-            <Report {...report} key={report._id}/>
-        )
+        if(this.state.reportsExpanded) {
+            const rawReports = this.props.reports || []
+            const reports = sortReports(rawReports).slice(0, 5)
+            return reports.map(report =>
+                <Report {...report} key={report._id}/>
+            )
+        } else {
+            return []
+        }
+    }
+
+    toggleReports() {
+        this.setState(state => ({
+            reportsExpanded: !state.reportsExpanded
+        }))
     }
 
     manyRemove(uid) {

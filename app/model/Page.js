@@ -73,6 +73,16 @@ pageSchema.methods.updateLink = function(linkID, linkData) {
     )
 }
 
+/**
+ * Find a value in any TestPack on Page
+ */
+pageSchema.methods.findPackValue = function(key) {
+    for(const pack in this.testPackData.reduce) {
+        if(pack.values[key])
+            return pack.values[key]
+    }
+}
+
 pageSchema.statics.graphQL = new GraphQLObjectType({
     name: "Page",
     fields: {

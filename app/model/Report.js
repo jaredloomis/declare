@@ -12,7 +12,8 @@ const reportSchema = mongoose.Schema({
     pageID: {
         type: ObjectId,
         ref: "Page",
-        required: true
+        required: true,
+        index: true
     },
     packID: {
         type: ObjectId,

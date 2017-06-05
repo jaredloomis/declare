@@ -8,7 +8,7 @@ import {
     LINK_UPDATE_DEST, PAGE_REMOVE_PACK, LINK_REMOVE_ACTION,
     LINK_ADD_ACTION, PAGE_REMOVE_LINK, PACK_REMOVE_MANY,
     PAGE_LIST, PAGE_CREATE, PAGE_REMOVE, PACK_EXECUTE,
-    REPORT_FETCH
+    REPORT_FETCH, PAGE_SET_BASELINE_SCREENSHOT
 } from "./Types"
 import {fetchPack} from "./TestPack"
 import client from "../graphQL/Client"
@@ -241,5 +241,17 @@ export const fetchReport = (reportID: string) => async (dispatch: Func) => {
         type: REPORT_FETCH,
         reportID,
         report
+    })
+}
+
+export const setBaselineScreenshot = (pageID: string, packID: string, image: string) =>
+                               async (dispatch: Func) => {
+    const {page} = await client.mutate(`($pageID: ID!, $packID: ID!, $image: String!){
+        page: setBaselineScreenshot(pageID: $pageID, packID: $packID, image: $image) {
+            _id
+        }
+    }`, {pageID, packID, image})
+    dispatch({
+        type: PAGE_SET_BASELINE_SCREENSHOT
     })
 }

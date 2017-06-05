@@ -13,6 +13,11 @@ const testPackSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    internalID: {
+        type: String,
+        required: true,
+        index: true
+    },
     fields: {
         type: Object,
         required: true
@@ -26,6 +31,9 @@ testPackSchema.statics.graphQL = new GraphQLObjectType({
             type: new GraphQLNonNull(GraphQLID)
         },
         name: {
+            type: GraphQLString
+        },
+        internalID: {
             type: GraphQLString
         },
         fields: {

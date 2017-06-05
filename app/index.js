@@ -61,8 +61,7 @@ fs
 .readdirSync(path.join(__dirname, "controller"))
 .filter(file => file.indexOf(".") !== 0)
 .forEach(file => {
-    const module = require(path.join(__dirname, "controller", file))
-    const router = typeof(module) === "function" ? module(app) : module
+    const router = require(path.join(__dirname, "controller", file))
     if(router.routes && router.allowedMethods) {
         app.use(router.routes())
            .use(router.allowedMethods())

@@ -1,6 +1,24 @@
-import React from "react"
+import React     from "react"
+import {connect} from "react-redux"
 
-import ReportScreenshot from "./ReportScreenshot"
+import ReportScreenshot        from "../components/ReportScreenshot"
+import {setBaselineScreenshot} from "../actions/Page"
+
+const mapStateToProps = (state, ownProps) => {
+    return {
+        ...ownProps
+    }
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+    return {
+        setBaselineScreenshot(image) {
+            dispatch(
+                setBaselineScreenshot(ownProps.pageID, ownProps.packID, image)
+            )
+        }
+    }
+}
 
 const Report = props => {
     const {name, pageID, packID, steps} = props
@@ -29,4 +47,7 @@ const renderStep = ({status, time, message, data}, i) => {
 }
 
 Report.displayName = "Report"
-export default Report
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Report)

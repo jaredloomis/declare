@@ -1,6 +1,9 @@
+// @flow
 import React from "react"
 
-const ReportScreenshot = ({name, pageID, packID, summary, steps}) => {
+const ReportScreenshot = ({
+    name, pageID, packID, summary, steps, setBaselineScreenshot
+}: any) => {
     summary = summary || {}
     const lastStep       = steps[steps.length-1]
     const statusLabel    = lastStep.status
@@ -16,6 +19,10 @@ const ReportScreenshot = ({name, pageID, packID, summary, steps}) => {
         <p>Percent different: {percDiff}%</p>
         <img src={screenshotNewSrc}  width="400" height="400"/>
         <img src={screenshotBaseSrc} width="400" height="400"/>
+        <button onClick={() => setBaselineScreenshot(screenshotNew)}
+                className="btn">
+            Accept as Baseline
+        </button>
     </div>
 }
 
