@@ -24,3 +24,5 @@ export const LINK_ADD_ACTION    = "LINK_ADD_ACTION"
 export const EXECUTOR_CONNECT   = "EXECUTOR_CONNECT"
 
 export const REPORT_FETCH = "REPORT_FETCH"
+
+export const ASSET_RETRIEVE = "ASSET_RETRIEVE"

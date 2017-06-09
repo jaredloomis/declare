@@ -24,6 +24,10 @@ const reportSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    startTime: {
+        type: Date,
+        required: true
+    },
     summary: {
         type: Object
     },

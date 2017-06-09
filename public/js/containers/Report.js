@@ -1,17 +1,21 @@
-import React     from "react"
-import {connect} from "react-redux"
+import React, {Component} from "react"
+import {connect}          from "react-redux"
 
 import ReportScreenshot        from "../components/ReportScreenshot"
-import {setBaselineScreenshot} from "../actions/Page"
+import {setBaselineScreenshot, fetchReport} from "../actions/Page"
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        ...ownProps
+        ...ownProps,
+        ...state.reports[ownProps.reportID]
     }
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
+        fetchReport() {
+            dispatch(fetchReport(ownProps.reportID))
+        },
         setBaselineScreenshot(image) {
             dispatch(
                 setBaselineScreenshot(ownProps.pageID, ownProps.packID, image)
@@ -20,17 +24,28 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     }
 }
 
-const Report = props => {
-    const {name, pageID, packID, steps} = props
-    return <div className="report card deep-purple lighten-1">
-    <div className="card-content">
-        <span className="card-title">{name}</span>
-        {renderReportMain(props)}
-        <ul className="collection">
-            {(steps || []).map(renderStep)}
-        </ul>
-    </div>
-    </div>
+class Report extends Component {
+    constructor(props) {
+        super(props)
+    }
+
+    componentDidMount() {
+        if(!this.props.name)
+            this.props.fetchReport()
+    }
+
+    render() {
+        const {name, pageID, packID, steps} = this.props
+        return <div className="report card deep-purple lighten-1">
+            <div className="card-content">
+                <span className="card-title">{name}</span>
+                {renderReportMain(this.props)}
+                <ul className="collection">
+                    {(steps || []).map(renderStep)}
+                </ul>
+            </div>
+        </div>
+    }
 }
 
 const renderReportMain = props => {
@@ -46,7 +61,6 @@ const renderStep = ({status, time, message, data}, i) => {
     </li>
 }
 
-Report.displayName = "Report"
 export default connect(
     mapStateToProps,
     mapDispatchToProps

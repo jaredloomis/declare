@@ -1,11 +1,10 @@
 import React, {Component} from "react"
 import {connect} from "react-redux"
+
 import {listPages, createPage} from "../actions/Page"
-import Pages from "../components/Pages"
+import PageAdd                 from "../components/PageAdd"
 
 const mapStateToProps = (state, ownProps) => {
-    //console.log(`Pages mapStateToProps: ${JSON.stringify(state.pages)}`)
-    //const pages = Object.assign({}, state.pages)
     return {
         pages: state.pages
     }
@@ -22,24 +21,48 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     }
 }
 
-class PagesContainer extends Component {
+
+class Pages extends Component {
     constructor(props) {
         super(props)
+
+        this.renderPageItem = this.renderPageItem.bind(this)
+        this.createPage     = this.createPage.bind(this)
     }
 
     componentDidMount() {
-        this.props.listPages()
+        if(!this.props.pages.length)
+            this.props.listPages()
     }
 
     render() {
         if(this.props.pages)
-            return <Pages {...this.props}/>
+            return <div>
+                {Object.keys(this.props.pages).map(this.renderPageItem)}
+                <PageAdd onCreatePage={this.createPage}/>
+            </div>
         else
             return <p>Loading...</p>
+    }
+
+    renderPageItem(pageID) {
+        const page = this.props.pages[pageID]
+        const link = `#/Page/${pageID}`
+        return <div className="card" key={pageID}>
+            <div className="card-content">
+                <span className="card-title">
+                    <a href={link}>{page.name}</a>
+                </span>
+            </div>
+        </div>
+    }
+
+    createPage(name) {
+        return this.props.createPage(name)
     }
 }
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(PagesContainer)
+)(Pages)
