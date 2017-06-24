@@ -29,12 +29,17 @@ const pageSchema = mongoose.Schema({
     },
     testPackData: {
         type: [TestPackData.schema]
-    },
-    reports: [{
-        type: ObjectId,
-        ref: "Report"
-    }]
+    }
 })
+
+pageSchema.methods.addReport = function(packID, reportID) {
+    for(let i = 0; i < this.testPackData.length; ++i) {
+        const datum = this.testPackData[i]
+        if(datum.testPack.toString() === packID) {
+            this.testPackData[i].reports.push(reportID)
+        }
+    }
+}
 
 pageSchema.methods.setPackData = function(packID, data) {
     Object.keys(data).forEach(key =>
@@ -103,9 +108,6 @@ pageSchema.statics.graphQL = new GraphQLObjectType({
         },
         testPackData: {
             type: new GraphQLList(TestPackData.graphQL)
-        },
-        reports: {
-            type: new GraphQLList(GraphQLID)
         }
     }
 })

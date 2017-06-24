@@ -1,4 +1,3 @@
-// @flow
 import React, {Component} from "react"
 
 import client from "../graphQL/Client"
@@ -9,13 +8,6 @@ class ReportScreenshot extends Component {
 
         this.state = {
             assets: {}
-        }
-    }
-
-    componentDidMount() {
-        console.log(`MOUNT ${JSON.stringify(this.props)}`)
-        if(this.props.summary) {
-            
         }
     }
 
@@ -31,7 +23,7 @@ class ReportScreenshot extends Component {
             this.retrieveAsset(this.props.summary.screenshotNew)
         }
 
-        //summary = summary || {}
+        const screenshotNewKey = this.props.summary.screenshotNew
         const lastStep       = steps[steps.length-1]
         const statusLabel    = lastStep.status
         const percDiff       = summary.percentDifference
@@ -41,12 +33,13 @@ class ReportScreenshot extends Component {
             `data:image/png;base64,${screenshotBase}`
         const screenshotNewSrc  =
             `data:image/png;base64,${screenshotNew}`
+
         return <div className="report-screenshot">
             <p>Result: {statusLabel}</p>
             <p>Percent different: {percDiff}%</p>
             <img src={screenshotNewSrc}  width="400" height="400"/>
             <img src={screenshotBaseSrc} width="400" height="400"/>
-            <button onClick={() => setBaselineScreenshot(screenshotNew)}
+            <button onClick={() => setBaselineScreenshot(screenshotNewKey)}
                     className="btn">
                 Accept as Baseline
             </button>

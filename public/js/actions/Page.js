@@ -38,8 +38,8 @@ export const fetchPage = (id: string, fetchPacks: boolean=false,
             testPackData {
                 testPack
                 values
+                reports
             }
-            reports
         }
     }`)
     dispatch({
@@ -54,9 +54,12 @@ export const fetchPage = (id: string, fetchPacks: boolean=false,
         ))
     }
     if(fetchReports) {
-        await Promise.all(page.reports.map(reportID =>
-            fetchReport(reportID)(dispatch)
+        const promises = [].concat(page.testPackData.map(datum =>
+            datum.reports.map(reportID =>
+                fetchReport(reportID)(dispatch)
+            )
         ))
+        await Promise.all(promises)
     }
 }
 

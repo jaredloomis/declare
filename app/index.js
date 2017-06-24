@@ -8,12 +8,13 @@ import body          from "koa-bodyparser"
 import session       from "koa-session"
 import passport      from "koa-passport"
 import assets        from "koa-static"
+import websockify    from "koa-websocket"
 
 import mongoose      from "mongoose"
 import logger        from "./services/Logger.js"
 import {development as dbConfig} from "./config/database"
 
-const app = new Koa()
+const app = websockify(new Koa())
 
 /*
  * Set up database
@@ -73,6 +74,6 @@ fs
  */
 
 const server = http.createServer(app.callback())
-require("./socket")(server)
+//require("./socket")(server)
 server.listen(3000)
 //app.listen(3000)

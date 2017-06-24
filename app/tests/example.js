@@ -1,26 +1,10 @@
-const jsc = require("jsverify")
-import test from "ava"
+/* global describe, it */
+import {expect} from "chai"
 
-test("Natural Numbers", t => {
-
-})
-
-/*
-describe("natural numbers", () => {
-    it("are greater than or equal to 0", () => {
-        const property = jsc.forall("nat", n => {
-            return n >= 0
+describe("Array", () => {
+    describe("#indexOf()", () => {
+        it("should return -1 when the value is not present", () => {
+            expect([1,2,3].indexOf(4)).to.equal(-1)
         })
-
-        jsc.assert(property)
-    })
-
-    it("are less than 90", () => {
-        const property = jsc.forall("nat", n => {
-            return n < 90
-        })
-
-        jsc.assert(property, { size: 100 })
     })
 })
-*/

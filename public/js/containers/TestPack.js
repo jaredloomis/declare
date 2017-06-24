@@ -12,21 +12,15 @@ import "../../style/TestPack.scss"
 const mapStateToProps = (state, ownProps) => {
     // Copy over all TestPack props
     const props = Object.assign({}, state.testPacks[ownProps.packID]) || {}
-    // Assign props.values based on page.testPackData
+    // Assign props.{values, reports} based on page.testPackData
     const page = state.pages[ownProps.pageID]
     if(page && page.testPackData) {
         const testPackData = page.testPackData
                          .filter(dat => dat.testPack === ownProps.packID)[0]
-        if(testPackData)
-            props.values = testPackData.values
-    }
-    // Assign reports based on page.reports
-    if(page && page.reports) {
-        props.reports = page.reports.reverse()
-        //    .map(reportID => state.reports[reportID])
-        //    .filter(report => report)
-    } else {
-        props.reports = []
+        if(testPackData) {
+            props.values  = testPackData.values
+            props.reports = testPackData.reports
+        }
     }
     return props
 }
@@ -106,9 +100,7 @@ class TestPack extends Component {
 
     renderReports() {
         if(this.state.reportsExpanded) {
-            //const rawReports = this.props.reports || []
-            //const reports = sortReports(rawReports).slice(0, 5)
-            return this.props.reports.map(reportID =>
+            return this.props.reports.reverse().map(reportID =>
                 <Report reportID={reportID}
                         pageID={this.props.pageID}
                         packID={this.props.packID}

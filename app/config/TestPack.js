@@ -1,5 +1,6 @@
 // @flow
 
 export const internalIDs: any = {
-    screenshot: "screenshot"
+    screenshot: "SCREENSHOT",
+    destructive: "DESTRUCTIVE_INPUT"
 }

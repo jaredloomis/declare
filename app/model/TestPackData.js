@@ -1,9 +1,8 @@
 import Promise from "bluebird"
 import mongoose from "mongoose"
 import {
-    GraphQLObjectType,
-    GraphQLNonNull,
-    GraphQLID
+    GraphQLObjectType, GraphQLNonNull, GraphQLID,
+    GraphQLList
 } from "graphql"
 import GraphQLJSON from "graphql-type-json"
 const ObjectId = mongoose.Schema.Types.ObjectId
@@ -21,7 +20,11 @@ const testPackDataSchema = mongoose.Schema({
     },
     data: {
         type: Object
-    }
+    },
+    reports: [{
+        type: ObjectId,
+        ref: "Report"
+    }]
 })
 
 testPackDataSchema.statics.graphQL = new GraphQLObjectType({
@@ -31,13 +34,16 @@ testPackDataSchema.statics.graphQL = new GraphQLObjectType({
             type: new GraphQLNonNull(GraphQLID)
         },
         testPack: {
-            type: new GraphQLNonNull(GraphQLID) //require("./TestPack").graphQL
+            type: new GraphQLNonNull(GraphQLID)
         },
         values: {
             type: GraphQLJSON
         },
         data: {
             type: GraphQLJSON
+        },
+        reports: {
+            type: new GraphQLList(GraphQLID)
         }
     }
 })
