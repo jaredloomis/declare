@@ -156,11 +156,12 @@ export const saveLinks = (pageID: string) =>
     // Create requests to update each link
     // (TODO: only update links that have changed)
     const linkRequests = links.map(link => {
-        const linkID = link._id
-        delete link._id
-        const linkStr = JSON.stringify(link)
-                            .replace(new RegExp("\"", "g"), "\\\"")
-        return client.mutate(`($pageID: ID!, $linkID: ID!, $link: LinkInput!){
+        const linkID = link._id || null
+        console.log(JSON.stringify(link))
+        //delete link._id
+        //const linkStr = JSON.stringify(link)
+        //                    .replace(new RegExp("\"", "g"), "\\\"")
+        return client.mutate(`($pageID: ID!, $linkID: ID, $link: LinkInput!){
             page: updateLink(pageID: $pageID, linkID: $linkID, link: $link) {
                 links {
                     _id destination

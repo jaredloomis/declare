@@ -8,7 +8,8 @@
     "watch": "gulp && gulp watch & (npm run startDB && nodemon dist/app/index.js)",
     "start": "npm run build && npm run startDB && node dist/app/index.js",
     "test": "mocha dist/app/tests",
-    "startDB": "mongod & sleep 5"
+    "startDB": "mongod & sleep 5",
+    "purescript": "./node_modules/purescript/bin/purs.js compile app/**/*.purs"
   },
   "author": "Jared Loomis",
   "license": "LicenseRef-LICENSE",
@@ -21,6 +22,7 @@
     "graph.ql": "^2.0.2",
     "graphql": "^0.7.0",
     "graphql-type-json": "^0.1.4",
+    "immutable": "^3.8.1",
     "koa": "^2.0.0-alpha.7",
     "koa-better-body": "^3.0.0",
     "koa-bodyparser": "^3.2.0",
@@ -37,6 +39,7 @@
     "mongoose-schema-to-graphql": "^2.5.7",
     "node-resemble-js": "^0.2.0",
     "passport-local": "^1.0.0",
+    "purescript": "^0.11.5",
     "selenium-webdriver": "^3.4.0",
     "socket.io": "^2.0.1",
     "winston": "^2.3.0",
