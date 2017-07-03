@@ -2,12 +2,15 @@ import React, {Component} from "react"
 import {connect}          from "react-redux"
 
 import ReportScreenshot        from "../components/ReportScreenshot"
+import ReportDestructive       from "../components/ReportDestructive"
 import {setBaselineScreenshot, fetchReport} from "../actions/Page"
+import {internalIDs} from "../../../app/config/TestPack"
 
 const mapStateToProps = (state, ownProps) => {
     return {
         ...ownProps,
-        ...state.reports[ownProps.reportID]
+        ...state.reports[ownProps.reportID],
+        testPacks: state.testPacks
     }
 }
 
@@ -35,7 +38,7 @@ class Report extends Component {
     }
 
     render() {
-        const {name, pageID, packID, steps} = this.props
+        const {name, steps} = this.props
         return <div className="report card deep-purple lighten-1">
             <div className="card-content">
                 <span className="card-title">{name}</span>
@@ -49,7 +52,13 @@ class Report extends Component {
 }
 
 const renderReportMain = props => {
-    return <ReportScreenshot {...props}/>
+    const {internalID} = props.testPacks[props.packID]
+    if(internalID === internalIDs.screenshot)
+        return <ReportScreenshot {...props}/>
+    else if(internalID === internalIDs.destructive)
+        return <ReportDestructive {...props}/>
+    else
+        throw new Error("Unknown report")
 }
 
 const renderStep = ({status, time, message, data}, i) => {

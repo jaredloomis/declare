@@ -1,6 +1,7 @@
 import fs            from "fs"
 import path          from "path"
 import http          from "http"
+import Promise       from "bluebird"
 
 import Koa           from "koa"
 import convert       from "koa-convert"
@@ -21,7 +22,8 @@ const app = websockify(new Koa())
  */
 
 // Use bluebird promises
-mongoose.Promise = require("bluebird")
+mongoose.Promise = Promise
+global.Promise   = Promise
 // Conect to MongoDB server
 mongoose.connect("mongodb://" + dbConfig.host + "/" + dbConfig.database)
 

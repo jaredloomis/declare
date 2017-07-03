@@ -27,8 +27,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onChange: uid => event => {
-            dispatch(updatePackValue(uid, event.target.value))
+        onChange: uid => value => {
+            if(value.target) value = value.target.value
+            dispatch(updatePackValue(uid, value))
         },
         fetchPack: () => {
             dispatch(fetchPack(ownProps.packID))
@@ -100,7 +101,7 @@ class TestPack extends Component {
 
     renderReports() {
         if(this.state.reportsExpanded) {
-            return this.props.reports.reverse().map(reportID =>
+            return this.props.reports.slice().reverse().map(reportID =>
                 <Report reportID={reportID}
                         pageID={this.props.pageID}
                         packID={this.props.packID}

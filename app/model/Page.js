@@ -42,12 +42,24 @@ pageSchema.methods.addReport = function(packID, reportID) {
 }
 
 pageSchema.methods.setPackData = function(packID, data) {
-    Object.keys(data).forEach(key =>
-        this.setPackDatum(packID, key, data[key])
-    )
+    if(data) {
+        Object.keys(data).forEach(key =>
+            this.setPackDatum(packID, key, data[key])
+        )
+    }
 }
 
 pageSchema.methods.setPackDatum = function(packID, name, value) {
+    for(let i = 0; i < this.testPackData.length; ++i) {
+        const pack = this.testPackData[i]//.toObject()
+        if(pack.testPack.toString() === packID) {
+            if(!this.testPackData[i].data) {
+                this.testPackData[i].data = {}
+            }
+            this.testPackData[i].data[name] = value
+        }
+    }
+    /*
     this.testPackData = this.testPackData.map(packFull => {
         const pack = packFull.toObject()
         if(pack.testPack.toString() === packID) {
@@ -61,7 +73,7 @@ pageSchema.methods.setPackDatum = function(packID, name, value) {
         } else {
             return pack
         }
-    })
+    })*/
 }
 
 pageSchema.methods.getPackData = function(packID) {

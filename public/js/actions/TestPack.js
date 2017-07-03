@@ -17,6 +17,7 @@ export const fetchPack = id => async dispatch => {
     const {testPack} = await client.query(`{
         testPack(id: "${id}") {
             _id
+            internalID
             name
             fields
         }
