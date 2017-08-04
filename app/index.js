@@ -15,6 +15,8 @@ import mongoose      from "mongoose"
 import logger        from "./services/Logger.js"
 import {development as dbConfig} from "./config/database"
 
+import "./model/InputType"
+
 const app = websockify(new Koa())
 
 /*

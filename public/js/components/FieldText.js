@@ -1,12 +1,11 @@
 import React from "react"
 
-const FieldText = ({name, uid, defaultValue, onChange}) => {
-    const randID = Math.floor(Math.random() * 10000)
-    return <div className="field input-field">
-        <input type="text" id={randID}
-               defaultValue={defaultValue} onChange={onChange(uid)}/>
-        <label htmlFor={randID}>{name}</label>
-    </div>
+import TextInput from "./base/TextInput"
+
+const FieldText = props => {
+    const {name, onChange, uid} = props
+    const change = event => onChange(uid)(event)
+    return <TextInput {...props} label={name} onChange={change}/>
 }
 
 FieldText.displayName = "FieldText"

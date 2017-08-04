@@ -1,5 +1,5 @@
 import React, {Component} from "react"
-import Select from "./Select"
+import Select from "./base/Select"
 
 import "../../style/Link.scss"
 
@@ -58,11 +58,12 @@ export default class Link extends Component {
     }
 
     renderAction(action, index) {
-        const val    = action && action.values ? action.values.element : ""
+        const val    = action && action.values ?
+                action.values.element.css : ""
         const change = event => {
             this.props.onActionChange(index, {
                 actionType: "click",
-                values: {element: event.target.value}
+                values: {element: {css: event.target.value}}
             })
         }
         const randID = Math.random()

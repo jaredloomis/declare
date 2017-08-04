@@ -4,12 +4,12 @@ import {
 } from "redux"
 
 import thunk       from "redux-thunk"
-import pageReducer from "../reducers/Page"
+import reducer from "../reducers"
 
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore)
 
 const store = createStoreWithMiddleware(
-    pageReducer,
+    reducer,
     window.__REDUX_DEVTOOLS_EXTENSION__ &&
     window.__REDUX_DEVTOOLS_EXTENSION__()
 )

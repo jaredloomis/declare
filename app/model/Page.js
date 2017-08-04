@@ -51,29 +51,15 @@ pageSchema.methods.setPackData = function(packID, data) {
 
 pageSchema.methods.setPackDatum = function(packID, name, value) {
     for(let i = 0; i < this.testPackData.length; ++i) {
-        const pack = this.testPackData[i]//.toObject()
+        const pack = this.testPackData[i]
         if(pack.testPack.toString() === packID) {
             if(!this.testPackData[i].data) {
                 this.testPackData[i].data = {}
             }
             this.testPackData[i].data[name] = value
+            return
         }
     }
-    /*
-    this.testPackData = this.testPackData.map(packFull => {
-        const pack = packFull.toObject()
-        if(pack.testPack.toString() === packID) {
-            return {
-                ...pack,
-                data: {
-                    ...pack.data,
-                    [name]: value
-                }
-            }
-        } else {
-            return pack
-        }
-    })*/
 }
 
 pageSchema.methods.getPackData = function(packID) {
@@ -83,11 +69,12 @@ pageSchema.methods.getPackData = function(packID) {
 }
 
 pageSchema.methods.updateLink = function(linkID, linkData) {
-    this.links = this.links.map(link =>
-        link._id.toString() === linkID.toString() ?
-            Object.assign({}, linkData, link) :
-            link
-    )
+    for(const link of this.links) {
+        if(link._id.toString() === linkID.toString()) {
+            Object.assign(link, linkData)
+            return
+        }
+    }
 }
 
 /**

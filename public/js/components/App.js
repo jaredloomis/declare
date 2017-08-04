@@ -1,17 +1,16 @@
 import React from "react"
 import {
-    Router,
-    Route,
-    hashHistory
+    Router, Route, hashHistory
 } from "react-router"
 
-import PageContainer from "../containers/Page"
+import Page from "../containers/Page"
 import Pages from "../containers/Pages"
 import "../../style/materialize.scss"
 import "../../node_modules/materialize-css/js/materialize"
+import "../../node_modules/jquery/dist/jquery.min.js"
 
 const PageRoute = props => {
-    return <PageContainer pageID={props.params.pageID} {...props}/>
+    return <Page pageID={props.params.pageID} {...props}/>
 }
 
 const App = () => <div className="container">

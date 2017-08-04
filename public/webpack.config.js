@@ -2,7 +2,6 @@
 const webpack              = require("webpack")
 const path                 = require("path")
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin
-const PrepackWebpackPlugin = require("prepack-webpack-plugin").default
 
 module.exports = {
     entry: {
@@ -29,9 +28,12 @@ module.exports = {
              use: ["style-loader", "css-loader", "sass-loader"]},
             // Load .html files
             {test: /\.html$/, loader: "html-loader"},
+            // Load .graphql files with graphql-tag
+            {test: /\.(graphql|gql)$/, exclude: /node_modules/,
+             loader: "graphql-tag/loader"},
             // Load static files
             {test: /\.(png|jpg|gif|svg|mp4|json|ttf|woff|woff2|eot)$/,
-             loader: "file-loader"}
+             loader: "file-loader"},
         ]
     },
     resolve: {

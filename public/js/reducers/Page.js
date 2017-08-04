@@ -17,7 +17,8 @@ import {deepSet, deepGet} from "../lib/Deep"
 const defaultState = {
     pages: {},
     testPacks: {},
-    reports: {}
+    reports: {},
+    inputTypes: {}
 }
 
 const pagesReducer = (state=defaultState, action) => {

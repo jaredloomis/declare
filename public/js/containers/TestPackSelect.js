@@ -1,7 +1,7 @@
 import React, {Component} from "react"
 import {connect} from "react-redux"
 import {listPacks} from "../actions/TestPack"
-import Select from "../components/Select"
+import Select from "../components/base/Select"
 
 const mapStateToProps = (state, ownProps) => {
     // Copy over all TestPack props
