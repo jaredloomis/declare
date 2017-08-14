@@ -16,7 +16,8 @@ build_job:
     script:
         - node ./node_modules/gulp/bin/gulp.js
         - cd public
-        - node ./public/node_modules/webpack/bin/webpack.js
+        - node ./node_modules/webpack/bin/webpack.js
+        - cd ..
 
 test_job:
     stage: test
