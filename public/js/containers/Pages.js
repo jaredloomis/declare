@@ -4,6 +4,7 @@ import {connect} from "react-redux"
 import {listPages, createPage} from "../actions/Page"
 import PageAdd                 from "../components/PageAdd"
 import InputTypes              from "./InputTypes"
+import Elements                from "./Elements"
 
 const mapStateToProps = (state, ownProps) => {
     return {
@@ -39,9 +40,14 @@ class Pages extends Component {
     render() {
         if(this.props.pages)
             return <div>
+                <h2>Pages</h2>
                 {Object.keys(this.props.pages).map(this.renderPageItem)}
+                <h4>Page Add</h4>
                 <PageAdd onCreatePage={this.createPage}/>
+                <h2>Input Types</h2>
                 <InputTypes/>
+                <h2>Elements</h2>
+                <Elements/>
             </div>
         else
             return <p>Loading...</p>

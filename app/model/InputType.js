@@ -15,6 +15,16 @@ const inputTypeSchema = mongoose.Schema({
     constraints: [constraintSchema]
 })
 
+inputTypeSchema.methods.randomInput = function() {
+    // TODO CREATE A COMPREHENSIVE GENERATOR
+    const tmp = this.constraints[0]
+    if(tmp.regex) {
+        return "regex"
+    } else if(tmp.minLength || tmp.maxLength) {
+        return "length"
+    }
+}
+
 /*
  * GraphQL
  */

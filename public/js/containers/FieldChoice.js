@@ -7,12 +7,15 @@ import Select from "../components/base/Select"
 const mapStateToProps = (state, ownProps) => {
     const overrides = {}
     // Convert choices to [{value: "", name: ""}]
-    if(ownProps.choices === "pages") {
-        overrides.choices = Object.keys(state.pages).map(pageID => ({
-            value: pageID,
-            name: state.pages[pageID].name
-        }))
+    // (state selection)
+    if(typeof ownProps.choices === "string") {
+        overrides.choices = Object.keys(state[ownProps.choices] || {})
+            .map(id => ({
+                value: id,
+                name: state[ownProps.choices][id].name
+            }))
     }
+
     return {
         ...ownProps,
         ...overrides

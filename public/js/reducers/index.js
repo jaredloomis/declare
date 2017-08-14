@@ -2,8 +2,9 @@
 
 import pages      from "./Page"
 import inputTypes from "./InputType"
+import elements   from "./Element"
 
-export default (state, event) => inputTypes(pages(state, event), event)
+export default (state, event) => elements(inputTypes(pages(state, event), event), event)
 
 /*
 export default combineReducers({

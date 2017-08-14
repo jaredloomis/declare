@@ -1,8 +1,10 @@
 import React from "react"
 
-import TextInput from "base/TextInput"
+import InputTypeSelect from "../containers/InputTypeSelect"
+import TextInput from "./base/TextInput"
+import Button from "./base/Button"
 
-export default props => {
+const Element = props => {
     // Default (initial) values
     const defSelector = props.defaultValue && props.defaultValue.selector
     const defType     = props.defaultValue && props.defaultValue.inputType
@@ -20,5 +22,10 @@ export default props => {
             defaultValue={defSelector}/>
         <InputTypeSelect onChange={typeChange}
             defaultValue={defType}/>
+        <Button onClick={props.onSave}>Save</Button>
     </div>
 }
+
+Element.displayName = "Element"
+
+export default Element

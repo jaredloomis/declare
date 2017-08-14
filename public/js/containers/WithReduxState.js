@@ -3,12 +3,12 @@ import {deepGet, deepSet} from "../lib/Deep"
 
 const mapStateToProps = fields => (state, ownProps) => {
     // Copy over all requested fields
-    return fields.reduce((field, acc) => {
+    return fields.reduce((acc, field) => {
         const normalizedField = typeof field === "string" ?
             field.split(".") :
             [].concat(...field)
         return deepSet(normalizedField, deepGet(normalizedField, state), acc)
-    }, {...ownProps})
+    }, {})
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
