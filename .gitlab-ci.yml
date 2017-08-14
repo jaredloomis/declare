@@ -1,6 +1,6 @@
-build:
+build_script:
     - npm install
     - node ./node_modules/gulp/bin/gulp.js
 
-test:
+test_script:
     - ./node_modules/mocha/bin/mocha dist/app/tests
