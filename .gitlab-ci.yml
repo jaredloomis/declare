@@ -10,6 +10,9 @@ stages:
 
 before_script:
     - npm install
+    - cd public
+    - npm install
+    - cd ..
 
 build_job:
     stage: build
