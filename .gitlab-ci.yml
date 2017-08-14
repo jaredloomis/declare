@@ -3,12 +3,12 @@ stages:
     - test
 
 build_job:
-    - stage: build
-    - script:
+    stage: build
+    script:
         - npm install
         - node ./node_modules/gulp/bin/gulp.js
 
 test_job:
-    - stage: test
-    - script:
+    stage: test
+    script:
         - ./node_modules/mocha/bin/mocha dist/app/tests
