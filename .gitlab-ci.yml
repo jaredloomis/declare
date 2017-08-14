@@ -1,6 +1,18 @@
+stages:
+    - build
+    - test
+
 build_script:
     - npm install
     - node ./node_modules/gulp/bin/gulp.js
 
+build_job:
+    - stage: build
+    - script: build_script
+
 test_script:
     - ./node_modules/mocha/bin/mocha dist/app/tests
+
+test_job:
+    - stage: test
+    - script: test_script
