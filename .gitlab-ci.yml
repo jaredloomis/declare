@@ -1,0 +1,6 @@
+build:
+    - npm install
+    - node ./node_modules/gulp/bin/gulp.js
+
+test:
+    - ./node_modules/mocha/bin/mocha dist/app/tests
