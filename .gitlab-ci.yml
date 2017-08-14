@@ -1,12 +1,22 @@
+image: node:8
+
+cache:
+    paths:
+        - node_modules/
+
 stages:
     - build
     - test
 
+before_script:
+    - npm install
+
 build_job:
     stage: build
     script:
-        - npm install
         - node ./node_modules/gulp/bin/gulp.js
+        - cd public
+        - node ./public/node_modules/webpack/bin/webpack.js
 
 test_job:
     stage: test
