@@ -4,8 +4,9 @@ import {
     ELEMENT_CREATE, ELEMENT_SAVE
 } from "../actions/Types"
 
-export default (state, action) => {
-    if(action.type === ELEMENT_FETCH) {
+export default (state: any, action: {type: string}) => {
+    if(action.type === ELEMENT_FETCH &&
+       action.id && action.element) {
         return {
             ...state,
             elements: {
@@ -13,7 +14,8 @@ export default (state, action) => {
                 [action.id]: action.element
             }
         }
-    } else if(action.type === ELEMENT_UPDATE) {
+    } else if(action.type === ELEMENT_UPDATE &&
+              action.id && action.element) {
         return {
             ...state,
             elements: {
@@ -24,14 +26,16 @@ export default (state, action) => {
                 }
             }
         }
-    } else if(action.type === ELEMENT_LIST) {
-        const elements = action.elements.reduce((acc, el) => {
-            return Object.assign(acc, {
-                [el._id]: {
-                    ...state.elements[el._id],
-                    ...el
-                }
-            })
+    } else if(action.type === ELEMENT_LIST &&
+              Array.isArray(action.elements)) {
+        const elements = ((action.elements: any): Array<{_id: string}>)
+            .reduce((acc, el: {_id: string}) => {
+                return Object.assign(acc, {
+                    [el._id]: {
+                        ...state.elements[el._id],
+                        ...el
+                    }
+                })
         }, {})
 
         return {
@@ -41,7 +45,8 @@ export default (state, action) => {
                 ...elements
             }
         }
-    } else if(action.type === ELEMENT_CREATE) {
+    } else if(action.type === ELEMENT_CREATE &&
+              action.element && action.element._id) {
         return {
             ...state,
             elements: {
@@ -49,7 +54,8 @@ export default (state, action) => {
                 [action.element._id]: action.element
             }
         }
-    } else if(action.type === ELEMENT_SAVE) {
+    } else if(action.type === ELEMENT_SAVE &&
+              action.element && action.id) {
         return {
             ...state,
             elements: {

@@ -1,10 +1,16 @@
+// @flow
 import mongoose from "mongoose"
 import {
     GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLList,
-    GraphQLID, GraphQLInt, GraphQLUnionType, GraphQLInputObjectType
+    GraphQLID, GraphQLInt, GraphQLInputObjectType
 } from "graphql"
 
+export type ConstraintTy =
+    {exact: string} | {regex: string} |
+    {minLength: ?number, maxLength: ?number}
+
 const constraintSchema = mongoose.Schema({
+    exact: String,
     regex: String,
     minLength: Number,
     maxLength: Number
@@ -30,6 +36,8 @@ inputTypeSchema.methods.randomInput = function() {
  */
 
 const constraintGraphQLFields = {
+    // Exact constraint
+    exact: {type: GraphQLString},
     // Regex constraint
     regex: {type: GraphQLString},
     // Length constraint

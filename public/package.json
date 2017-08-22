@@ -41,6 +41,8 @@
     "webpack-dev-server": "^2.1.0-beta.0"
   },
   "scripts": {
+    "prepublish": "./node_modules/webpack/bin/webpack.js",
+
     "dev": "webpack-dev-server --open --inline --hot",
     "build": "npm run static && webpack",
     "static": "npm run html && npm run style",

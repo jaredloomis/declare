@@ -22,19 +22,21 @@ export default class FieldMany extends Component {
     }
 
     render() {
-        const singleForm = index => Object.keys(this.props.fields)
-        .map(id => {
-            const field  = this.props.fields[id]
-            const uid    = this.childUID(id, index)
-            const defVal = this.fieldValue(uid)
-            return <Field uid={uid}
+        const singleForm = index => {
+            return Object.keys(this.props.fields)
+                .map(id => {
+                    const field  = this.props.fields[id]
+                    const uid    = this.childUID(id, index)
+                    const defVal = this.fieldValue(uid)
+                    return <Field uid={uid}
                           type={field.type}
                           options={field.options}
                           defaultValue={defVal}
                           onChange={this.props.onChange}
                           onManyRemove={this.props.onInputRemove}
                           key={id}/>
-        })
+                })
+        }
 
         const forms = [...Array(this.state.inputCount).keys()]
         .map(index => {

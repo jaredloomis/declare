@@ -4,6 +4,8 @@
   "description": "",
   "main": "app/index.js",
   "scripts": {
+    "prepublish": "gulp",
+
     "build": "gulp",
     "watch": "gulp && gulp watch & (npm run startDB && nodemon dist/app/index.js)",
     "start": "npm run build && npm run startDB && node dist/app/index.js",
@@ -43,6 +45,7 @@
     "node-resemble-js": "^0.2.0",
     "passport-local": "^1.0.0",
     "purescript": "^0.11.5",
+    "seedrandom": "^2.4.3",
     "selenium-webdriver": "^3.4.0",
     "socket.io": "^2.0.1",
     "winston": "^2.3.0",

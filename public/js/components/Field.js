@@ -3,12 +3,18 @@ import React from "react"
 import FieldMany     from "./FieldMany"
 import FieldText     from "./FieldText"
 import FieldChoice   from "../containers/FieldChoice"
-import FieldSelector from "./FieldSelector"
+import FieldElement  from "./FieldElement"
 
 const Field = ({uid, type, options, defaultValue,
                 onChange, onManyRemove}) => {
+                    console.log(uid)
     options = options || {}
     if(typeof(type) === "object") {
+        const indirectType = type[0]
+        if(indirectType) {
+            type = indirectType
+        }
+
         return <FieldMany {...options}
                           uid={uid}
                           fields={type}
@@ -20,7 +26,7 @@ const Field = ({uid, type, options, defaultValue,
                             onChange={onChange}
                             defaultValue={defaultValue}/>
     } else if(type === "element" || type === "selector") {
-        return <FieldSelector {...options} defaultValue={defaultValue}
+        return <FieldElement {...options} defaultValue={defaultValue}
                               uid={uid} onChange={onChange}/>
     } else {
         if(type !== "text") {

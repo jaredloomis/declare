@@ -91,7 +91,7 @@ export const savePackData = (id: string) =>
         page: updatePackData(pageID: "${id}", data: "${data}") {
             _id
         }
-    }`)
+    }`, {id, data})
 }
 
 export const removeLink = (pageID: string, linkI: number) => ({
