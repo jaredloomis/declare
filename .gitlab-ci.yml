@@ -12,10 +12,8 @@ build_job:
     stage: build
     script:
         - npm install
-        - node ./node_modules/gulp/bin/gulp.js
         - cd public
         - npm install
-        - node ./node_modules/webpack/bin/webpack.js
         - cd ..
 
 test_job:
