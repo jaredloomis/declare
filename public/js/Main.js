@@ -5,9 +5,6 @@ import {Provider}    from "react-redux"
 import App   from "./components/App"
 import store from "./store"
 
-import "../style/materialize.scss"
-import "../node_modules/materialize-css/dist/js/materialize.min.js"
-
 render(
     <Provider store={store}>
         <App/>

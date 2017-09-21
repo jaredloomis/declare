@@ -24,8 +24,17 @@ module.exports = {
             // TypeScript for .ts files
             {test: /\.ts$/, loader: "ts-loader"},
             // Load .scss files
+//            {test: /\.scss$/,
+//             use: ["style-loader", "css-loader", "sass-loader"]},
             {test: /\.scss$/,
-             use: ["style-loader", "css-loader", "sass-loader"]},
+             use: [
+                 "style-loader",
+                 {loader: "css-loader", options: {
+                     modules: true,
+                     localIdentName: "[name]_[local]_[hash:base64:5]"
+                 }},
+                 "sass-loader"
+             ]},
             // Load .html files
             {test: /\.html$/, loader: "html-loader"},
             // Load .graphql files with graphql-tag

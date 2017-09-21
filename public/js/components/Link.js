@@ -1,5 +1,6 @@
 import React, {Component} from "react"
 import Select from "./base/Select"
+import ElementSelect from "../containers/ElementSelect"
 
 import "../../style/Link.scss"
 
@@ -59,11 +60,11 @@ export default class Link extends Component {
 
     renderAction(action, index) {
         const val    = action && action.values ?
-                action.values.element.css : ""
-        const change = event => {
+                action.values.element : ""
+        const change = value => {
             this.props.onActionChange(index, {
                 actionType: "click",
-                values: {element: {css: event.target.value}}
+                values: {element: value}
             })
         }
         const randID = Math.random()
@@ -75,11 +76,7 @@ export default class Link extends Component {
             </Select>
             </div>
             <div className="col s8">
-            <div className="input-field">
-                <input type="text" defaultValue={val} onChange={change}
-                       id={randID}/>
-                <label htmlFor={randID}>Element</label>
-            </div>
+            <ElementSelect defaultValue={val} onChange={change}/>
             </div>
             <div className="col s2">
             <button onClick={this.removeAction(index)}

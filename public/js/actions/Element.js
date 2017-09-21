@@ -3,7 +3,7 @@ import type {Func} from "../flow"
 import client from "../graphQL/Client"
 import {
     ELEMENT_FETCH, ELEMENT_UPDATE, ELEMENT_LIST,
-    ELEMENT_CREATE, ELEMENT_SAVE
+    ELEMENT_CREATE, ELEMENT_SAVE, ELEMENT_REMOVE
 } from "./Types"
 
 export const fetchElement = (id: string) => async (dispatch: Func) => {
@@ -70,6 +70,18 @@ export const saveElement = (id: string) => async (dispatch: Func, getState: Func
     dispatch({
         type: ELEMENT_SAVE,
         element: newElement,
+        id
+    })
+}
+
+export const removeElement = (id: string) => async (dispatch: Func) => {
+    const {element} = await client.mutate(`($id: ID!) {
+        element: removeElement(id: $id) {
+            _id
+        }
+    }`, {id})
+    dispatch({
+        type: ELEMENT_REMOVE,
         id
     })
 }

@@ -234,7 +234,7 @@ export const fetchReport = (reportID: string) => async (dispatch: Func) => {
             pageID packID
             summary
             steps {
-                status time message data
+                status time message data children
             }
         }
     }`, {reportID})

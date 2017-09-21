@@ -1,7 +1,7 @@
 import {
     INPUT_TYPE_FETCH, INPUT_TYPE_CONSTRAINT_UPDATE,
     INPUT_TYPE_LIST, INPUT_TYPE_ADD_CONSTRAINT,
-    INPUT_TYPE_SAVE
+    INPUT_TYPE_SAVE, INPUT_TYPE_REMOVE
 } from "../actions/Types"
 
 export default (state={inputTypes: {}}, action) => {
@@ -69,6 +69,13 @@ export default (state={inputTypes: {}}, action) => {
                 ...state.inputTypes,
                 [action.id]: action.inputType
             }
+        }
+    } else if(action.type === INPUT_TYPE_REMOVE) {
+        const inputTypes = Object.assign({}, state.inputTypes)
+        delete inputTypes[action.id]
+        return {
+            ...state,
+            inputTypes
         }
     } else {
         return state

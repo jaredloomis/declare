@@ -63,6 +63,7 @@ const InputTypeBase = props => {
         {constraintElems}
         <Button onClick={onConstraintAdd}>+</Button>
         <Button onClick={props.onSave}>Save</Button>
+        <Button onClick={props.onDelete}>Delete</Button>
     </div>
 }
 

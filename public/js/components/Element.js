@@ -26,6 +26,7 @@ const Element = props => {
         <InputTypeSelect onChange={typeChange}
             defaultValue={defType}/>
         <Button onClick={props.onSave}>Save</Button>
+        <Button onClick={props.onRemove}>Delete</Button>
     </div>
 }
 

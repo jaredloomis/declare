@@ -1,6 +1,7 @@
 import React, {Component} from "react"
 import {connect}          from "react-redux"
 
+import Expandable              from "../components/Expandable"
 import ReportScreenshot        from "../components/ReportScreenshot"
 import ReportDestructive       from "../components/ReportDestructive"
 import {setBaselineScreenshot, fetchReport} from "../actions/Page"
@@ -61,12 +62,20 @@ const renderReportMain = props => {
         throw new Error("Unknown report")
 }
 
-const renderStep = ({status, time, message, data}, i) => {
+const renderStep = ({status, time, message, data, children}, i) => {
+    const childElements = children && children.map((child, j) =>
+        renderStep(child, i + (j * 0.0001))
+    )
+    const childList = children && <ul>
+        {childElements}
+    </ul>
+
     const timeStr  = new Date(time).toLocaleString()
     return <li className="collection-item row" key={i}>
         <span className="col s3">{status}</span>
         <span className="col s3">{timeStr}</span>
         <span className="col s6">{message}</span>
+        {childList}
     </li>
 }
 

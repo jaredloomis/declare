@@ -4,6 +4,7 @@
   "description": "Web UI for uQA",
   "main": "js/Main.js",
   "dependencies": {
+    "bulma": "^0.5.3",
     "graphql.js": "^0.4.16",
     "jquery": "^3.1.1",
     "lokka": "^1.7.0",
@@ -42,12 +43,11 @@
   },
   "scripts": {
     "prepublish": "./node_modules/webpack/bin/webpack.js",
-
     "dev": "webpack-dev-server --open --inline --hot",
     "build": "npm run static && webpack",
     "static": "npm run html && npm run style",
     "html": "mkdir -p dist/view && cp view/Main.html dist/view/Main.html",
-    "style": "mkdir -p dist/style && sass style/materialize.scss > dist/style/materialize.css",
+    "style": "mkdir -p dist/style && sass style/materialize.scss > dist/style/materialize.css && sass style/bulma.scss > dist/style/bulma.css",
     "jquery": "cp node_modules/jquery/dist/jquery.min.js dist/js"
   },
   "author": "Jared Loomis",

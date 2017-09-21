@@ -1,6 +1,6 @@
 import {connect}          from "react-redux"
 
-import {updateElement, saveElement} from "../actions/Element"
+import {updateElement, saveElement, removeElement} from "../actions/Element"
 import Element         from "../components/Element"
 
 const mapStateToProps = (state, ownProps) => {
@@ -16,6 +16,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         onChange(element) {
             dispatch(updateElement(ownProps.elementID, element))
+        },
+        onRemove() {
+            dispatch(removeElement(ownProps.elementID))
         }
     }
 }

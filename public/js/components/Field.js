@@ -7,20 +7,28 @@ import FieldElement  from "./FieldElement"
 
 const Field = ({uid, type, options, defaultValue,
                 onChange, onManyRemove}) => {
-                    console.log(uid)
     options = options || {}
-    if(typeof(type) === "object") {
-        const indirectType = type[0]
-        if(indirectType) {
-            type = indirectType
-        }
-
+    if(Array.isArray(type)) {
         return <FieldMany {...options}
                           uid={uid}
-                          fields={type}
+                          fields={type[0]}
                           defaultValue={defaultValue}
                           onChange={onChange}
                           onInputRemove={onManyRemove}/>
+    } else if(typeof(type) === "object") {
+        const ret = Object.keys(type)
+            .map(key => {
+                const field = type[key]
+                const keyUid  = `${uid}.${key}`
+                return <Field uid={keyUid}
+                          type={field.type}
+                          options={field.options}
+                          defaultValue={defaultValue[key]}
+                          onChange={onChange}
+                          onManyRemove={onManyRemove}
+                          key={keyUid}/>
+            })
+        return <div>{ret}</div>
     } else if(type === "select" || type === "dropdown") {
         return <FieldChoice {...options} uid={uid}
                             onChange={onChange}
@@ -31,7 +39,7 @@ const Field = ({uid, type, options, defaultValue,
     } else {
         if(type !== "text") {
             console.warn("Field type not recognized in " +
-                         `${options.name}: "${type}". ` +
+                         `${uid} (${options.name}): "${JSON.stringify(type)}". ` +
                          "Rendering as FieldText."
             )
         }

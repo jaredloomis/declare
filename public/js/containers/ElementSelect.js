@@ -10,7 +10,9 @@ const ElementSelect = withReduxState(["elements"], props => {
                 {props.elements[elemID].name}
             </span>
         )
-    return <Select label="Element" onChange={props.onChange}>{children}</Select>
+    return <Select label="Element" onChange={props.onChange} {...props}>
+        {children}
+    </Select>
 })
 
 ElementSelect.displayName = "ElementSelect"

@@ -5,15 +5,15 @@ import {
 
 import Page from "../containers/Page"
 import Pages from "../containers/Pages"
-import "../../style/materialize.scss"
-import "../../node_modules/materialize-css/js/materialize"
-import "../../node_modules/jquery/dist/jquery.min.js"
+
+import bulma from "../../style/bulma.scss"
+import style from "../../style/App.scss"
 
 const PageRoute = props => {
     return <Page pageID={props.params.pageID} {...props}/>
 }
 
-const App = () => <div className="container">
+const App = () => <div className={`${bulma.container} ${style.app}`}>
     <Router history={hashHistory}>
         <Route path="/"             component={Pages}/>
         <Route path="/Page/:pageID" component={PageRoute}/>

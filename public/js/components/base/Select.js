@@ -23,6 +23,7 @@ export default class Select extends Component {
     }
 
     componentDidMount() {
+        /*
         $(`#${this.state.randID}`).dropdown({
             inDuration: 300,
             outDuration: 225,
@@ -32,7 +33,7 @@ export default class Select extends Component {
             belowOrigin: false,
             alignment: "left",
             stopPropagation: false
-        })
+        })*/
     }
 
     render() {

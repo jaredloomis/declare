@@ -1,11 +1,10 @@
 import React from "react"
 
 const TextInput = ({label, defaultValue, onChange}) => {
-    const randID = Math.floor(Math.random() * 10000)
-    return <div className="field input-field">
-        <input type="text" id={randID}
+    return <div className="field">
+        <label className="label">{label}</label>
+        <input type="text" className="input"
                defaultValue={defaultValue} onChange={onChange}/>
-        <label htmlFor={randID}>{label}</label>
     </div>
 }
 

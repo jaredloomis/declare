@@ -1,9 +1,10 @@
 import {connect} from "react-redux"
 
 import {
-    updateInputTypeConstraint, addConstraint, saveInputType
+    updateInputTypeConstraint, addConstraint, saveInputType,
+    removeInputType
 } from "../actions/InputType"
-import InputType                   from "../components/InputType"
+import InputType from "../components/InputType"
 
 const mapStateToProps = (state, ownProps) => {
     return state.inputTypes[ownProps.inputTypeID]
@@ -21,6 +22,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         onSave() {
             dispatch(saveInputType(ownProps.inputTypeID))
+        },
+        onDelete() {
+            dispatch(removeInputType(ownProps.inputTypeID))
         }
     }
 }

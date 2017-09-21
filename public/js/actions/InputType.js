@@ -4,7 +4,7 @@ import client from "../graphQL/Client"
 import {
     INPUT_TYPE_FETCH, INPUT_TYPE_CONSTRAINT_UPDATE,
     INPUT_TYPE_LIST, INPUT_TYPE_CREATE, INPUT_TYPE_ADD_CONSTRAINT,
-    INPUT_TYPE_SAVE
+    INPUT_TYPE_SAVE, INPUT_TYPE_REMOVE
 } from "./Types"
 
 export const fetchInputType = (id: string) => async (dispatch: Func) => {
@@ -90,3 +90,15 @@ export const saveInputType = (inputTypeID: string) =>
             inputType: inputTypeNewRet.inputType
         })
     }
+
+export const removeInputType = (id: string) => async (dispatch: Func) => {
+    const {inputType} = await client.mutate(`($id: ID!) {
+        inputType: removeInputType(id: $id) {
+            _id
+        }
+    }`, {id})
+    dispatch({
+        type: INPUT_TYPE_REMOVE,
+        id
+    })
+}

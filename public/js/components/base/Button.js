@@ -1,7 +1,7 @@
 import React from "react"
 
 const Button = ({onClick, children, color}) => {
-    const klass = `btn ${color || ""}`
+    const klass = `button ${color || ""}`
     return <button onClick={onClick} className={klass}>
         {children}
     </button>

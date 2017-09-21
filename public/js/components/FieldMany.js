@@ -11,7 +11,8 @@ export default class FieldMany extends Component {
         this.fieldValue = this.fieldValue.bind(this)
 
         const inputCount = this.props.defaultValue ?
-            Math.max(1, this.props.defaultValue.length) : 1
+            Math.max(1, this.props.defaultValue.length || 1) : 1
+        console.log(inputCount + "count")
         const inputKeys = [...Array(inputCount).keys()].map(() =>
             Math.random()
         )
@@ -23,6 +24,14 @@ export default class FieldMany extends Component {
 
     render() {
         const singleForm = index => {
+            const uid = `${this.props.uid}.${index}`
+            return <Field type={this.props.fields}
+                          uid={uid}
+                          defaultValue={this.fieldValue(uid)}
+                          onChange={this.props.onChange}
+                          onManyRemove={this.props.onInputRemove}
+                          key={uid}/>
+            /*
             return Object.keys(this.props.fields)
                 .map(id => {
                     const field  = this.props.fields[id]
@@ -36,6 +45,7 @@ export default class FieldMany extends Component {
                           onManyRemove={this.props.onInputRemove}
                           key={id}/>
                 })
+                */
         }
 
         const forms = [...Array(this.state.inputCount).keys()]

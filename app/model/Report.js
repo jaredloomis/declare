@@ -44,6 +44,9 @@ const reportSchema = mongoose.Schema({
             },
             data: {
                 type: Object
+            },
+            children: {
+                type: Object
             }
         }]
     }
@@ -59,10 +62,11 @@ reportSchema.statics.graphQL = createType({
         steps: {type: new GraphQLList(new GraphQLObjectType({
             name: "Step",
             fields: {
-                status:  {type: GraphQLString},
-                message: {type: GraphQLString},
-                time:    {type: GraphQLString},
-                data:    {type: GraphQLJSON}
+                status:   {type: GraphQLString},
+                message:  {type: GraphQLString},
+                time:     {type: GraphQLString},
+                data:     {type: GraphQLJSON},
+                children: {type: GraphQLJSON}
             }
         }))}
     }

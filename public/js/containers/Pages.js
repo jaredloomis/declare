@@ -56,7 +56,7 @@ class Pages extends Component {
     renderPageItem(pageID) {
         const page = this.props.pages[pageID]
         const link = `#/Page/${pageID}`
-        return <div className="card" key={pageID}>
+        return <div className="box" key={pageID}>
             <div className="card-content">
                 <span className="card-title">
                     <a href={link}>{page.name}</a>

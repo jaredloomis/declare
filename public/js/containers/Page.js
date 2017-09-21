@@ -12,7 +12,8 @@ import TestPack from "./TestPack"
 import Link     from "../components/Link"
 import TestPackSelect from "./TestPackSelect"
 
-import "../../style/Page.scss"
+import bulma from "../../style/bulma.scss"
+import style from "../../style/Page.scss"
 
 const mapStateToProps = (state, ownProps) => {
     const props = state.pages ?
@@ -113,8 +114,8 @@ class Page extends Component {
             (row, rowI) => this.renderRow(row, rowI, COL_WIDTH)
         )
 
-        return <div className="page">
-            <h1 className="page-name header center">
+        return <div className={style.page}>
+            <h1 className={bulma.title}>
                 {this.props.name}
             </h1>
             <h3>Page Info</h3>
