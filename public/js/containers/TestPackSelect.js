@@ -36,7 +36,7 @@ class TestPackSelect extends Component {
                 return <span value={packID} key={packID}>{name}</span>
             })
 
-        return <Select label="Test Pack" onChange={this.props.onChange}>
+        return <Select label="Test Pack" onChange={this.props.onChange} {...this.props}>
             {packs}
         </Select>
     }

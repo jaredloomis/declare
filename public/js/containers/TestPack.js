@@ -3,11 +3,14 @@ import {connect} from "react-redux"
 
 import {updatePackValue} from "../actions/Page"
 import {fetchPack} from "../actions/TestPack"
+import Button from "../components/base/Button"
+import Title  from "../components/base/Title"
 import Field from "../components/Field"
 import Report from "./Report"
 import {deepGet} from "../lib/Deep"
 
-import "../../style/TestPack.scss"
+import bulma from "../../style/bulma"
+import style from "../../style/TestPack.scss"
 
 const mapStateToProps = (state, ownProps) => {
     // Copy over all TestPack props
@@ -73,26 +76,29 @@ class TestPack extends Component {
                           key={id}/>
         })
 
-        return <div className="test-pack card">
+        return <div className={`test-pack ${bulma.box}`}>
+            <div className={style.testPackHeader}>
+                <div className={bulma.is_pulled_left}>
+                    <Title>{this.props.name}</Title>
+                </div>
+                <div className={style.testPackControls}>
+                    <Button onClick={this.remove} type="danger outlined">
+                        <i className="large material-icons">delete</i>
+                    </Button>
+                    <Button onClick={this.props.onExecute} type="success">
+                        <i className="large material-icons">play_arrow</i>
+                    </Button>
+                </div>
+            </div>
+            <div className={bulma.is_clearfix}></div>
             <div className="card-content">
-                <span className="test-pack-name card-title">
-                    {this.props.name}
-                </span>
-                <button onClick={this.remove}
-                        className="btn-floating btn-small red right">
-                    <i className="large material-icons">delete</i>
-                </button>
-                <button onClick={this.props.onExecute}
-                        className="btn-floating btn-small green right">
-                    <i className="large material-icons">play_arrow</i>
-                </button>
                 <div className="test-pack-form">
                     {form}
                 </div>
-                <div className="test-pack-reports">
-                    <button className="btn-flat" onClick={this.toggleReports}>
+                <div className={style.testPackReports}>
+                    <Button onClick={this.toggleReports}>
                         {this.state.reportsExpanded ? "Hide" : "Show"} Reports
-                    </button>
+                    </Button>
                     {this.renderReports()}
                 </div>
             </div>

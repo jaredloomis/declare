@@ -1,5 +1,7 @@
 import React, {Component} from "react"
 
+import bulma from "../../../style/bulma"
+
 export default class Select extends Component {
     constructor(props) {
         super(props)
@@ -38,6 +40,36 @@ export default class Select extends Component {
 
     render() {
         const children = this.children()
+        const change = (value, childs) => event =>
+            this.onChange(value, childs, event)
+        const childElements = children.map((child, childI) =>
+            <option key={childI} value={child.props.value}>
+                {child.props.children}
+            </option>
+        )
+        const label = this.props.noExteriorLabel ? null :
+            <label className={bulma.label}>{this.props.label}</label>
+        return <div className={bulma.field}>
+            {label}
+            <div className={`${bulma.control} ${bulma.select}`}>
+                <select onChange={ev => change(ev.target.value, "")(ev)}>
+                    {childElements}
+                </select>
+            </div>
+        </div>
+
+        /*
+        return <div className={bulma.select}>
+            <span>{this.props.label}</span>
+
+            <select onChange={ev => change(ev.target.value, "")(ev)}>
+                {childElements}
+            </select>
+        </div>
+        */
+
+        /*
+        const children = this.children()
         const labelID = `${this.state.randID}-lbl`
         const change = (value, childs) => event =>
             this.onChange(value, childs, event)
@@ -57,6 +89,7 @@ export default class Select extends Component {
                 {childElements}
             </ul>
         </div>
+        */
     }
 
     onChange(value, children, event) {

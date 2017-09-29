@@ -1,6 +1,10 @@
 import React, {Component} from "react"
 import Field from "./Field"
+import Button from "./base/Button"
 import {deepGet} from "../lib/Deep"
+
+import bulma from "../../style/bulma"
+import style from "../../style/TestPack.scss"
 
 export default class FieldMany extends Component {
     constructor(props) {
@@ -12,7 +16,6 @@ export default class FieldMany extends Component {
 
         const inputCount = this.props.defaultValue ?
             Math.max(1, this.props.defaultValue.length || 1) : 1
-        console.log(inputCount + "count")
         const inputKeys = [...Array(inputCount).keys()].map(() =>
             Math.random()
         )
@@ -51,7 +54,7 @@ export default class FieldMany extends Component {
         const forms = [...Array(this.state.inputCount).keys()]
         .map(index => {
             const uid = this.state.inputKeys[index]
-            return <div className="field-many-form" key={uid}>
+            return <div className={style.fieldManyForm} key={uid}>
                 <div className="field-many-singular-name">
                     <span>
                         {this.props.singularName ||
@@ -66,15 +69,24 @@ export default class FieldMany extends Component {
             </div>
         })
 
-        return <div className="field field-many">
+        return <div className={style.fieldMany}>
             <div className="field-many-name">
-                <span>{this.props.name}</span>
+                <label className={bulma.label}>{this.props.name}</label>
             </div>
-            {forms}
-            <button onClick={this.addInput} className="btn">
-                +
-            </button>
+            <div className={`${bulma.box} field field-many`}>
+                {forms}
+                <Button onClick={this.addInput} type="info">
+                    + Add {this.singularize(this.props.name)}
+                </Button>
+            </div>
         </div>
+    }
+
+    /* XXX: This is a hack */
+    singularize(str) {
+        return str[str.length-1] === "s" ?
+            str.slice(0, str.length-1) :
+            str
     }
 
     fieldValue(uid) {
@@ -108,7 +120,6 @@ export default class FieldMany extends Component {
                 --state.inputCount
                 return state
             })
-            console.log(`REMOVE ${this.props.uid}.${index}`)
             this.props.onInputRemove(`${this.props.uid}.${index}`)
         }
     }

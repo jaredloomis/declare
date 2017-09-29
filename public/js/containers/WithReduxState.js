@@ -1,4 +1,5 @@
 import {connect}          from "react-redux"
+import {compose, setDisplayName} from "recompose"
 import {deepGet, deepSet} from "../lib/Deep"
 
 const mapStateToProps = fields => (state, ownProps) => {
@@ -15,7 +16,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {}
 }
 
-export default (fields, BaseComponent) => connect(
-    mapStateToProps(fields),
-    mapDispatchToProps
-)(BaseComponent)
+export default (fields, BaseComponent) => compose(
+        setDisplayName(`withReduxState(${BaseComponent.displayName})`),
+        connect(mapStateToProps(fields), mapDispatchToProps)
+    )(BaseComponent)

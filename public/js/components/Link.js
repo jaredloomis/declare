@@ -1,8 +1,12 @@
 import React, {Component} from "react"
-import Select from "./base/Select"
+
+import Button        from "./base/Button"
+import Select        from "./base/Select"
+import Title         from "./base/Title"
 import ElementSelect from "../containers/ElementSelect"
 
-import "../../style/Link.scss"
+import bulma from "../../style/bulma"
+import style from "../../style/Link.scss"
 
 export default class Link extends Component {
     constructor(props) {
@@ -25,19 +29,19 @@ export default class Link extends Component {
         const destID   = this.props.defaultValue.destination
         const dest     = this.props.pages[destID]
         const destName = dest ? dest.name : ""
-        return <div className="page-link card">
-            <div className="card-content">
-            <div className="page-link-header">
-                <span className="card-title">
-                    {destName}
-                </span>
-                <button onClick={this.props.onRemove}
-                        className="btn btn-floating red right">
-                    <i className="material-icons">delete</i>
-                </button>
+        return <div className={bulma.box}>
+            <div className={`${bulma.columns} ${style.linkHeader}`}>
+                <div className={`${bulma.column} ${bulma.is_three_quarters}`}>
+                    <Title>Link To: {destName}</Title>
+                </div>
+                <div className={bulma.column}>
+                    <Button type="danger outlined" onClick={this.props.onRemove}>
+                        <i className="material-icons">delete</i>
+                    </Button>
+                </div>
             </div>
-            <div className="row">
-                <div className="col s2">
+            <div className={bulma.columns}>
+                <div className={`${bulma.column} ${bulma.is_one_quarter}`}>
                 <Select label="Destination" onChange={this.changeDest}
                         defaultValue={destID}>
                     {Object.keys(this.props.pages).map(pageID =>
@@ -47,13 +51,12 @@ export default class Link extends Component {
                     )}
                 </Select>
                 </div>
-                <div className="col s10 link-actions">
+                <div className={`${bulma.column} ${bulma.is_primary} ${style.linkActions}`}>
                     {this.props.defaultValue.navigation.map(
                         this.renderAction
                     )}
-                    <button onClick={this.addAction} className="btn">+</button>
+                    <Button onClick={this.addAction} type="info">+</Button>
                 </div>
-            </div>
             </div>
         </div>
     }
@@ -67,22 +70,20 @@ export default class Link extends Component {
                 values: {element: value}
             })
         }
-        const randID = Math.random()
         const key = this.state.inputKeys[index]
-        return <div key={key} className="row">
-            <div className="col s2">
+        return <div key={key} className={bulma.columns}>
+            <div className={`${bulma.column} ${bulma.is_one_quarter}`}>
             <Select label="Action" onChange={() => {}} defaultValue="click">
                 <span value="click">Click</span>
             </Select>
             </div>
-            <div className="col s8">
+            <div className={bulma.column}>
             <ElementSelect defaultValue={val} onChange={change}/>
             </div>
-            <div className="col s2">
-            <button onClick={this.removeAction(index)}
-                    className="btn btn-floating red">
+            <div className={bulma.column}>
+            <Button type="danger outlined" onClick={this.removeAction(index)}>
                 <i className="material-icons">delete</i>
-            </button>
+            </Button>
             </div>
         </div>
     }

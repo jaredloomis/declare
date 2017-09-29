@@ -7,7 +7,8 @@ import FieldElement  from "./FieldElement"
 
 const Field = ({uid, type, options, defaultValue,
                 onChange, onManyRemove}) => {
-    options = options || {}
+    options      = options || {}
+                    //defaultValue = defaultValue || {}
     if(Array.isArray(type)) {
         return <FieldMany {...options}
                           uid={uid}
@@ -23,7 +24,7 @@ const Field = ({uid, type, options, defaultValue,
                 return <Field uid={keyUid}
                           type={field.type}
                           options={field.options}
-                          defaultValue={defaultValue[key]}
+                          defaultValue={defaultValue && defaultValue[key]}
                           onChange={onChange}
                           onManyRemove={onManyRemove}
                           key={keyUid}/>

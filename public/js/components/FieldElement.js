@@ -7,7 +7,7 @@ const FieldElement = props => {
         props.onChange(props.uid)(value)
     }
     const def    = props.defaultValue
-    return <ElementSelect defaultValue={def} onChange={change}/>
+    return <ElementSelect label={props.name} defaultValue={def} onChange={change}/>
 }
 
 FieldElement.displayName = "FieldElement"

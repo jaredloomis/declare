@@ -8,11 +8,13 @@ import {
     removeLink, removePackMany, addLink,
     removePage, executePack
 } from "../actions/Page"
+import Title    from "../components/base/Title"
+import Button   from "../components/base/Button"
 import TestPack from "./TestPack"
 import Link     from "../components/Link"
 import TestPackSelect from "./TestPackSelect"
 
-import bulma from "../../style/bulma.scss"
+import bulma from "../../style/bulma.js"
 import style from "../../style/Page.scss"
 
 const mapStateToProps = (state, ownProps) => {
@@ -115,39 +117,42 @@ class Page extends Component {
         )
 
         return <div className={style.page}>
-            <h1 className={bulma.title}>
-                {this.props.name}
-            </h1>
-            <h3>Page Info</h3>
+            <Title primary="true">{this.props.name}</Title>
+            <Title>Page Info</Title>
             <div className="page-info">
                 TODO
             </div>
-            <h3>Page Links</h3>
+            <Title>Page Links</Title>
             <div className="page-links">
                 {this.renderLinks()}
-                <button onClick={this.props.onLinksSave} className="btn">
-                    Save
-                </button>
+                <Button type="primary" onClick={this.props.onLinksSave}>
+                    Save Links
+                </Button>
             </div>
-            <h3>Test Packs</h3>
+            <Title>Test Packs</Title>
             <div className="page-test-packs">
                 {testPacksDOM}
-                <div className="page-test-pack-add">
-                    <TestPackSelect label="Test Pack"
-                        onChange={this.addPackChange}/>
-                    <button onClick={this.addPack} className="btn">+</button>
+                <div className={`${bulma.field} ${bulma.has_addons}`}>
+                    <div className="control">
+                        <TestPackSelect label="Test Pack" noExteriorLabel="true"
+                            onChange={this.addPackChange}/>
+                    </div>
+                    <div className="control">
+                        <Button onClick={this.addPack}>+ Add Test Pack</Button>
+                    </div>
                 </div>
             </div>
-            <button onClick={this.props.onPacksSave} className="btn">
+            <Button type="primary" onClick={this.props.onPacksSave}>
                 Save Pack Data
-            </button>
-            <button onClick={this.props.onPageDelete} className="btn">
+            </Button>
+            <Button type="danger outlined" onClick={this.props.onPageDelete}>
                 Delete Page
-            </button>
+            </Button>
         </div>
     }
 
     renderRow(row, rowI, colWidth) {
+        /*
         const columns = row.map((tp, colI) => {
             if(tp && tp.testPack) {
                 return <div key={colI} className={"col s" + colWidth}>
@@ -163,6 +168,22 @@ class Page extends Component {
             }
         })
         return <div className="row" key={rowI}>{columns}</div>
+        */
+        const columns = row.map((tp, colI) => {
+            if(tp && tp.testPack) {
+                return <div key={colI} className={bulma.column}>
+                    <TestPack packID={tp.testPack}
+                              pageID={this.props.pageID}
+                              onChange={this.fieldChange}
+                              onRemove={this.packRemove(tp.testPack)}
+                              onManyRemove={this.manyRemove}
+                              onExecute={this.packExecute(tp.testPack)}/>
+                </div>
+            } else {
+                return <span key={colI}>Loading...</span>
+            }
+        })
+        return <div className={bulma.columns} key={rowI}>{columns}</div>
     }
 
     renderLinks() {
@@ -178,9 +199,9 @@ class Page extends Component {
             )
             return <div>
                 {links}
-                <button onClick={this.linkAdd} className="btn">
-                    +
-                </button>
+                <Button onClick={this.linkAdd} type="info">
+                    + Add Link
+                </Button>
             </div>
         } else {
             return <span>Loading...</span>
@@ -229,6 +250,7 @@ class Page extends Component {
     }
 
     addPack(event) {
+        console.log(this.state.addPackSelection)
         this.props.onPackAdd(this.state.addPackSelection)
     }
 

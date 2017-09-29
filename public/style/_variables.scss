@@ -1,4 +1,11 @@
+// Old materialize stuff
+
 $primary-color: #0F1626; //color("light-blue", "base");
 $secondary-color: #AB987A; //color("orange", "base");
 
 $roboto-font-path: "../node_modules/materialize-css/fonts/roboto/";
+
+// New
+
+// Import bulma vars
+@import "../node_modules/bulma/sass/utilities/initial-variables";
