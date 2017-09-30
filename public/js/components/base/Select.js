@@ -1,11 +1,13 @@
 import React, {Component} from "react"
 
-import bulma from "../../../style/bulma"
+import FeatherIcon from "./FeatherIcon"
+import bulma       from "../../../style/bulma"
 
 export default class Select extends Component {
     constructor(props) {
         super(props)
-        this.onChange = this.onChange.bind(this)
+        this.onChange       = this.onChange.bind(this)
+        this.toggleExpanded = this.toggleExpanded.bind(this)
 
         const label = (() => {
             const def = this.props.label || ""
@@ -20,7 +22,8 @@ export default class Select extends Component {
 
         this.state = {
             label,
-            randID: `Select-${Math.floor(Math.random() * 100000)}`
+            randID: `Select-${Math.floor(Math.random() * 100000)}`,
+            expanded: false
         }
     }
 
@@ -40,15 +43,26 @@ export default class Select extends Component {
 
     render() {
         const children = this.children()
-        const change = (value, childs) => event =>
+        const change = (value, childs) => event => {
             this.onChange(value, childs, event)
+            this.setState({
+                expanded: false
+            })
+        }
         const childElements = children.map((child, childI) =>
+            <a className={bulma.dropdown_item} value={child.props.value} key={childI}
+               onClick={change(child.props.value, child.props.children)}>
+                {child.props.children}
+            </a>
+            /*
             <option key={childI} value={child.props.value}>
                 {child.props.children}
             </option>
+            */
         )
         const label = this.props.noExteriorLabel ? null :
             <label className={bulma.label}>{this.props.label}</label>
+            /*
         return <div className={bulma.field}>
             {label}
             <div className={`${bulma.control} ${bulma.select}`}>
@@ -56,17 +70,23 @@ export default class Select extends Component {
                     {childElements}
                 </select>
             </div>
-        </div>
+        </div>*/
 
-        /*
-        return <div className={bulma.select}>
-            <span>{this.props.label}</span>
-
-            <select onChange={ev => change(ev.target.value, "")(ev)}>
-                {childElements}
-            </select>
+        const randID = Math.random()
+        return <div className={`${bulma.dropdown} ${this.state.expanded ? bulma.is_active : ""}`}>
+            <div>
+                <button className={bulma.button} aria-haspopup="true" aria-controls="dropdown-menu"
+                        onClick={this.toggleExpanded}>
+                    <span>{this.state.label}</span>
+                    <FeatherIcon icon="chevron-down"/>
+                </button>
+            </div>
+            <div className={bulma.dropdown_menu} id={`dropdown-menu-${randID}`} role="menu">
+                <div className={bulma.dropdown_content}>
+                    {childElements}
+                </div>
+            </div>
         </div>
-        */
 
         /*
         const children = this.children()
@@ -90,6 +110,12 @@ export default class Select extends Component {
             </ul>
         </div>
         */
+    }
+
+    toggleExpanded(expanded) {
+        this.setState(state => ({
+            expanded: !state.expanded
+        }))
     }
 
     onChange(value, children, event) {
