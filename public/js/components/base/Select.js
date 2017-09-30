@@ -23,22 +23,9 @@ export default class Select extends Component {
         this.state = {
             label,
             randID: `Select-${Math.floor(Math.random() * 100000)}`,
-            expanded: false
+            expanded: false,
+            selectedValue: this.props.defaultValue
         }
-    }
-
-    componentDidMount() {
-        /*
-        $(`#${this.state.randID}`).dropdown({
-            inDuration: 300,
-            outDuration: 225,
-            constrainWidth: true,
-            hover: false,
-            gutter: 0,
-            belowOrigin: false,
-            alignment: "left",
-            stopPropagation: false
-        })*/
     }
 
     render() {
@@ -46,31 +33,21 @@ export default class Select extends Component {
         const change = (value, childs) => event => {
             this.onChange(value, childs, event)
             this.setState({
-                expanded: false
+                expanded: false,
+                selectedValue: value
             })
         }
-        const childElements = children.map((child, childI) =>
-            <a className={bulma.dropdown_item} value={child.props.value} key={childI}
+        const childElements = children.map((child, childI) => {
+            const isSelected = child.props.value === this.state.selectedValue
+            const klass = `${bulma.dropdown_item} ${isSelected ? bulma.is_active : ""}`
+
+            return <a className={klass} value={child.props.value} key={childI}
                onClick={change(child.props.value, child.props.children)}>
                 {child.props.children}
             </a>
-            /*
-            <option key={childI} value={child.props.value}>
-                {child.props.children}
-            </option>
-            */
-        )
+        })
         const label = this.props.noExteriorLabel ? null :
             <label className={bulma.label}>{this.props.label}</label>
-            /*
-        return <div className={bulma.field}>
-            {label}
-            <div className={`${bulma.control} ${bulma.select}`}>
-                <select onChange={ev => change(ev.target.value, "")(ev)}>
-                    {childElements}
-                </select>
-            </div>
-        </div>*/
 
         const randID = Math.random()
         return <div className={`${bulma.dropdown} ${this.state.expanded ? bulma.is_active : ""}`}>
@@ -87,29 +64,6 @@ export default class Select extends Component {
                 </div>
             </div>
         </div>
-
-        /*
-        const children = this.children()
-        const labelID = `${this.state.randID}-lbl`
-        const change = (value, childs) => event =>
-            this.onChange(value, childs, event)
-        const childElements = children.map((child, childI) =>
-            <li key={childI}>
-                <a onClick={change(child.props.value,
-                                   child.props.children)}>
-                    {child}
-                </a>
-            </li>
-        )
-        return <div>
-            <a className="dropdown-button btn"
-               id={this.state.randID}
-               data-activates={labelID}>{this.state.label}</a>
-            <ul id={labelID} className="dropdown-content">
-                {childElements}
-            </ul>
-        </div>
-        */
     }
 
     toggleExpanded(expanded) {

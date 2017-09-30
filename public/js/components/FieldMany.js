@@ -34,21 +34,6 @@ export default class FieldMany extends Component {
                           onChange={this.props.onChange}
                           onManyRemove={this.props.onInputRemove}
                           key={uid}/>
-            /*
-            return Object.keys(this.props.fields)
-                .map(id => {
-                    const field  = this.props.fields[id]
-                    const uid    = this.childUID(id, index)
-                    const defVal = this.fieldValue(uid)
-                    return <Field uid={uid}
-                          type={field.type}
-                          options={field.options}
-                          defaultValue={defVal}
-                          onChange={this.props.onChange}
-                          onManyRemove={this.props.onInputRemove}
-                          key={id}/>
-                })
-                */
         }
 
         const forms = [...Array(this.state.inputCount).keys()]
@@ -73,7 +58,7 @@ export default class FieldMany extends Component {
             <div className="field-many-name">
                 <label className={bulma.label}>{this.props.name}</label>
             </div>
-            <div className={`${bulma.box} field field-many`}>
+            <div className={`${style.fieldManyBody}`}>
                 {forms}
                 <Button onClick={this.addInput} type="info">
                     + Add {this.singularize(this.props.name)}

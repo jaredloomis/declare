@@ -37,6 +37,15 @@
     padding-bottom: 1em;
 }
 
+.fieldManyBody {
+    border-left: 1px solid $grey-lighter;
+    padding-left: 1em;
+}
+
+.fieldManyBody:hover {
+    border-left: 1px solid $grey-light;
+}
+
 .fieldManyForm {
     padding-bottom: 1em;
     margin-bottom: 1em;
