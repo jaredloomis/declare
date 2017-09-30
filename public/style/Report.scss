@@ -1,0 +1,33 @@
+@import "./variables";
+
+.reportMain {
+    padding-bottom: 1.5em;
+}
+
+.reportSteps {
+    background-color: $white;
+    padding-right: 0px;
+}
+
+@mixin step($statusColor) {
+    border-left:   2px solid $statusColor;
+    border-top:    1px solid lighten($statusColor, 30%);
+    border-bottom: 1px solid lighten($statusColor, 30%);
+    background-color:        lighten($statusColor, 40%);
+}
+
+.statuspass {
+    @include step($success);
+}
+.statusfail {
+    @include step($danger);
+}
+.statusinfo {
+    @include step($info);
+}
+
+.reportStep > .reportSteps {
+    padding-left: 1em;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}

@@ -67,7 +67,7 @@ export default class FieldMany extends Component {
         </div>
     }
 
-    /* XXX: This is a hack */
+    /* XXX: This is a hack. This data should be hardcoded in TestPack db */
     singularize(str) {
         return str[str.length-1] === "s" ?
             str.slice(0, str.length-1) :

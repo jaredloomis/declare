@@ -99,7 +99,9 @@ class TestPack extends Component {
                     <Button onClick={this.toggleReports}>
                         {this.state.reportsExpanded ? "Hide" : "Show"} Reports
                     </Button>
-                    {this.renderReports()}
+                    <div className={style.testPackReportList}>
+                        {this.renderReports()}
+                    </div>
                 </div>
             </div>
         </div>

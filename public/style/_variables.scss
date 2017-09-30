@@ -7,5 +7,11 @@ $roboto-font-path: "../node_modules/materialize-css/fonts/roboto/";
 
 // New
 
-// Import bulma vars
+// Import initial bulma vars
 @import "../node_modules/bulma/sass/utilities/initial-variables";
+
+// Override bulma vars here
+
+// Let bulma create more derived vars
+@import "../node_modules/bulma/sass/utilities/functions.sass";
+@import "../node_modules/bulma/sass/utilities/derived-variables";

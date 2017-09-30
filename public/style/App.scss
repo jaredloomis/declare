@@ -1,0 +1,26 @@
+.app {
+}
+
+/*
+ * Make firefox not draw that disgusting dotted
+ * line around everthing you interact with
+ */
+
+button::-moz-focus-inner {
+    border: 0;
+}
+a {
+   outline: 0;
+}
+input::-moz-focus-inner { 
+    border: 0;
+}
+/* <select>s are a bit harder */
+select:-moz-focusring {
+  color: transparent;
+  text-shadow: 0 0 0 #000;
+}
+select:-moz-focusring * {
+  color: #000;
+  text-shadow: none;
+}
