@@ -4,12 +4,13 @@ import {
     lifecycle, compose, withState
 } from "recompose"
 
-import InputType from "./InputType"
+import InputType   from "./InputType"
 import {
     listInputTypes, createInputType
-}                from "../actions/InputType"
-import Button    from "../components/base/Button"
-import TextInput from "../components/base/TextInput"
+}                  from "../actions/InputType"
+import Button      from "../components/base/Button"
+import TextInput   from "../components/base/TextInput"
+import AddonsField from "../components/base/AddonsField"
 
 const InputTypesBase = props => {
     const {inputTypes, createType, newName, setNewName} = props
@@ -25,8 +26,12 @@ const InputTypesBase = props => {
     // Display list and add controls
     return <div>
         {inTyDOMs}
-        <Button onClick={() => createType(newName)}>+</Button>
-        <TextInput onChange={changeName} label="Input Type Name"/>
+        <AddonsField>
+            <TextInput onChange={changeName} label="Input Type Name"/>
+            <Button onClick={() => createType(newName)} type="info" inline={true}>
+                Create Input Type
+            </Button>
+        </AddonsField>
     </div>
 }
 

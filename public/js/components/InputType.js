@@ -4,6 +4,10 @@ import {withState} from "recompose"
 import TextInput from "./base/TextInput"
 import Button    from "./base/Button"
 import Select    from "./base/Select"
+import Title     from "./base/Title"
+import Group     from "./base/Group"
+
+import bulma from "../../style/bulma.js"
 
 const InputTypeBase = props => {
     const {name, constraints, onConstraintChange, onConstraintAdd} = props
@@ -19,22 +23,19 @@ const InputTypeBase = props => {
                 regex: event.target.value
             })
 
-            return <div className="row">
-                <TextInput label="Regex" onChange={change}
-                           defaultValue={constraint.regex}/>
-            </div>
+            return <TextInput label="Regex" onChange={change}
+                              defaultValue={constraint.regex}/>
         } else if(constraintTy === "length") {
             const change = key => event => onConstraintChange(i, {
                 [key]: event.target.value
             })
 
-            return <div className="row">
-                Length:
+            return [
                 <TextInput label="Min Length" onChange={change("minLength")}
-                           defaultValue={constraint.minLength}/>
+                           defaultValue={constraint.minLength} key={i}/>,
                 <TextInput label="Max Length" onChange={change("maxLength")}
-                           defaultValue={constraint.maxLength}/>
-            </div>
+                           defaultValue={constraint.maxLength} key={i + 0.5}/>
+            ]
         }
     }).map((constraintDOM, i) => {
         // Add controls to each constraint row
@@ -50,20 +51,28 @@ const InputTypeBase = props => {
         }
 
         return <div key={i}>
-            <Select label="Constraint Type" onChange={change}
-                    defaultValue={curSelectedConstraint}>
-                <span value="regex">Regex</span>
-                <span value="length">Length</span>
-            </Select>
-            {constraintDOM}
+            <Group>
+                <Select label="Constraint" onChange={change}
+                        defaultValue={curSelectedConstraint}>
+                    <span value="regex">Regex</span>
+                    <span value="length">Length</span>
+                </Select>
+                {constraintDOM}
+            </Group>
         </div>
     })
-    return <div className="card">
-        <span>{name}</span>
-        {constraintElems}
-        <Button onClick={onConstraintAdd}>+</Button>
-        <Button onClick={props.onSave}>Save</Button>
-        <Button onClick={props.onDelete}>Delete</Button>
+    return <div>
+        <Title size="5">{name}</Title>
+        <div className={bulma.field}>
+            {constraintElems}
+        </div>
+        <div className={bulma.field}>
+            <Button onClick={onConstraintAdd} type="info">+ Add Constraint</Button>
+        </div>
+        <Group>
+            <Button onClick={props.onSave} type="primary">Save</Button>
+            <Button onClick={props.onDelete} type="danger outlined">Delete</Button>
+        </Group>
     </div>
 }
 

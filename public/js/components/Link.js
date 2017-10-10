@@ -81,7 +81,7 @@ export default class Link extends Component {
             <ElementSelect defaultValue={val} onChange={change}/>
             </div>
             <div className={bulma.column}>
-            <Button type="danger outlined" onClick={this.removeAction(index)}>
+            <Button inline={true} type="danger outlined" onClick={this.removeAction(index)}>
                 <i className="material-icons">delete</i>
             </Button>
             </div>

@@ -1,5 +1,10 @@
 import React, {Component} from "react"
 
+import Button    from "./base/Button"
+import TextInput from "./base/TextInput"
+
+import bulma from "../../style/bulma.js"
+
 export default class PageAdd extends Component {
     constructor(props) {
         super(props)
@@ -13,15 +18,15 @@ export default class PageAdd extends Component {
     }
 
     render() {
-        const randID = Math.random()
-        return <div>
-            <div className="field input-field">
-                <input type="text" id={randID} onChange={this.nameChange}/>
-                <label htmlFor={randID}>{name}</label>
+        return <div className={`${bulma.field} ${bulma.has_addons}`}>
+            <div className={bulma.control}>
+                <TextInput onChange={this.nameChange} label="Page Name"/>
             </div>
-            <button onClick={this.createPage} className="btn">
-                Create Page
-            </button>
+            <div className={bulma.control}>
+                <Button onClick={this.createPage} inline={true} type="info">
+                    Create Page
+                </Button>
+            </div>
         </div>
     }
 

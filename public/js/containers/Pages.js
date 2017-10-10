@@ -2,9 +2,12 @@ import React, {Component} from "react"
 import {connect} from "react-redux"
 
 import {listPages, createPage} from "../actions/Page"
+import Title                   from "../components/base/Title"
 import PageAdd                 from "../components/PageAdd"
 import InputTypes              from "./InputTypes"
 import Elements                from "./Elements"
+
+import bulma from "../../style/bulma.js"
 
 const mapStateToProps = (state, ownProps) => {
     return {
@@ -40,13 +43,13 @@ class Pages extends Component {
     render() {
         if(this.props.pages)
             return <div>
-                <h2>Pages</h2>
+                <Title size="2">Pages</Title>
                 {Object.keys(this.props.pages).map(this.renderPageItem)}
-                <h4>Page Add</h4>
+                <Title size="4">Page Add</Title>
                 <PageAdd onCreatePage={this.createPage}/>
-                <h2>Input Types</h2>
+                <Title size="2">Input Types</Title>
                 <InputTypes/>
-                <h2>Elements</h2>
+                <Title size="2">Elements</Title>
                 <Elements/>
             </div>
         else
@@ -56,7 +59,7 @@ class Pages extends Component {
     renderPageItem(pageID) {
         const page = this.props.pages[pageID]
         const link = `#/Page/${pageID}`
-        return <div className="box" key={pageID}>
+        return <div className={bulma.box} key={pageID}>
             <div className="card-content">
                 <span className="card-title">
                     <a href={link}>{page.name}</a>

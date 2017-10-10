@@ -1,9 +1,10 @@
 import React from "react"
 
-import bulma from "../../../style/bulma.js"
+import bulma from "../../../style/bulma"
+import style from "../../../style/Button.scss"
 
-const Button = ({onClick, children, color, type}) => {
-    const klass = `${bulma.button} ${typeToClasses(type)} ${typeToClasses(color)}`
+const Button = ({onClick, children, color, type, inline}) => {
+    const klass = `${bulma.button} ${typeToClasses(type)} ${typeToClasses(color)} ${inline ? style.inlineInputButton : ""}`
     return <button onClick={onClick} className={klass}>
         {children}
     </button>
@@ -25,5 +26,4 @@ function typeToClasses(type) {
 }
 
 Button.displayName = "Button"
-
 export default Button

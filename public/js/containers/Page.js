@@ -117,37 +117,55 @@ class Page extends Component {
         )
 
         return <div className={style.page}>
-            <Title primary="true">{this.props.name}</Title>
-            <Title>Page Info</Title>
+            <Title size="1">{this.props.name}</Title>
+            <Title size="3">Page Info</Title>
             <div className="page-info">
                 TODO
             </div>
-            <Title>Page Links</Title>
+            <Title size="3">Page Links</Title>
             <div className="page-links">
                 {this.renderLinks()}
-                <Button type="primary" onClick={this.props.onLinksSave}>
-                    Save Links
-                </Button>
+                <div className={`${bulma.field} ${bulma.is_grouped} ${style.linkControls}`}>
+                    <p className={bulma.control}>
+                        <Button onClick={this.linkAdd} type="info">
+                            + Add Link
+                        </Button>
+                    </p>
+                    <p className={bulma.control}>
+                        <Button type="primary" onClick={this.props.onLinksSave}>
+                            Save Links
+                        </Button>
+                    </p>
+                </div>
             </div>
-            <Title>Test Packs</Title>
+            <Title size="3">Page Test Packs</Title>
             <div className="page-test-packs">
                 {testPacksDOM}
-                <div className={`${bulma.field} ${bulma.has_addons}`}>
-                    <div className="control">
+                <div className={`${bulma.field} ${bulma.is_grouped}`}>
+                    <div className={bulma.control}>
                         <TestPackSelect label="Test Pack" noExteriorLabel="true"
                             onChange={this.addPackChange}/>
                     </div>
-                    <div className="control">
-                        <Button onClick={this.addPack}>+ Add Test Pack</Button>
+                    <div className={bulma.control}>
+                        <Button inline={true} type="info" onClick={this.addPack}>
+                            + Add Test Pack
+                        </Button>
                     </div>
                 </div>
             </div>
-            <Button type="primary" onClick={this.props.onPacksSave}>
-                Save Pack Data
-            </Button>
-            <Button type="danger outlined" onClick={this.props.onPageDelete}>
-                Delete Page
-            </Button>
+            <br/>
+            <div className={`${bulma.field} ${bulma.is_grouped}`}>
+                <div className={bulma.control}>
+                    <Button type="primary" onClick={this.props.onPacksSave}>
+                        Save Pack Data
+                    </Button>
+                </div>
+                <div className={bulma.control}>
+                    <Button type="danger outlined" onClick={this.props.onPageDelete}>
+                        Delete Page
+                    </Button>
+                </div>
+            </div>
         </div>
     }
 
@@ -169,6 +187,7 @@ class Page extends Component {
         })
         return <div className="row" key={rowI}>{columns}</div>
         */
+
         const columns = row.map((tp, colI) => {
             if(tp && tp.testPack) {
                 return <div key={colI} className={bulma.column}>
@@ -199,9 +218,6 @@ class Page extends Component {
             )
             return <div>
                 {links}
-                <Button onClick={this.linkAdd} type="info">
-                    + Add Link
-                </Button>
             </div>
         } else {
             return <span>Loading...</span>
@@ -250,7 +266,6 @@ class Page extends Component {
     }
 
     addPack(event) {
-        console.log(this.state.addPackSelection)
         this.props.onPackAdd(this.state.addPackSelection)
     }
 

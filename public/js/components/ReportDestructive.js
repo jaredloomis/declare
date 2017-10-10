@@ -22,7 +22,9 @@ export default class ReportDestructive extends Component {
                                          ""
 
         return <div>
-            <p>Result: <span className={`${bulma.tag} ${statusClass}`}>{statusLabel}</span></p>
+            <p>Result:
+                <span className={`${bulma.tag} ${statusClass} ${bulma.is_medium}`}>{statusLabel}</span>
+            </p>
         </div>
     }
 }

@@ -42,8 +42,7 @@ export default class FieldMany extends Component {
             return <div className={style.fieldManyForm} key={uid}>
                 <div className="field-many-singular-name">
                     <span>
-                        {this.props.singularName ||
-                         this.props.name.slice(0, this.props.name.length-1)}
+                        {this.props.singularName}
                         &nbsp;
                         #{index+1}
                         <i onClick={this.removeInput(index)}
@@ -61,7 +60,7 @@ export default class FieldMany extends Component {
             <div className={`${style.fieldManyBody}`}>
                 {forms}
                 <Button onClick={this.addInput} type="info">
-                    + Add {this.singularize(this.props.name)}
+                    + Add {this.props.singularName}
                 </Button>
             </div>
         </div>
