@@ -4,10 +4,14 @@ import {
     lifecycle, compose, withState, setDisplayName
 } from "recompose"
 
-import Element from "./Element"
 import {listElements, createElement} from "../actions/Element"
-import TextInput from "../components/base/TextInput"
-import Button    from "../components/base/Button"
+import Element     from "./Element"
+import TextInput   from "../components/base/TextInput"
+import Button      from "../components/base/Button"
+import AddonsField from "../components/base/AddonsField"
+import Title       from "../components/base/Title"
+
+import bulma from "../../style/bulma"
 
 const mapStateToProps = (state, ownProps) => {
     return {elements: state.elements}
@@ -27,13 +31,20 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 const ElementsBase = props => {
     const elements = !props.elements || !Object.keys(props.elements).length ? null :
             Object.keys(props.elements).map(elemID =>
-                <Element elementID={elemID} key={elemID}/>
+                <div className={bulma.box} key={elemID}>
+                    <Element elementID={elemID}/>
+                </div>
             )
     return <div>
+        <Title size="2">Elements</Title>
         {elements}
-        <TextInput label="Selector"
-                   onChange={ev => props.setSelector(ev.target.value)}/>
-        <Button onClick={() => props.onCreate(props.selector)}>+</Button>
+        <AddonsField>
+            <TextInput label="Selector"
+                       onChange={ev => props.setSelector(ev.target.value)}/>
+            <Button onClick={() => props.onCreate(props.selector)} inline={true} type="info">
+                Create Element
+            </Button>
+        </AddonsField>
     </div>
 }
 

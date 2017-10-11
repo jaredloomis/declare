@@ -45,12 +45,7 @@ class Pages extends Component {
             return <div>
                 <Title size="2">Pages</Title>
                 {Object.keys(this.props.pages).map(this.renderPageItem)}
-                <Title size="4">Page Add</Title>
                 <PageAdd onCreatePage={this.createPage}/>
-                <Title size="2">Input Types</Title>
-                <InputTypes/>
-                <Title size="2">Elements</Title>
-                <Elements/>
             </div>
         else
             return <p>Loading...</p>

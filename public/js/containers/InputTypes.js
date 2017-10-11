@@ -11,6 +11,9 @@ import {
 import Button      from "../components/base/Button"
 import TextInput   from "../components/base/TextInput"
 import AddonsField from "../components/base/AddonsField"
+import Title       from "../components/base/Title"
+
+import bulma       from "../../style/bulma.js"
 
 const InputTypesBase = props => {
     const {inputTypes, createType, newName, setNewName} = props
@@ -19,12 +22,15 @@ const InputTypesBase = props => {
     const inTyDOMs = !inTyKeys.length ?
         <span>No Input Types Found...</span> :
         inTyKeys.map(inTyID =>
-            <InputType key={inTyID} inputTypeID={inTyID}/>
+            <div className={bulma.box} key={inTyID}>
+                <InputType inputTypeID={inTyID}/>
+            </div>
         )
     // When new name text changes, update state
     const changeName = event => setNewName(event.target.value)
     // Display list and add controls
     return <div>
+        <Title size="2">Input Types</Title>
         {inTyDOMs}
         <AddonsField>
             <TextInput onChange={changeName} label="Input Type Name"/>
