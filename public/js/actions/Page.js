@@ -8,7 +8,8 @@ import {
     LINK_UPDATE_DEST, PAGE_REMOVE_PACK, LINK_REMOVE_ACTION,
     LINK_ADD_ACTION, PAGE_REMOVE_LINK, PACK_REMOVE_MANY,
     PAGE_LIST, PAGE_CREATE, PAGE_REMOVE, PACK_EXECUTE,
-    REPORT_FETCH, PAGE_SET_BASELINE_SCREENSHOT
+    REPORT_FETCH, PAGE_SET_BASELINE_SCREENSHOT,
+    PAGE_UPDATE_INFO
 } from "./Types"
 import {fetchPack} from "./TestPack"
 import client from "../graphQL/Client"
@@ -79,8 +80,14 @@ export async function listPages(dispatch: Func) {
     })
 }
 
+export const updatePageInfo = (id: string, info: any) => ({
+    type: PAGE_UPDATE_INFO,
+    id,
+    info
+})
+
 export const savePackData = (id: string) =>
-                            async (dispatch: Func, getState: Func) => {
+                      async (dispatch: Func, getState: Func) => {
     const data = JSON.stringify(getState().pages[id].testPackData)
                      .replace(new RegExp("\"", "g"), "\\\"")
     dispatch({

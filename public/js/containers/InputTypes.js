@@ -60,7 +60,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         listTypes() {
-            dispatch(listInputTypes())
+            dispatch(listInputTypes)
         },
         createType(name) {
             dispatch(createInputType(name))

@@ -2,7 +2,7 @@ import {connect} from "react-redux"
 
 import {
     updateInputTypeConstraint, addConstraint, saveInputType,
-    removeInputType
+    removeInputType, removeInputTypeConstraint, updateInputType
 } from "../actions/InputType"
 import InputType from "../components/InputType"
 
@@ -20,11 +20,19 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                 updateInputTypeConstraint(ownProps.inputTypeID, index, value)
             )
         },
+        onConstraintRemove(index) {
+            dispatch(
+                removeInputTypeConstraint(ownProps.inputTypeID, index)
+            )
+        },
         onSave() {
             dispatch(saveInputType(ownProps.inputTypeID))
         },
         onDelete() {
             dispatch(removeInputType(ownProps.inputTypeID))
+        },
+        onNameChange(name) {
+            dispatch(updateInputType(ownProps.inputTypeID, {name}))
         }
     }
 }

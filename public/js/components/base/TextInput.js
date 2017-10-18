@@ -15,7 +15,13 @@ const TextInputBase = props => {
 
     // Keep track of whether element is focused (for label)
     const focus   = () => setFocused(true)
-    const unfocus = () => setFocused(false)
+    const unfocus = event => {
+        setFocused(false)
+        // Bubble up to any event handlers on this component
+        if(props.onBlur) {
+            props.onBlur(event)
+        }
+    }
 
     const labelClick = () => {
         document.getElementById(randID).focus()

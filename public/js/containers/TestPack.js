@@ -1,6 +1,8 @@
 import React, {Component} from "react"
 import {connect} from "react-redux"
+import {lifecycle, compose} from "recompose"
 
+import {listElements}       from "../actions/Element"
 import {updatePackValue} from "../actions/Page"
 import {fetchPack} from "../actions/TestPack"
 import Button from "../components/base/Button"
@@ -8,6 +10,7 @@ import Title  from "../components/base/Title"
 import Field from "../components/Field"
 import Report from "./Report"
 import {deepGet} from "../lib/Deep"
+import withReduxDispatch from "./WithReduxDispatch"
 
 import bulma from "../../style/bulma"
 import style from "../../style/TestPack.scss"
@@ -154,7 +157,16 @@ const sortReports = reports => {
     })
 }
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(TestPack)
+const enhance = compose(
+    withReduxDispatch({
+        listElements
+    }),
+    lifecycle({
+        componentDidMount() {
+            this.props.listElements()
+        }
+    }),
+    connect(mapStateToProps, mapDispatchToProps)
+)
+
+export default enhance(TestPack)

@@ -6,12 +6,15 @@ import {
     saveLinks, updateLinkDest, addPack,
     removePack, removeLinkAction, addLinkAction,
     removeLink, removePackMany, addLink,
-    removePage, executePack
+    removePage, executePack, updatePageInfo
 } from "../actions/Page"
-import Title    from "../components/base/Title"
-import Button   from "../components/base/Button"
-import TestPack from "./TestPack"
-import Link     from "../components/Link"
+import Sep       from "../components/base/Sep"
+import AddonsField from "../components/base/AddonsField"
+import Title     from "../components/base/Title"
+import Button    from "../components/base/Button"
+import PageInfo  from "../components/PageInfo"
+import TestPack  from "./TestPack"
+import Link      from "./Link"
 import TestPackSelect from "./TestPackSelect"
 
 import bulma from "../../style/bulma.js"
@@ -78,6 +81,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         onPackExecute(packID) {
             dispatch(executePack(ownProps.pageID, packID))
+        },
+        onInfoChange(valMap) {
+            dispatch(updatePageInfo(ownProps.pageID, valMap))
         }
     }
 }
@@ -92,6 +98,7 @@ class Page extends Component {
         this.addPack = this.addPack.bind(this)
         this.manyRemove = this.manyRemove.bind(this)
         this.addPackChange = this.addPackChange.bind(this)
+        this.infoChange = this.infoChange.bind(this)
 
         this.state = {
             addPackSelection: "",
@@ -116,12 +123,13 @@ class Page extends Component {
             (row, rowI) => this.renderRow(row, rowI, COL_WIDTH)
         )
 
-        return <div className={style.page}>
+        return <div>
             <Title size="1">{this.props.name}</Title>
             <Title size="3">Page Info</Title>
-            <div className="page-info">
-                TODO
+            <div className={style.pageInfo}>
+                <PageInfo page={this.props} onChange={this.infoChange}/>
             </div>
+            <Sep/>
             <Title size="3">Page Links</Title>
             <div className="page-links">
                 {this.renderLinks()}
@@ -138,6 +146,7 @@ class Page extends Component {
                     </p>
                 </div>
             </div>
+            <Sep/>
             <Title size="3">Page Test Packs</Title>
             <div className="page-test-packs">
                 {testPacksDOM}
@@ -153,8 +162,8 @@ class Page extends Component {
                     </div>
                 </div>
             </div>
-            <br/>
-            <div className={`${bulma.field} ${bulma.is_grouped}`}>
+            {/*<div className={`${bulma.field} ${bulma.is_grouped}`}>*/}
+            <AddonsField>
                 <div className={bulma.control}>
                     <Button type="primary" onClick={this.props.onPacksSave}>
                         Save Pack Data
@@ -165,7 +174,8 @@ class Page extends Component {
                         Delete Page
                     </Button>
                 </div>
-            </div>
+            </AddonsField>
+            {/*</div>*/}
         </div>
     }
 
@@ -222,6 +232,10 @@ class Page extends Component {
         } else {
             return <span>Loading...</span>
         }
+    }
+
+    infoChange(valMap) {
+        this.props.onInfoChange(valMap)
     }
 
     packExecute(packID) {

@@ -16,7 +16,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {}
 }
 
-export default (fields, BaseComponent) => compose(
+export default fields => BaseComponent => compose(
         setDisplayName(`withReduxState(${BaseComponent.displayName})`),
         connect(mapStateToProps(fields), mapDispatchToProps)
     )(BaseComponent)

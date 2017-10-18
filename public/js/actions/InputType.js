@@ -4,7 +4,8 @@ import client from "../graphQL/Client"
 import {
     INPUT_TYPE_FETCH, INPUT_TYPE_CONSTRAINT_UPDATE,
     INPUT_TYPE_LIST, INPUT_TYPE_CREATE, INPUT_TYPE_ADD_CONSTRAINT,
-    INPUT_TYPE_SAVE, INPUT_TYPE_REMOVE
+    INPUT_TYPE_SAVE, INPUT_TYPE_REMOVE, INPUT_TYPE_CONSTRAINT_REMOVE,
+    INPUT_TYPE_UPDATE
 } from "./Types"
 
 export const fetchInputType = (id: string) => async (dispatch: Func) => {
@@ -25,7 +26,7 @@ export const fetchInputType = (id: string) => async (dispatch: Func) => {
     })
 }
 
-export const listInputTypes = () => async (dispatch: Func) => {
+export const listInputTypes = async (dispatch: Func) => {
     const {inputTypes} = await client.query(`{
         inputTypes {
             _id
@@ -44,11 +45,23 @@ export const listInputTypes = () => async (dispatch: Func) => {
     })
 }
 
+/* For updating top-level simple properties of InputType (like name) */
+export const updateInputType = (id: string, valMap: any) => ({
+    type: INPUT_TYPE_UPDATE,
+    id,
+    ...valMap
+})
+
 export const updateInputTypeConstraint =
     (id: string, constraintI: number, value: any) => ({
             type: INPUT_TYPE_CONSTRAINT_UPDATE,
             id, constraintI, value
         })
+
+export const removeInputTypeConstraint = (id: string, constraintI: number) => ({
+    type: INPUT_TYPE_CONSTRAINT_REMOVE,
+    id, constraintI
+})
 
 export const createInputType = (name: string) => async (dispatch: Func) => {
     const {inputType} = await client.mutate(`($inputType: InputTypeInput!) {
