@@ -3,7 +3,8 @@ import React, {Component} from "react"
 import Button        from "./base/Button"
 import Select        from "./base/Select"
 import Title         from "./base/Title"
-import ElementSelect from "../containers/ElementSelect"
+//import ElementSelect from "../containers/ElementSelect"
+import Action        from "./Action"
 
 import bulma from "../../style/bulma"
 import style from "../../style/Link.scss"
@@ -62,6 +63,12 @@ export default class Link extends Component {
     }
 
     renderAction(action, index) {
+        const change = newAction => this.props.onActionChange(index, newAction)
+        return <Action {...action}
+                    onChange={change}
+                    onRemove={this.removeAction(index)}
+                    key={this.state.inputKeys[index]}/>
+        /*
         const val    = action && action.values ?
                 action.values.element : ""
         const change = value => {
@@ -86,6 +93,7 @@ export default class Link extends Component {
             </Button>
             </div>
         </div>
+        */
     }
 
     addAction() {

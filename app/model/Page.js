@@ -29,6 +29,48 @@ const pageSchema = mongoose.Schema({
     },
     testPackData: {
         type: [TestPackData.schema]
+    },
+    customTests: {
+        type: [{
+            type: ObjectId,
+            ref: "CustomTest"
+        }]
+    },
+    testValues: {
+        type: [{
+            type: ObjectId,
+            ref: "TestValue"
+        }]
+    }
+})
+
+pageSchema.statics.graphQL = new GraphQLObjectType({
+    name: "Page",
+    fields: {
+        _id: {
+            type: new GraphQLNonNull(GraphQLID)
+        },
+        name: {
+            type: new GraphQLNonNull(GraphQLString)
+        },
+        startURL: {
+            type: GraphQLString
+        },
+        identifier: {
+            type: GraphQLString
+        },
+        links: {
+            type: new GraphQLList(Link.graphQL)
+        },
+        testPackData: {
+            type: new GraphQLList(TestPackData.graphQL)
+        },
+        customTests: {
+            type: new GraphQLList(GraphQLID)
+        },
+        testValues: {
+            type: new GraphQLList(GraphQLID)
+        }
     }
 })
 
@@ -86,29 +128,5 @@ pageSchema.methods.findPackValue = function(key) {
             return pack.values[key]
     }
 }
-
-pageSchema.statics.graphQL = new GraphQLObjectType({
-    name: "Page",
-    fields: {
-        _id: {
-            type: new GraphQLNonNull(GraphQLID)
-        },
-        name: {
-            type: new GraphQLNonNull(GraphQLString)
-        },
-        startURL: {
-            type: GraphQLString
-        },
-        identifier: {
-            type: GraphQLString
-        },
-        links: {
-            type: new GraphQLList(Link.graphQL)
-        },
-        testPackData: {
-            type: new GraphQLList(TestPackData.graphQL)
-        }
-    }
-})
 
 module.exports = mongoose.model("Page", pageSchema)

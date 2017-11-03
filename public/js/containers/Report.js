@@ -107,19 +107,6 @@ const Step = ({status, time, message, data, stepPath, children, expandedSteps, o
 
     const iconStr = isExpanded ? "chevron-down" : "chevron-right"
 
-        /*
-    return <li className={`${style.reportStep} ${style[`status${status}`]}`} key={stepPath}>
-        <div className={`${bulma.columns} ${bulma.is_marginless}`} onClick={expand}>
-            <span className={`${bulma.column} ${bulma.is_2}`}>
-                {hasChildren ? <FeatherIcon icon={iconStr}/> : null}
-            </span>
-            <span className={`${bulma.column} ${bulma.is_2}`}>{status}</span>
-            <span className={bulma.column}>{timeStr}</span>
-            <span className={bulma.column}>{message}</span>
-        </div>
-        {childList}
-    </li>*/
-
     return <li className={`${style.reportStep} ${style[`status${status}`]}`} key={stepPath}>
         <Row marginless onClick={expand}>
             <Column size="2">
