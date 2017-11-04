@@ -1,32 +1,31 @@
 // @flow
 import {
-    CUSTOM_TEST_UPDATE_ACTION
+    CUSTOM_TEST_UPDATE_ACTION, CUSTOM_TEST_FETCH
 } from "../actions/Types"
 
 export default (state: any, action: {type: string}) => {
     if(action.type === CUSTOM_TEST_UPDATE_ACTION) {
-        const curPage = state.pages[action.pageID]
-        const newPage = {
-            ...curPage,
-            customTests: curPage.customTests.map((customTest, ctI) => {
-                if(ctI === action.customTestI) {
-                    return {
-                        ...customTest,
-                        actions: customTest.actions.map((curAction, aI) =>
-                            aI === action.actionI ? action.action : curAction
-                        )
-                    }
-                } else {
-                    return customTest
-                }
-            })
+        const curTest = state.customTests[action.customTestID]
+        const newTest = {
+            ...curTest,
+            actions: curTest.actions.map((curAction, aI) =>
+                aI === action.actionI ? action.action : curAction
+            )
         }
 
         return {
             ...state,
-            pages: {
-                ...state.pages,
-                [action.pageID]: newPage
+            customTests: {
+                ...state.customTests,
+                [action.customTestID]: newTest
+            }
+        }
+    } else if(action.type === CUSTOM_TEST_FETCH) {
+        return {
+            ...state,
+            customTests: {
+                ...state.customTests,
+                [action.id]: action.customTest
             }
         }
     } else {

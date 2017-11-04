@@ -2,26 +2,28 @@
 import type {Func} from "../flow"
 import client from "../graphQL/Client"
 import {
-    CUSTOM_TEST_UPDATE_ACTION
+    CUSTOM_TEST_UPDATE_ACTION, CUSTOM_TEST_FETCH
 } from "./Types"
 
-export const fetchElement = (id: string) => async (dispatch: Func) => {
-    const {element} = await client.query(`($id: ID!) {
-        element(id: $id) {
+export const fetchCustomTest = (id: string) => async (dispatch: Func) => {
+    const {customTest} = await client.query(`query ($id: ID!) {
+        customTest(id: $id) {
             _id
             name
-            selector
-            inputType
+            actions {
+                actionType
+                values
+            }
         }
     }`, {id})
     dispatch({
-        type: ELEMENT_FETCH,
-        id, element
+        type: CUSTOM_TEST_FETCH,
+        id, customTest
     })
 }
 
-export const updateCustomTestAction = (pageID: string, customTestI: number,
+export const updateCustomTestAction = (customTestID: string,
                                        actionI: number, action: any) => ({
     type: CUSTOM_TEST_UPDATE_ACTION,
-    pageID, customTestI, actionI, action
+    customTestID, actionI, action
 })

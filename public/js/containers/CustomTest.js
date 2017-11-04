@@ -1,29 +1,35 @@
-import {connect}          from "react-redux"
+import React          from "react"
+import {lifecycle, compose, setDisplayName} from "recompose"
 
-import {updateCustomTestAction} from "../actions/Element"
-import Element         from "../components/Element"
+import {fetchCustomTest, updateCustomTestAction} from "../actions/CustomTest"
+import CustomTestComponent from "../components/CustomTest"
+import withReduxState      from "./WithReduxState"
+import withReduxDispatch   from "./WithReduxDispatch"
 
-const mapStateToProps = (state, ownProps) => {
-    return {
-        defaultValue: state.elements[ownProps.elementID]
+const CustomTestBase = ({customTestID, customTests}) => {
+    const customTest   = customTests[customTestID]
+    const actionChange = actionI => action => {
+        this.props.updateCustomTestAction(customTestID, actionI, action)
     }
+
+    return <CustomTestComponent {...customTest}
+                onActionChange={actionChange}
+                onActionRemove={() => {}}
+                onActionAdd={() => {}}/>
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-    return {
-        onSave() {
-            dispatch(saveElement(ownProps.elementID))
-        },
-        onChange(element) {
-            dispatch(updateElement(ownProps.elementID, element))
-        },
-        onRemove() {
-            dispatch(removeElement(ownProps.elementID))
+const enhance = compose(
+    withReduxDispatch({
+        fetchCustomTest: dispatch => id => fetchCustomTest(id)(dispatch),
+        updateCustomTestAction
+    }),
+    lifecycle({
+        componentDidMount() {
+            this.props.fetchCustomTest()(this.props.customTestID)
         }
-    }
-}
+    }),
+    withReduxState(["customTests"]),
+    setDisplayName("CustomTest")
+)
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Element)
+export default enhance(CustomTestBase)

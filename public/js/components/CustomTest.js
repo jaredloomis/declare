@@ -4,7 +4,10 @@ import Action from "./Action"
 
 const CustomTest = ({name, actions, onActionChange, onActionRemove, onActionAdd}) => {
     return <div>
-        {actions.map(action => <Action {...action}/>)}
+        {name}
+        {actions && actions.map((action, actionI) =>
+            <Action {...action} onChange={onActionChange(actionI)} key={actionI}/>
+        )}
     </div>
 }
 

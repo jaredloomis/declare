@@ -19,7 +19,8 @@ const defaultState = {
     testPacks: {},
     reports: {},
     inputTypes: {},
-    elements: {}
+    elements: {},
+    customTests: {}
 }
 
 const pagesReducer = (state=defaultState, action) => {

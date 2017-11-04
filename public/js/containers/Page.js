@@ -8,13 +8,14 @@ import {
     removeLink, removePackMany, addLink,
     removePage, executePack, updatePageInfo
 } from "../actions/Page"
-import Sep       from "../components/base/Sep"
+import Sep         from "../components/base/Sep"
 import AddonsField from "../components/base/AddonsField"
-import Title     from "../components/base/Title"
-import Button    from "../components/base/Button"
-import PageInfo  from "../components/PageInfo"
-import TestPack  from "./TestPack"
-import Link      from "./Link"
+import Title       from "../components/base/Title"
+import Button      from "../components/base/Button"
+import PageInfo    from "../components/PageInfo"
+import TestPack    from "./TestPack"
+import CustomTest  from "./CustomTest"
+import Link        from "./Link"
 import TestPackSelect from "./TestPackSelect"
 
 import bulma from "../../style/bulma.js"
@@ -147,6 +148,9 @@ class Page extends Component {
                 </div>
             </div>
             <Sep/>
+            <Title size="3">Page Custom Tests</Title>
+            {this.renderCustomTests()}
+            <Sep/>
             <Title size="3">Page Test Packs</Title>
             <div className="page-test-packs">
                 {testPacksDOM}
@@ -162,7 +166,6 @@ class Page extends Component {
                     </div>
                 </div>
             </div>
-            {/*<div className={`${bulma.field} ${bulma.is_grouped}`}>*/}
             <AddonsField>
                 <div className={bulma.control}>
                     <Button type="primary" onClick={this.props.onPacksSave}>
@@ -175,29 +178,10 @@ class Page extends Component {
                     </Button>
                 </div>
             </AddonsField>
-            {/*</div>*/}
         </div>
     }
 
     renderRow(row, rowI, colWidth) {
-        /*
-        const columns = row.map((tp, colI) => {
-            if(tp && tp.testPack) {
-                return <div key={colI} className={"col s" + colWidth}>
-                    <TestPack packID={tp.testPack}
-                              pageID={this.props.pageID}
-                              onChange={this.fieldChange}
-                              onRemove={this.packRemove(tp.testPack)}
-                              onManyRemove={this.manyRemove}
-                              onExecute={this.packExecute(tp.testPack)}/>
-                </div>
-            } else {
-                return <span key={colI}>Loading...</span>
-            }
-        })
-        return <div className="row" key={rowI}>{columns}</div>
-        */
-
         const columns = row.map((tp, colI) => {
             if(tp && tp.testPack) {
                 return <div key={colI} className={bulma.column}>
@@ -213,6 +197,16 @@ class Page extends Component {
             }
         })
         return <div className={bulma.columns} key={rowI}>{columns}</div>
+    }
+
+    renderCustomTests() {
+        if(this.props.customTests) {
+            return this.props.customTests.map(customTestID =>
+                <CustomTest customTestID={customTestID} key={customTestID}/>
+            )
+        } else {
+            return <span>No Custom Tests...</span>
+        }
     }
 
     renderLinks() {

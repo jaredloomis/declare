@@ -41,6 +41,8 @@ export const fetchPage = (id: string, fetchPacks: boolean=false,
                 values
                 reports
             }
+            customTests
+            testValues
         }
     }`)
     dispatch({
