@@ -221,11 +221,12 @@ class Page extends Component {
 
     renderCustomTests() {
         if(this.props.customTests) {
-            return this.props.customTests.map(customTestID =>
-                <div className={bulma.box} key={customTestID}>
-                    <CustomTest customTestID={customTestID}/>
+            return this.props.customTests.map(customTest => {
+                const id = customTest && (customTest._id || customTest)
+                return <div className={bulma.box} key={id}>
+                    <CustomTest customTestID={id}/>
                 </div>
-            )
+            })
         } else {
             return <span>No Custom Tests...</span>
         }

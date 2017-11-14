@@ -9,9 +9,6 @@ import {
 } from "./Types"
 
 export const fetchCustomTest = (customTestID: string) => async (dispatch: Func) => {
-    if(typeof customTestID !== "string") {
-        customTestID = customTestID.toString()
-    }
     const {customTest} = await client.query(`query ($id: ID!) {
         customTest(id: $id) {
             _id
