@@ -6,12 +6,16 @@ import {
     saveLinks, updateLinkDest, addPack,
     removePack, removeLinkAction, addLinkAction,
     removeLink, removePackMany, addLink,
-    removePage, executePack, updatePageInfo
+    removePage, executePack, updatePageInfo,
 } from "../actions/Page"
+import {
+    createCustomTest, saveCustomTest
+} from "../actions/CustomTest"
 import Sep         from "../components/base/Sep"
 import AddonsField from "../components/base/AddonsField"
 import Title       from "../components/base/Title"
 import Button      from "../components/base/Button"
+import Group       from "../components/base/Group"
 import PageInfo    from "../components/PageInfo"
 import TestPack    from "./TestPack"
 import CustomTest  from "./CustomTest"
@@ -85,6 +89,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         onInfoChange(valMap) {
             dispatch(updatePageInfo(ownProps.pageID, valMap))
+        },
+        onCustomTestAdd() {
+            dispatch(createCustomTest(ownProps.pageID, {name: "x"}))
+        },
+        onCustomTestSave(testID) {
+            dispatch(saveCustomTest(testID))
         }
     }
 }
@@ -100,6 +110,8 @@ class Page extends Component {
         this.manyRemove = this.manyRemove.bind(this)
         this.addPackChange = this.addPackChange.bind(this)
         this.infoChange = this.infoChange.bind(this)
+        this.customTestAdd = this.customTestAdd.bind(this)
+        this.customTestsSave = this.customTestsSave.bind(this)
 
         this.state = {
             addPackSelection: "",
@@ -150,6 +162,14 @@ class Page extends Component {
             <Sep/>
             <Title size="3">Page Custom Tests</Title>
             {this.renderCustomTests()}
+            <Group>
+                <Button onClick={this.customTestAdd} type="info">
+                    + Add Custom Test
+                </Button>
+                <Button onClick={this.customTestsSave} type="primary">
+                    Save Custom Tests
+                </Button>
+            </Group>
             <Sep/>
             <Title size="3">Page Test Packs</Title>
             <div className="page-test-packs">
@@ -202,7 +222,9 @@ class Page extends Component {
     renderCustomTests() {
         if(this.props.customTests) {
             return this.props.customTests.map(customTestID =>
-                <CustomTest customTestID={customTestID} key={customTestID}/>
+                <div className={bulma.box} key={customTestID}>
+                    <CustomTest customTestID={customTestID}/>
+                </div>
             )
         } else {
             return <span>No Custom Tests...</span>
@@ -279,6 +301,15 @@ class Page extends Component {
 
     addPackChange(selection) {
         this.setState({addPackSelection: selection})
+    }
+
+    customTestAdd() {
+        this.props.onCustomTestAdd()
+    }
+
+    customTestsSave() {
+        this.props.customTests
+            .forEach(this.props.onCustomTestSave)
     }
 }
 

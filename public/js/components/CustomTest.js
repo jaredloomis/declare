@@ -1,15 +1,28 @@
 import React from "react"
+import {setDisplayName} from "recompose"
 
-import Action from "./Action"
+import Button        from "./base/Button"
+import EditableTitle from "./base/EditableTitle"
+import ActionList    from "./ActionList"
 
-const CustomTest = ({name, actions, onActionChange, onActionRemove, onActionAdd}) => {
+const CustomTest = props => {
+    const {
+        name, actions,
+        onNameChange,
+        onActionChange, onActionRemove, onActionAdd,
+        onRemove
+    } = props
+
     return <div>
-        {name}
-        {actions && actions.map((action, actionI) =>
-            <Action {...action} onChange={onActionChange(actionI)} key={actionI}/>
-        )}
+        <EditableTitle size="4" onChange={onNameChange}>{name}</EditableTitle>
+        <ActionList actions={actions}
+            onAdd={onActionAdd}
+            onChange={onActionChange}
+            onRemove={onActionRemove}/>
+        <Button type="danger outlined" onClick={onRemove}>Delete</Button>
     </div>
 }
 
-CustomTest.displayName = "CustomTest"
-export default CustomTest
+const enhance = setDisplayName("CustomTest")
+
+export default enhance(CustomTest)

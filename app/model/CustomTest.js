@@ -7,6 +7,10 @@ import {
 import Action from "./Action"
 
 const customTestSchema = mongoose.Schema({
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Page"
+    },
     name:    String,
     actions: [Action.schema]
 })
@@ -16,6 +20,9 @@ customTestSchema.statics.graphQL = new GraphQLObjectType({
     fields: {
         _id: {
             type: new GraphQLNonNull(GraphQLID)
+        },
+        owner: {
+            type: GraphQLID
         },
         name: {
             type: GraphQLString
@@ -29,6 +36,9 @@ customTestSchema.statics.graphQL = new GraphQLObjectType({
 customTestSchema.statics.graphQLInput = new GraphQLInputObjectType({
     name: "CustomTestInput",
     fields: {
+        owner: {
+            type: GraphQLID
+        },
         name: {
             type: GraphQLString
         },

@@ -1,31 +1,71 @@
 import React          from "react"
 import {lifecycle, compose, setDisplayName} from "recompose"
 
-import {fetchCustomTest, updateCustomTestAction} from "../actions/CustomTest"
+import {
+    fetchCustomTest, updateCustomTestAction, addCustomTestAction,
+    removeCustomTestAction, updateCustomTestInfo, removeCustomTest
+} from "../actions/CustomTest"
 import CustomTestComponent from "../components/CustomTest"
 import withReduxState      from "./WithReduxState"
 import withReduxDispatch   from "./WithReduxDispatch"
 
-const CustomTestBase = ({customTestID, customTests}) => {
+const CustomTestBase = props => {
+    const {
+        customTestID, customTests
+    } = props
     const customTest   = customTests[customTestID]
+
+    const nameChange = event => {
+        props.updateCustomTestInfo(customTestID, {name: event.target.value})
+    }
     const actionChange = actionI => action => {
-        this.props.updateCustomTestAction(customTestID, actionI, action)
+        props.updateCustomTestAction(customTestID, actionI, action)
+    }
+    const actionAdd    = () => {
+        props.addCustomTestAction(customTestID, {
+            actionType: null,
+            values: {}
+        })
+    }
+    const actionRemove = actionI => {
+        props.removeCustomTestAction(customTestID, actionI)
+    }
+    const remove = () => {
+        props.removeCustomTest(customTestID)
     }
 
     return <CustomTestComponent {...customTest}
+                onNameChange={nameChange}
                 onActionChange={actionChange}
-                onActionRemove={() => {}}
-                onActionAdd={() => {}}/>
+                onActionRemove={actionRemove}
+                onActionAdd={actionAdd}
+                onRemove={remove}/>
 }
 
 const enhance = compose(
     withReduxDispatch({
-        fetchCustomTest: dispatch => id => fetchCustomTest(id)(dispatch),
-        updateCustomTestAction
+        fetchCustomTest: {
+            parameterized: fetchCustomTest
+        },
+        updateCustomTestInfo: {
+            parameterized: updateCustomTestInfo
+        },
+        updateCustomTestAction: {
+            parameterized: updateCustomTestAction
+        },
+        addCustomTestAction: {
+            parameterized: addCustomTestAction
+        },
+        removeCustomTestAction: {
+            parameterized: removeCustomTestAction
+        },
+        removeCustomTest: {
+            parameterized: removeCustomTest
+        }
     }),
     lifecycle({
         componentDidMount() {
-            this.props.fetchCustomTest()(this.props.customTestID)
+            this.props.fetchCustomTest(this.props.customTestID)
         }
     }),
     withReduxState(["customTests"]),

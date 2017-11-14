@@ -68,32 +68,6 @@ export default class Link extends Component {
                     onChange={change}
                     onRemove={this.removeAction(index)}
                     key={this.state.inputKeys[index]}/>
-        /*
-        const val    = action && action.values ?
-                action.values.element : ""
-        const change = value => {
-            this.props.onActionChange(index, {
-                actionType: "click",
-                values: {element: value}
-            })
-        }
-        const key = this.state.inputKeys[index]
-        return <div key={key} className={bulma.columns}>
-            <div className={`${bulma.column} ${bulma.is_one_quarter}`}>
-            <Select label="Action" onChange={() => {}} defaultValue="click">
-                <span value="click">Click</span>
-            </Select>
-            </div>
-            <div className={bulma.column}>
-            <ElementSelect defaultValue={val} onChange={change}/>
-            </div>
-            <div className={bulma.column}>
-            <Button inline={true} type="danger outlined" onClick={this.removeAction(index)}>
-                <i className="material-icons">delete</i>
-            </Button>
-            </div>
-        </div>
-        */
     }
 
     addAction() {
