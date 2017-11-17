@@ -44,10 +44,11 @@ module.exports = app => {
             })
         }
         // After logging
-        const end     = new Date()
-        const elapsed = end - start
-        ctx.logger.info(
-        `-${ctx.status}-> ${ctx.method} ${ctx.url} ${elapsed}ms`, {
+        const end      = new Date()
+        const elapsed  = end - start
+        const afterMsg = `-${ctx.status}-> ${ctx.method} ${ctx.url} ${elapsed}ms`
+        const afterLog = ctx.status > 400 ? ctx.logger.error : ctx.logger.info
+        afterLog(afterMsg, {
             body: ctx.body,
             headers: ctx.response.headers,
             responseTime: elapsed

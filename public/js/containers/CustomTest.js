@@ -3,7 +3,8 @@ import {lifecycle, compose, setDisplayName} from "recompose"
 
 import {
     fetchCustomTest, updateCustomTestAction, addCustomTestAction,
-    removeCustomTestAction, updateCustomTestInfo, removeCustomTest
+    removeCustomTestAction, updateCustomTestInfo, removeCustomTest,
+    executeCustomTest
 } from "../actions/CustomTest"
 import CustomTestComponent from "../components/CustomTest"
 import withReduxState      from "./WithReduxState"
@@ -30,6 +31,9 @@ const CustomTestBase = props => {
     const actionRemove = actionI => {
         props.removeCustomTestAction(customTestID, actionI)
     }
+    const execute = () => {
+        props.executeCustomTest(customTestID)
+    }
     const remove = () => {
         props.removeCustomTest(customTestID)
     }
@@ -39,6 +43,7 @@ const CustomTestBase = props => {
                 onActionChange={actionChange}
                 onActionRemove={actionRemove}
                 onActionAdd={actionAdd}
+                onExecute={execute}
                 onRemove={remove}/>
 }
 
@@ -61,6 +66,9 @@ const enhance = compose(
         },
         removeCustomTest: {
             parameterized: removeCustomTest
+        },
+        executeCustomTest: {
+            parameterized: executeCustomTest
         }
     }),
     lifecycle({

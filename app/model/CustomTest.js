@@ -5,6 +5,7 @@ import {
 } from "graphql"
 
 import Action from "./Action"
+import Report from "./Report"
 
 const customTestSchema = mongoose.Schema({
     owner: {
@@ -12,7 +13,11 @@ const customTestSchema = mongoose.Schema({
         ref: "Page"
     },
     name:    String,
-    actions: [Action.schema]
+    actions: [Action.schema],
+    reports: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Report"
+    }]
 })
 
 customTestSchema.statics.graphQL = new GraphQLObjectType({
@@ -29,6 +34,9 @@ customTestSchema.statics.graphQL = new GraphQLObjectType({
         },
         actions: {
             type: new GraphQLList(Action.graphQL)
+        },
+        reports: {
+            type: new GraphQLList(GraphQLID)
         }
     }
 })

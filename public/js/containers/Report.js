@@ -74,13 +74,16 @@ class Report extends Component {
 }
 
 const renderReportMain = props => {
-    const {internalID} = props.testPacks[props.packID]
+    const internalID = props.testPacks && props.testPacks[props.packID] ?
+            props.testPacks[props.packID].internalID :
+            null
     if(internalID === internalIDs.screenshot)
         return <ReportScreenshot {...props}/>
     else if(internalID === internalIDs.destructive)
         return <ReportDestructive {...props}/>
     else
-        throw new Error("Unknown report")
+        <span></span>
+        //throw new Error("Unknown report")
 }
 
 const Step = ({status, time, message, data, stepPath, children, expandedSteps, onExpand}) => {

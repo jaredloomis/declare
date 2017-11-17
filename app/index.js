@@ -12,20 +12,21 @@ import assets        from "koa-static"
 import websockify    from "koa-websocket"
 
 import mongoose      from "mongoose"
-import logger        from "./services/Logger.js"
+import requestLogger from "./middleware/RequestLogger.js"
 import {development as dbConfig} from "./config/database"
 
 import "./model/InputType"
 
 const app = websockify(new Koa())
 
+// Use bluebird promises
+mongoose.Promise = Promise
+global.Promise   = Promise
+
 /*
  * Set up database
  */
 
-// Use bluebird promises
-mongoose.Promise = Promise
-global.Promise   = Promise
 // Conect to MongoDB server
 mongoose.connect("mongodb://" + dbConfig.host + "/" + dbConfig.database)
 
@@ -40,8 +41,6 @@ db.once("open", function() {/* we're connected! */})
 
 // Body parser
 app.use(body())
-// Simple req/res logging
-//app.use(logger())
 // Session
 app.keys = ["super-secret"]
 app.use(convert(session(app)))
@@ -50,7 +49,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 require("./services/Auth")(app)
 // Winston logging
-logger(app)
+app.use(requestLogger)
 // Static assets
 app.use(assets(path.join(__dirname, "..", "..", "public", "dist"), {
     // 1 week
@@ -78,6 +77,4 @@ fs
  */
 
 const server = http.createServer(app.callback())
-//require("./socket")(server)
 server.listen(3000)
-//app.listen(3000)
