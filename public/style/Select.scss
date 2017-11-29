@@ -1,0 +1,15 @@
+@import "./variables";
+
+.select {
+    margin-top: 20px;
+}
+
+.selectButton label {
+    transition: all 0.2s;
+}
+
+.activeLabel {
+    width: 0px;
+    color: $primary;
+    transform: scale(0.9) translateX(-13px) translateY(-33px);
+}

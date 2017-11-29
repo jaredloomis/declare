@@ -1,0 +1,52 @@
+@import "./variables";
+
+.textInput {
+    position: relative;
+    margin-top: 20px;
+}
+
+/* TODO possibly custom style text input
+.textInput input[type="text"] {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    border: 1px solid transparent;
+    border-bottom: 1px solid $grey;
+    border-top: 1px solid $grey;
+    //border-radius: 3px;
+    display: inline-flex;
+    background-color: white;
+    font-size: 1rem;
+    height: 2.25em;
+    justify-content: flex-start;
+    line-height: 1.5;
+    padding-bottom: calc(0.375em - 1px);
+    padding-left: calc(0.625em - 1px);
+    padding-right: calc(0.625em - 1px);
+    padding-top: calc(0.375em - 1px);
+    position: relative;
+    vertical-align: top;
+    color: #363636;
+    box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.1);
+    max-width: 100%;
+    width: 100%;
+}
+*/
+
+.textInput label {
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    // Text input is z-index 4 when focused
+    z-index: 5;
+    transition: all 0.2s;
+    cursor: text;
+}
+
+.textInput label:not(.activeLabel) {
+    color: $grey-light;
+}
+
+.activeLabel {
+    transform: scale(0.9) translateX(-18px) translateY(-30px);
+    color: $primary;
+}
