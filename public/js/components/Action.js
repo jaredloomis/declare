@@ -2,6 +2,8 @@ import React from "react"
 import {withState, compose, setDisplayName} from "recompose"
 
 import {actionTypes} from "../../../app/config/Action"
+import Row           from "./base/Row"
+import Column        from "./base/Column"
 import Button        from "./base/Button"
 import Select        from "./base/Select"
 import TextInput     from "./base/TextInput"
@@ -52,8 +54,8 @@ const Action = ({actionType, values, setActionType, setValues, onChange, onRemov
         }
     })()
 
-    return <div className={bulma.columns}>
-        <div className={`${bulma.column} ${bulma.is_one_quarter}`}>
+    return <Row>
+        <Column size="3">
         <Select label="Action" onChange={tyChange} defaultValue={actionType}>
             <span value={actionTypes.CLICK}>Click</span>
             <span value={actionTypes.ASSERT_ELEMENT_CONTAINS}>Assert Element Contains</span>
@@ -63,83 +65,83 @@ const Action = ({actionType, values, setActionType, setValues, onChange, onRemov
             <span value={actionTypes.NAVIGATE_TO_PAGE}>Navigate to Page</span>
             <span value={actionTypes.SEND_INPUT}>Send Input</span>
         </Select>
-        </div>
+        </Column>
         {actionSpecificValues}
-        <div className={bulma.column}>
+        <Column size="2">
         <Button inline={true} type="danger outlined" onClick={onRemove}>
             <i className="material-icons">delete</i>
         </Button>
-        </div>
-    </div>
+        </Column>
+    </Row>
 }
 
 const ClickAction = ({values, onValueChange}) =>
-    <div className={bulma.column}>
+    <Column size="7">
         <ElementSelect defaultValue={values.element}
                        onChange={onValueChange(["element"])}/>
-    </div>
+    </Column>
 
 const AssertElementContainsAction = ({values, onValueChange}) => [
-    <div className={bulma.column}>
+    <Column size="4">
         <ElementSelect defaultValue={values.element}
                        onChange={onValueChange(["element"])}/>
-    </div>,
-    <div className={bulma.column}>
+    </Column>,
+    <Column size="3">
         <TextInput defaultValue={values.text}
                    onChange={ev => onValueChange(["text"])(ev.target.value)}
                    label="Text"/>
-    </div>
+    </Column>
 ]
 
 const ExtractElementTextAction = ({values, onValueChange}) => [
-    <div className={bulma.column}>
+    <Column size="4">
         <ElementSelect defaultValue={values.element}
                        onChange={onValueChange(["element"])}/>
-    </div>,
-    <div className={bulma.column}>
+    </Column>,
+    <Column size="3">
         <TextInput defaultValue={values.variableName}
                    onChange={ev => onValueChange(["variableName"])(ev.target.value)}
                    label="Variable Name"/>
-    </div>
+    </Column>
 ]
 
 const AssertJsAction = ({values, onValueChange}) =>
-    <div className={bulma.column}>
+    <Column size="7">
         <TextInput defaultValue={values.code}
                    onChange={ev => onValueChange(["code"])(ev.target.value)}
                    label="Javascript Code"/>
-    </div>
+    </Column>
 
 const ExtractJsAction = ({values, onValueChange}) => [
-    <div className={bulma.column}>
+    <Column size="4">
         <TextInput defaultValue={values.code}
                    onChange={ev => onValueChange(["code"])(ev.target.value)}
                    label="JavaScript Code"/>
-    </div>,
-    <div className={bulma.column}>
+    </Column>,
+    <Column size="3">
         <TextInput defaultValue={values.variableName}
                    onChange={ev => onValueChange(["variableName"])(ev.target.value)}
                    label="Variable Name"/>
-    </div>
+    </Column>
 ]
 
 const NavigateAction = ({values, onValueChange}) =>
-    <div className={bulma.column}>
+    <Column size="7">
         <PageSelect defaultValue={values.page}
                     onChange={onValueChange(["page"])}
                     label="Destination"/>
-    </div>
+    </Column>
 
 const SendInputAction = ({values, onValueChange}) => [
-    <div className={bulma.column}>
+    <Column size="4">
         <ElementSelect defaultValue={values.element}
                        onChange={onValueChange(["element"])}/>
-    </div>,
-    <div className={bulma.column}>
+    </Column>,
+    <Column size="3">
         <TextInput defaultValue={values.input}
                    onChange={ev => onValueChange(["input"])(ev.target.value)}
                    label="Input Text"/>
-    </div>
+    </Column>
 ]
 
 
