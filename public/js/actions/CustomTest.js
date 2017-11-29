@@ -52,6 +52,7 @@ export const createCustomTest = (pageID: string, customTestInput: any) => async 
 export const saveCustomTest = (testID: string) => async (dispatch: Func, getState: Func) => {
     const cachedTest = getState().customTests[testID]
     delete cachedTest._id
+    delete cachedTest.reports
     const {customTest} = await client.mutate(`($testID: ID!, $customTest: CustomTestInput) {
         customTest: updateCustomTest(id: $testID, customTest: $customTest) {
             _id
