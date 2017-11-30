@@ -57,6 +57,10 @@ export default class SeleniumDriver extends Driver {
         return new Buffer(await this.driver.takeScreenshot(), "base64")
     }
 
+    async getText(selector: Selector): Promise<string> {
+        return (await this.driver.find(selector)).getText()
+    }
+
     find(selector: Selector): Promise<Elem> {
         return this.driver.findElement(this.toBy(selector))
     }

@@ -6,7 +6,7 @@ import {
     CUSTOM_TEST_REMOVE, CUSTOM_TEST_EXECUTE
 } from "../actions/Types"
 
-export default (state: any, action: {type: string}) => {
+export default (state: any, action: any) => {
     if(action.type === CUSTOM_TEST_UPDATE_ACTION) {
         const curTest = state.customTests[action.customTestID]
         const newTest = {

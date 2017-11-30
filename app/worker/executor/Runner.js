@@ -129,8 +129,7 @@ export default class Runner {
 
     async getText(selector: Selector): Promise<string> {
         try {
-            const element = await this.driver.find(selector)
-            const text    = await element.getText()
+            const text = await this.driver.getText(selector)
             this.log(
                 Status.PASS,
                 `Get text from "${showSelector(selector)}": "${text}"`
@@ -142,6 +141,7 @@ export default class Runner {
                 `Couldn't get text from "${showSelector(selector)}"`,
                 {ex}
             )
+            return ""
         }
     }
 
@@ -224,7 +224,7 @@ export default class Runner {
     }
 
     // priv
-    fillInVariables(text, variables) {
+    fillInVariables(text: string, variables: {[string]: any}) {
         for(const varName in variables) {
             text.replace(new RegExp(`{{${varName}}}`, "g"), variables[varName])
         }

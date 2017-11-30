@@ -4,7 +4,7 @@ import {
     ELEMENT_CREATE, ELEMENT_SAVE, ELEMENT_REMOVE
 } from "../actions/Types"
 
-export default (state: any, action: {type: string}) => {
+export default (state: any, action: any) => {
     if(action.type === ELEMENT_FETCH &&
        action.id && action.element) {
         return {
