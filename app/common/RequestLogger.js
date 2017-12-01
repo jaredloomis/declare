@@ -18,22 +18,9 @@ if(process.env.NODE_ENV !== "production") {
     }))
 }
 
-// Add info log (I think it's actually combined all log levels)
 transports.push(new winston.transports.File({
-    name:      "info-log-file",
     timestamp: true,
-    level:     "info",
-    filename:  "logs/info.log",
-    maxsize:   1048576,
-    maxFiles:  5,
-    tailable:  true
-}))
-
-transports.push(new winston.transports.File({
-    name:      "error-log-file",
-    timestamp: true,
-    level:     "error",
-    filename:  "logs/error.log",
+    filename:  "logs/requests.log",
     maxsize:   1048576,
     maxFiles:  5,
     tailable:  true

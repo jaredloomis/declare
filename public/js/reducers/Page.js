@@ -20,7 +20,8 @@ const defaultState = {
     reports: {},
     inputTypes: {},
     elements: {},
-    customTests: {}
+    customTests: {},
+    categories: {}
 }
 
 const pagesReducer = (state=defaultState, action) => {

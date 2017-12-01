@@ -1,31 +1,58 @@
-/* global __dirname, require, module */
+/* global __dirname, require, module, process */
 const webpack              = require("webpack")
 const path                 = require("path")
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin
 
+const plugins = []
+
+// Add common chunk plugin
+plugins.push(new webpack.optimize.CommonsChunkPlugin({
+    name: "common",
+    filename: "common.js",
+    minChunks: (module, count) => {
+        const userRequest = module.userRequest
+        return userRequest &&
+               userRequest.indexOf("node_modules") >= 0
+    }
+}))
+
+// Add optimizations when in productions
+if(process.env.NODE_ENV === "production") {
+    // UglifyJS plugin
+    plugins.push(new webpack.optimize.UglifyJsPlugin({
+        minimize: true,
+        compress: {
+            warnings: false
+        }
+    }))
+    // Prepack plugin - TODO
+    //new PrepackWebpackPlugin({})
+}
+
+// Analyze the bundle after building
+//plugins.push(new BundleAnalyzerPlugin())
+
 module.exports = {
     entry: {
-//        vendor: path.join(__dirname, "js", "Vendor.js"),
-        app:    path.join(__dirname, "js", "Main.js")
+        app: path.join(__dirname, "js", "Main.js")
     },
     output: {
-        filename: "[name].js",
-        path: path.join(__dirname, "dist", "js"),
+        filename:   "[name].js",
+        path:       path.join(__dirname, "dist", "js"),
         publicPath: "/js/",
-        pathinfo: true
+        pathinfo:   true
     },
     module: {
         rules: [
             // ESLint for all .js files
             {enforce: "pre", test: /\.js$/, exclude: /node_modules/,
              loader: "eslint-loader"},
+            // Babel for all .js files
             {test: /\.js$/, exclude: /node_modules/,
              loader: "babel-loader"},
             // TypeScript for .ts files
             {test: /\.ts$/, loader: "ts-loader"},
-            // Load .scss files
-//            {test: /\.scss$/,
-//             use: ["style-loader", "css-loader", "sass-loader"]},
+            // Load .scss files, simulate CSS Modules
             {test: /\.scss$/,
              use: [
                  "style-loader",
@@ -51,24 +78,5 @@ module.exports = {
             "vue$": "vue/dist/vue.common.js"
         }
     },
-    plugins: [
-        //new PrepackWebpackPlugin({}),
-        new webpack.optimize.CommonsChunkPlugin({
-            name: "common",
-            filename: "common.js",
-            minChunks: (module, count) => {
-                const userRequest = module.userRequest
-                return userRequest &&
-                       userRequest.indexOf("node_modules") >= 0
-            }
-        }),
-        /*
-        new webpack.optimize.UglifyJsPlugin({
-            minimize: true,
-            compress: {
-                warnings: false
-            }
-        }),*/
-        //new BundleAnalyzerPlugin()
-    ]
+    plugins
 }

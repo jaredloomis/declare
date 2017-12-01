@@ -6,6 +6,7 @@ Prerequisites:
 - Node.js
 - MongoDB
 - Gulp
+- Chromium Chromedriver
 
 ```bash
 $ cd public

@@ -1,4 +1,4 @@
-import logger from "../common/Logger"
+import logger from "../common/RequestLogger"
 
 export default async (ctx, next) => {
     // Before logging
