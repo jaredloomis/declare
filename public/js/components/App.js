@@ -4,14 +4,17 @@ import {
 } from "react-router"
 import createHistory from "history/createHashHistory"
 
-import Container  from "./base/Container"
-import Section    from "./base/Section"
-import Dashboard  from "./Dashboard"
-import Page       from "../containers/Page"
-import Elements   from "../containers/Elements"
-import InputTypes from "../containers/InputTypes"
-import Pages      from "../containers/Pages"
-import Nav        from "./Nav"
+import Container           from "./base/Container"
+import Section             from "./base/Section"
+import Dashboard           from "./Dashboard"
+import PageCategories      from "./PageCategories"
+import InputTypeCategories from "./InputTypeCategories"
+import ElementCategories   from "./ElementCategories"
+import Nav                 from "./Nav"
+import Page                from "../containers/Page"
+import Elements            from "../containers/Elements"
+import InputTypes          from "../containers/InputTypes"
+import Pages               from "../containers/Pages"
 
 const PageRoute = props => {
     return <Page pageID={props.match.params.pageID} {...props}/>
@@ -31,7 +34,7 @@ class ErrorBoundary extends Component {
     }
   
     render() {
-        return this.state.errors.length    ?
+        return this.state.errors.length ?
             <pre>{JSON.stringify(this.state.errors, null, 2)}</pre> :
             this.props.children
     }
@@ -44,11 +47,14 @@ const App = () =>
             <Section>
                 <Router history={createHistory()}>
                     <Switch>
-                        <Route path="/" exact      component={Dashboard}/>
-                        <Route path="/Pages"        component={Pages}/>
-                        <Route path="/Elements"     component={Elements}/>
-                        <Route path="/InputTypes"   component={InputTypes}/>
-                        <Route path="/Page/:pageID" component={PageRoute}/>
+                        <Route path="/" exact            component={Dashboard}/>
+                        <Route path="/Pages"             component={PageCategories}/>
+                        <Route path="/PagesRaw"          component={Pages}/>
+                        <Route path="/Elements"          component={Elements}/>
+                        <Route path="/ElementCategory"          component={ElementCategories}/>
+                        <Route path="/InputType"         component={InputTypeCategories}/>
+                        <Route path="/InputTypesRaw"     component={InputTypes}/>
+                        <Route path="/Page/:pageID"      component={PageRoute}/>
                     </Switch>
                 </Router>
             </Section>

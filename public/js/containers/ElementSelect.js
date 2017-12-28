@@ -1,9 +1,12 @@
 import React from "react"
+import {lifecycle, compose, setDisplayName} from "recompose"
 
-import Select         from "../components/base/Select"
-import withReduxState from "./WithReduxState"
+import {listElements}    from "../actions/Element"
+import Select            from "../components/base/Select"
+import withReduxState    from "./WithReduxState"
+import withReduxDispatch from "./WithReduxDispatch"
 
-const ElementSelect = withReduxState(["elements"])(props => {
+const ElementSelectBase = props => {
     const children = !props.elements ? null :
         Object.keys(props.elements).map(elemID =>
             <span value={elemID} key={elemID}>
@@ -13,7 +16,19 @@ const ElementSelect = withReduxState(["elements"])(props => {
     return <Select label={props.label || "Element"} onChange={props.onChange} {...props}>
         {children}
     </Select>
-})
+}
 
-ElementSelect.displayName = "ElementSelect"
-export default ElementSelect
+const enhance = compose(
+    withReduxDispatch({
+        listElements
+    }),
+    lifecycle({
+        componentDidMount() {
+            this.props.listElements()
+        }
+    }),
+    withReduxState(["elements"]),
+    setDisplayName("ElementSelect")
+)
+
+export default enhance(ElementSelectBase)

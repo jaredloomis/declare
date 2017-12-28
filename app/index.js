@@ -12,10 +12,10 @@ import assets        from "koa-static"
 import websockify    from "koa-websocket"
 
 import mongoose      from "mongoose"
+
+import logger        from "./common/Logger"
 import requestLogger from "./middleware/RequestLogger.js"
 import {development as dbConfig} from "./config/database"
-
-import "./model/InputType"
 
 const app = websockify(new Koa())
 
@@ -28,12 +28,12 @@ global.Promise   = Promise
  */
 
 // Conect to MongoDB server
-mongoose.connect("mongodb://" + dbConfig.host + "/" + dbConfig.database)
+mongoose.connect(`mongodb://${dbConfig.host}/${dbConfig.database}`)
 
 const db = mongoose.connection
 // Set up error logging
-db.on("error", console.error.bind(console, "connection error:"))
-db.once("open", function() {/* we're connected! */})
+db.on("error", err => logger.error("Error from DB!", err))
+db.once("open", () => {/* we're connected! */})
 
 /*
  * Middleware
@@ -77,4 +77,4 @@ fs
  */
 
 const server = http.createServer(app.callback())
-server.listen(3000)
+server.listen(process.env.PORT || 3000)

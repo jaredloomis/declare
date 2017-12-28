@@ -56,5 +56,28 @@ export default {
                 return ex
             }
         }
+    },
+    removeCategory: {
+        type: Category.graphQL,
+        args: {
+            id: {
+                name: "id",
+                type: new GraphQLNonNull(GraphQLID)
+            }
+        },
+        async resolve(object, {id}) {
+            const cat = await Category.findById(id)
+            await cat.remove()
+
+            if(cat.parent) {
+                await Category.findByIdAndUpdate(
+                    cat.parent,
+                    {$pull: {children: id}}
+                )
+
+            }
+
+            return cat
+        }
     }
 }

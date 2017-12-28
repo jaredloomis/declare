@@ -1,8 +1,10 @@
 import React from "react"
-import {compose, setDisplayName} from "recompose"
+import {compose, setDisplayName, lifecycle} from "recompose"
 
-import Select         from "../components/base/Select"
-import withReduxState from "./WithReduxState"
+import {listPages}       from "../actions/Page"
+import Select            from "../components/base/Select"
+import withReduxState    from "./WithReduxState"
+import withReduxDispatch from "./WithReduxDispatch"
 
 const PageSelect = ({pages, defaultValue, onChange}) =>
     <Select label="Destination" onChange={onChange}
@@ -16,7 +18,13 @@ const PageSelect = ({pages, defaultValue, onChange}) =>
 
 const enhance = compose(
     setDisplayName("PageSelect"),
-    withReduxState(["pages"])
+    withReduxState(["pages"]),
+    withReduxDispatch({listPages}),
+    lifecycle({
+        componentDidMount() {
+            this.props.listPages()
+        }
+    })
 )
 
 export default enhance(PageSelect)
