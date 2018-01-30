@@ -9,8 +9,9 @@ import {
 } from "./Types"
 import {fetchReport} from "./Page"
 
-export const fetchCustomTest = (customTestID: string) => async (dispatch: Func) => {
-    const {customTest} = await client.query(`query ($id: ID!) {
+export const fetchCustomTest = (customTestID: string) => async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
+    const {customTest} = await client(token).query(`query ($id: ID!) {
         customTest(id: $id) {
             _id
             owner
@@ -29,9 +30,10 @@ export const fetchCustomTest = (customTestID: string) => async (dispatch: Func) 
     })
 }
 
-export const createCustomTest = (pageID: string, customTestInput: any) => async (dispatch: Func) => {
+export const createCustomTest = (pageID: string, customTestInput: any) => async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
     customTestInput.owner = pageID
-    const {customTest} = await client.mutate(`($pageID: ID!, $customTest: CustomTestInput) {
+    const {customTest} = await client(token).mutate(`($pageID: ID!, $customTest: CustomTestInput) {
         customTest: createCustomTest(pageID: $pageID, customTest: $customTest) {
             _id
             owner
@@ -50,10 +52,11 @@ export const createCustomTest = (pageID: string, customTestInput: any) => async 
 }
 
 export const saveCustomTest = (testID: string) => async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
     const cachedTest = getState().customTests[testID]
     delete cachedTest._id
     delete cachedTest.reports
-    const {customTest} = await client.mutate(`($testID: ID!, $customTest: CustomTestInput) {
+    const {customTest} = await client(token).mutate(`($testID: ID!, $customTest: CustomTestInput) {
         customTest: updateCustomTest(id: $testID, customTest: $customTest) {
             _id
             owner
@@ -97,8 +100,9 @@ export const updateCustomTestInfo = (customTestID: string, update: any) => ({
     customTestID, update
 })
 
-export const removeCustomTest = (customTestID: string) => async (dispatch: Func) => {
-    const {customTest} = await client.mutate(`($customTestID: ID!) {
+export const removeCustomTest = (customTestID: string) => async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
+    const {customTest} = await client(token).mutate(`($customTestID: ID!) {
         customTest: removeCustomTest(id: $customTestID) {
             _id
             owner
@@ -115,14 +119,15 @@ export const removeCustomTest = (customTestID: string) => async (dispatch: Func)
     })
 }
 
-export const executeCustomTest = (customTestID: string) => async (dispatch: Func) => {
+export const executeCustomTest = (customTestID: string) => async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
     // Fire off event indication execution start
     dispatch({
         type: CUSTOM_TEST_EXECUTE,
         customTestID
     })
     // Start test
-    const {customTest} = await client.mutate(`($id: ID!) {
+    const {customTest} = await client(token).mutate(`($id: ID!) {
         customTest: executeCustomTest(id: $id) {
             _id
         }

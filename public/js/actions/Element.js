@@ -6,8 +6,9 @@ import {
     ELEMENT_CREATE, ELEMENT_SAVE, ELEMENT_REMOVE
 } from "./Types"
 
-export const fetchElement = (id: string) => async (dispatch: Func) => {
-    const {element} = await client.query(`($id: ID!) {
+export const fetchElement = (id: string) => async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
+    const {element} = await client(token).query(`($id: ID!) {
         element(id: $id) {
             _id
             name
@@ -21,8 +22,9 @@ export const fetchElement = (id: string) => async (dispatch: Func) => {
     })
 }
 
-export const listElements = async (dispatch: Func) => {
-    const {elements} = await client.query(` {
+export const listElements = async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
+    const {elements} = await client(token).query(` {
         elements {
             _id
             name
@@ -41,8 +43,9 @@ export const updateElement = (id: string, element: any) => ({
     id, element
 })
 
-export const createElement = (elementInput: any) => async (dispatch: Func) => {
-    const {element} = await client.mutate(`($element: ElementInput) {
+export const createElement = (elementInput: any) => async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
+    const {element} = await client(token).mutate(`($element: ElementInput) {
         element: createElement(element: $element) {
             _id
             name
@@ -57,9 +60,10 @@ export const createElement = (elementInput: any) => async (dispatch: Func) => {
 }
 
 export const saveElement = (id: string) => async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
     const curElement = getState().elements[id]
     delete curElement._id
-    const {newElement} = await client.mutate(`($id: ID!, $element: ElementInput) {
+    const {newElement} = await client(token).mutate(`($id: ID!, $element: ElementInput) {
         element: updateElement(id: $id, element: $element) {
             _id
             name
@@ -74,8 +78,9 @@ export const saveElement = (id: string) => async (dispatch: Func, getState: Func
     })
 }
 
-export const removeElement = (id: string) => async (dispatch: Func) => {
-    const {element} = await client.mutate(`($id: ID!) {
+export const removeElement = (id: string) => async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
+    const {element} = await client(token).mutate(`($id: ID!) {
         element: removeElement(id: $id) {
             _id
         }

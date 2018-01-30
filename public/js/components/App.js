@@ -15,6 +15,7 @@ import Page                from "../containers/Page"
 import Elements            from "../containers/Elements"
 import InputTypes          from "../containers/InputTypes"
 import Pages               from "../containers/Pages"
+import SignIn              from "../containers/SignIn"
 
 const PageRoute = props => {
     return <Page pageID={props.match.params.pageID} {...props}/>
@@ -47,14 +48,15 @@ const App = () =>
             <Section>
                 <Router history={createHistory()}>
                     <Switch>
-                        <Route path="/" exact            component={Dashboard}/>
-                        <Route path="/Pages"             component={PageCategories}/>
-                        <Route path="/PagesRaw"          component={Pages}/>
-                        <Route path="/Elements"          component={Elements}/>
-                        <Route path="/ElementCategory"          component={ElementCategories}/>
-                        <Route path="/InputType"         component={InputTypeCategories}/>
-                        <Route path="/InputTypesRaw"     component={InputTypes}/>
-                        <Route path="/Page/:pageID"      component={PageRoute}/>
+                        <Route path="/" exact        component={Dashboard}/>
+                        <Route path="/Pages"         component={PageCategories}/>
+                        <Route path="/PagesRaw"      component={Pages}/>
+                        <Route path="/Elements"      component={ElementCategories}/>
+                        <Route path="/ElementsRaw"   component={Elements}/>
+                        <Route path="/InputTypes"    component={InputTypeCategories}/>
+                        <Route path="/InputTypesRaw" component={InputTypes}/>
+                        <Route path="/Page/:pageID"  component={PageRoute}/>
+                        <Route path="/SignIn"        component={SignIn}/>
                     </Switch>
                 </Router>
             </Section>

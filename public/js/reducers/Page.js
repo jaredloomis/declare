@@ -21,7 +21,9 @@ const defaultState = {
     inputTypes: {},
     elements: {},
     customTests: {},
-    categories: {}
+    categories: {},
+    tokens: {},
+    activeToken: null
 }
 
 const pagesReducer = (state=defaultState, action) => {

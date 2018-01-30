@@ -13,6 +13,8 @@ const TextInputBase = props => {
     // The label is active if input is focused, or there is text in input
     const labelActive = focused || (defaultValue && defaultValue !== "")
 
+    // onChange doesn't need whole event
+    const change = event => onChange(event.target.value)
     // Keep track of whether element is focused (for label)
     const focus   = () => setFocused(true)
     const unfocus = event => {
@@ -32,7 +34,7 @@ const TextInputBase = props => {
             {label}
         </label>
         <input type="text" className={bulma.input} defaultValue={defaultValue}
-            onFocus={focus} onBlur={unfocus} onChange={onChange} id={randID}/>
+            onFocus={focus} onBlur={unfocus} onChange={change} id={randID}/>
     </div>
 }
 

@@ -2,19 +2,15 @@ import {
     PACK_FETCH, PACK_LIST
 } from "./Types"
 
-import {Lokka} from "lokka"
-import {Transport} from "lokka-transport-http"
+import client from "../graphQL/Client"
 
-const client = new Lokka({
-    transport: new Transport("/graphql")
-})
-
-export const fetchPack = id => async dispatch => {
+export const fetchPack = id => async (dispatch, getState) => {
+    const token = getState().activeToken
     dispatch({
         type: PACK_FETCH,
         id
     })
-    const {testPack} = await client.query(`{
+    const {testPack} = await client(token).query(`{
         testPack(id: "${id}") {
             _id
             internalID
@@ -30,10 +26,11 @@ export const fetchPack = id => async dispatch => {
 }
 
 export const listPacks = async (dispatch, getState) => {
+    const token = getState().activeToken
     dispatch({
         type: PACK_LIST
     })
-    const {testPacks} = await client.query(`{
+    const {testPacks} = await client(token).query(`{
         testPacks {
             _id
             name

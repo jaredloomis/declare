@@ -18,12 +18,13 @@ import type {Func} from "../flow"
 
 export const fetchPage = (id: string, fetchPacks: boolean=false,
                                       fetchReports: boolean=false) =>
-                         async (dispatch: Func) => {
+                         async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
     dispatch({
         type: PAGE_FETCH,
         id
     })
-    const {page} = await client.query(`{
+    const {page} = await client(token).query(`{
         page(id: "${id}") {
             _id
             name
@@ -66,11 +67,12 @@ export const fetchPage = (id: string, fetchPacks: boolean=false,
     }
 }
 
-export async function listPages(dispatch: Func) {
+export async function listPages(dispatch: Func, getState: Func) {
+    const token = getState().activeToken
     dispatch({
         type: PAGE_LIST
     })
-    const {pages} = await client.query(`{
+    const {pages} = await client(token).query(`{
         pages {
             _id
             name
@@ -90,13 +92,14 @@ export const updatePageInfo = (id: string, info: any) => ({
 
 export const savePackData = (id: string) =>
                       async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
     const data = JSON.stringify(getState().pages[id].testPackData)
                      .replace(new RegExp("\"", "g"), "\\\"")
     dispatch({
         type: PAGE_SAVE_PACK_DATA,
         id
     })
-    client.mutate(`{
+    client(token).mutate(`{
         page: updatePackData(pageID: "${id}", data: "${data}") {
             _id
         }
@@ -156,6 +159,7 @@ export const updateLinkDest = (pageID: string, linkI: number,
 
 export const saveLinks = (pageID: string) =>
                    async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
     // Dispatch a "Save Page Links Started" action
     dispatch({
         type: PAGE_LINKS_SAVE,
@@ -167,7 +171,7 @@ export const saveLinks = (pageID: string) =>
     const linkRequests = links.map(link => {
         const linkID = link._id || null
         delete link._id
-        return client.mutate(`($pageID: ID!, $linkID: ID, $link: LinkInput!){
+        return client(token).mutate(`($pageID: ID!, $linkID: ID, $link: LinkInput!){
             page: updateLink(pageID: $pageID, linkID: $linkID, link: $link) {
                 links {
                     _id destination
@@ -197,12 +201,13 @@ export const addLink = (pageID: string) => ({
     pageID
 })
 
-export const createPage = (name: string) => async (dispatch: Func) => {
+export const createPage = (name: string) => async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
     dispatch({
         type: PAGE_CREATE,
         name
     })
-    const {page} = await client.mutate(`{
+    const {page} = await client(token).mutate(`{
         page: createPage(name: "${name}", startURL: "", testPackData: []) {
             _id
         }
@@ -210,12 +215,13 @@ export const createPage = (name: string) => async (dispatch: Func) => {
     await fetchPage(page._id)(dispatch)
 }
 
-export const removePage = (pageID: string) => async (dispatch: Func) => {
+export const removePage = (pageID: string) => async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
     dispatch({
         type: PAGE_REMOVE,
         pageID
     })
-    const {page} = await client.mutate(`{
+    const {page} = await client(token).mutate(`{
         page: removePage(pageID: "${pageID}") {
             _id
         }
@@ -223,20 +229,22 @@ export const removePage = (pageID: string) => async (dispatch: Func) => {
 }
 
 export const executePack = (pageID: string, packID: string) =>
-                     async (dispatch: Func) => {
+                     async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
     dispatch({
         type: PACK_EXECUTE,
         pageID, packID
     })
-    const {page} = await client.mutate(`{
+    const {page} = await client(token).mutate(`{
         page: executePack(pageID: "${pageID}", packID: "${packID}") {
             _id
         }
     }`)
 }
 
-export const fetchReport = (reportID: string) => async (dispatch: Func) => {
-    const {report} = await client.query(`query _($reportID: ID!){
+export const fetchReport = (reportID: string) => async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
+    const {report} = await client(token).query(`query _($reportID: ID!){
         report(id: $reportID) {
             _id
             name
@@ -255,8 +263,9 @@ export const fetchReport = (reportID: string) => async (dispatch: Func) => {
 }
 
 export const setBaselineScreenshot = (pageID: string, packID: string, image: string) =>
-                               async (dispatch: Func) => {
-    const {page} = await client.mutate(`($pageID: ID!, $packID: ID!, $image: String!){
+                               async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
+    const {page} = await client(token).mutate(`($pageID: ID!, $packID: ID!, $image: String!){
         page: setBaselineScreenshot(pageID: $pageID, packID: $packID, image: $image) {
             _id
         }

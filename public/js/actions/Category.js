@@ -7,8 +7,9 @@ import {
     CATEGORY_UPDATE_NAME, CATEGORY_REMOVE
 } from "./Types"
 
-export const fetchCategory = (categoryID: string) => async (dispatch: Func) => {
-    const {category} = await client.query(`query ($id: ID!) {
+export const fetchCategory = (categoryID: string) => async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
+    const {category} = await client(token).query(`query ($id: ID!) {
         category(id: $id) {
             _id
             name
@@ -25,8 +26,9 @@ export const fetchCategory = (categoryID: string) => async (dispatch: Func) => {
     })
 }
 
-export const createCategory = (categoryInput: any) => async (dispatch: Func) => {
-    const {category} = await client.mutate(`($category: CategoryInput!) {
+export const createCategory = (categoryInput: any) => async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
+    const {category} = await client(token).mutate(`($category: CategoryInput!) {
         category: createCategory(category: $category) {
             _id
             name
@@ -43,12 +45,13 @@ export const createCategory = (categoryInput: any) => async (dispatch: Func) => 
 }
 
 export const saveCategory = (categoryID: string) => async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
     const cachedCategory = {
         ...getState().categories[categoryID]
     }
     delete cachedCategory._id
     delete cachedCategory.children
-    const {category} = await client.mutate(`($categoryID: ID!, $category: CategoryInput!) {
+    const {category} = await client(token).mutate(`($categoryID: ID!, $category: CategoryInput!) {
         category: updateCategory(id: $categoryID, category: $category) {
             _id
             name
@@ -69,8 +72,9 @@ export const saveCategory = (categoryID: string) => async (dispatch: Func, getSt
     })
 }
 
-export const removeCategory = (categoryID: string) => async (dispatch: Func) => {
-    const {category} = await client.mutate(`($categoryID: ID!) {
+export const removeCategory = (categoryID: string) => async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
+    const {category} = await client(token).mutate(`($categoryID: ID!) {
         category: removeCategory(id: $categoryID) {
             _id
             name

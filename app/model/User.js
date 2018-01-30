@@ -1,6 +1,11 @@
-const Promise  = require("bluebird")
-const bcrypt   = Promise.promisifyAll(require("bcrypt"))
-const mongoose = require("mongoose")
+import Promise  from "bluebird"
+import mongoose from "mongoose"
+import {
+    GraphQLObjectType, GraphQLNonNull,
+    GraphQLID, GraphQLString,
+    GraphQLInputObjectType
+} from "graphql"
+const bcrypt = Promise.promisifyAll(require("bcrypt"))
 
 const userSchema = mongoose.Schema({
     email: {
@@ -13,14 +18,44 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    // Salt is generated automatically
     passwordSalt: {
         type: String
     }
 })
 
-userSchema.methods.checkPassword = async function(password) {
-    const hash = await bcrypt.hashAsync(password, this.passwordSalt)
-    return hash === this.passwordHash
+userSchema.statics.graphQL = new GraphQLObjectType({
+    name: "User",
+    fields: {
+        _id: {
+            type: new GraphQLNonNull(GraphQLID)
+        },
+        email: {
+            type: new GraphQLNonNull(GraphQLString)
+        },
+        password: {
+            type: new GraphQLNonNull(GraphQLString)
+        },
+        passwordSalt: {
+            type: GraphQLString // Prob could be non-null
+        }
+    }
+})
+
+userSchema.statics.graphQLInput = new GraphQLInputObjectType({
+    name: "UserInput",
+    fields: {
+        email: {
+            type: GraphQLString
+        },
+        password: {
+            type: GraphQLString
+        }
+    }
+})
+
+userSchema.methods.checkPassword = function(password) {
+    return bcrypt.compareAsync(password, this.password)
 }
 
 // Before saving to db, hash password
@@ -32,12 +67,10 @@ userSchema.pre("save", function(next) {
             }
             this.password     = hash
             this.passwordSalt = salt
-            this.save()
+            //this.save()
             next()
         })
     })
 })
 
-const User = mongoose.model("User", userSchema)
-
-module.exports = User
+module.exports = mongoose.model("User", userSchema)

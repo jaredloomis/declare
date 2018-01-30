@@ -8,8 +8,9 @@ import {
     INPUT_TYPE_UPDATE
 } from "./Types"
 
-export const fetchInputType = (id: string) => async (dispatch: Func) => {
-    const {inputType} = await client.query(`($id: ID!) {
+export const fetchInputType = (id: string) => async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
+    const {inputType} = await client(token).query(`($id: ID!) {
         inputType(id: $id) {
             _id
             name
@@ -26,8 +27,9 @@ export const fetchInputType = (id: string) => async (dispatch: Func) => {
     })
 }
 
-export const listInputTypes = async (dispatch: Func) => {
-    const {inputTypes} = await client.query(`{
+export const listInputTypes = async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
+    const {inputTypes} = await client(token).query(`{
         inputTypes {
             _id
             name
@@ -63,8 +65,9 @@ export const removeInputTypeConstraint = (id: string, constraintI: number) => ({
     id, constraintI
 })
 
-export const createInputType = (name: string) => async (dispatch: Func) => {
-    const {inputType} = await client.mutate(`($inputType: InputTypeInput!) {
+export const createInputType = (name: string) => async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
+    const {inputType} = await client(token).mutate(`($inputType: InputTypeInput!) {
         inputType: createInputType(inputType: $inputType) {
             _id
             name
@@ -84,9 +87,10 @@ export const addConstraint = (inputTypeID: string) => ({
 
 export const saveInputType = (inputTypeID: string) =>
     async (dispatch: Func, getState: Func) => {
+        const token = getState().activeToken
         const inputType = getState().inputTypes[inputTypeID]
         delete inputType._id
-        const inputTypeNewRet = await client.mutate(`($id: ID!, $inputType: InputTypeInput!) {
+        const inputTypeNewRet = await client(token).mutate(`($id: ID!, $inputType: InputTypeInput!) {
             inputType: updateInputType(id: $id, inputType: $inputType) {
                 _id
                 name
@@ -104,8 +108,9 @@ export const saveInputType = (inputTypeID: string) =>
         })
     }
 
-export const removeInputType = (id: string) => async (dispatch: Func) => {
-    const {inputType} = await client.mutate(`($id: ID!) {
+export const removeInputType = (id: string) => async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
+    const {inputType} = await client(token).mutate(`($id: ID!) {
         inputType: removeInputType(id: $id) {
             _id
         }

@@ -7,6 +7,7 @@
     "bulma": "^0.5.3",
     "feather-icons": "^3.2.2",
     "graphql.js": "^0.4.16",
+    "headjs": "^1.0.3",
     "history": "^4.7.2",
     "jquery": "^3.1.1",
     "lokka": "^1.7.0",
@@ -46,10 +47,10 @@
     "prepublish": "./node_modules/webpack/bin/webpack.js",
     "dev": "webpack-dev-server --open --inline --hot",
     "build": "npm run static && webpack",
-    "static": "npm run html && npm run style",
+    "static": "npm run html && npm run style && npm run headjs",
     "html": "mkdir -p dist/view && cp view/Main.html dist/view/Main.html",
     "style": "mkdir -p dist/style && sass style/materialize.scss > dist/style/materialize.css && sass style/bulma.scss > dist/style/bulma.css",
-    "jquery": "cp node_modules/jquery/dist/jquery.min.js dist/js"
+    "headjs": "cp node_modules/headjs/dist/1.0.0/head.load.min.js dist/js"
   },
   "author": "Jared Loomis",
   "license": "All Rights Reserved"

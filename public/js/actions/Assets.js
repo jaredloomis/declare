@@ -4,8 +4,9 @@ import client from "../graphQL/Client"
 
 import type {Func} from "../flow"
 
-export const retrieveAsset = (key: string) => async (dispatch: Func) => {
-    const {asset} = await client.query(`($key: String){
+export const retrieveAsset = (key: string) => async (dispatch: Func, getState: Func) => {
+    const token   = getState().activeToken
+    const {asset} = await client(token).query(`($key: String){
         asset(key: $key)
     }`, {key})
     dispatch({
