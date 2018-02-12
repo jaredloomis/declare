@@ -2,25 +2,39 @@ import {
     GraphQLID, GraphQLNonNull, GraphQLList
 } from "graphql"
 
-import CustomTest from "../../model/CustomTest"
+import CustomTestModel  from "../../model/CustomTest"
+import CustomTestAccess from "../../access/CustomTest"
+import CanError         from "../GraphQLCanError"
 
 export default {
     customTests: {
-        type: new GraphQLList(CustomTest.graphQL),
-        async resolve(parent, args) {
-            return await CustomTest.find({})
+        type: CanError(new GraphQLList(CustomTestModel.graphQL), {name: "List_CustomTest_CanError"}),
+        async resolve(parent, args, {state}) {
+            try {
+                return {
+                    data: await CustomTestAccess.customTests({user: state.user})
+                }
+            } catch(ex) {
+                return {error: ex}
+            }
         }
     },
     customTest: {
-        type: CustomTest.graphQL,
+        type: CanError(CustomTestModel.graphQL),
         args: {
             id: {
                 name: "id",
                 type: new GraphQLNonNull(GraphQLID)
             }
         },
-        async resolve(parent, {id}) {
-            return await CustomTest.findById(id)
+        async resolve(parent, {id}, {state}) {
+            try {
+                return {
+                    data: await CustomTestAccess.customTest({id}, {user: state.user})
+                }
+            } catch(ex) {
+                return {error: ex}
+            }
         }
     }
 }

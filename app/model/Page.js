@@ -41,6 +41,10 @@ const pageSchema = mongoose.Schema({
             type: ObjectId,
             ref: "TestValue"
         }]
+    },
+    owner: {
+        type: ObjectId,
+        ref: "Account"
     }
 })
 
@@ -70,6 +74,9 @@ pageSchema.statics.graphQL = new GraphQLObjectType({
         },
         testValues: {
             type: new GraphQLList(GraphQLID)
+        },
+        owner: {
+            type: GraphQLID
         }
     }
 })

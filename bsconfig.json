@@ -1,0 +1,14 @@
+{
+    "name": "declare",
+    "refmt": 3,
+    "sources": [{
+        "dir": "app",
+        "subdirs": true
+    }],
+    "bs-dependencies": ["reason-react", "re-classnames"],
+    "package-specs" : [{
+        "module": "commonjs",
+        "in-source": true
+    }]
+}
+

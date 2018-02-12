@@ -2,25 +2,28 @@ import {
     GraphQLID, GraphQLNonNull, GraphQLList
 } from "graphql"
 
-import Element from "../../model/Element"
+import ElementModel  from "../../model/Element"
+import ElementAccess from "../../access/Element"
+
+import CanError, {wrapExceptional} from "../GraphQLCanError"
 
 export default {
     elements: {
-        type: new GraphQLList(Element.graphQL),
-        async resolve(parent, args) {
-            return await Element.find({})
+        type: CanError(new GraphQLList(ElementModel.graphQL), {name: "List_Element_CanError"}),
+        resolve(parent, args, {state}) {
+            return wrapExceptional(() => ElementAccess.elements({user: state.user}))
         }
     },
     element: {
-        type: Element.graphQL,
+        type: CanError(ElementModel.graphQL),
         args: {
             id: {
                 name: "id",
                 type: new GraphQLNonNull(GraphQLID)
             }
         },
-        async resolve(parent, {id}) {
-            return await Element.findById(id)
+        resolve(parent, {id}, {state}) {
+            return wrapExceptional(() => ElementAccess.element({id}, {user: state.user}))
         }
     }
 }

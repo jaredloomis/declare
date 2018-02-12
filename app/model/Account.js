@@ -4,6 +4,8 @@ import {
     GraphQLNonNull, GraphQLID, GraphQLList
 } from "graphql"
 
+import User from "./User"
+
 const ObjectId = mongoose.Schema.Types.ObjectId
 
 const accountSchema = mongoose.Schema({
@@ -63,5 +65,27 @@ accountSchema.statics.graphQLInput = new GraphQLInputObjectType({
         }
     }
 })
+
+accountSchema.statics.containingUser = function(userID) {
+    return this.find({users: userID})
+}
+
+accountSchema.methods.containsUser = function(userID) {
+    // Clean arg
+    if(userID._id) {
+        const user = userID
+        userID = user._id
+        // SuperAdmin is "in" every account
+        if(user.role === User.roles.superAdmin) {
+            return true
+        }
+    }
+    const userIDNorm = userID.toString()
+    for(const user of this.users) {
+        if(user.toString() === userIDNorm)
+            return true
+    }
+    return false
+}
 
 module.exports = mongoose.model("Account", accountSchema)

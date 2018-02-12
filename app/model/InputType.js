@@ -5,6 +5,8 @@ import {
     GraphQLID, GraphQLInt, GraphQLInputObjectType
 } from "graphql"
 
+const ObjectId = mongoose.Schema.Types.ObjectId
+
 export type ConstraintTy =
     {exact: string} | {regex: string} |
     {minLength: ?number, maxLength: ?number}
@@ -18,7 +20,11 @@ const constraintSchema = mongoose.Schema({
 
 const inputTypeSchema = mongoose.Schema({
     name: String,
-    constraints: [constraintSchema]
+    constraints: [constraintSchema],
+    owner: {
+        type: ObjectId,
+        ref: "Account"
+    }
 })
 
 inputTypeSchema.methods.randomInput = function() {
@@ -60,6 +66,9 @@ inputTypeSchema.statics.graphQL = new GraphQLObjectType({
                 name: "Constraint",
                 fields: constraintGraphQLFields
             }))
+        },
+        owner: {
+            type: GraphQLID
         }
     }
 })
@@ -77,6 +86,9 @@ inputTypeSchema.statics.graphQLInput = new GraphQLInputObjectType({
                 description: "",
                 fields: constraintGraphQLFields
             }))
+        },
+        owner: {
+            type: GraphQLID
         }
     }
 })

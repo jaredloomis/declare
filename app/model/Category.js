@@ -9,15 +9,17 @@ const ObjectId = mongoose.Schema.Types.ObjectId
 
 const categorySchema = new mongoose.Schema({
     // Name of the category
-    name:        {type: String, required: true},
+    name:    {type: String, required: true},
     // Items contained in the category
-    items:       [{type: ObjectId}],
+    items:  [{type: ObjectId}],
     // The type of ObjectIds stored in items (ex. "Page")
-    itemRef:     {type: String, required: true}
+    itemRef: {type: String, required: true},
+    // Account that owns this Category
+    owner:   {type: ObjectId, ref: "Account"}
 })
 // Apply tree plugin
 categorySchema.plugin(treePlugin, {
-    pathSeparator : "#",
+    pathSeparator:  "#",
     onDelete:       "REPARENT",
     numWorkers:     5, // XXX WHATS A GOOD VAl??
     idType:         ObjectId
@@ -43,6 +45,9 @@ categorySchema.statics.graphQL = new GraphQLObjectType({
         },
         children: {
             type: new GraphQLList(GraphQLID)
+        },
+        owner: {
+            type: GraphQLID
         }
     }
 })
@@ -61,7 +66,10 @@ categorySchema.statics.graphQLInput = new GraphQLInputObjectType({
         },
         itemRef: {
             type: GraphQLString
-        }
+        },
+        owner: {
+            type: GraphQLID
+        },
     }
 })
 

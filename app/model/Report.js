@@ -1,7 +1,7 @@
 import mongoose    from "mongoose"
 import {
     GraphQLObjectType, GraphQLList, GraphQLString,
-    GraphQLID, GraphQLNonNull, GraphQLSchema
+    GraphQLID
 } from "graphql"
 import GraphQLJSON from "graphql-type-json"
 import createType  from "mongoose-schema-to-graphql"
@@ -49,6 +49,10 @@ const reportSchema = mongoose.Schema({
                 type: Object
             }
         }]
+    },
+    owner: {
+        type: ObjectId,
+        ref: "Account"
     }
 })
 
@@ -66,25 +70,11 @@ reportSchema.statics.graphQL = createType({
                 message:  {type: GraphQLString},
                 time:     {type: GraphQLString},
                 data:     {type: GraphQLJSON},
-                children: {type: GraphQLJSON}
+                children: {type: GraphQLJSON},
+                owner:    {type: GraphQLID}
             }
         }))}
     }
 })
-
-const stepSchema = {
-    status: {
-        type: String
-    },
-    message: {
-        type: String
-    },
-    time: {
-        type: Date
-    },
-    data: {
-        type: Object
-    }
-}
 
 module.exports = mongoose.model("Report", reportSchema)

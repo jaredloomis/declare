@@ -1,13 +1,13 @@
 import {Lokka} from "lokka"
-import {Transport as HttpTransport} from "lokka-transport-http"
+import {Transport} from "lokka-transport-http"
 
-// Cache lokka instances
+// Cache lokka instances by token
 const lokkas = {}
 
 export default token => {
     if(!lokkas[token]) {
         lokkas[token] = new Lokka({
-            transport: new HttpTransport("/graphql", {
+            transport: new Transport("/graphql", {
                 headers: {
                     token
                 }

@@ -2,17 +2,25 @@ import {
     GraphQLID, GraphQLNonNull, GraphQLList
 } from "graphql"
 
-import Category from "../../model/Category"
+import CanError       from "../GraphQLCanError"
+import CategoryModel  from "../../model/Category"
+import CategoryAccess from "../../access/Category"
 
 export default {
     categories: {
-        type: new GraphQLList(Category.graphQL),
-        async resolve(parent, args) {
-            return await Category.find({})
+        type: CanError(new GraphQLList(CategoryModel.graphQL)),
+        async resolve(parent, args, {state}) {
+            try {
+                return {
+                    data: await CategoryAccess.categories({user: state.user})
+                }
+            } catch(ex) {
+                return {error: ex}
+            }
         }
     },
     category: {
-        type: Category.graphQL,
+        type: CanError(CategoryModel.graphQL),
         args: {
             id: {
                 name: "id",
@@ -20,7 +28,13 @@ export default {
             }
         },
         async resolve(parent, {id}) {
-            return await Category.findById(id)
+            try {
+                return {
+                    data: await CategoryModel.findById(id)
+                }
+            } catch(ex) {
+                return {error: ex}
+            }
         }
     }
 }

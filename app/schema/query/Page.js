@@ -2,26 +2,31 @@ import {
     GraphQLList, GraphQLString, GraphQLNonNull
 } from "graphql"
 
-import Page from "../../model/Page"
+import PageModel  from "../../model/Page"
+import PageAccess from "../../access/Page"
+import CanError, {wrapExceptional} from "../GraphQLCanError"
 
 export default {
-    /* Page Queries */
     pages: {
-        type: new GraphQLList(Page.graphQL),
-        async resolve() {
-            return await Page.find({})
+        type: CanError(new GraphQLList(PageModel.graphQL), {name: "List_Page_CanError"}),
+        resolve(parent, args, {state}) {
+            return wrapExceptional(() =>
+                PageAccess.pages({user: state.user})
+            )
         }
     },
     page: {
-        type: Page.graphQL,
+        type: CanError(PageModel.graphQL),
         args: {
             id: {
                 name: "id",
                 type: new GraphQLNonNull(GraphQLString)
             }
         },
-        async resolve(parent, args) {
-            return await Page.findById(args.id)
+        async resolve(parent, {id}, {state}) {
+            return wrapExceptional(() =>
+                PageAccess.page({id}, {user: state.user})
+            )
         }
     }
 }

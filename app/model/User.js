@@ -6,6 +6,7 @@ import {
     GraphQLInputObjectType
 } from "graphql"
 const bcrypt = Promise.promisifyAll(require("bcrypt"))
+const ObjectId = mongoose.Schema.Types.ObjectId
 
 const userSchema = mongoose.Schema({
     email: {
@@ -21,6 +22,17 @@ const userSchema = mongoose.Schema({
     // Salt is generated automatically
     passwordSalt: {
         type: String
+    },
+    // Role - User / Admin / SuperAdmin (me)
+    role: {
+        type: String,
+        enum: ["user", "admin", "superadmin"],
+        default: "user"
+    },
+    // Account this user belongs to
+    owner: {
+        type: ObjectId,
+        ref: "Account"
     }
 })
 
@@ -38,6 +50,9 @@ userSchema.statics.graphQL = new GraphQLObjectType({
         },
         passwordSalt: {
             type: GraphQLString // Prob could be non-null
+        },
+        owner: {
+            type: GraphQLID
         }
     }
 })
@@ -50,9 +65,24 @@ userSchema.statics.graphQLInput = new GraphQLInputObjectType({
         },
         password: {
             type: GraphQLString
+        },
+        owner: {
+            type: GraphQLID
         }
     }
 })
+
+Object.assign(userSchema.statics, {
+    roles: {
+        user: "user",
+        admin: "admin",
+        superAdmin: "superadmin"
+    }
+})
+
+userSchema.methods.isSuperAdmin = function() {
+    return this.role === "superadmin"
+}
 
 userSchema.methods.checkPassword = function(password) {
     return bcrypt.compareAsync(password, this.password)
