@@ -2,45 +2,53 @@ import {
     GraphQLID, GraphQLNonNull
 } from "graphql"
 
-import Element from "../../model/Element"
+import ElementModel  from "../../model/Element"
+import ElementAccess from "../../access/Element"
+
+import CanError, {wrapExceptional} from "../GraphQLCanError"
 
 export default {
     createElement: {
-        type: Element.graphQL,
+        type: CanError(ElementModel.graphQL),
         args: {
             element: {
-                type: Element.graphQLInput
+                type: ElementModel.graphQLInput
             }
         },
-        async resolve(parent, {element}) {
-            return await new Element(element).save()
+        resolve(parent, args, {state}) {
+            return wrapExceptional(() =>
+                ElementAccess.createElement(args, {user: state.user})
+            )
         }
     },
     updateElement: {
-        type: Element.graphQL,
+        type: CanError(ElementModel.graphQL),
         args: {
             id: {
                 type: new GraphQLNonNull(GraphQLID)
             },
             element: {
-                type: Element.graphQLInput
+                type: ElementModel.graphQLInput
             }
         },
-        async resolve(parent, {id, element}) {
-            await Element.findByIdAndUpdate(id, element)
-            return await Element.findById(id)
+        resolve(parent, args, {state}) {
+            return wrapExceptional(() =>
+                ElementAccess.updateElement(args, {user: state.user})
+            )
         }
     },
     removeElement: {
-        type: Element.graphQL,
+        type: CanError(ElementModel.graphQL),
         args: {
             id: {
                 name: "id",
                 type: new GraphQLNonNull(GraphQLID)
             }
         },
-        async resolve(object, {id}) {
-            return await Element.findByIdAndRemove(id)
+        resolve(object, args, {state}) {
+            return wrapExceptional(() =>
+                ElementAccess.removeElement(args, {user: state.user})
+            )
         }
     }
 }

@@ -2,23 +2,28 @@ import {
     GraphQLNonNull, GraphQLID
 } from "graphql"
 
-import InputType from "../../model/InputType"
+import InputTypeModel  from "../../model/InputType"
+import InputTypeAccess from "../../access/InputType"
+
+import CanError, {wrapExceptional} from "../GraphQLCanError"
 
 export default {
     createInputType: {
-        type: InputType.graphQL,
+        type: CanError(InputTypeModel.graphQL),
         args: {
             inputType: {
                 name: "inputType",
-                type: InputType.graphQLInput
+                type: InputTypeModel.graphQLInput
             }
         },
-        async resolve(parent, {inputType}) {
-            return await new InputType(inputType).save()
+        resolve(parent, args, {state}) {
+            return wrapExceptional(() =>
+                InputTypeAccess.createInputType(args, {user: state.user})
+            )
         }
     },
     updateInputType: {
-        type: InputType.graphQL,
+        type: CanError(InputTypeModel.graphQL),
         args: {
             id: {
                 name: "id",
@@ -26,25 +31,27 @@ export default {
             },
             inputType: {
                 name: "inputType",
-                type: InputType.graphQLInput
+                type: InputTypeModel.graphQLInput
             }
         },
-        async resolve(parent, {id, inputType}) {
-            await InputType.findByIdAndUpdate(id, inputType)
-            const ret = await InputType.findById(id)
-            return ret
+        resolve(parent, args, {state}) {
+            return wrapExceptional(() =>
+                InputTypeAccess.updateInputType(args, {user: state.user})
+            )
         }
     },
     removeInputType: {
-        type: InputType.graphQL,
+        type: CanError(InputTypeModel.graphQL),
         args: {
             id: {
                 name: "id",
                 type: new GraphQLNonNull(GraphQLID)
             }
         },
-        async resolve(object, {id}) {
-            return await InputType.findByIdAndRemove(id)
+        resolve(object, args, {state}) {
+            return wrapExceptional(() =>
+                InputTypeAccess.removeInputType(args, {user: state.user})
+            )
         }
     }
 }

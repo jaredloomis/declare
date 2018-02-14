@@ -67,7 +67,7 @@ accountSchema.statics.graphQLInput = new GraphQLInputObjectType({
 })
 
 accountSchema.statics.containingUser = function(userID) {
-    return this.find({users: userID})
+    return this.findOne({users: userID})
 }
 
 accountSchema.methods.containsUser = function(userID) {

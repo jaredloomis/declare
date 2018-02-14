@@ -2,17 +2,16 @@ import {
     GraphQLList, GraphQLString, GraphQLID, GraphQLNonNull
 } from "graphql"
 
-import Page          from "../../model/Page"
+import PageModel     from "../../model/Page"
+import PageAccess    from "../../access/Page"
 import TestPack      from "../../model/TestPack"
-import Report        from "../../model/Report"
 import Link          from "../../model/Link"
-import TestPackData  from "../../model/TestPackData"
-import {executePack} from "../../worker/executor"
+
+import CanError, {wrapExceptional} from "../GraphQLCanError"
 
 export default {
-    /* Page Mutations */
     createPage: {
-        type: Page.graphQL,
+        type: CanError(PageModel.graphQL),
         args: {
             name: {
                 name: "name",
@@ -27,24 +26,28 @@ export default {
                 type: new GraphQLList(GraphQLID)
             }
         },
-        async resolve(obj, args) {
-            return await new Page(args).save()
+        resolve(obj, args, {state}) {
+            return wrapExceptional(() =>
+                PageAccess.createPage(args, {user: state.user})
+            )
         }
     },
     removePage: {
-        type: Page.graphQL,
+        type: CanError(PageModel.graphQL),
         args: {
             pageID: {
                 name: "pageID",
                 type: new GraphQLNonNull(GraphQLID)
             }
         },
-        async resolve(object, {pageID}) {
-            return await Page.findByIdAndRemove(pageID)
+        resolve(object, args, {state}) {
+            return wrapExceptional(() =>
+                PageAccess.removePage(args, {user: state.user})
+            )
         }
     },
     executePack: {
-        type: TestPack.graphQL,
+        type: CanError(TestPack.graphQL),
         args: {
             pageID: {
                 name: "pageID",
@@ -55,24 +58,14 @@ export default {
                 type: new GraphQLNonNull(GraphQLID)
             }
         },
-        async resolve(parent, {pageID, packID}) {
-            executePack(pageID, packID)
-            .then(async result => {
-                try {
-                const report = await new Report(result.report).save()
-                const page = await Page.findOne({_id: pageID})
-                page.addReport(packID, report._id)
-                page.setPackData(packID, result.data)
-                await page.save()
-                } catch(ex) {
-                    console.log(JSON.stringify(ex))
-                }
-            })
-            return TestPack.findById(packID)
+        resolve(parent, args, {state}) {
+            return wrapExceptional(() =>
+                PageAccess.executePack(args, {user: state.user})
+            )
         }
     },
     addTestPack: {
-        type: Page.graphQL,
+        type: CanError(PageModel.graphQL),
         args: {
             pageID: {
                 name: "pageID",
@@ -83,19 +76,14 @@ export default {
                 type: new GraphQLNonNull(GraphQLID)
             }
         },
-        async resolve(parent, {pageID, packID}) {
-            const data = new TestPackData({
-                testPack: packID,
-                values: {}
-            })
-            return await Page.findOneAndUpdate(
-                {_id: pageID},
-                {$addToSet: {testPackData: data}}
+        resolve(parent, args, {state}) {
+            return wrapExceptional(() =>
+                PageAccess.addTestPack(args, {user: state.user})
             )
         }
     },
     removeTestPack: {
-        type: Page.graphQL,
+        type: CanError(PageModel.graphQL),
         args: {
             pageID: {
                 name: "pageID",
@@ -106,16 +94,14 @@ export default {
                 type: new GraphQLNonNull(GraphQLID)
             }
         },
-        async resolve(parent, {pageID, packID}) {
-            const page = await Page.findById(pageID)
-            page.testPackData = page.testPackData.filter(dat =>
-                dat.testPack.toString() !== packID
+        resolve(parent, args, {state}) {
+            return wrapExceptional(() =>
+                PageAccess.removeTestPack(args, {user: state.user})
             )
-            return await page.save()
         }
     },
     updatePackData: {
-        type: Page.graphQL,
+        type: CanError(PageModel.graphQL),
         args: {
             pageID: {
                 name: "pageID",
@@ -126,17 +112,14 @@ export default {
                 type: GraphQLString
             }
         },
-        async resolve(parent, {pageID, data}) {
-            data = JSON.parse(data).map(pack => new TestPackData(pack))
-            const page = await Page.findOneAndUpdate(
-                {_id: pageID},
-                {$set: {testPackData: data}}
+        resolve(parent, args, {state}) {
+            return wrapExceptional(() =>
+                PageAccess.updatePackData(args, {user: state.user})
             )
-            return page
         }
     },
     addLink: {
-        type: Page.graphQL,
+        type: CanError(PageModel.graphQL),
         args: {
             pageID: {
                 name: "pageID",
@@ -147,16 +130,14 @@ export default {
                 type: Link.graphQLInput
             }
         },
-        async resolve(parent, {pageID, link}) {
-            const linkModel = new Link(link)
-            return await Page.findOneAndUpdate(
-                {_id: pageID},
-                {$addToSet: {links: linkModel}}
+        async resolve(parent, args, {state}) {
+            return wrapExceptional(() =>
+                PageAccess.addLink(args, {user: state.user})
             )
         }
     },
     updateLink: {
-        type: Page.graphQL,
+        type: CanError(PageModel.graphQL),
         args: {
             pageID: {
                 name: "pageID",
@@ -171,19 +152,10 @@ export default {
                 type: Link.graphQLInput
             }
         },
-        async resolve(parent, {pageID, linkID, link}) {
-            try {
-            const page = await Page.findById(pageID)
-            if(linkID) {
-                page.updateLink(linkID, link)
-            } else {
-                page.links.push(new Link(link))
-            }
-            return await page.save()
-            } catch(ex) {
-                console.log(ex)
-                return ex
-            }
+        resolve(parent, args, {state}) {
+            return wrapExceptional(() =>
+                PageAccess.updateLink(args, {user: state.user})
+            )
         }
     }
 }

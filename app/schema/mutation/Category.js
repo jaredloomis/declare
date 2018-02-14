@@ -2,82 +2,53 @@ import {
     GraphQLID, GraphQLNonNull
 } from "graphql"
 
-import logger   from "../../common/Logger"
-import Category from "../../model/Category"
+import CategoryModel  from "../../model/Category"
+import CategoryAccess from "../../access/Category"
+
+import CanError, {wrapExceptional} from "../GraphQLCanError"
 
 export default {
     createCategory: {
-        type: Category.graphQL,
+        type: CanError(CategoryModel.graphQL),
         args: {
             category: {
-                type: new GraphQLNonNull(Category.graphQLInput)
+                type: new GraphQLNonNull(CategoryModel.graphQLInput)
             }
         },
-        async resolve(_parent, {category}) {
-            try {
-                const {parent} = category
-                delete category.parent
-                const categoryModel = await new Category(category).save()
-                if(parent) {
-                    categoryModel.parent = parent
-                    await categoryModel.save()
-                }
-                return categoryModel
-            } catch(ex) {
-                console.log(ex)
-                logger.log("error", "Error while creating Category", ex)
-                return ex
-            }
+        resolve(_parent, {category}, {state}) {
+            return wrapExceptional(() =>
+                CategoryAccess.createCategory({category}, {user: state.user})
+            )
         }
     },
     updateCategory: {
-        type: Category.graphQL,
+        type: CanError(CategoryModel.graphQL),
         args: {
             id: {
                 type: new GraphQLNonNull(GraphQLID)
             },
             category: {
-                type: new GraphQLNonNull(Category.graphQLInput)
+                type: new GraphQLNonNull(CategoryModel.graphQLInput)
             }
         },
-        async resolve(_parent, {id, category}) {
-            try {
-                const parent = category.parent
-                delete category.parent
-                const categoryModel = await Category.findByIdAndUpdate(id, category)
-                if(categoryModel.parent !== parent) {
-                    categoryModel.parent = parent
-                    await categoryModel.save()
-                }
-                return categoryModel
-            } catch(ex) {
-                console.log(ex)
-                logger.log("error", "Error while creating Category", ex)
-                return ex
-            }
+        resolve(_parent, {id, category}, {state}) {
+            return wrapExceptional(() =>
+                CategoryAccess.updateCategory({id, category}, {user: state.user})
+            )
         }
     },
     removeCategory: {
-        type: Category.graphQL,
+        type: CanError(CategoryModel.graphQL),
         args: {
             id: {
                 name: "id",
                 type: new GraphQLNonNull(GraphQLID)
             }
         },
-        async resolve(object, {id}) {
-            const cat = await Category.findById(id)
-            await cat.remove()
-
-            if(cat.parent) {
-                await Category.findByIdAndUpdate(
-                    cat.parent,
-                    {$pull: {children: id}}
-                )
-
-            }
-
-            return cat
+        resolve(object, {id}, {state}) {
+            return wrapExceptional(() =>
+                CategoryAccess.removeCategory({id}, {user: state.user})
+            )
         }
     }
 }

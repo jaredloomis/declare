@@ -2,13 +2,15 @@ import {
     GraphQLString, GraphQLNonNull, GraphQLID
 } from "graphql"
 
-import Page          from "../../model/Page"
-import TestPack      from "../../model/TestPack"
-import {internalIDs} from "../../config/TestPack"
+import Page           from "../../model/Page"
+import TestPackModel  from "../../model/TestPack"
+import TestPackAccess from "../../access/TestPack"
+
+import CanError, {wrapExceptional} from "../GraphQLCanError"
 
 export default {
     createTestPack: {
-        type: TestPack.graphQL,
+        type: CanError(TestPackModel.graphQL),
         args: {
             name: {
                 name: "name",
@@ -19,9 +21,10 @@ export default {
                 type: new GraphQLNonNull(GraphQLString)
             }
         },
-        async resolve(parent, args) {
-            args.fields = JSON.parse(args.fields)
-            return await new TestPack(args).save()
+        resolve(parent, args, {state}) {
+            return wrapExceptional(() =>
+                TestPackAccess.createTestPack(args, {user: state.user})
+            )
         }
     },
     setBaselineScreenshot: {
@@ -40,11 +43,10 @@ export default {
                 type: new GraphQLNonNull(GraphQLString)
             }
         },
-        async resolve(parent, {pageID, packID, image}) {
-            const page = await Page.findOne({_id: pageID})
-            page.setPackDatum(packID, "baselineScreenshot", image)
-            await page.save()
-            return page
+        resolve(parent, args, {state}) {
+            return wrapExceptional(() =>
+                TestPackAccess.setBaselineScreenshot(args, {user: state.user})
+            )
         }
     }
 }

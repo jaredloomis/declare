@@ -1,4 +1,5 @@
 import TestPack from "../model/TestPack"
+import Page     from "../model/Page"
 
 export default {
     testPacks({user}) {
@@ -29,5 +30,34 @@ export default {
         }
 
         return pack
+    },
+
+
+    createTestPack(testPack, {user}) {
+        if(!user.isSuperAdmin()) {
+            throw {
+                message: "Must be super user to create test pack."
+            }
+        }
+
+        if(typeof(testPack.fields) === "string") {
+            testPack.fields = JSON.parse(testPack.fields)
+        }
+        return new TestPack(testPack).save()
+    },
+
+    async setBaselineScreenshot({pageID, packID, image}, {user}) {
+        const page = await Page.findOne({_id: pageID})
+
+        // Check if user has access
+        if(!user || page.owner !== user.owner && !user.isSuperAdmin()) {
+            throw {
+                message: "Don't have permission to modify page."
+            }
+        }
+
+        page.setPackDatum(packID, "baselineScreenshot", image)
+        await page.save()
+        return page
     }
 }

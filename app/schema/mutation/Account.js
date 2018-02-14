@@ -2,63 +2,58 @@ import {
     GraphQLID, GraphQLNonNull
 } from "graphql"
 
-import logger  from "../../common/Logger"
-import Account from "../../model/Account"
-import User    from "../../model/User"
+import AccountModel  from "../../model/Account"
+import AccountAccess from "../../access/Account"
+
+import CanError, {wrapExceptional} from "../GraphQLCanError"
 
 export default {
     createAccount: {
-        type: Account.graphQL,
+        type: CanError(AccountModel.graphQL),
         args: {
             account: {
-                type: new GraphQLNonNull(Account.graphQLInput)
+                type: new GraphQLNonNull(AccountModel.graphQLInput)
             }
         },
-        async resolve(_parent, {account}) {
-            try {
-                return await new Account(account).save()
-            } catch(ex) {
-                console.log(ex)
-                logger.log("error", "Error while creating Account", ex)
-                return ex
-            }
+        resolve(_parent, {account}) {
+            return wrapExceptional(() =>
+                AccountAccess.createAccount({account})
+            )
         }
     },
     updateAccount: {
-        type: Account.graphQL,
+        type: CanError(AccountModel.graphQL),
         args: {
             id: {
                 type: new GraphQLNonNull(GraphQLID)
             },
             account: {
-                type: new GraphQLNonNull(Account.graphQLInput)
+                type: new GraphQLNonNull(AccountModel.graphQLInput)
             }
         },
-        async resolve(_parent, {id, account}) {
-            try {
-                return await Account.findByIdAndUpdate(id, account)
-            } catch(ex) {
-                console.log(ex)
-                logger.log("error", "Error while creating Category", ex)
-                return ex
-            }
+        resolve(_parent, {id, account}, {state}) {
+            return wrapExceptional(() =>
+                AccountAccess.updateAccount({id, account}, {user: state.user})
+            )
         }
     },
     removeAccount: {
-        type: Account.graphQL,
+        type: CanError(AccountModel.graphQL),
         args: {
             id: {
                 name: "id",
                 type: new GraphQLNonNull(GraphQLID)
             }
         },
-        async resolve(object, {id}) {
-            return await Account.findByIdAndRemove(id)
+        resolve(object, {id}, {state}) {
+            return wrapExceptional(() =>
+                AccountAccess.removeAccount({id}, {user: state.user})
+            )
         }
     },
     // Assign a User to an Account
     assignUser: {
-        type: Account.graphQL,
+        type: CanError(AccountModel.graphQL),
         args: {
             accountID: {
                 name: "accountID",
@@ -69,10 +64,9 @@ export default {
                 type: new GraphQLNonNull(GraphQLID)
             }
         },
-        async resolve(_parent, {accountID, userID}) {
-            return await Account.findByIdAndUpdate(
-                accountID,
-                {$addToSet: {users: userID}}
+        resolve(_parent, {accountID, userID}, {state}) {
+            return wrapExceptional(() =>
+                AccountAccess.assignUser({accountID, userID}, {user: state.user})
             )
         }
     }

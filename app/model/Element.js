@@ -15,6 +15,10 @@ const elementSchema = mongoose.Schema({
     inputType: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "InputType"
+    },
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Account"
     }
 })
 

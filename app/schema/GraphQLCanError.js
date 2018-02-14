@@ -1,5 +1,7 @@
-import {GraphQLObjectType, GraphQLNonNull} from "graphql"
+import {GraphQLObjectType} from "graphql"
 import GraphQLJSON from "graphql-type-json"
+
+const cache = {}
 
 export default (baseType, opts={}) => {
     const name = (() => {
@@ -10,7 +12,11 @@ export default (baseType, opts={}) => {
         return "CanError"
     })()
 
-    return new GraphQLObjectType({
+    if(cache[name] && name !== "CanError") {
+        return cache[name]
+    }
+
+    const ret = new GraphQLObjectType({
         name,
         fields: {
             [opts.dataFieldName || "data"]: {
@@ -22,46 +28,9 @@ export default (baseType, opts={}) => {
         }
     })
 
-    /*
-    if(baseType._typeConfig && baseType._typeConfig.fields) {
-        console.log("typeConfig", baseType._typeConfig)
-        console.log("fields", baseType._typeConfig.fields)
-        const fields = {
-            error: {
-                type: GraphQLJSON
-            }
-        }
-        for(const fieldKey in baseType._typeConfig.fields) {
-            const field = baseType._typeConfig.fields[fieldKey]
-            if(field instanceof GraphQLNonNull) {
-                fields[fieldKey] = field.type.ofType
-            } else {
-                fields[fieldKey] = field
-            }
-        }
-        return new GraphQLObjectType({
-            name: opts.name || `${baseType._typeConfig.name}_CanError`,
-            description: baseType._typeConfig.description,
-            fields
-        })
-    } else if(baseType.ofType) {
-        
-    } else {
-        debugger
+    cache[name] = ret
 
-        return new GraphQLObjectType({
-            name: opts.name || "CanError",
-            fields: {
-                [opts.dataFieldName || "data"]: {
-                    type: baseType
-                },
-                error: {
-                    type: GraphQLJSON
-                }
-            }
-        })
-    }
-    */
+    return ret
 }
 
 export const wrapExceptional = async action => {
