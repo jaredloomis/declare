@@ -16,6 +16,7 @@ import Elements            from "../containers/Elements"
 import InputTypes          from "../containers/InputTypes"
 import Pages               from "../containers/Pages"
 import SignIn              from "../containers/SignIn"
+import ErrorModal          from "../containers/ErrorModal"
 
 const PageRoute = props => {
     return <Page pageID={props.match.params.pageID} {...props}/>
@@ -61,6 +62,7 @@ const App = () =>
                 </Router>
             </Section>
         </Container>
+        <ErrorModal/>
     </ErrorBoundary>
 
 App.displayName = "App"

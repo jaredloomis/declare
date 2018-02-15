@@ -1,5 +1,6 @@
 // @flow
 import Promise from "bluebird"
+import gql     from "graphql-tag"
 
 import {
     PAGE_ADD_PACK, PAGE_FETCH,
@@ -9,12 +10,15 @@ import {
     LINK_ADD_ACTION, PAGE_REMOVE_LINK, PACK_REMOVE_MANY,
     PAGE_LIST, PAGE_CREATE, PAGE_REMOVE, PACK_EXECUTE,
     REPORT_FETCH, PAGE_SET_BASELINE_SCREENSHOT,
-    PAGE_UPDATE_INFO
+    PAGE_UPDATE_INFO, ERROR_DISPLAY_MSG
 } from "./Types"
 import {fetchPack} from "./TestPack"
 import client from "../graphQL/Client"
 
 import type {Func} from "../flow"
+import Fragments from "../graphQL/Fragments"
+
+const fragments = Fragments.page
 
 export const fetchPage = (id: string, fetchPacks: boolean=false,
                                       fetchReports: boolean=false) =>
@@ -24,33 +28,33 @@ export const fetchPage = (id: string, fetchPacks: boolean=false,
         type: PAGE_FETCH,
         id
     })
-    const {page} = await client(token).query(`{
-        page(id: "${id}") {
-            _id
-            name
-            startURL
-            links {
-                _id
-                destination
-                navigation {
-                    actionType
-                    values
-                }
+
+    const pageRes = await client(token).query({ 
+        query: gql`query ($id: ID!) {
+            page(id: $id) {
+                ...FullPage
             }
-            testPackData {
-                testPack
-                values
-                reports
-            }
-            customTests
-            testValues
-        }
-    }`)
-    dispatch({
-        type: PAGE_FETCH,
-        id,
-        page
+                             
+            ${fragments.full}`,
+        variables: {id}
     })
+    const page = pageRes.data.page.data
+    const error = pageRes.data.page.error
+
+    if(page) {
+        dispatch({
+            type: PAGE_FETCH,
+            id,
+            page
+        })
+    }
+
+    if(error) {
+        dispatch({
+            type: ERROR_DISPLAY_MSG,
+            message: error.message
+        })
+    }
 
     if(fetchPacks) {
         await Promise.all(page.testPackData.map(data =>
@@ -72,16 +76,28 @@ export async function listPages(dispatch: Func, getState: Func) {
     dispatch({
         type: PAGE_LIST
     })
-    const {pages} = await client(token).query(`{
-        pages {
-            _id
-            name
-        }
-    }`)
+    const pagesRes = await client(token).query({
+        query: gql`{
+                pages {
+                    ...MinimalPageList
+                }
+            }
+            ${fragments.minimalList}`
+    })
+    const pages = pagesRes.data.pages.data
+    const error = pagesRes.data.pages.error
+
     dispatch({
         type: PAGE_LIST,
         pages
     })
+
+    if(error) {
+        dispatch({
+            type: ERROR_DISPLAY_MSG,
+            message: error.message
+        })
+    }
 }
 
 export const updatePageInfo = (id: string, info: any) => ({
@@ -99,11 +115,14 @@ export const savePackData = (id: string) =>
         type: PAGE_SAVE_PACK_DATA,
         id
     })
-    client(token).mutate(`{
-        page: updatePackData(pageID: "${id}", data: "${data}") {
-            _id
-        }
-    }`, {id, data})
+    client(token).mutate({
+        mutation: `{
+                page: updatePackData(pageID: "${id}", data: "${data}") {
+                    _id
+                }
+            }`,
+        variables: {id, data}
+    })
 }
 
 export const removeLink = (pageID: string, linkI: number) => ({
@@ -171,19 +190,22 @@ export const saveLinks = (pageID: string) =>
     const linkRequests = links.map(link => {
         const linkID = link._id || null
         delete link._id
-        return client(token).mutate(`($pageID: ID!, $linkID: ID, $link: LinkInput!){
-            page: updateLink(pageID: $pageID, linkID: $linkID, link: $link) {
-                links {
-                    _id destination
-                    navigation {
-                        actionType values
+        return client(token).mutate({
+            mutation: gql`($pageID: ID!, $linkID: ID, $link: LinkInput!){
+                    page: updateLink(pageID: $pageID, linkID: $linkID, link: $link) {
+                        links {
+                            _id destination
+                            navigation {
+                                actionType values
+                            }
+                        }
                     }
-                }
+                }`,
+            variables: {
+                linkID,
+                pageID,
+                link
             }
-        }`, {
-            linkID,
-            pageID,
-            link
         })
     })
     // Send off all requests in parallel
@@ -207,12 +229,24 @@ export const createPage = (name: string) => async (dispatch: Func, getState: Fun
         type: PAGE_CREATE,
         name
     })
-    const {page} = await client(token).mutate(`{
-        page: createPage(name: "${name}", startURL: "", testPackData: []) {
-            _id
-        }
-    }`)
+    const pageRes = await client(token).mutate({
+        mutation: gql`{
+                page: createPage(name: "${name}", startURL: "", testPackData: []) {
+                    _id
+                }
+            }`
+    })
+    const page = pageRes.data.page.data
+    const error = pageRes.data.page.error
+
     await fetchPage(page._id)(dispatch)
+
+    if(error) {
+        dispatch({
+            type: ERROR_DISPLAY_MSG,
+            message: error.message
+        })
+    }
 }
 
 export const removePage = (pageID: string) => async (dispatch: Func, getState: Func) => {
@@ -221,11 +255,13 @@ export const removePage = (pageID: string) => async (dispatch: Func, getState: F
         type: PAGE_REMOVE,
         pageID
     })
-    const {page} = await client(token).mutate(`{
-        page: removePage(pageID: "${pageID}") {
-            _id
-        }
-    }`)
+    await client(token).mutate({
+        mutation: gql`{
+            page: removePage(pageID: "${pageID}") {
+                _id
+            }
+        }`
+    })
 }
 
 export const executePack = (pageID: string, packID: string) =>
@@ -235,41 +271,55 @@ export const executePack = (pageID: string, packID: string) =>
         type: PACK_EXECUTE,
         pageID, packID
     })
-    const {page} = await client(token).mutate(`{
-        page: executePack(pageID: "${pageID}", packID: "${packID}") {
-            _id
-        }
-    }`)
+    const pageRes = await client(token).mutate({
+        mutation: gql`($pageID: String!, $packID: String!){
+                page: executePack(pageID: $pageID, packID: $packID) {
+                    _id
+                }
+            }`,
+        variables: {pageID, packID}
+    })
 }
 
 export const fetchReport = (reportID: string) => async (dispatch: Func, getState: Func) => {
     const token = getState().activeToken
-    const {report} = await client(token).query(`query _($reportID: ID!){
-        report(id: $reportID) {
-            _id
-            name
-            pageID packID
-            summary
-            steps {
-                status time message data children
+    const reportRes = await client(token).query({
+        query: gql`query _($reportID: ID!){
+                report(id: $reportID) {
+                    ...FullReport
+                }
             }
-        }
-    }`, {reportID})
+            ${Fragments.report.full}`,
+        variables: {reportID}
+    })
+    const report = reportRes.data.report.data
+    const error  = reportRes.data.report.error
+
     dispatch({
         type: REPORT_FETCH,
         reportID,
         report
     })
+
+    if(error) {
+        dispatch({
+            type: ERROR_DISPLAY_MSG,
+            message: error.message
+        })
+    }
 }
 
 export const setBaselineScreenshot = (pageID: string, packID: string, image: string) =>
                                async (dispatch: Func, getState: Func) => {
     const token = getState().activeToken
-    const {page} = await client(token).mutate(`($pageID: ID!, $packID: ID!, $image: String!){
-        page: setBaselineScreenshot(pageID: $pageID, packID: $packID, image: $image) {
-            _id
-        }
-    }`, {pageID, packID, image})
+    await client(token).mutate({
+        mutation: gql`($pageID: ID!, $packID: ID!, $image: String!){
+                page: setBaselineScreenshot(pageID: $pageID, packID: $packID, image: $image) {
+                    _id
+                }
+            }`,
+        variables: {pageID, packID, image}
+    })
     dispatch({
         type: PAGE_SET_BASELINE_SCREENSHOT
     })

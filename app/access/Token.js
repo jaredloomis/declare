@@ -22,20 +22,28 @@ export default {
         // Verify password is correct
         const correctPass  = await user.checkPassword(password)
 
-        if(correctAcct && correctPass) {
-            // How long till expiration (in ms)
-            const expiresIn = 1000 * 60 * 10
-            // Create token in database
-            const tokenModel = new Token({
-                token:   Token.rawToken(),
-                expires: new Date(new Date().getTime() + expiresIn).toISOString(),
-                account: accountModel._id,
-                user:    user._id
-            })
-            await tokenModel.save()
-            return tokenModel
-        } else {
-            return null
+        if(!correctAcct) {
+            throw {
+                message: "User does not exist in account."
+            }
         }
+
+        if(!correctPass) {
+            throw {
+                message: "Password is incorrect."
+            }
+        }
+
+        // How long till expiration (in ms)
+        const expiresIn = 1000 * 60 * 10
+        // Create token in database
+        const tokenModel = new Token({
+            token:   Token.rawToken(),
+            expires: new Date(new Date().getTime() + expiresIn).toISOString(),
+            account: accountModel._id,
+            user:    user._id
+        })
+        await tokenModel.save()
+        return tokenModel
     }
 }

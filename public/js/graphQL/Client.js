@@ -1,3 +1,4 @@
+/*
 import {Lokka} from "lokka"
 import {Transport} from "lokka-transport-http"
 
@@ -16,4 +17,25 @@ export default token => {
     }
 
     return lokkas[token]
+}
+*/
+
+import {ApolloClient}  from "apollo-client"
+import {HttpLink}      from "apollo-link-http"
+import {setContext}    from "apollo-link-context"
+import {InMemoryCache} from "apollo-cache-inmemory"
+
+export default token => {
+    const httpLink = new HttpLink({uri: "/graphql" })
+    const authLink = setContext((_, {headers}) => ({
+        headers: {
+            ...headers,
+            token
+        }
+    }))
+
+    return new ApolloClient({
+        link: authLink.concat(httpLink),
+        cache: new InMemoryCache()
+    })
 }

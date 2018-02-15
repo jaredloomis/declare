@@ -3,7 +3,7 @@ import TestPack      from "../model/TestPack"
 import TestPackData  from "../model/TestPackData"
 import Report        from "../model/Report"
 import Link          from "../model/Link"
-import {executePack} from "../../worker/executor"
+import {executePack} from "../worker/executor"
 
 export default {
     /*
@@ -11,14 +11,22 @@ export default {
      */
 
     pages({user}) {
-        // Check if user has access
-        if(!user || !user.isSuperAdmin()) {
+        // Check if user has access        
+        if(!user) {
             throw {
-                message: "Must be a super admin to access all pages."
+                message: "You don't have permission to access pages."
             }
         }
-        
-        return Page.find({})
+
+        // For super admin, send all pages. Otherwise
+        // find pages in account
+        if(user.isSuperAdmin()) {
+            return Page.find({})
+        } else {
+            return Page.find({
+                owner: user.owner
+            })
+        }
     },
 
     async page({id}, {user}) {

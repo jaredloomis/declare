@@ -1,41 +1,69 @@
 // @flow
+import gql from "graphql-tag"
 import type {Func} from "../flow"
 import client from "../graphQL/Client"
 import {
     ELEMENT_FETCH, ELEMENT_UPDATE, ELEMENT_LIST,
-    ELEMENT_CREATE, ELEMENT_SAVE, ELEMENT_REMOVE
+    ELEMENT_CREATE, ELEMENT_SAVE, ELEMENT_REMOVE,
+    ERROR_DISPLAY_MSG
 } from "./Types"
+import Fragments from "../graphQL/Fragments"
+
+const fragments = Fragments.element
 
 export const fetchElement = (id: string) => async (dispatch: Func, getState: Func) => {
     const token = getState().activeToken
-    const {element} = await client(token).query(`($id: ID!) {
-        element(id: $id) {
-            _id
-            name
-            selector
-            inputType
-        }
-    }`, {id})
+    const elementRes = await client(token).query({
+        query: gql`($id: ID!) {
+            element(id: $id) {
+                ...FullElement
+            }
+
+            ${fragments.full}
+        }`,
+        variables: {id}
+    })
+    const {data, error} = elementRes.data.element
+    const element = data
+
     dispatch({
         type: ELEMENT_FETCH,
         id, element
     })
+
+    if(error) {
+        dispatch({
+            type: ERROR_DISPLAY_MSG,
+            message: error.message
+        })
+    }
 }
 
 export const listElements = async (dispatch: Func, getState: Func) => {
     const token = getState().activeToken
-    const {elements} = await client(token).query(` {
-        elements {
-            _id
-            name
-            selector
-            inputType
-        }
-    }`)
+    const elementsRes = await client(token).query({
+        query: gql`{
+                elements {
+                    ...FullElementList
+                }
+            }
+            
+            ${fragments.fullList}`
+    })
+    const {data, error} = elementsRes.data.elements
+    const elements = data
+
     dispatch({
         type: ELEMENT_LIST,
         elements
     })
+
+    if(error) {
+        dispatch({
+            type: ERROR_DISPLAY_MSG,
+            message: error.message
+        })
+    }
 }
 
 export const updateElement = (id: string, element: any) => ({
@@ -45,48 +73,86 @@ export const updateElement = (id: string, element: any) => ({
 
 export const createElement = (elementInput: any) => async (dispatch: Func, getState: Func) => {
     const token = getState().activeToken
-    const {element} = await client(token).mutate(`($element: ElementInput) {
-        element: createElement(element: $element) {
-            _id
-            name
-            selector
-            inputType
-        }
-    }`, {element: elementInput})
+    const elementRes = await client(token).mutate({
+        mutation: gql`($element: ElementInput) {
+                element: createElement(element: $element) {
+                    _id
+                    name
+                    selector
+                    inputType
+                }
+            }`,
+        variables: {element: elementInput}
+    })
+    const {data, error} = elementRes.data.element
+    const element = data
+
     dispatch({
         type: ELEMENT_CREATE,
         element
     })
+
+    if(error) {
+        dispatch({
+            type: ERROR_DISPLAY_MSG,
+            message: error.message
+        })
+    }
 }
 
 export const saveElement = (id: string) => async (dispatch: Func, getState: Func) => {
     const token = getState().activeToken
     const curElement = getState().elements[id]
     delete curElement._id
-    const {newElement} = await client(token).mutate(`($id: ID!, $element: ElementInput) {
-        element: updateElement(id: $id, element: $element) {
-            _id
-            name
-            selector
-            inputType
-        }
-    }`, {element: curElement, id})
+    const newElementRes = await client(token).mutate({
+        mutation: gql`($id: ID!, $element: ElementInput) {
+                element: updateElement(id: $id, element: $element) {
+                    _id
+                    name
+                    selector
+                    inputType
+                }
+            }`,
+        variables: {element: curElement, id}
+    })
+    const {data, error} = newElementRes.data.element
+    const newElement = data
+
     dispatch({
         type: ELEMENT_SAVE,
         element: newElement,
         id
     })
+
+    if(error) {
+        dispatch({
+            type: ERROR_DISPLAY_MSG,
+            message: error.message
+        })
+    }
 }
 
 export const removeElement = (id: string) => async (dispatch: Func, getState: Func) => {
     const token = getState().activeToken
-    const {element} = await client(token).mutate(`($id: ID!) {
-        element: removeElement(id: $id) {
-            _id
-        }
-    }`, {id})
+    const elementRes = await client(token).mutate({
+        mutation: gql`($id: ID!) {
+            element: removeElement(id: $id) {
+                _id
+            }
+        }`,
+        variables: {id}
+    })
+    const {error} = elementRes.data.element
+
     dispatch({
         type: ELEMENT_REMOVE,
         id
     })
+
+    if(error) {
+        dispatch({
+            type: ERROR_DISPLAY_MSG,
+            message: error.message
+        })
+    }
 }

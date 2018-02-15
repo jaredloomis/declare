@@ -23,7 +23,8 @@ const defaultState = {
     customTests: {},
     categories: {},
     tokens: {},
-    activeToken: null
+    activeToken: null,
+    error: null
 }
 
 const pagesReducer = (state=defaultState, action) => {

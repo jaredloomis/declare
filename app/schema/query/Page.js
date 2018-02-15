@@ -23,7 +23,7 @@ export default {
                 type: new GraphQLNonNull(GraphQLString)
             }
         },
-        async resolve(parent, {id}, {state}) {
+        resolve(parent, {id}, {state}) {
             return wrapExceptional(() =>
                 PageAccess.page({id}, {user: state.user})
             )
