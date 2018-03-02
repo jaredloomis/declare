@@ -6,14 +6,18 @@ export default {
      */
 
     inputTypes({user}) {
-        // Check if user has access
-        if(!user || !user.isSuperAdmin()) {
+        if(!user) {
             throw {
-                message: "Must be a super admin to access all input types."
+                message: "You don't have permission to access input types."
             }
         }
-        
-        return InputType.find({})
+
+        // Check if user has access
+        if(user.isSuperAdmin()) {
+            return InputType.find({})
+        } else {
+            return InputType.find({owner: user.owner})
+        }
     },
 
     async inputType({id}, {user}) {

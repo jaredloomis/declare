@@ -5,7 +5,8 @@ import client from "../graphQL/Client"
 import {
     CATEGORY_FETCH, CATEGORY_CREATE, CATEGORY_SAVE,
     CATEGORY_ADD_ITEM, CATEGORY_UPDATE_ITEM, CATEGORY_REMOVE_ITEM,
-    CATEGORY_UPDATE_NAME, CATEGORY_REMOVE, ERROR_DISPLAY_MSG
+    CATEGORY_UPDATE_NAME, CATEGORY_REMOVE, ERROR_DISPLAY_MSG,
+    CATEGORY_LIST
 } from "./Types"
 
 import Fragments from "../graphQL/Fragments"
@@ -42,10 +43,39 @@ export const fetchCategory = (categoryID: string) => async (dispatch: Func, getS
     }
 }
 
+export const listCategories = async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
+    const categoriesRes = await client(token).query({
+        query: gql`
+            query {
+                categories {
+                    ...MinimalCategoryList
+                }
+            }
+        
+            ${fragments.minimalList}`
+    })
+    const res        = categoriesRes.data.categories
+    const categories = res.data
+    const error      = res.error
+
+    if(categories) {
+        dispatch({
+            type: CATEGORY_LIST,
+            categories
+        })
+    } else {
+        dispatch({
+            type: ERROR_DISPLAY_MSG,
+            message: `Couldn't list categories. ${error}`
+        })
+    }
+}
+
 export const createCategory = (categoryInput: any) => async (dispatch: Func, getState: Func) => {
     const token = getState().activeToken
     const categoryRes = await client(token).mutate({
-        mutation: `($category: CategoryInput!) {
+        mutation: gql`($category: CategoryInput!) {
             category: createCategory(category: $category) {
                 ...FullCategory
             }
@@ -65,7 +95,7 @@ export const createCategory = (categoryInput: any) => async (dispatch: Func, get
     if(error) {
         dispatch({
             type: ERROR_DISPLAY_MSG,
-            message: `Couldn't create category. ${error}`
+            message: `Couldn't create category. ${error.message}`
         })
     }
 }
@@ -80,14 +110,11 @@ export const saveCategory = (categoryID: string) => async (dispatch: Func, getSt
     const categoryRes = await client(token).mutate({
         mutation: gql`($categoryID: ID!, $category: CategoryInput!) {
                 category: updateCategory(id: $categoryID, category: $category) {
-                    _id
-                    name
-                    parent
-                    items
-                    itemRef
-                    children
+                    ...FullCategory
                 }
-            }`,
+            }
+        
+            ${fragments.full}`,
         variables: {
             categoryID,
             category: cachedCategory
@@ -105,7 +132,7 @@ export const saveCategory = (categoryID: string) => async (dispatch: Func, getSt
     if(error) {
         dispatch({
             type: ERROR_DISPLAY_MSG,
-            message: `Couldn't create category. ${error}`
+            message: `Couldn't save category. ${error}`
         })
     }
 }
@@ -116,11 +143,6 @@ export const removeCategory = (categoryID: string) => async (dispatch: Func, get
         mutation: gql`($categoryID: ID!) {
                 category: removeCategory(id: $categoryID) {
                     _id
-                    name
-                    parent
-                    items
-                    itemRef
-                    children
                 }
             }`,
         variables: {categoryID}

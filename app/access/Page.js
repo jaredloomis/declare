@@ -23,9 +23,7 @@ export default {
         if(user.isSuperAdmin()) {
             return Page.find({})
         } else {
-            return Page.find({
-                owner: user.owner
-            })
+            return Page.find({owner: user.owner})
         }
     },
 

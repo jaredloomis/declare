@@ -10,9 +10,7 @@ export default {
         if(user && user.isSuperAdmin()) {
             return Category.find({})
         } else {
-            throw {
-                message: "Must be a super admin to access all categories."
-            }
+            return Category.find({owner: user.owner})
         }
     },
 

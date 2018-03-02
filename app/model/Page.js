@@ -44,7 +44,8 @@ const pageSchema = mongoose.Schema({
     },
     owner: {
         type: ObjectId,
-        ref: "Account"
+        ref: "Account",
+        required: true
     }
 })
 
@@ -76,7 +77,7 @@ pageSchema.statics.graphQL = new GraphQLObjectType({
             type: new GraphQLList(GraphQLID)
         },
         owner: {
-            type: GraphQLID
+            type: new GraphQLNonNull(GraphQLID)
         }
     }
 })

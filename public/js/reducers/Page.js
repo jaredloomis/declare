@@ -14,6 +14,11 @@ import {
 } from "../actions/Types"
 import {deepSet, deepGet} from "../lib/Deep"
 
+function getCookieValue(a) {
+    const b = document.cookie.match("(^|;)\\s*" + a + "\\s*=\\s*([^;]+)")
+    return b ? b.pop() : null
+}
+
 const defaultState = {
     pages: {},
     testPacks: {},
@@ -23,7 +28,8 @@ const defaultState = {
     customTests: {},
     categories: {},
     tokens: {},
-    activeToken: null,
+    accounts: {},
+    activeToken: getCookieValue("declare_token"),
     error: null
 }
 

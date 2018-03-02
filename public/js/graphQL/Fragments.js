@@ -13,6 +13,18 @@ export default {
                     children
                 }
                 error
+            }`,
+        minimalList: gql`
+            fragment MinimalCategoryList on List_Category_CanError {
+                data {
+                    _id
+                    name
+                    parent
+                    items
+                    itemRef
+                    children
+                }
+                error
             }`
     },
     page: {
@@ -73,7 +85,8 @@ export default {
             }`
     },
     report: {
-        full: gql`{
+        full: gql`
+            fragment FullReport on Report_CanError {
                 _id
                 name
                 pageID packID
@@ -81,6 +94,98 @@ export default {
                 steps {
                     status time message data children
                 }
+            }`
+    },
+    customTest: {
+        full: gql`
+            fragment FullCustomTest on CustomTest_CanError {
+                data {
+                    _id
+                    owner
+                    name
+                    actions {
+                        actionType
+                        values
+                    }
+                    reports
+                }
+                error
+            }`
+    },
+    inputType: {
+        full: gql`
+            fragment FullInputType on InputType_CanError {
+                data {
+                    _id
+                    name
+                    constraints {
+                        regex
+                        minLength
+                        maxLength
+                    }
+
+                }
+                error
+            }`,
+        fullList: gql`
+            fragment FullInputTypeList on List_InputType_CanError {
+                data {
+                    _id
+                    name
+                    constraints {
+                        regex
+                        minLength
+                        maxLength
+                    }
+
+                }
+                error
+            }`
+    },
+    testPack: {
+        full: gql`
+            fragment FullTestPack on TestPack_CanError {
+                data {
+                    _id
+                    internalID
+                    name
+                    fields
+                }
+                error
+            }`,
+        minimalList: gql`
+            fragment MinimalTestPackList on List_TestPack_CanError {
+                data {
+                    _id
+                    name
+                }
+                error
+            }`
+    },
+    account: {
+        full: gql`
+            fragment FullAccount on Account_CanError {
+                data {
+                    _id
+                    users
+                    pageCategories
+                    elementCategories
+                    inputTypeCategories
+                }
+                error
+            }`
+    },
+    user: {
+        full: gql`
+            fragment FullUser on User_CanError {
+                data {
+                    _id
+                    email
+                    password
+                    passwordSalt
+                    owner
+                }
+                error
             }`
     }
 }

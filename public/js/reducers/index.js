@@ -7,9 +7,10 @@ import customTests from "./CustomTest"
 import categories  from "./Category"
 import users       from "./User"
 import errors      from "./Error"
+import accounts    from "./Account"
 
 export default (state, event) =>
-    errors(users(categories(customTests(elements(inputTypes(pages(state, event), event), event), event), event), event), event)
+    accounts(errors(users(categories(customTests(elements(inputTypes(pages(state, event), event), event), event), event), event), event), event)
 
 /*
 export default combineReducers({

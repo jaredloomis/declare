@@ -7,7 +7,7 @@ import createHistory from "history/createHashHistory"
 import Container           from "./base/Container"
 import Section             from "./base/Section"
 import Dashboard           from "./Dashboard"
-import PageCategories      from "./PageCategories"
+import PageCategories      from "../containers/PageCategories"
 import InputTypeCategories from "./InputTypeCategories"
 import ElementCategories   from "./ElementCategories"
 import Nav                 from "./Nav"
@@ -16,6 +16,7 @@ import Elements            from "../containers/Elements"
 import InputTypes          from "../containers/InputTypes"
 import Pages               from "../containers/Pages"
 import SignIn              from "../containers/SignIn"
+import SignUp              from "../containers/SignUp"
 import ErrorModal          from "../containers/ErrorModal"
 
 const PageRoute = props => {
@@ -58,6 +59,7 @@ const App = () =>
                         <Route path="/InputTypesRaw" component={InputTypes}/>
                         <Route path="/Page/:pageID"  component={PageRoute}/>
                         <Route path="/SignIn"        component={SignIn}/>
+                        <Route path="/SignUp"        component={SignUp}/>
                     </Switch>
                 </Router>
             </Section>

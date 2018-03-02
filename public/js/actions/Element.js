@@ -76,12 +76,11 @@ export const createElement = (elementInput: any) => async (dispatch: Func, getSt
     const elementRes = await client(token).mutate({
         mutation: gql`($element: ElementInput) {
                 element: createElement(element: $element) {
-                    _id
-                    name
-                    selector
-                    inputType
+                    ...FullElement
                 }
-            }`,
+            }
+            
+            ${fragments.full}`,
         variables: {element: elementInput}
     })
     const {data, error} = elementRes.data.element
@@ -107,12 +106,11 @@ export const saveElement = (id: string) => async (dispatch: Func, getState: Func
     const newElementRes = await client(token).mutate({
         mutation: gql`($id: ID!, $element: ElementInput) {
                 element: updateElement(id: $id, element: $element) {
-                    _id
-                    name
-                    selector
-                    inputType
+                    ...FullElement
                 }
-            }`,
+            }
+        
+            ${fragments.full}`,
         variables: {element: curElement, id}
     })
     const {data, error} = newElementRes.data.element

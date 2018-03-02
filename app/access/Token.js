@@ -1,3 +1,5 @@
+import mongoose from "mongoose"
+
 import Token   from "../model/Token"
 import Account from "../model/Account"
 import User    from "../model/User"
@@ -8,26 +10,46 @@ export default {
      */
     async createToken({account, email, password}) {
         // Verify a User with `email` exists in `account`
-        const accountModel = await Account.findById(account)
+        let accountModel
         let user
-        for(const userID of accountModel.users) {
-            const userI = await User.findById(userID)
-            if(userI.email === email) {
-                user = userI
-                break
+        if(account) {
+            accountModel = await Account.findById(account)
+            for(const userID of accountModel.users) {
+                const userI = await User.findById(userID)
+                if(userI.email === email) {
+                    user = userI
+                    break
+                }
+            }
+        } else {
+            user = await User.findOne({email})
+
+            if(user.owner) {
+                accountModel = await Account.findById(user.owner)
+            } else {
+                accountModel = await Account.findOne({
+                    users: new mongoose.Types.ObjectId(user._id)
+                })
             }
         }
-        const correctAcct  = !!user
 
-        // Verify password is correct
-        const correctPass  = await user.checkPassword(password)
+        // Verify we were able to find account
+        if(!accountModel) {
+            throw {
+                message: "No account specified and unable to infer."
+            }
+        }
 
+        // Verify user exists in account
+        const correctAcct = !!user
         if(!correctAcct) {
             throw {
                 message: "User does not exist in account."
             }
         }
 
+        // Verify password is correct
+        const correctPass = await user.checkPassword(password)
         if(!correctPass) {
             throw {
                 message: "Password is incorrect."
@@ -43,7 +65,12 @@ export default {
             account: accountModel._id,
             user:    user._id
         })
+        try {
         await tokenModel.save()
+        } catch(ex) {
+            console.log("caught ex", ex)
+            console.log(accountModel)
+        }
         return tokenModel
     }
 }

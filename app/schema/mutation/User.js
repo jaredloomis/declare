@@ -2,57 +2,53 @@ import {
     GraphQLID, GraphQLNonNull
 } from "graphql"
 
-import logger from "../../common/Logger"
-import User   from "../../model/User"
+import UserModel  from "../../model/User"
+import UserAccess from "../../access/User"
+
+import CanError, {wrapExceptional} from "../GraphQLCanError"
 
 export default {
     createUser: {
-        type: User.graphQL,
+        type: CanError(UserModel.graphQL),
         args: {
             user: {
-                type: new GraphQLNonNull(User.graphQLInput)
+                type: new GraphQLNonNull(UserModel.graphQLInput)
             }
         },
-        async resolve(_parent, {user}) {
-            try {
-                return await new User(user).save()
-            } catch(ex) {
-                console.log(ex)
-                logger.log("error", "Error while creating User", ex)
-                return ex
-            }
+        resolve(_parent, args, {state}) {
+            return wrapExceptional(() =>
+                UserAccess.createUser(args, {user: state.user})
+            )
         }
     },
     updateUser: {
-        type: User.graphQL,
+        type: CanError(UserModel.graphQL),
         args: {
             id: {
                 type: new GraphQLNonNull(GraphQLID)
             },
             user: {
-                type: new GraphQLNonNull(User.graphQLInput)
+                type: new GraphQLNonNull(UserModel.graphQLInput)
             }
         },
-        async resolve(_parent, {id, user}) {
-            try {
-                return await User.findByIdAndUpdate(id, user)
-            } catch(ex) {
-                console.log(ex)
-                logger.log("error", "Error while creating Category", ex)
-                return ex
-            }
+        resolve(_parent, args, {state}) {
+            return wrapExceptional(() =>
+                UserAccess.updateUser(args, {user: state.user})
+            )
         }
     },
     removeUser: {
-        type: User.graphQL,
+        type: CanError(UserModel.graphQL),
         args: {
             id: {
                 name: "id",
                 type: new GraphQLNonNull(GraphQLID)
             }
         },
-        async resolve(object, {id}) {
-            return await User.findByIdAndRemove(id)
+        resolve(object, args, {state}) {
+            return wrapExceptional(() =>
+                UserAccess.removeUser(args, {user: state.user})
+            )
         }
     }
 }

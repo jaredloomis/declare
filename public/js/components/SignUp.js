@@ -6,7 +6,7 @@ import {
 import TextInput from "./base/TextInput"
 import Button    from "./base/Button"
 
-const SignInBase = ({email, password, setEmail, setPassword, onSubmit}) => <div>
+const SignUpBase = ({email, password, setEmail, setPassword, onSubmit}) => <div>
     <TextInput label="Email"    onChange={setEmail}/>
     <TextInput label="Password" onChange={setPassword}/>
     <Button onClick={() => onSubmit({email, password})}>
@@ -18,7 +18,7 @@ const SignInBase = ({email, password, setEmail, setPassword, onSubmit}) => <div>
 const enhance = compose(
     withState("email",    "setEmail",    ""),
     withState("password", "setPassword", ""),
-    setDisplayName("SignIn")
+    setDisplayName("SignUp")
 )
 
-export default enhance(SignInBase)
+export default enhance(SignUpBase)

@@ -5,12 +5,12 @@ import {
 } from "graphql"
 
 import Action from "./Action"
-import Report from "./Report"
 
 const customTestSchema = mongoose.Schema({
     owner: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Page"
+        ref: "Page",
+        required: true
     },
     name:    String,
     actions: [Action.schema],
@@ -27,7 +27,7 @@ customTestSchema.statics.graphQL = new GraphQLObjectType({
             type: new GraphQLNonNull(GraphQLID)
         },
         owner: {
-            type: GraphQLID
+            type: new GraphQLNonNull(GraphQLID)
         },
         name: {
             type: GraphQLString

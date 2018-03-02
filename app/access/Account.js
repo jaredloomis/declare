@@ -1,4 +1,5 @@
 import Account from "../model/Account"
+import User    from "../model/User"
 
 export default {
     /*
@@ -93,6 +94,12 @@ export default {
             }
         }
 
+        // Set user's owner
+        await User.findByIdAndUpdate(userID, {
+            $set: {owner: accountID}
+        })
+
+        // Add user ID to account's users list
         return await Account.findByIdAndUpdate(
             accountID,
             {$addToSet: {users: userID}}

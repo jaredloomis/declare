@@ -7,13 +7,19 @@ export default {
 
     elements({user}) {
         // Check if user has access
-        if(!user || !user.isSuperAdmin()) {
+        if(!user) {
             throw {
-                message: "Must be a super admin to access all elements."
+                message: "You don't have permission to access elements."
             }
         }
         
-        return Element.find({})
+        if(user.isSuperAdmin()) {
+            return Element.find({})
+        } else {
+            return Element.find({
+                owner: user.owner
+            })
+        }
     },
 
     async element({id}, {user}) {

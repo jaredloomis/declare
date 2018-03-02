@@ -18,7 +18,8 @@ const elementSchema = mongoose.Schema({
     },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Account"
+        ref: "Account",
+        required: true
     }
 })
 
@@ -37,6 +38,9 @@ elementSchema.statics.graphQL = new GraphQLObjectType({
         },
         inputType: {
             type: GraphQLID
+        },
+        owner: {
+            type: new GraphQLNonNull(GraphQLID)
         }
     }
 })

@@ -8,7 +8,7 @@ import CategoryAccess from "../../access/Category"
 
 export default {
     categories: {
-        type: CanError(new GraphQLList(CategoryModel.graphQL)),
+        type: CanError(new GraphQLList(CategoryModel.graphQL), {name: "List_Category_CanError"}),
         async resolve(parent, args, {state}) {
             try {
                 return {

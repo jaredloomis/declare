@@ -23,7 +23,8 @@ const inputTypeSchema = mongoose.Schema({
     constraints: [constraintSchema],
     owner: {
         type: ObjectId,
-        ref: "Account"
+        ref: "Account",
+        required: true
     }
 })
 
@@ -68,7 +69,7 @@ inputTypeSchema.statics.graphQL = new GraphQLObjectType({
             }))
         },
         owner: {
-            type: GraphQLID
+            type: new GraphQLNonNull(GraphQLID)
         }
     }
 })

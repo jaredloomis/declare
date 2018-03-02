@@ -15,7 +15,8 @@ const categorySchema = new mongoose.Schema({
     // The type of ObjectIds stored in items (ex. "Page")
     itemRef: {type: String, required: true},
     // Account that owns this Category
-    owner:   {type: ObjectId, ref: "Account"}
+    owner:   {type: ObjectId, ref: "Account",
+              required: true}
 })
 // Apply tree plugin
 categorySchema.plugin(treePlugin, {
@@ -47,7 +48,7 @@ categorySchema.statics.graphQL = new GraphQLObjectType({
             type: new GraphQLList(GraphQLID)
         },
         owner: {
-            type: GraphQLID
+            type: new GraphQLNonNull(GraphQLID)
         }
     }
 })
@@ -69,7 +70,7 @@ categorySchema.statics.graphQLInput = new GraphQLInputObjectType({
         },
         owner: {
             type: GraphQLID
-        },
+        }
     }
 })
 

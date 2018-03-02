@@ -30,11 +30,11 @@ export const fetchPage = (id: string, fetchPacks: boolean=false,
     })
 
     const pageRes = await client(token).query({ 
-        query: gql`query ($id: ID!) {
+        query: gql`query ($id: String!) {
             page(id: $id) {
                 ...FullPage
             }
-                             
+            }
             ${fragments.full}`,
         variables: {id}
     })
@@ -116,7 +116,7 @@ export const savePackData = (id: string) =>
         id
     })
     client(token).mutate({
-        mutation: `{
+        mutation: gql`{
                 page: updatePackData(pageID: "${id}", data: "${data}") {
                     _id
                 }
@@ -191,12 +191,14 @@ export const saveLinks = (pageID: string) =>
         const linkID = link._id || null
         delete link._id
         return client(token).mutate({
-            mutation: gql`($pageID: ID!, $linkID: ID, $link: LinkInput!){
+            mutation: gql`mutation ($pageID: ID!, $linkID: ID, $link: LinkInput!){
                     page: updateLink(pageID: $pageID, linkID: $linkID, link: $link) {
-                        links {
-                            _id destination
-                            navigation {
-                                actionType values
+                        data {
+                            links {
+                                _id destination
+                                navigation {
+                                    actionType values
+                                }
                             }
                         }
                     }

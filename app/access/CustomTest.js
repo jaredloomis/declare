@@ -14,9 +14,7 @@ export default {
         if(user && user.isSuperAdmin()) {
             return CustomTest.find({})
         } else {
-            throw {
-                message: "Must be a super admin to access all custom tests."
-            }
+            return CustomTest.find({owner: user.owner})
         }
     },
 

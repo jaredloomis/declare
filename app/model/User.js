@@ -20,6 +20,7 @@ const userSchema = mongoose.Schema({
         required: true
     },
     // Salt is generated automatically
+    // TODO can remove; contained in password
     passwordSalt: {
         type: String
     },
@@ -32,7 +33,8 @@ const userSchema = mongoose.Schema({
     // Account this user belongs to
     owner: {
         type: ObjectId,
-        ref: "Account"
+        ref: "Account",
+        required: true
     }
 })
 
@@ -52,7 +54,7 @@ userSchema.statics.graphQL = new GraphQLObjectType({
             type: GraphQLString // Prob could be non-null
         },
         owner: {
-            type: GraphQLID
+            type: new GraphQLNonNull(GraphQLID)
         }
     }
 })

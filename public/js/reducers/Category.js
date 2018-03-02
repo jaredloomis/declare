@@ -2,7 +2,7 @@
 import {
     CATEGORY_FETCH, CATEGORY_CREATE, CATEGORY_SAVE,
     CATEGORY_ADD_ITEM, CATEGORY_UPDATE_ITEM, CATEGORY_UPDATE_NAME,
-    CATEGORY_REMOVE_ITEM, CATEGORY_REMOVE
+    CATEGORY_REMOVE_ITEM, CATEGORY_REMOVE, CATEGORY_LIST
 } from "../actions/Types"
 
 export default (state: any, action: any) => {
@@ -12,6 +12,14 @@ export default (state: any, action: any) => {
             categories: {
                 ...state.categories,
                 [action.categoryID]: action.category
+            }
+        }
+    } else if(action.type === CATEGORY_LIST) {
+        return {
+            ...state,
+            categories: {
+                ...state.categories,
+                ...action.categories
             }
         }
     } else if(action.type === CATEGORY_CREATE) {
