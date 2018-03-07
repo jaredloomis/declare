@@ -9,36 +9,37 @@ import CategoryAdd       from "./CategoryAdd"
 import withReduxState    from "./WithReduxState"
 import withReduxDispatch from "./WithReduxDispatch"
 
-import {listPages}       from "../actions/Page"
+import {listInputTypes}  from "../actions/InputType"
 import {listCategories}  from "../actions/Category"
 
-const PageCategoriesBase = ({categories}) => {
+const InputTypeCategoriesBase = ({categories}) => {
     const categoryID = categories && Object.keys(categories).filter(catID => {
         const cat = categories[catID]
-        return cat && !cat.parent && cat.itemRef.toLowerCase() === "page"
+        return cat && !cat.parent && cat.itemRef.toLowerCase() === "inputtype"
     })[0]
 
     if(categoryID) {
+        // Hard-coded category temporarily
         return <Box>
             <Category categoryID={categoryID}/>
         </Box>
     } else {
-        return <CategoryAdd itemRef="page"/>
+        return <CategoryAdd itemRef="inputType"/>
     }
 }
 
 const enhance = compose(
     withReduxDispatch({
-        listPages,
+        listInputTypes,
         listCategories
     }),
     withReduxState(["categories"]),
     lifecycle({
         componentDidMount() {
-            this.props.listPages()
+            this.props.listInputTypes()
             this.props.listCategories()
         }
     }),
-    setDisplayName("PageCategories")
+    setDisplayName("InputTypeCategories")
 )
-export default enhance(PageCategoriesBase)
+export default enhance(InputTypeCategoriesBase)

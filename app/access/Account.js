@@ -1,5 +1,6 @@
-import Account from "../model/Account"
-import User    from "../model/User"
+import Account  from "../model/Account"
+import User     from "../model/User"
+import Category from "../model/Category"
 
 export default {
     /*
@@ -104,6 +105,23 @@ export default {
             accountID,
             {$addToSet: {users: userID}}
         )
-    }
+    },
 
+    async addRootCategory({categoryID, itemRef}, {user}) {
+        if(!itemRef) {
+            itemRef = (await Category.findById(categoryID)).itemRef
+        }
+        itemRef = itemRef.toLowerCase()
+
+        // Compute name of field we want to modify (ex. "pageCategories")
+        const propName =
+            itemRef.indexOf("page")      !== -1 ? "pageCategories"      :
+            itemRef.indexOf("element")   !== -1 ? "elementCategories"   :
+            itemRef.indexOf("inputtype") !== -1 ? "inputTypeCategories" : ""
+
+        return Account.findByIdAndUpdate(
+            user.owner,
+            {$addToSet: {[propName]: categoryID}}
+        )
+    }
 }

@@ -4,13 +4,16 @@ import Page     from "../model/Page"
 export default {
     testPacks({user}) {
         // Check if user has access
-        if(!user || !user.isSuperAdmin()) {
+        if(!user) {
             throw {
-                message: "Must be a super admin to access all test packs."
+                message: "Must be logged in to access test packs."
             }
         }
         
-        return TestPack.find({})
+        if(user.isSuperAdmin())
+            return TestPack.find({})
+        else
+            return TestPack.find({owner: user.owner})
     },
 
     async testPack({id}, {user}) {

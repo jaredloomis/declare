@@ -118,10 +118,10 @@ function tree(schema, options) {
                     return next(err);
                 }
 
-                streamWorker(cursor.stream(), numWorkers, function streamOnData(doc, done) {
+                streamWorker(cursor.stream(), function streamOnData(doc, done) {
 
                         self.collection.update({ _id: doc._id }, { $set: { parent: newParent } }, done);
-                },
+                }, {concurrency: numWorkers},
                 function streamOnClose(err) {
 
                     if (err) {
@@ -131,11 +131,11 @@ function tree(schema, options) {
                     self.collection.find({ path: { $regex: previousParent + pathSeparatorRegex} }, function (err, cursor) {
 
                         var subStream = cursor.stream();
-                        streamWorker(subStream, numWorkers, function subStreamOnData(doc, done) {
+                        streamWorker(subStream, function subStreamOnData(doc, done) {
 
                             var newPath = doc.path.replace(previousParent + pathSeparator, '');
                             self.collection.update({ _id: doc._id }, { $set: { path: newPath } }, done);
-                        },
+                        }, {concurrency: numWorkers},
                         next);
                     });
                 });

@@ -1,11 +1,11 @@
-import Promise from "bluebird"
 import mongoose from "mongoose"
 import {
     GraphQLObjectType,
     GraphQLNonNull,
     GraphQLString,
     GraphQLList,
-    GraphQLID
+    GraphQLID,
+    GraphQLInputObjectType
 } from "graphql"
 
 import TestPackData from "./TestPackData"
@@ -78,6 +78,21 @@ pageSchema.statics.graphQL = new GraphQLObjectType({
         },
         owner: {
             type: new GraphQLNonNull(GraphQLID)
+        }
+    }
+})
+
+pageSchema.statics.graphQLInput = new GraphQLInputObjectType({
+    name: "PageInput",
+    fields: {
+        name: {
+            type: GraphQLString
+        },
+        startURL: {
+            type: GraphQLString
+        },
+        identifier: {
+            type: GraphQLString
         }
     }
 })

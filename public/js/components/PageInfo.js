@@ -2,18 +2,16 @@ import React from "react"
 
 import TextInput from "./base/TextInput"
 
-//import bulma from "../../style/bulma.scss"
-
 const PageInfo = ({page={}, onChange}) => {
-    const change = fieldName => event => {
+    const change = fieldName => value => {
         onChange({
-            [fieldName]: event.target.value
+            [fieldName]: value
         })
     }
 
     return <div>
-        <TextInput label="Start URL" defaultValue={page.startUrl}
-                   onChange={change("startUrl")}/>
+        <TextInput label="Start URL" defaultValue={page.startURL}
+                   onChange={change("startURL")}/>
     </div>
 }
 

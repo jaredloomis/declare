@@ -1,5 +1,5 @@
 import {
-    GraphQLID, GraphQLNonNull
+    GraphQLID, GraphQLNonNull, GraphQLString
 } from "graphql"
 
 import AccountModel  from "../../model/Account"
@@ -69,5 +69,23 @@ export default {
                 AccountAccess.assignUser({accountID, userID}, {user: state.user})
             )
         }
-    }
+    },
+    addRootCategory: {
+        type: CanError(AccountModel.graphQL),
+        args: {
+            categoryID: {
+                name: "categoryID",
+                type: new GraphQLNonNull(GraphQLID)
+            },
+            itemRef: {
+                name: "itemRef",
+                type: new GraphQLNonNull(GraphQLString)
+            }
+        },
+        resolve(_parent, {categoryID, itemRef}, {state}) {
+            return wrapExceptional(() =>
+                AccountAccess.addRootCategory({categoryID, itemRef}, {user: state.user})
+            )
+        }
+    },
 }

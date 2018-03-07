@@ -12,7 +12,7 @@ const categorySchema = new mongoose.Schema({
     name:    {type: String, required: true},
     // Items contained in the category
     items:  [{type: ObjectId}],
-    // The type of ObjectIds stored in items (ex. "Page")
+    // The type of ObjectIds stored in items (ex. "page")
     itemRef: {type: String, required: true},
     // Account that owns this Category
     owner:   {type: ObjectId, ref: "Account",

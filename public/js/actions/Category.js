@@ -6,7 +6,7 @@ import {
     CATEGORY_FETCH, CATEGORY_CREATE, CATEGORY_SAVE,
     CATEGORY_ADD_ITEM, CATEGORY_UPDATE_ITEM, CATEGORY_REMOVE_ITEM,
     CATEGORY_UPDATE_NAME, CATEGORY_REMOVE, ERROR_DISPLAY_MSG,
-    CATEGORY_LIST
+    CATEGORY_LIST, CATEGORY_SET_ROOT
 } from "./Types"
 
 import Fragments from "../graphQL/Fragments"
@@ -75,13 +75,14 @@ export const listCategories = async (dispatch: Func, getState: Func) => {
 export const createCategory = (categoryInput: any) => async (dispatch: Func, getState: Func) => {
     const token = getState().activeToken
     const categoryRes = await client(token).mutate({
-        mutation: gql`($category: CategoryInput!) {
-            category: createCategory(category: $category) {
-                ...FullCategory
+        mutation: gql`
+            mutation ($category: CategoryInput!) {
+                category: createCategory(category: $category) {
+                    ...FullCategory
+                }
             }
 
-            ${fragments.full}
-        }`,
+            ${fragments.full}`,
         variables: {category: categoryInput}
     })
     const {data, error} = categoryRes.data.category
@@ -98,6 +99,8 @@ export const createCategory = (categoryInput: any) => async (dispatch: Func, get
             message: `Couldn't create category. ${error.message}`
         })
     }
+    
+    return category
 }
 
 export const saveCategory = (categoryID: string) => async (dispatch: Func, getState: Func) => {
@@ -107,8 +110,9 @@ export const saveCategory = (categoryID: string) => async (dispatch: Func, getSt
     }
     delete cachedCategory._id
     delete cachedCategory.children
+    delete cachedCategory.__typename
     const categoryRes = await client(token).mutate({
-        mutation: gql`($categoryID: ID!, $category: CategoryInput!) {
+        mutation: gql`mutation ($categoryID: ID!, $category: CategoryInput!) {
                 category: updateCategory(id: $categoryID, category: $category) {
                     ...FullCategory
                 }
@@ -140,9 +144,10 @@ export const saveCategory = (categoryID: string) => async (dispatch: Func, getSt
 export const removeCategory = (categoryID: string) => async (dispatch: Func, getState: Func) => {
     const token = getState().activeToken
     await client(token).mutate({
-        mutation: gql`($categoryID: ID!) {
+        mutation: gql`mutation ($categoryID: ID!) {
                 category: removeCategory(id: $categoryID) {
-                    _id
+                    data {_id}
+                    error
                 }
             }`,
         variables: {categoryID}
@@ -152,6 +157,36 @@ export const removeCategory = (categoryID: string) => async (dispatch: Func, get
         categoryID
     })
 }
+
+// Make specified category a "root" category - no parent category, but connected
+// to the account itself
+export const setCategoryAsRoot = (categoryID: string, itemRef: string) => async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
+    const accountRes = await client(token).mutate({
+        mutation: gql`mutation ($categoryID: ID!, $itemRef: String!) {
+                account: addRootCategory(categoryID: $categoryID, itemRef: $itemRef) {
+                    data {_id}
+                    error
+                }
+            }`,
+        variables: {categoryID, itemRef}
+    })
+    const {data, error} = accountRes.data.account
+    const account = data
+
+    dispatch({
+        type: CATEGORY_SET_ROOT,
+        account
+    })
+
+    if(error) {
+        dispatch({
+            type: ERROR_DISPLAY_MSG,
+            message: `Couldn't make category root. ${error.message}`
+        })
+    }
+}
+
 
 export const addItemToCategory = (categoryID: string, item: any) => ({
     type: CATEGORY_ADD_ITEM,

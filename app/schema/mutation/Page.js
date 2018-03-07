@@ -130,7 +130,7 @@ export default {
                 type: Link.graphQLInput
             }
         },
-        async resolve(parent, args, {state}) {
+        resolve(parent, args, {state}) {
             return wrapExceptional(() =>
                 PageAccess.addLink(args, {user: state.user})
             )
@@ -155,6 +155,24 @@ export default {
         resolve(parent, args, {state}) {
             return wrapExceptional(() =>
                 PageAccess.updateLink(args, {user: state.user})
+            )
+        }
+    },
+    updatePageInfo: {
+        type: CanError(PageModel.graphQL),
+        args: {
+            id: {
+                name: "id",
+                type: new GraphQLNonNull(GraphQLID)
+            },
+            page: {
+                name: "page",
+                type: PageModel.graphQLInput
+            }
+        },
+        resolve(parent, args, {state}) {
+            return wrapExceptional(() =>
+                PageAccess.updateInfo(args, {user: state.user})
             )
         }
     }

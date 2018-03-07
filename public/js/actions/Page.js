@@ -232,16 +232,18 @@ export const createPage = (name: string) => async (dispatch: Func, getState: Fun
         name
     })
     const pageRes = await client(token).mutate({
-        mutation: gql`{
-                page: createPage(name: "${name}", startURL: "", testPackData: []) {
-                    _id
+        mutation: gql`mutation($name: String!) {
+                page: createPage(name: $name, startURL: "", testPackData: []) {
+                    data {_id}
+                    error
                 }
-            }`
+            }`,
+        variables: {name}
     })
     const page = pageRes.data.page.data
     const error = pageRes.data.page.error
 
-    await fetchPage(page._id)(dispatch)
+    await fetchPage(page._id)(dispatch, getState)
 
     if(error) {
         dispatch({
@@ -249,6 +251,8 @@ export const createPage = (name: string) => async (dispatch: Func, getState: Fun
             message: error.message
         })
     }
+
+    return page
 }
 
 export const removePage = (pageID: string) => async (dispatch: Func, getState: Func) => {
@@ -324,5 +328,28 @@ export const setBaselineScreenshot = (pageID: string, packID: string, image: str
     })
     dispatch({
         type: PAGE_SET_BASELINE_SCREENSHOT
+    })
+}
+
+export const savePageInfo = (pageID: string) => async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
+    const page = getState().pages[pageID]
+    const pageInfo = {
+        name: page.name,
+        identifier: page.identifier,
+        startURL: page.startURL
+    }
+    
+    await client(token).mutate({
+        mutation: gql`mutation ($id: ID!, $page: PageInput!){
+                page: updatePageInfo(id: $id, page: $page) {
+                    data {_id}
+                    error
+                }
+            }`,
+        variables: {
+            id: pageID,
+            page: pageInfo
+        }
     })
 }

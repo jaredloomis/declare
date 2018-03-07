@@ -7,6 +7,7 @@ import {
     removePack, removeLinkAction, addLinkAction,
     removeLink, removePackMany, addLink,
     removePage, executePack, updatePageInfo,
+    savePageInfo
 } from "../actions/Page"
 import {
     createCustomTest, saveCustomTest
@@ -89,6 +90,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         onInfoChange(valMap) {
             dispatch(updatePageInfo(ownProps.pageID, valMap))
+            dispatch(savePageInfo(ownProps.pageID))
         },
         onCustomTestAdd() {
             dispatch(createCustomTest(ownProps.pageID, {name: "x"}))

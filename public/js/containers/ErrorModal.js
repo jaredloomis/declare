@@ -2,7 +2,7 @@ import React from "react"
 import {compose, setDisplayName} from "recompose"
 
 import {acknowledgeError}   from "../actions/Error"
-import ErrorModalComponent from "../components/ErrorModal"
+import Modal from "../components/base/Modal"
 import withReduxDispatch   from "./WithReduxDispatch"
 import withReduxState      from "./WithReduxState"
 
@@ -11,9 +11,9 @@ const ErrorModalBase = props => {
         props.acknowledgeError()
     }
 
-    return <ErrorModalComponent message={props.error}
-            active={props.error}
-            onClose={close}/>
+    return <Modal type="error" active={props.error} onClose={close}>
+        {props.error}
+    </Modal>
 }
 
 const enhance = compose(

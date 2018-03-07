@@ -2,7 +2,7 @@
 import {
     CATEGORY_FETCH, CATEGORY_CREATE, CATEGORY_SAVE,
     CATEGORY_ADD_ITEM, CATEGORY_UPDATE_ITEM, CATEGORY_UPDATE_NAME,
-    CATEGORY_REMOVE_ITEM, CATEGORY_REMOVE, CATEGORY_LIST
+    CATEGORY_REMOVE_ITEM, CATEGORY_REMOVE, CATEGORY_LIST, CATEGORY_SET_ROOT
 } from "../actions/Types"
 
 export default (state: any, action: any) => {
@@ -15,20 +15,30 @@ export default (state: any, action: any) => {
             }
         }
     } else if(action.type === CATEGORY_LIST) {
+        const transformedCats = action.categories
+            .reduce((acc, cat) => ({...acc, [cat._id]: cat}), {})
         return {
             ...state,
             categories: {
                 ...state.categories,
-                ...action.categories
+                ...transformedCats
             }
         }
     } else if(action.type === CATEGORY_CREATE) {
         const {_id, parent} = action.category
         const curParent     = state.categories[parent]
-        const newParent     = {
+        const newParent     = curParent && {
             ...curParent,
             children: curParent.children.concat([_id])
         }
+
+        const update = {
+            [_id]: action.category
+        }
+        if(newParent) {
+            update[parent] = newParent
+        }
+
         return {
             ...state,
             categories: {
@@ -104,18 +114,33 @@ export default (state: any, action: any) => {
         const curCategory  = state.categories[categoryID]
         const parentID     = curCategory.parent
         const curParent    = parentID && state.categories[parentID]
-        const newParent    = {
+        const newParent    = curParent && {
             ...curParent,
             children: curParent.children.filter(id =>
                 id.toString() !== categoryID.toString()
             )
         }
+
+        const update = {
+            [categoryID]: null
+        }
+        if(newParent) {
+            update[parentID] = newParent
+        }
+
         return {
             ...state,
             categories: {
                 ...state.categories,
-                [categoryID]: null,
-                [parentID]: newParent
+                ...update
+            }
+        }
+    } else if(action.type === CATEGORY_SET_ROOT) {
+        return {
+            ...state,
+            accounts: {
+                ...state.categories,
+                [action.account._id]: action.account
             }
         }
     } else {

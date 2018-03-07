@@ -45,7 +45,8 @@ export default {
      * Mutations
      */
 
-    createElement({element}) {
+    createElement({element}, {user}) {
+        element.owner = element.owner || user.owner
         return new Element(element).save()
     },
 

@@ -23,7 +23,7 @@ export default class PageAdd extends Component {
                 <TextInput onChange={this.nameChange} label="Page Name"/>
             </div>
             <div className={bulma.control}>
-                <Button onClick={this.createPage} inline={true} type="info">
+                <Button onClick={this.createPage} inline type="info">
                     Create Page
                 </Button>
             </div>
@@ -34,7 +34,7 @@ export default class PageAdd extends Component {
         this.props.onCreatePage(this.state.pageName)
     }
     
-    nameChange(event) {
-        this.setState({pageName: event.target.value})
+    nameChange(pageName) {
+        this.setState({pageName})
     }
 }

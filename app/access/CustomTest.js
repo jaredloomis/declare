@@ -24,11 +24,11 @@ export default {
         // Check if test exists with id
         if(!cat) {
             throw {
-                message: `Custom test not found with id \"${id}\"`
+                message: `Custom test not found with id "${id}"`
             }
         }
         // Check if user has access
-        if(!user || cat.owner !== user.owner && !user.isSuperAdmin()) {
+        if(!user || !(cat && user.owner.equals(cat.owner)) && !user.isSuperAdmin()) {
             throw {
                 message: "Cannot access custom tests not in your account."
             }

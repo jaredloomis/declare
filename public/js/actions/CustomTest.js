@@ -46,7 +46,7 @@ export const createCustomTest = (pageID: string, customTestInput: any) => async 
     const token = getState().activeToken
     customTestInput.owner = pageID
     const customTestRes = await client(token).mutate({
-        mutation: gql`($pageID: ID!, $customTest: CustomTestInput) {
+        mutation: gql`mutation ($pageID: ID!, $customTest: CustomTestInput) {
                 customTest: createCustomTest(pageID: $pageID, customTest: $customTest) {
                     ...FullCustomTest
                 }
@@ -78,7 +78,7 @@ export const saveCustomTest = (testID: string) => async (dispatch: Func, getStat
     delete cachedTest._id
     delete cachedTest.reports
     const customTestRes = await client(token).mutate({
-        mutation: gql`($testID: ID!, $customTest: CustomTestInput) {
+        mutation: gql`mutation ($testID: ID!, $customTest: CustomTestInput) {
                 customTest: updateCustomTest(id: $testID, customTest: $customTest) {
                     ...FullCustomTest
                 }
@@ -132,7 +132,7 @@ export const updateCustomTestInfo = (customTestID: string, update: any) => ({
 export const removeCustomTest = (customTestID: string) => async (dispatch: Func, getState: Func) => {
     const token = getState().activeToken
     await client(token).mutate({
-        mutation: gql`($customTestID: ID!) {
+        mutation: gql`mutation ($customTestID: ID!) {
                 customTest: removeCustomTest(id: $customTestID) {
                     _id
                 }
@@ -154,7 +154,7 @@ export const executeCustomTest = (customTestID: string) => async (dispatch: Func
     })
     // Start test
     const customTestRes = await client(token).mutate({
-        mutation: gql`($id: ID!) {
+        mutation: gql`mutation ($id: ID!) {
                 customTest: executeCustomTest(id: $id) {
                     _id
                 }

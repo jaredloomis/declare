@@ -9,13 +9,13 @@ import CategoryAdd       from "./CategoryAdd"
 import withReduxState    from "./WithReduxState"
 import withReduxDispatch from "./WithReduxDispatch"
 
-import {listPages}       from "../actions/Page"
+import {listElements}    from "../actions/Element"
 import {listCategories}  from "../actions/Category"
 
-const PageCategoriesBase = ({categories}) => {
+const ElementCategoriesBase = ({categories}) => {
     const categoryID = categories && Object.keys(categories).filter(catID => {
         const cat = categories[catID]
-        return cat && !cat.parent && cat.itemRef.toLowerCase() === "page"
+        return cat && !cat.parent && cat.itemRef.toLowerCase() === "element"
     })[0]
 
     if(categoryID) {
@@ -23,22 +23,22 @@ const PageCategoriesBase = ({categories}) => {
             <Category categoryID={categoryID}/>
         </Box>
     } else {
-        return <CategoryAdd itemRef="page"/>
+        return <CategoryAdd itemRef="element"/>
     }
 }
 
 const enhance = compose(
     withReduxDispatch({
-        listPages,
+        listElements,
         listCategories
     }),
     withReduxState(["categories"]),
     lifecycle({
         componentDidMount() {
-            this.props.listPages()
+            this.props.listElements()
             this.props.listCategories()
         }
     }),
-    setDisplayName("PageCategories")
+    setDisplayName("ElementCategories")
 )
-export default enhance(PageCategoriesBase)
+export default enhance(ElementCategoriesBase)

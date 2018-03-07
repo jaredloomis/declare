@@ -1,5 +1,4 @@
 import Category from "../model/Category"
-import Account  from "../model/Account"
 
 export default {
     /*
@@ -30,6 +29,9 @@ export default {
      */
 
     async createCategory({category}, {user}) {
+        if(!category.owner) {
+            category.owner = user.owner
+        }
         const {parent} = category
         delete category.parent
         const categoryModel = await new Category(category).save()
@@ -43,8 +45,14 @@ export default {
     async updateCategory({id, category}, {user}) {
         const categoryModel = await Category.findById(id)
 
+        if(!categoryModel) {
+            throw {
+                message: `Category with id "${id}" not found.`
+            }
+        }
+
         // Ensure user has permission to access category
-        if(categoryModel.owner !== user.owner) {
+        if(!user || !categoryModel.owner.equals(user.owner)) {
             throw {
                 message: "You don't have permission to modify this category."
             }
@@ -63,7 +71,7 @@ export default {
     async removeCategory({id}, {user}) {
         const cat = await Category.findById(id)
 
-        if(cat.owner !== user.owner) {
+        if(!user.owner.equals(cat.owner)) {
             throw {
                 message: "You don't have permission to delete this category."
             }

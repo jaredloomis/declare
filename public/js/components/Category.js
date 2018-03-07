@@ -5,6 +5,7 @@ import Row               from "./base/Row"
 import Group             from "./base/Group"
 import Column            from "./base/Column"
 import Button            from "./base/Button"
+import FeatherIcon       from "./base/FeatherIcon"
 import EditableTitle     from "./base/EditableTitle"
 import PageSelect        from "../containers/PageSelect"
 import InputTypeSelect   from "../containers/InputTypeSelect"
@@ -14,52 +15,60 @@ import CategoryContainer from "../containers/Category"
 const Category = props => {
     const {
         _id, parent, name, items=[], itemRef, children=[], onNameChange,
-        onItemAdd, onItemChange, onItemRemove, onChildAdd, onRemove
+        onItemAdd, onItemChange, onItemRemove, onChildAdd, onRemove,
+        onView
     } = props
-    // Event handlers
-    const nameChange = event => onNameChange(event.target.value)
 
     // Rendering
     const itemsDOM = items.map((item, i) => {
         const key = item ? item+i : i
         if(itemRef.toLowerCase() === "page") {
             return <Row key={key}>
-                <Column size="10">
+                <Column size="8">
                     <PageSelect defaultValue={item} key={key}
                             onChange={newItem => onItemChange(i, newItem)}/>
                 </Column>
                 <Column size="2">
-                    <Button type="danger "onClick={() => onItemRemove(i)}>
+                    <FeatherIcon icon="link" onClick={() => onView(item)}/>
+                </Column>
+                <Column size="2">
+                    <Button type="danger" inline onClick={() => onItemRemove(i)}>
                         Remove
                     </Button>
                 </Column>
             </Row>
         } else if(itemRef.toLowerCase() === "inputtype") {
             return <Row key={key}>
-                <Column size="10">
+                <Column size="8">
                     <InputTypeSelect defaultValue={item} key={key}
                             onChange={newItem => onItemChange(i, newItem)}/>
                 </Column>
                 <Column size="2">
-                    <Button type="danger" onClick={() => onItemRemove(i)}>
+                    <FeatherIcon icon="link" onClick={() => onView(item)}/>
+                </Column>
+                <Column size="2">
+                    <Button type="danger" inline onClick={() => onItemRemove(i)}>
                         Remove
                     </Button>
                 </Column>
             </Row>
         } else if(itemRef.toLowerCase() === "element") {
             return <Row key={key}>
-                <Column size="10">
+                <Column size="8">
                     <ElementSelect defaultValue={item} key={key}
                             onChange={newItem => onItemChange(i, newItem)}/>
                 </Column>
                 <Column size="2">
-                    <Button type="danger" onClick={() => onItemRemove(i)}>
+                    <FeatherIcon icon="link" onClick={() => onView(item)}/>
+                </Column>
+                <Column size="2">
+                    <Button type="danger" inline onClick={() => onItemRemove(i)}>
                         Remove
                     </Button>
                 </Column>
             </Row>
         } else {
-            return <span key={key}>Unknown itemRef!</span>
+            return <span key={key}>Unknown itemRef! {itemRef}</span>
         }
     })
 
@@ -70,7 +79,7 @@ const Category = props => {
     )
 
     return <div>
-        <EditableTitle size="4" onChange={nameChange}>
+        <EditableTitle size="4" onChange={onNameChange}>
             {name}
         </EditableTitle>
         {itemsDOM}

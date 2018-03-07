@@ -43,7 +43,9 @@ export default {
      * Mutations
      */
 
-    createInputType({inputType}) {
+    createInputType({inputType}, {user}) {
+        inputType.owner = inputType.owner || user.owner
+
         return new InputType(inputType).save()
     },
 
@@ -51,7 +53,7 @@ export default {
         const ty = await InputType.findById(id)
 
         // Check if user has access
-        if(!user || ty.owner !== user.owner && !user.isSuperAdmin()) {
+        if(!user || !(ty && user.owner.equals(ty.owner)) && !user.isSuperAdmin()) {
             throw {
                 message: "Cannot access input types not in your account."
             }

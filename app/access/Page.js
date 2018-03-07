@@ -37,9 +37,9 @@ export default {
             }
         }
         // Check if user has access
-        if(!user || ty.owner !== user.owner && !user.isSuperAdmin()) {
+        if(!user || !(ty && user && user.owner.equals(ty.owner)) && !user.isSuperAdmin()) {
             throw {
-                message: "Cannot access input types not in your account."
+                message: "Cannot access page not in your account."
             }
         }
 
@@ -50,7 +50,8 @@ export default {
      * Mutations
      */
 
-    createPage(page) {
+    createPage(page, {user}) {
+        page.owner = user.owner
         return new Page(page).save()
     },
 
@@ -172,5 +173,22 @@ export default {
             page.links.push(new Link(link))
         }
         return await page.save()
+    },
+
+    async updateInfo({id, page}, {user}) {
+        const pageModel = await Page.findById(id)
+
+        if(!user || !(pageModel && user.owner.equals(pageModel.owner)) && !user.isSuperAdmin()) {
+            throw {
+                message: "You don't have permission to modify this page."
+            }
+        }
+
+        const update = {
+            startURL: page.startURL
+        }
+
+        await pageModel.update(update)
+        return pageModel
     }
 }

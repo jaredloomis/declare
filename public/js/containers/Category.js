@@ -1,20 +1,28 @@
 import React          from "react"
-import {lifecycle, compose, setDisplayName} from "recompose"
+import {
+    lifecycle, compose, setDisplayName, withState
+} from "recompose"
 
+import Modal             from "../components/base/Modal"
 import CategoryComponent from "../components/Category"
 import {
     fetchCategory, saveCategory, addItemToCategory,
     updateCategoryItem, updateCategoryName, removeCategoryItem,
     createCategory, removeCategory
 } from "../actions/Category"
+import PageAdd           from "./PageAdd"
+import ElementAdd        from "./ElementAdd"
+import InputTypeAdd      from "./InputTypeAdd"
 import withReduxState    from "./WithReduxState"
 import withReduxDispatch from "./WithReduxDispatch"
 
 const CategoryBase = props => {
-    const {categories, categoryID} = props
+    const {categories, categoryID,
+           isAdding, setAdding} = props
     const category = categories[categoryID]
-    const defItem = null
-    // XXX manually saves after itemAdd and itemChange. Lots of network traffic
+    const itemRef = category.itemRef.toLowerCase()
+
+    // XXX manually saves after itemChange. Lots of network traffic
     // Event listeners
     const save       = ()   => props.saveCategory(categoryID)
     const nameChange = name => {
@@ -22,10 +30,10 @@ const CategoryBase = props => {
         save()
     }
     const itemAdd    = ()   => {
-        props.addItemToCategory(categoryID, defItem)
-        save()
+        setAdding(true)
     }
     const itemChange = (i, item) => {
+        // TODO buffer changes or something
         props.updateCategoryItem(categoryID, i, item)
         save()
     }
@@ -44,14 +52,38 @@ const CategoryBase = props => {
     const remove = () => {
         props.removeCategory(categoryID)
     }
+    const adderClose = () => {
+        setAdding(false)
+    }
+    const onItemCreated = item => {
+        props.addItemToCategory(categoryID, item._id)
+        save()
+    }
+    const viewItem = itemID => {
+        window.location.hash =
+            itemRef === "page"      ? `/Page/${itemID}`      :
+            itemRef === "element"   ? `/Element/${itemID}`   :
+            itemRef === "inputtype" ? `/InputType/${itemID}` :
+            window.location.hash
+    }
+
     // Render
-    return <CategoryComponent {...category}
+    return <div>
+        <CategoryComponent {...category}
                 onNameChange={nameChange}
                 onItemAdd={itemAdd}
                 onItemChange={itemChange}
                 onItemRemove={itemRemove}
                 onChildAdd={childAdd}
-                onRemove={remove}/>
+                onRemove={remove}
+                onView={viewItem}/>
+        <Modal type="info" onClose={adderClose} active={isAdding}>{
+            itemRef === "page"      ? <PageAdd      onCreate={onItemCreated}/> :
+            itemRef === "element"   ? <ElementAdd   onCreate={onItemCreated}/> :
+            itemRef === "inputtype" ? <InputTypeAdd onCreate={onItemCreated}/> :
+            <span>Unknown itemRef {itemRef}</span>
+        }</Modal>
+    </div>
 }
 
 const enhance = compose(
@@ -82,6 +114,7 @@ const enhance = compose(
         }
     }),
     withReduxState(["categories"]),
+    withState("isAdding", "setAdding", false),
     lifecycle({
         componentDidMount() {
             if(!this.props.categories[this.props.categoryID])
