@@ -26,7 +26,7 @@ export default {
             }
         }
         // Check if user has access
-        if(!user || pack.owner !== user.owner && !user.isSuperAdmin()) {
+        if(!(user && (user.owner.equals(pack.owner) || user.isSuperAdmin()))) {
             throw {
                 message: "Cannot access test packs not in your account."
             }
@@ -53,7 +53,7 @@ export default {
         const page = await Page.findOne({_id: pageID})
 
         // Check if user has access
-        if(!user || page.owner !== user.owner && !user.isSuperAdmin()) {
+        if(!(user && (user.owner.equals(page.owner) || user.isSuperAdmin()))) {
             throw {
                 message: "Don't have permission to modify page."
             }

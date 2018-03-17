@@ -49,9 +49,8 @@ export default {
     async updateAccount({id, account}, {user}) {
         // Ensure user is in account
         // TODO make sure is admin
-        const acct      = await Account.containingUser(user._id)
-        const matchAcct = acct && acct._id === id
-        if(!user || (!matchAcct && !user.isSuperAdmin())) {
+        const acct = await Account.findById(id)
+        if(!(user && (user.owner.equals(acct._id) || user.isSuperAdmin()))) {
             throw {
                 message: "You don't have access to this account."
             }
@@ -63,9 +62,8 @@ export default {
     async removeAccount({id}, {user}) {
         // Ensure user is in account
         // TODO make sure is admin
-        const acct     = await Account.containingUser(user._id)
-        const matchAcct = acct && acct._id === id
-        if(!user || (!matchAcct && !user.isSuperAdmin())) {
+        const acct = await Account.findById(id)
+        if(!(user && (user.owner.equals(acct._id) || user.isSuperAdmin()))) {
             throw {
                 message: "You don't have access to this account."
             }

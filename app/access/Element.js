@@ -32,7 +32,7 @@ export default {
             }
         }
         // Check if user has access
-        if(!user || elem.owner !== user.owner && !user.isSuperAdmin()) {
+        if(!(user && (user.owner.equals(elem.owner) || user.isSuperAdmin()))) {
             throw {
                 message: "Cannot access elements not in your account."
             }
@@ -53,7 +53,7 @@ export default {
     async updateElement({id, element}, {user}) {
         const elementModel = await Element.findById(id)
 
-        if(!user || user.owner !== elementModel.owner) {
+        if(!(user && (user.owner.equals(elementModel.owner) || user.isSuperAdmin()))) {
             throw {
                 message: "You don't have permission to modify this element."
             }
@@ -66,7 +66,7 @@ export default {
     async removeElement({id}, {user}) {
         const elementModel = await Element.findById(id)
 
-        if(!user || user.owner !== elementModel.owner) {
+        if(!(user && (user.owner.equals(elementModel.owner) || user.isSuperAdmin()))) {
             throw {
                 message: "You don't have permission to modify this element."
             }

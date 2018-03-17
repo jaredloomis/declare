@@ -40,7 +40,7 @@ const ElementsBase = props => {
         {elements}
         <AddonsField>
             <TextInput label="Selector"
-                       onChange={ev => props.setSelector(ev.target.value)}/>
+                       onChange={props.setSelector}/>
             <Button onClick={() => props.onCreate(props.selector)} inline={true} type="info">
                 Create Element
             </Button>

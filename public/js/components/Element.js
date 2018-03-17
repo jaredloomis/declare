@@ -14,8 +14,8 @@ const Element = props => {
     const defType     = props.defaultValue && props.defaultValue.inputType
 
     // Responding to changes
-    const textChange = propName => event => props.onChange({
-        [propName]: event.target.value
+    const textChange = propName => value => props.onChange({
+        [propName]: value
     })
     const typeChange     = value => props.onChange({
         inputType: value

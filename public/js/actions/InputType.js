@@ -15,7 +15,7 @@ const fragments = Fragments.inputType
 export const fetchInputType = (id: string) => async (dispatch: Func, getState: Func) => {
     const token = getState().activeToken
     const inputTypeRes = await client(token).query({
-        query: gql`($id: ID!) {
+        query: gql`query ($id: ID!) {
                 inputType(id: $id) {
                     ...FullInputType
                 }

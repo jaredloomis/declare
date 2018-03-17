@@ -135,7 +135,7 @@ pageSchema.methods.getPackData = function(packID) {
 
 pageSchema.methods.updateLink = function(linkID, linkData) {
     for(const link of this.links) {
-        if(link._id.toString() === linkID.toString()) {
+        if(link._id.equals(ObjectId(linkID))) {
             Object.assign(link, linkData)
             return
         }

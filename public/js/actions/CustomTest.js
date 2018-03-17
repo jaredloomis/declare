@@ -37,7 +37,7 @@ export const fetchCustomTest = (customTestID: string) => async (dispatch: Func, 
     if(error) {
         dispatch({
             type: ERROR_DISPLAY_MSG,
-            message: `Couldn't fetch custom test. ${error}`
+            message: `Couldn't fetch custom test. ${error.message}`
         })
     }
 }
@@ -77,6 +77,7 @@ export const saveCustomTest = (testID: string) => async (dispatch: Func, getStat
     const cachedTest = getState().customTests[testID]
     delete cachedTest._id
     delete cachedTest.reports
+    delete cachedTest.__typename
     const customTestRes = await client(token).mutate({
         mutation: gql`mutation ($testID: ID!, $customTest: CustomTestInput) {
                 customTest: updateCustomTest(id: $testID, customTest: $customTest) {
@@ -134,9 +135,11 @@ export const removeCustomTest = (customTestID: string) => async (dispatch: Func,
     await client(token).mutate({
         mutation: gql`mutation ($customTestID: ID!) {
                 customTest: removeCustomTest(id: $customTestID) {
-                    _id
+                    ...MinimalCustomTest
                 }
-            }`,
+            }
+        
+            ${fragments.minimal}`,
         variables: {customTestID}
     })
     dispatch({

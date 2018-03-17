@@ -15,7 +15,7 @@ export default {
 
     async category({id}, {user}) {
         const cat = await Category.findById(id)
-        if(user && cat && cat.owner === user.owner) {
+        if(user && (user.owner.equals(cat.owner) || user.isSuperAdmin())) {
             return cat
         } else {
             throw {
@@ -52,7 +52,7 @@ export default {
         }
 
         // Ensure user has permission to access category
-        if(!user || !categoryModel.owner.equals(user.owner)) {
+        if(!(user && (user.owner.equals(categoryModel.owner) || user.isSuperAdmin()))) {
             throw {
                 message: "You don't have permission to modify this category."
             }
@@ -71,7 +71,7 @@ export default {
     async removeCategory({id}, {user}) {
         const cat = await Category.findById(id)
 
-        if(!user.owner.equals(cat.owner)) {
+        if(!(user && (user.owner.equals(cat.owner) || user.isSuperAdmin()))) {
             throw {
                 message: "You don't have permission to delete this category."
             }

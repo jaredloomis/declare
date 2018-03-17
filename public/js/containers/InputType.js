@@ -1,17 +1,23 @@
 import {connect} from "react-redux"
+import {
+    compose, setDisplayName, lifecycle
+} from "recompose"
 
 import {
     updateInputTypeConstraint, addConstraint, saveInputType,
-    removeInputType, removeInputTypeConstraint, updateInputType
+    removeInputType, removeInputTypeConstraint, updateInputType, fetchInputType
 } from "../actions/InputType"
 import InputType from "../components/InputType"
 
 const mapStateToProps = (state, ownProps) => {
-    return state.inputTypes[ownProps.inputTypeID]
+    return state.inputTypes[ownProps.inputTypeID] || {}
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
+        fetchInputType() {
+            dispatch(fetchInputType(ownProps.inputTypeID))
+        },
         onConstraintAdd() {
             dispatch(addConstraint(ownProps.inputTypeID))
         },
@@ -37,6 +43,16 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     }
 }
 
-export default connect(
-    mapStateToProps, mapDispatchToProps
-)(InputType)
+const enhance = compose(
+    connect(mapStateToProps, mapDispatchToProps),
+    lifecycle({
+        componentDidMount() {
+            if(!this.props._id) {
+                this.props.fetchInputType()
+            }
+        }
+    }),
+    setDisplayName("InputTypeContainer")
+)
+
+export default enhance(InputType)

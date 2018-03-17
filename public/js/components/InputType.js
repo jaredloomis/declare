@@ -59,8 +59,8 @@ const InputTypeBase = props => {
         ))
         onConstraintRemove(constraintI)
     }
-    const constraintChange = i => key => event => onConstraintChange(i, {
-        [key]: event.target.value
+    const constraintChange = i => key => value => onConstraintChange(i, {
+        [key]: value
     })
     const typeChange = i => newVal => {
         setConstraintTypes(constraintTypes.map((val, ci) => {
@@ -68,10 +68,9 @@ const InputTypeBase = props => {
             else         return val
         }))
     }
-    const nameChange = event => onNameChange(event.target.value)
 
     // Render constraints
-    const constraintElems = constraints.map((constraint, constraintI) => {
+    const constraintElems = constraints && constraints.map((constraint, constraintI) => {
         const constraintID   = constraintIDs[constraintI]
         const constraintType = constraintTypes[constraintI]
 
@@ -97,7 +96,7 @@ const InputTypeBase = props => {
 
     // Render outline
     return <div>
-        <EditableTitle size="5" onChange={nameChange}>{name}</EditableTitle>
+        <EditableTitle size="5" onChange={onNameChange}>{name}</EditableTitle>
         {/*<Title size="5">{name}</Title>*/}
         <div className={bulma.field}>
             {constraintElems}
@@ -123,10 +122,10 @@ const getConstraintType = constraint => {
 
 const enhance = compose(
     withState("constraintTypes", "setConstraintTypes", ({constraints}) =>
-        constraints.map(getConstraintType)
+        constraints ? constraints.map(getConstraintType)  : []
     ),
     withState("constraintIDs",   "setConstraintIDs",   ({constraints}) =>
-        constraints.map(x => Math.random())
+        constraints ? constraints.map(x => Math.random()) : []
     )
 )
 

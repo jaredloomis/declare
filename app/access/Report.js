@@ -22,7 +22,7 @@ export default {
             }
         }
         // Check if user has access
-        if(!user || rep.owner !== user.owner && !user.isSuperAdmin()) {
+        if(!(user && (user.owner.equals(rep.owner) || user.isSuperAdmin()))) {
             throw {
                 message: "Cannot access reports not in your account."
             }

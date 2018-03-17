@@ -16,8 +16,8 @@ const CustomTestBase = props => {
     } = props
     const customTest   = customTests[customTestID]
 
-    const nameChange = event => {
-        props.updateCustomTestInfo(customTestID, {name: event.target.value})
+    const nameChange = name => {
+        props.updateCustomTestInfo(customTestID, {name})
     }
     const actionChange = actionI => action => {
         props.updateCustomTestAction(customTestID, actionI, action)

@@ -7,7 +7,7 @@ import withReduxState    from "./WithReduxState"
 import withReduxDispatch from "./WithReduxDispatch"
 
 const PageSelect = ({pages, defaultValue, onChange}) =>
-    <Select label="Destination" onChange={onChange}
+    <Select label="Page" onChange={onChange}
             defaultValue={defaultValue}>
         {Object.keys(pages).map(pageID =>
             <span value={pageID} key={pageID}>

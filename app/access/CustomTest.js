@@ -19,22 +19,23 @@ export default {
     },
 
     async customTest({id}, {user}) {
-        const cat = await CustomTest.findById(id)
+        const test = await CustomTest.findById(id)
+        const page       = await Page.findById(test.owner)
 
         // Check if test exists with id
-        if(!cat) {
+        if(!test) {
             throw {
                 message: `Custom test not found with id "${id}"`
             }
         }
         // Check if user has access
-        if(!user || !(cat && user.owner.equals(cat.owner)) && !user.isSuperAdmin()) {
+        if(!(user && (user.owner.equals(page.owner) || user.isSuperAdmin()))) {
             throw {
                 message: "Cannot access custom tests not in your account."
             }
         }
 
-        return cat
+        return test
     },
 
     /*
@@ -49,6 +50,7 @@ export default {
 
     async updateCustomTest({id, customTest}, {user}) {
         const test = await CustomTest.findById(id)
+        const page = await Page.findById(test.owner)
 
         // Ensure test id is valid
         if(!test) {
@@ -58,7 +60,7 @@ export default {
         }
 
         // Ensure user has permissions to modify test
-        if(!user || user.owner !== test.owner) {
+        if(!(user && (user.owner.equals(page.owner) || user.isSuperAdmin()))) {
             throw {
                 message: "You don't have permission to modify this custom test."
             }
@@ -70,16 +72,17 @@ export default {
 
     async removeCustomTest({id}, {user}) {
         const customTest = await CustomTest.findById(id)
+        const page       = await Page.findById(customTest.owner)
 
         // Ensure test id is valid
         if(!customTest) {
             throw {
-                message: "No known custom test with id."
+                message: `No known custom test with id ${id}.`
             }
         }
 
         // Ensure user has permissions to modify test
-        if(!user || user.owner !== customTest.owner) {
+        if(!(user && (user.owner.equals(page.owner) || user.isSuperAdmin()))) {
             throw {
                 message: "You don't have permission to modify this custom test."
             }
@@ -95,9 +98,17 @@ export default {
 
     async executeCustomTest({id}, {user}) {
         const customTest  = await CustomTest.findById(id)
+        const page        = await Page.findById(customTest.owner)
+
+        // Ensure test id is valid
+        if(!customTest) {
+            throw {
+                message: `No known custom test with id ${id}.`
+            }
+        }
 
         // Ensure user has permissions to execute test
-        if(!user || user.owner !== customTest.owner) {
+        if(!(user && (user.owner.equals(page.owner) || user.isSuperAdmin()))) {
             throw {
                 message: "You don't have permission to modify this custom test."
             }

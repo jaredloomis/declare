@@ -1,7 +1,7 @@
 import React from "react"
 
 import bulma from "../../../style/bulma.js"
-import style from "../../../style/SplitRow.scss"
+//import style from "../../../style/SplitRow.scss"
 
 const SplitRow = ({children}) => {
     const left  = []
@@ -17,8 +17,8 @@ const SplitRow = ({children}) => {
             {left}
         </div>
         <div className={bulma.level_right}>
-            {right.map(rt =>
-                <div className={bulma.level_item}>
+            {right.map((rt, i) =>
+                <div className={bulma.level_item} key={i}>
                     {rt}
                 </div>
             )}

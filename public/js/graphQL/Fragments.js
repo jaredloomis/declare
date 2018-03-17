@@ -110,7 +110,13 @@ export default {
                     reports
                 }
                 error
-            }`
+            }`,
+        minimal: gql`
+            fragment MinimalCustomTest on CustomTest_CanError {
+                data {_id}
+                error
+            }
+        `
     },
     inputType: {
         full: gql`

@@ -44,8 +44,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         onPageDelete() {
             dispatch(removePage(ownProps.pageID))
         },
-        onTestPackChange: uid => event => {
-            dispatch(updatePackValue(uid, event.target.value))
+        onTestPackChange: uid => value => {
+            dispatch(updatePackValue(uid, value))
         },
         onPackManyRemove(uid) {
             dispatch(removePackMany(uid))

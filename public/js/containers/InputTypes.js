@@ -26,14 +26,12 @@ const InputTypesBase = props => {
                 <InputType inputTypeID={inTyID}/>
             </div>
         )
-    // When new name text changes, update state
-    const changeName = event => setNewName(event.target.value)
     // Display list and add controls
     return <div>
         <Title size="2">Input Types</Title>
         {inTyDOMs}
         <AddonsField>
-            <TextInput onChange={changeName} label="Input Type Name"/>
+            <TextInput onChange={setNewName} label="Input Type Name"/>
             <Button onClick={() => createType(newName)} type="info" inline={true}>
                 Create Input Type
             </Button>

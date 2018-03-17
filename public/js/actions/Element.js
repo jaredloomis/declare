@@ -105,6 +105,7 @@ export const saveElement = (id: string) => async (dispatch: Func, getState: Func
     const token = getState().activeToken
     const curElement = getState().elements[id]
     delete curElement._id
+    delete curElement.__typename
     const newElementRes = await client(token).mutate({
         mutation: gql`mutation ($id: ID!, $element: ElementInput) {
                 element: updateElement(id: $id, element: $element) {

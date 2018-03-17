@@ -30,7 +30,7 @@ export default {
             }
         }
         // Check if user has access
-        if(!user || ty.owner !== user.owner && !user.isSuperAdmin()) {
+        if(!(user && (user.owner.equals(ty.owner) || user.isSuperAdmin()))) {
             throw {
                 message: "Cannot access input types not in your account."
             }
@@ -53,7 +53,7 @@ export default {
         const ty = await InputType.findById(id)
 
         // Check if user has access
-        if(!user || !(ty && user.owner.equals(ty.owner)) && !user.isSuperAdmin()) {
+        if(!(user && (user.owner.equals(ty.owner) || user.isSuperAdmin()))) {
             throw {
                 message: "Cannot access input types not in your account."
             }
@@ -67,7 +67,7 @@ export default {
         const ty = await InputType.findById(id)
 
         // Check if user has access
-        if(!user || ty.owner !== user.owner && !user.isSuperAdmin()) {
+        if(!(user && (user.owner.equals(ty.owner) || user.isSuperAdmin()))) {
             throw {
                 message: "Cannot access input types not in your account."
             }

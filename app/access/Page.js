@@ -28,22 +28,23 @@ export default {
     },
 
     async page({id}, {user}) {
-        const ty = await Page.findById(id)
+        const page = await Page.findById(id)
 
         // Check if page exists with id
-        if(!ty) {
+        if(!page) {
             throw {
                 message: `Page not found with id \"${id}\"`
             }
         }
+
         // Check if user has access
-        if(!user || !(ty && user && user.owner.equals(ty.owner)) && !user.isSuperAdmin()) {
+        if(!(user && (user.owner.equals(page.owner) || user.isSuperAdmin()))) {
             throw {
                 message: "Cannot access page not in your account."
             }
         }
 
-        return ty
+        return page
     },
 
     /*
@@ -58,7 +59,7 @@ export default {
     async removePage({pageID}, {user}) {
         const page = await Page.findById(pageID)
 
-        if(!user || user.owner !== page.owner) {
+        if(!(user && (user.owner.equals(page.owner) || user.isSuperAdmin()))) {
             throw {
                 message: "You don't have permission to delete this page."
             }
@@ -71,7 +72,7 @@ export default {
     async executePack({pageID, packID}, {user}) {
         const page = await Page.findById(pageID)
 
-        if(!user || user.owner !== page.owner) {
+        if(!(user && (user.owner.equals(page.owner) || user.isSuperAdmin()))) {
             throw {
                 message: "You don't have permission to execute tests on this page."
             }
@@ -90,7 +91,7 @@ export default {
     async addTestPack({pageID, packID}, {user}) {
         const page = await Page.findById(pageID)
 
-        if(!user || user.owner !== page.owner) {
+        if(!(user && (user.owner.equals(page.owner) || user.isSuperAdmin()))) {
             throw {
                 message: "You don't have permission to modify this page."
             }
@@ -109,7 +110,7 @@ export default {
     async removeTestPack({pageID, packID}, {user}) {
         const page = await Page.findById(pageID)
 
-        if(!user || user.owner !== page.owner) {
+        if(!(user && (user.owner.equals(page.owner) || user.isSuperAdmin()))) {
             throw {
                 message: "You don't have permission to modify this page."
             }
@@ -124,7 +125,7 @@ export default {
     async updatePackData({pageID, data}, {user}) {
         let page = await Page.findById(pageID)
 
-        if(!user || user.owner !== page.owner) {
+        if(!(user && (user.owner.equals(page.owner) || user.isSuperAdmin()))) {
             throw {
                 message: "You don't have permission to modify this page."
             }
@@ -145,7 +146,7 @@ export default {
     async addLink({pageID, link}, {user}) {
         const page = await Page.findById(pageID)
 
-        if(!user || user.owner !== page.owner) {
+        if(!(user && (user.owner.equals(page.owner) || user.isSuperAdmin()))) {
             throw {
                 message: "You don't have permission to modify this page."
             }
@@ -161,7 +162,7 @@ export default {
     async updateLink({pageID, linkID, link}, {user}) {
         const page = await Page.findById(pageID)
 
-        if(!user || user.owner !== page.owner) {
+        if(!(user && (user.owner.equals(page.owner) || user.isSuperAdmin()))) {
             throw {
                 message: "You don't have permission to modify this page."
             }
@@ -170,15 +171,15 @@ export default {
         if(linkID) {
             page.updateLink(linkID, link)
         } else {
-            page.links.push(new Link(link))
+            page.links = page.links.concat([new Link(link)])
         }
-        return await page.save()
+        return page.save().exec()
     },
 
     async updateInfo({id, page}, {user}) {
         const pageModel = await Page.findById(id)
 
-        if(!user || !(pageModel && user.owner.equals(pageModel.owner)) && !user.isSuperAdmin()) {
+        if(!(user && (user.owner.equals(pageModel.owner) || user.isSuperAdmin()))) {
             throw {
                 message: "You don't have permission to modify this page."
             }

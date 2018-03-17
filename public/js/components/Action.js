@@ -88,7 +88,7 @@ const AssertElementContainsAction = ({values, onValueChange}) => [
     </Column>,
     <Column size="3">
         <TextInput defaultValue={values.text}
-                   onChange={ev => onValueChange(["text"])(ev.target.value)}
+                   onChange={onValueChange(["text"])}
                    label="Text"/>
     </Column>
 ]
@@ -100,7 +100,7 @@ const ExtractElementTextAction = ({values, onValueChange}) => [
     </Column>,
     <Column size="3">
         <TextInput defaultValue={values.variableName}
-                   onChange={ev => onValueChange(["variableName"])(ev.target.value)}
+                   onChange={onValueChange(["variableName"])}
                    label="Variable Name"/>
     </Column>
 ]
@@ -108,19 +108,19 @@ const ExtractElementTextAction = ({values, onValueChange}) => [
 const AssertJsAction = ({values, onValueChange}) =>
     <Column size="7">
         <TextInput defaultValue={values.code}
-                   onChange={ev => onValueChange(["code"])(ev.target.value)}
+                   onChange={onValueChange(["code"])}
                    label="Javascript Code"/>
     </Column>
 
 const ExtractJsAction = ({values, onValueChange}) => [
     <Column size="4">
         <TextInput defaultValue={values.code}
-                   onChange={ev => onValueChange(["code"])(ev.target.value)}
+                   onChange={onValueChange(["code"])}
                    label="JavaScript Code"/>
     </Column>,
     <Column size="3">
         <TextInput defaultValue={values.variableName}
-                   onChange={ev => onValueChange(["variableName"])(ev.target.value)}
+                   onChange={onValueChange(["variableName"])}
                    label="Variable Name"/>
     </Column>
 ]
@@ -139,7 +139,7 @@ const SendInputAction = ({values, onValueChange}) => [
     </Column>,
     <Column size="3">
         <TextInput defaultValue={values.input}
-                   onChange={ev => onValueChange(["input"])(ev.target.value)}
+                   onChange={onValueChange(["input"])}
                    label="Input Text"/>
     </Column>
 ]
