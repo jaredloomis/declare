@@ -134,8 +134,10 @@ pageSchema.methods.getPackData = function(packID) {
 }
 
 pageSchema.methods.updateLink = function(linkID, linkData) {
+    if(typeof linkID !== "string") linkID = linkID.toString()
     for(const link of this.links) {
-        if(link._id.equals(ObjectId(linkID))) {
+        // ObjectId comparison isn't working here
+        if(link._id.toString() === linkID) {
             Object.assign(link, linkData)
             return
         }

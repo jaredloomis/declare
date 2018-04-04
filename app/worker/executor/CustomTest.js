@@ -14,9 +14,11 @@ export const executeCustomTest = async customTest => {
     const runner = new Runner(driver, customTest.name, {})
     await runner.initNavigator()
 
-    // Go to start URL
-    const page = await Page.findById(customTest.owner)
-    await runner.get(page.startURL)
+    // Go to a root page
+    await runner.navigateToRoot(customTest.owner.toString())
+
+    // Navigate to CustomTest's Page
+    await runner.navigateTo(customTest.owner.toString())
 
     // Execute steps
     for(const action of customTest.actions) {

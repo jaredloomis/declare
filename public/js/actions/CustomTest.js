@@ -26,7 +26,7 @@ export const fetchCustomTest = (customTestID: string) => async (dispatch: Func, 
         variables: {id: customTestID}
     })
     const res        = customTestRes.data.customTest
-    const customTest = res.data
+    const customTest = {...res.data}
     const error      = res.error
 
     dispatch({
@@ -78,6 +78,11 @@ export const saveCustomTest = (testID: string) => async (dispatch: Func, getStat
     delete cachedTest._id
     delete cachedTest.reports
     delete cachedTest.__typename
+    cachedTest.actions = cachedTest.actions.map(action => {
+        const ret = Object.assign({}, action)
+        delete ret.__typename
+        return ret
+    })
     const customTestRes = await client(token).mutate({
         mutation: gql`mutation ($testID: ID!, $customTest: CustomTestInput) {
                 customTest: updateCustomTest(id: $testID, customTest: $customTest) {
@@ -159,9 +164,11 @@ export const executeCustomTest = (customTestID: string) => async (dispatch: Func
     const customTestRes = await client(token).mutate({
         mutation: gql`mutation ($id: ID!) {
                 customTest: executeCustomTest(id: $id) {
-                    _id
+                    ...FullCustomTest
                 }
-            }`,
+            }
+        
+            ${fragments.full}`,
         variables: {id: customTestID}
     })
     const res        = customTestRes.data.customTest
@@ -169,14 +176,16 @@ export const executeCustomTest = (customTestID: string) => async (dispatch: Func
     const error      = res.error
     // Get the id of the report added to test
     const latestReportID = customTest.reports[customTest.reports.length-1]
-    // Fetch that Report
-    dispatch(fetchReport(latestReportID))
-    // Fire off event to indicate test is complete and results were recieved
-    dispatch({
-        type: CUSTOM_TEST_EXECUTE,
-        customTestID,
-        report: latestReportID
-    })
+    if(latestReportID) {
+        // Fetch that Report
+        dispatch(fetchReport(latestReportID))
+        // Fire off event to indicate test is complete and results were recieved
+        dispatch({
+            type: CUSTOM_TEST_EXECUTE,
+            customTestID,
+            report: latestReportID
+        })
+    }
 
     if(error) {
         dispatch({

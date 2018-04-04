@@ -50,7 +50,7 @@ export default {
         },
         resolve(object, args, {state}) {
             return wrapExceptional(() =>
-                CustomTestAccess.updateCustomTest(args, {user: state.user})
+                CustomTestAccess.removeCustomTest(args, {user: state.user})
             )
         }
     },
@@ -64,7 +64,7 @@ export default {
         },
         resolve(object, args, {state}) {
             return wrapExceptional(() =>
-                CustomTestAccess.updateCustomTest(args, {user: state.user})
+                CustomTestAccess.executeCustomTest(args, {user: state.user})
             )
         }
     }

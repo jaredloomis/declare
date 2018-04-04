@@ -55,7 +55,8 @@ app.use(requestLogger)
 // Static assets
 app.use(assets(path.join(__dirname, "..", "..", "public", "dist"), {
     // 1 week
-    maxage: 657000
+    //maxage: 657000
+    maxage: 0
 }))
 
 /*

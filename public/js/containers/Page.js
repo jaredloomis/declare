@@ -122,7 +122,7 @@ class Page extends Component {
     }
 
     componentDidMount() {
-        if(!this.props.links)
+        if(!this.props.startURL)
             this.props.fetchPage()
     }
 

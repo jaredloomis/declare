@@ -136,11 +136,13 @@ export const saveElement = (id: string) => async (dispatch: Func, getState: Func
 export const removeElement = (id: string) => async (dispatch: Func, getState: Func) => {
     const token = getState().activeToken
     const elementRes = await client(token).mutate({
-        mutation: gql`($id: ID!) {
+        mutation: gql`mutation ($id: ID!) {
             element: removeElement(id: $id) {
-                _id
+                ...FullElement
             }
-        }`,
+        }
+        
+        ${fragments.full}`,
         variables: {id}
     })
     const {error} = elementRes.data.element

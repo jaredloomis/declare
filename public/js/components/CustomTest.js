@@ -25,7 +25,7 @@ const CustomTest = props => {
 
     const reportsDOM = reportsExpanded && reports &&
                        reversePure(reports).map(reportID =>
-        <Report reportID={reportID}/>
+        <Report reportID={reportID} key={reportID || "key"}/>
     )
 
     return <div>

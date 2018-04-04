@@ -33,6 +33,21 @@ export default class Navigator {
         }
     }
 
+    async findRoots(target: ?string) {
+        const roots = await Page.find({startURL: {$exists: true}})
+
+        if(target) {
+            return roots
+            .filter(root => {
+                if(root.startURL.length === 0) return false
+                const path = findPath(this.pageGraph, root._id.toString(), target)
+                return path.size > 1
+            })
+        } else {
+            return roots
+        }
+    }
+
     async navigateTo(pageID: string) {
         const actions = findPathActions(this.pageGraph, this.currentPage, pageID)
         for(const action of actions) {

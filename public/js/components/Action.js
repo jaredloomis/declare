@@ -7,7 +7,7 @@ import Column        from "./base/Column"
 import Button        from "./base/Button"
 import Select        from "./base/Select"
 import TextInput     from "./base/TextInput"
-import ElementSelect from "../containers/ElementSelect"
+import ElementQuickSelect from "../containers/ElementQuickSelect"
 import PageSelect    from "../containers/PageSelect"
 import {deepSet}     from "../lib/Deep"
 
@@ -77,16 +77,16 @@ const Action = ({actionType, values, setActionType, setValues, onChange, onRemov
 
 const ClickAction = ({values, onValueChange}) =>
     <Column size="7">
-        <ElementSelect defaultValue={values.element}
+        <ElementQuickSelect defaultValue={values && values.element}
                        onChange={onValueChange(["element"])}/>
     </Column>
 
 const AssertElementContainsAction = ({values, onValueChange}) => [
-    <Column size="4">
-        <ElementSelect defaultValue={values.element}
+    <Column size="4" key="0">
+        <ElementQuickSelect defaultValue={values.element}
                        onChange={onValueChange(["element"])}/>
     </Column>,
-    <Column size="3">
+    <Column size="3" key="1">
         <TextInput defaultValue={values.text}
                    onChange={onValueChange(["text"])}
                    label="Text"/>
@@ -94,11 +94,11 @@ const AssertElementContainsAction = ({values, onValueChange}) => [
 ]
 
 const ExtractElementTextAction = ({values, onValueChange}) => [
-    <Column size="4">
-        <ElementSelect defaultValue={values.element}
+    <Column size="4" key="0">
+        <ElementQuickSelect defaultValue={values.element}
                        onChange={onValueChange(["element"])}/>
     </Column>,
-    <Column size="3">
+    <Column size="3" key="1">
         <TextInput defaultValue={values.variableName}
                    onChange={onValueChange(["variableName"])}
                    label="Variable Name"/>
@@ -113,12 +113,12 @@ const AssertJsAction = ({values, onValueChange}) =>
     </Column>
 
 const ExtractJsAction = ({values, onValueChange}) => [
-    <Column size="4">
+    <Column size="4" key="0">
         <TextInput defaultValue={values.code}
                    onChange={onValueChange(["code"])}
                    label="JavaScript Code"/>
     </Column>,
-    <Column size="3">
+    <Column size="3" key="1">
         <TextInput defaultValue={values.variableName}
                    onChange={onValueChange(["variableName"])}
                    label="Variable Name"/>
@@ -133,11 +133,11 @@ const NavigateAction = ({values, onValueChange}) =>
     </Column>
 
 const SendInputAction = ({values, onValueChange}) => [
-    <Column size="4">
-        <ElementSelect defaultValue={values.element}
+    <Column size="3" key="0">
+        <ElementQuickSelect defaultValue={values.element}
                        onChange={onValueChange(["element"])}/>
     </Column>,
-    <Column size="3">
+    <Column size="4" key="1">
         <TextInput defaultValue={values.input}
                    onChange={onValueChange(["input"])}
                    label="Input Text"/>

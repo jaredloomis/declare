@@ -38,10 +38,12 @@ export const fetchPage = (id: string, fetchPacks: boolean=false,
             ${fragments.full}`,
         variables: {id}
     })
-    const page = pageRes.data.page.data
+    const page2 = pageRes.data.page.data
+    const page = Object.assign({}, page2)
     const error = pageRes.data.page.error
 
     if(page) {
+        page.links = page.links.map(x => Object.assign({}, x))
         dispatch({
             type: PAGE_FETCH,
             id,
@@ -107,7 +109,7 @@ export const updatePageInfo = (id: string, info: any) => ({
 })
 
 export const savePackData = (id: string) =>
-                      async (dispatch: Func, getState: Func) => {
+                            (dispatch: Func, getState: Func) => {
     const token = getState().activeToken
     const data = JSON.stringify(getState().pages[id].testPackData)
                      .replace(new RegExp("\"", "g"), "\\\"")
@@ -125,10 +127,42 @@ export const savePackData = (id: string) =>
     })
 }
 
+    /*
 export const removeLink = (pageID: string, linkI: number) => ({
     type: PAGE_REMOVE_LINK,
     pageID, linkI
 })
+*/
+
+export const removeLink = (pageID: string, linkI: number) =>
+                           (dispatch: Func, getState: Func) => {
+    const state = getState()
+    const token = state.activeToken
+    const link  = state.pages[pageID].links[linkI]
+    dispatch({
+        type: PAGE_REMOVE_LINK,
+        pageID, linkI
+    })
+    client(token).mutate({
+        mutation: gql`mutation ($pageID: ID!, $linkID: ID, $link: LinkInput){
+            page: updateLink(pageID: $pageID, linkID: $linkID, link: $link) {
+                data {
+                    links {
+                        _id destination
+                        navigation {
+                            actionType values
+                        }
+                    }
+                }
+            }
+        }`,
+        variables: {
+            linkID: link._id,
+            pageID,
+            link: null
+        }
+    })
+}
 
 export const addPack = (pageID: string, packID: string) => ({
     type: PAGE_ADD_PACK,
@@ -189,7 +223,17 @@ export const saveLinks = (pageID: string) =>
     // (TODO: only update links that have changed)
     const linkRequests = links.map(link => {
         const linkID = link._id || null
+        link = {...link}
         delete link._id
+        delete link.__typename
+        link.navigation = link.navigation.map(nav => {
+            if(nav.__typename) {
+                const ret = {...nav}
+                delete ret.__typename
+                return ret
+            }
+            return nav
+        })
         return client(token).mutate({
             mutation: gql`mutation ($pageID: ID!, $linkID: ID, $link: LinkInput!){
                     page: updateLink(pageID: $pageID, linkID: $linkID, link: $link) {

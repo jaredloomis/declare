@@ -58,11 +58,24 @@ export default class SeleniumDriver extends Driver {
     }
 
     async getText(selector: Selector): Promise<string> {
-        return (await this.driver.find(selector)).getText()
+        return (await this.find(selector)).getText()
+    }
+
+    async getTextAll(selector: Selector): Promise<Array<string>> {
+        const ret = []
+        const elems = await this.findAll(selector)
+        for(let i = 0; i < elems.length; ++i) {
+            ret.push(await elems[i].getText())
+        }
+        return ret
     }
 
     find(selector: Selector): Promise<Elem> {
         return this.driver.findElement(this.toBy(selector))
+    }
+
+    findAll(selector: Selector): Promise<Array<Elem>> {
+        return this.driver.findElements(this.toBy(selector))
     }
 
     executeScript(script: string, ...args: Array<any>): Promise<any> {

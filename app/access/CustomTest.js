@@ -93,7 +93,7 @@ export default {
                 {$pull: {customTests: mongoose.Types.ObjectId(id)}}
             )
         }
-        return await CustomTest.findByIdAndRemove(id)
+        return CustomTest.findByIdAndRemove(id)
     },
 
     async executeCustomTest({id}, {user}) {
@@ -117,9 +117,10 @@ export default {
         const report      = await executeCustomTest(customTest)
         report.packID = id
         report.pageID = customTest.owner
+        report.owner  = user.owner
         const reportModel = new Report(report)
         await reportModel.save()
-        customTest.reports.push(reportModel._id)
+        customTest.reports = customTest.reports.concat([reportModel._id])
         await customTest.save()
         return customTest
     }

@@ -4,7 +4,7 @@ import {lifecycle, compose, setDisplayName} from "recompose"
 import {
     listElements, createElement
 } from "../actions/Element"
-import Select            from "../components/base/Select"
+import QuickSelect       from "../components/base/QuickSelect"
 import withReduxState    from "./WithReduxState"
 import withReduxDispatch from "./WithReduxDispatch"
 
@@ -16,9 +16,18 @@ const ElementSelectBase = props => {
             </span>
         )
 
-    return <Select label={props.label || "Element"} onChange={props.onChange} {...props}>
+    const create = selector => {
+        props.createElement({
+            selector,
+            name: selector
+        }).then(el =>
+            props.onChange(el._id)
+        )
+    }
+
+    return <QuickSelect label={props.label || "Element"} onChange={props.onChange} onCreate={create} {...props}>
         {children}
-    </Select>
+    </QuickSelect>
 }
 
 const enhance = compose(

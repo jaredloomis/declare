@@ -168,11 +168,16 @@ export default {
             }
         }
 
-        if(linkID) {
-            page.updateLink(linkID, link)
+        if(link) {
+            if(linkID) {
+                page.updateLink(linkID, link)
+            } else {
+                page.links = page.links.concat([new Link(link)])
+            }
         } else {
-            page.links = page.links.concat([new Link(link)])
+            page.links = page.links.filter(l => l._id.equals(linkID))
         }
+
         return page.save().exec()
     },
 

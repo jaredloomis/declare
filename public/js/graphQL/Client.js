@@ -28,8 +28,9 @@ import {InMemoryCache} from "apollo-cache-inmemory"
 export default token => {
     // Create cookie
     document.cookie = `declare_token=${token}`
+
     // Create client
-    const httpLink = new HttpLink({uri: "/graphql" })
+    const httpLink = new HttpLink({uri: "/graphql"})
     const authLink = setContext((_, {headers}) => ({
         headers: {
             ...headers,

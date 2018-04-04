@@ -129,18 +129,15 @@ export const saveInputType = (inputTypeID: string) =>
         const token = getState().activeToken
         const inputType = getState().inputTypes[inputTypeID]
         delete inputType._id
+        delete inputType.__typename
         const inputTypeNewRes = await client(token).mutate({
             mutation: gql`mutation ($id: ID!, $inputType: InputTypeInput!) {
                     inputType: updateInputType(id: $id, inputType: $inputType) {
-                        _id
-                        name
-                        constraints {
-                            regex
-                            minLength
-                            maxLength
-                        }
+                        ...FullInputType
                     }
-                }`,
+                }
+            
+                ${fragments.full}`,
             variables: {id: inputTypeID, inputType}
         })
         const res          = inputTypeNewRes.data.inputType
@@ -163,11 +160,16 @@ export const saveInputType = (inputTypeID: string) =>
 
 export const removeInputType = (id: string) => async (dispatch: Func, getState: Func) => {
     const token = getState().activeToken
-    const {inputType} = await client(token).mutate(`($id: ID!) {
-        inputType: removeInputType(id: $id) {
-            _id
+    const {inputType} = await client(token).mutate({
+        mutation: gql`mutation ($id: ID!) {
+            inputType: removeInputType(id: $id) {
+                ...FullInputType
+            }
         }
-    }`, {id})
+        
+        ${fragments.full}`,
+        variables: {id}
+    })
     dispatch({
         type: INPUT_TYPE_REMOVE,
         id

@@ -13,11 +13,29 @@ export const runAction = async (runner: Runner, action: any) => {
     if(type === actionTypes.CLICK || (!type && action.values.element)) {
         await runner.click(selector)
     } else if(type === actionTypes.ASSERT_ELEMENT_CONTAINS) {
+        /*
         const expected = action.values.text
         const actual   = await runner.getText(selector)
         runner.assert(expected === actual,
             `Found expected text "${expected}" in "${selector}"`,
             `Didn't find expected text "${expected}" in "${selector}"; found "${actual}"`
+        )*/
+
+        /*
+        const expectedText = action.values.text
+        const selectorFull = `${selector}:contains(${expectedText})`
+        runner.assert(await runner.exists(selectorFull),
+            `Found expected text "${expectedText}" in "${selector}"`,
+            `Didn't find expected text "${expectedText}" in "${selector}"`
+        )
+        */
+
+        const expectedText = action.values.text
+        const allText      = await runner.getTextAll(selector)
+        const foundText    = allText.filter(txt => txt.indexOf(expectedText) !== -1)
+        runner.assert(foundText.length,
+            `Found expected text "${expectedText}" in "${selector}"`,
+            `Didn't find expected text "${expectedText}" in "${selector}"`
         )
     } else if(type === actionTypes.EXTRACT_FROM_ELEMENT) {
         const {variableName} = action.values

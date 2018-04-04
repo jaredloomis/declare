@@ -1,7 +1,6 @@
 import React from "react"
 import {withState, setDisplayName, compose} from "recompose"
 
-import Title  from "./base/Title"
 import Button from "./base/Button"
 import Action from "./Action"
 
@@ -19,12 +18,11 @@ const ActionList = ({actions, actionKeys, setActionKeys, onAdd, onRemove, onChan
     }
 
     return <div>
-        <Title size="4">{name}</Title>
         {actions && actions.map((action, actionI) =>
             <Action {...action}
                 onChange={change(actionI)}
                 onRemove={() => remove(actionI)}
-                key={actionKeys[actionI]}/>
+                key={actionKeys[actionI] || actionI}/>
         )}
         <Button onClick={add} type="info">+</Button>
     </div>

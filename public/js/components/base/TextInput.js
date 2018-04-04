@@ -1,6 +1,9 @@
 import React from "react"
 
-import {withState, setDisplayName, compose} from "recompose"
+import {
+    withState, setDisplayName,
+    lifecycle, compose
+} from "recompose"
 
 import bulma from "../../../style/bulma"
 import style from "../../../style/TextInput.scss"
@@ -47,6 +50,11 @@ const TextInputBase = props => {
 const enhance = compose(
     withState("focused", "setFocused", false),
     withState("empty", "setEmpty", ({defaultValue}) => !defaultValue),
+    lifecycle({
+        componentDidMount() {
+            this.props.setEmpty(!this.props.defaultValue)
+        }
+    }),
     setDisplayName("TextInput")
 )
 

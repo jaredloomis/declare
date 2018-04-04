@@ -87,13 +87,16 @@ export default {
     report: {
         full: gql`
             fragment FullReport on Report_CanError {
-                _id
-                name
-                pageID packID
-                summary
-                steps {
-                    status time message data children
+                data {
+                    _id
+                    name
+                    pageID packID
+                    summary
+                    steps {
+                        status time message data children
+                    }
                 }
+                error
             }`
     },
     customTest: {

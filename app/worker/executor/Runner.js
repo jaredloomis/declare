@@ -145,6 +145,25 @@ export default class Runner {
         }
     }
 
+    async getTextAll(selector: Selector): Promise<Array<string>> {
+        try {
+            const text = await this.driver.getTextAll(selector)
+            this.log(
+                Status.PASS,
+                `Get text from "${showSelector(selector)}": "${text}"`
+            )
+            return text
+        } catch(ex) {
+            this.log(
+                Status.FAIL,
+                `Couldn't get text from "${showSelector(selector)}"`,
+                {ex}
+            )
+            return ""
+        }
+    }
+
+
     /*
      * JavaScript Execution
      */
@@ -174,6 +193,24 @@ export default class Runner {
 
     navigateTo(pageID: string): Promise<void> {
         return this.navigator.navigateTo(pageID)
+    }
+
+    /**
+     * Navigate to a root page (a page directly accessible from URL).
+     * If target is present, it will navigate to a root that is connected
+     * to target (i.e. it is possible to get from root to target)
+     */
+    async navigateToRoot(target: ?string): Promise<void> {
+        const roots = await this.navigator.findRoots(target)
+
+        if(roots.length) {
+            await this.get(roots[0].startURL)
+            this.navigator.setPage(roots[0]._id.toString())
+        } else {
+            throw {
+                message: "No connected roots present in page graph."
+            }
+        }
     }
 
     inferCurrentPage(): Promise<void> {
