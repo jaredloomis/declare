@@ -16,7 +16,7 @@ const CustomTest = props => {
     const {
         name, actions, reports,
         onNameChange,
-        onActionChange, onActionRemove, onActionAdd,
+        onActionChange, onActionRemove, onActionAdd, onActionInsert,
         onRemove, onExecute,
         reportsExpanded, setReportsExpanded
     } = props
@@ -43,7 +43,8 @@ const CustomTest = props => {
         <ActionList actions={actions}
             onAdd={onActionAdd}
             onChange={onActionChange}
-            onRemove={onActionRemove}/>
+            onRemove={onActionRemove}
+            onInsert={onActionInsert}/>
         <Sep/>
         <Group>
             <Button onClick={toggleReports}>

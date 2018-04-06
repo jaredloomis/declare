@@ -22,8 +22,12 @@ export default class Runner {
     variables: {[string]: any}
 
     constructor(driver: DriverI, repName: string, options: ?RunnerOptions) {
+        const defaultOptions = {
+            delay: 500
+        }
+        this.options   = Object.assign({}, defaultOptions, options)
+
         this.driver    = driver
-        this.options   = options || {}
         this.report    = new Report(repName)
         this.navigator = new Navigator(this)
         this.variables = {}
@@ -258,6 +262,10 @@ export default class Runner {
 
     endLogRegion() {
         this.report.endLogRegion()
+    }
+
+    failed(): boolean {
+        return this.report.failed()
     }
 
     // priv

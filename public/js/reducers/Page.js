@@ -10,7 +10,8 @@ import {
     LINK_UPDATE_DEST, PAGE_REMOVE_PACK, LINK_REMOVE_ACTION,
     LINK_ADD_ACTION, PAGE_REMOVE_LINK, PACK_REMOVE_MANY,
     PAGE_ADD_LINK, PAGE_LIST, PAGE_CREATE, PAGE_REMOVE,
-    PACK_EXECUTE, REPORT_FETCH, ASSET_RETRIEVE, PAGE_UPDATE_INFO
+    PACK_EXECUTE, REPORT_FETCH, ASSET_RETRIEVE, PAGE_UPDATE_INFO,
+    LINK_INSERT_ACTION
 } from "../actions/Types"
 import {deepSet, deepGet} from "../lib/Deep"
 
@@ -159,16 +160,60 @@ const pagesReducer = (state=defaultState, action) => {
     }
     // Update an action step in a link
     else if(action.type === LINK_UPDATE_ACTION) {
+        /*
         const {pageID, linkI, actionI, actionStep} = action
         const actionPath = [
             "pages", pageID, "links", linkI, "navigation", actionI
         ]
         return deepSet(actionPath, actionStep, state)
+        */
+
+        const newLinks = state.pages[action.pageID].links.map((link, linkI) => {
+            if(linkI === action.linkI) {
+                return {
+                    ...link,
+                    navigation: link.navigation.map((step, stepI) => {
+                        if(stepI === action.actionI) {
+                            return action.actionStep
+                        } else {
+                            return step
+                        }
+                    })
+                }
+            } else {
+                return link
+            }
+        })
+
+        return {
+            ...state,
+            pages: {
+                ...state.pages,
+                [action.pageID]: {
+                    ...state.pages[action.pageID],
+                    links: newLinks
+                }
+            }
+        }
     }
     else if(action.type === LINK_ADD_ACTION) {
         const {pageID, linkI} = action
         const curNav = state.pages[pageID].links[linkI].navigation
         const newNav = [...curNav, {actionType: "click", values: {}}]
+        const navPath = ["pages", pageID, "links", linkI, "navigation"]
+        return deepSet(navPath, newNav, state)
+    }
+    else if(action.type === LINK_INSERT_ACTION) {
+        const {pageID, linkI, actionI} = action
+        const curNav = state.pages[pageID].links[linkI].navigation
+        const newNav = []
+        for(let i = 0; i < curNav.length; ++i) {
+            if(i === actionI) {
+                newNav.push(action.action)
+            }
+
+            newNav.push(curNav[i])
+        }
         const navPath = ["pages", pageID, "links", linkI, "navigation"]
         return deepSet(navPath, newNav, state)
     }

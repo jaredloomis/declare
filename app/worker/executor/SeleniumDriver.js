@@ -1,5 +1,5 @@
 // @flow
-import webdriver, {By} from "selenium-webdriver"
+import webdriver, {By, until} from "selenium-webdriver"
 
 import      Driver                   from "./Driver"
 import type {DriverI, DriverOptions} from "./Driver"
@@ -18,10 +18,15 @@ export default class SeleniumDriver extends Driver {
     driver: RawDriver
 
     constructor(options: ?DriverOptions) {
-        options = options || {}
+        const defaultOptions = {
+            browser: "chrome",
+            timeout: 5 * 1000
+        }
+        options = Object.assign({}, defaultOptions, options)
         super(options)
+
         this.driver = new webdriver.Builder()
-            .forBrowser(options.browser || "chrome")
+            .forBrowser(options.browser)
             .build()
     }
 
@@ -29,8 +34,9 @@ export default class SeleniumDriver extends Driver {
         return this.driver.quit()
     }
 
-    get(url: string): Promise<void> {
-        return this.driver.get(url)
+    async get(url: string): Promise<void> {
+        await this.driver.get(url)
+        return this.wait(until.urlContains(url))
     }
 
     async click(selector: Selector): Promise<void> {
@@ -70,20 +76,37 @@ export default class SeleniumDriver extends Driver {
         return ret
     }
 
-    find(selector: Selector): Promise<Elem> {
-        return this.driver.findElement(this.toBy(selector))
+    async find(selector: Selector): Promise<Elem> {
+        /*const elemBy = this.toBy(selector)
+        await this.wait(until.elementLocated(elemBy))
+        return this.driver.findElement(elemBy)*/
+        const elems = await this.findAll(selector)
+        for(const elem of elems) {
+            if(await elem.isDisplayed()) {
+                return elem
+            }
+        }
+        return elems[0]
     }
 
-    findAll(selector: Selector): Promise<Array<Elem>> {
-        return this.driver.findElements(this.toBy(selector))
+    async findAll(selector: Selector): Promise<Array<Elem>> {
+        const elemBy = this.toBy(selector)
+        await this.wait(until.elementLocated(elemBy))
+        return this.driver.findElements(elemBy)
     }
 
     executeScript(script: string, ...args: Array<any>): Promise<any> {
         return this.driver.executeScript(script, args)
     }
 
+    wait(condition: any, message: string, timeout: ?number): Promise<any> {
+        return this.driver.wait(condition, timeout || this.options.timeout, message)
+    }
+
     toBy(element: Selector): By {
-        if(element.xpath) {
+        if(!element) {
+            return null
+        } else if(element.xpath) {
             return By.xpath(element.xpath)
         } else if(element.css) {
             return By.css(element.css)

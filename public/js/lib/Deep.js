@@ -52,7 +52,12 @@ export const deepSet = (selectorArr, value, obj) => {
         }
         root = root[field]
     }
-    root[selectorArr[selectorArr.length-1]] = value
+    try {
+        root[selectorArr[selectorArr.length-1]] = value
+    } catch(ex) {
+        root = {...root}
+        root[selectorArr[selectorArr.length-1]] = value
+    }
     return ret
 }
 

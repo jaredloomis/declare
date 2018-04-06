@@ -2,7 +2,7 @@ import CustomTest     from "../../model/CustomTest"
 import Page           from "../../model/Page"
 import Runner         from "./Runner"
 import SeleniumDriver from "./SeleniumDriver"
-import {runAction}    from "./ActionStepper"
+import {runActions}   from "./ActionStepper"
 
 export const executeCustomTest = async customTest => {
     if(typeof customTest === "string" || !customTest._id) {
@@ -21,9 +21,7 @@ export const executeCustomTest = async customTest => {
     await runner.navigateTo(customTest.owner.toString())
 
     // Execute steps
-    for(const action of customTest.actions) {
-        await runAction(runner, action)
-    }
+    await runActions(runner, customTest.actions)
 
     // Close browser, return report
     await runner.quit()

@@ -4,6 +4,19 @@ import {actionTypes}  from "../../config/Action"
 import Runner         from "./Runner"
 import {Status}       from "./Report"
 
+export const runActions = async (runner: Runner, actions: any) => {
+    for(const action of actions) {
+        // Execute action
+        await runAction(runner, action)
+
+        // If failed, we are done
+        if(runner.failed()) break
+
+        // Delay between each action
+        await runner.sleep(runner.options.delay)
+    }
+}
+
 export const runAction = async (runner: Runner, action: any) => {
     const type     = action.actionType
     const elemID   = action.values.element
@@ -67,6 +80,12 @@ export const runAction = async (runner: Runner, action: any) => {
     } else if(type === actionTypes.SEND_INPUT) {
         const {input} = action.values
         await runner.setValue(selector, input)
+    } else if(type === actionTypes.SLEEP) {
+        const {duration} = action.values
+        await runner.sleep(duration)
+    } else if(type === actionTypes.GO_TO_URL) {
+        const {url} = action.values
+        await runner.get(url)
     } else {
         throw new Error(`Invalid action ${JSON.stringify(action, null, 2)}`)
     }

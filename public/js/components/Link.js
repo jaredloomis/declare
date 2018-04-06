@@ -5,6 +5,7 @@ import Select        from "./base/Select"
 import Title         from "./base/Title"
 //import ElementSelect from "../containers/ElementSelect"
 import Action        from "./Action"
+import ActionList    from "./ActionList"
 
 import bulma from "../../style/bulma"
 import style from "../../style/Link.scss"
@@ -13,6 +14,7 @@ export default class Link extends Component {
     constructor(props) {
         super(props)
         this.renderAction = this.renderAction.bind(this)
+        this.renderActionList = this.renderActionList.bind(this)
         this.addAction    = this.addAction.bind(this)
         this.removeAction = this.removeAction.bind(this)
         this.changeDest   = this.changeDest.bind(this)
@@ -53,13 +55,20 @@ export default class Link extends Component {
                 </Select>
                 </div>
                 <div className={`${bulma.column} ${bulma.is_primary} ${style.linkActions}`}>
-                    {this.props.defaultValue.navigation.map(
+                    {this.renderActionList()/*this.props.defaultValue.navigation.map(
                         this.renderAction
-                    )}
-                    <Button onClick={this.addAction} type="info">+</Button>
+                    )*/}
                 </div>
             </div>
         </div>
+    }
+
+    renderActionList() {
+        return <ActionList actions={this.props.defaultValue.navigation}
+            onAdd={this.addAction}
+            onChange={index => action => this.props.onActionChange(index, action)}
+            onRemove={this.removeAction}
+            onInsert={this.props.onActionInsert}/>
     }
 
     renderAction(action, index) {
@@ -79,13 +88,11 @@ export default class Link extends Component {
     }
 
     removeAction(index) {
-        return () => {
-            this.setState(state => {
-                state.inputKeys.splice(index, 1)
-                return state
-            })
-            this.props.onActionRemove(index)
-        }
+        this.setState(state => {
+            state.inputKeys.splice(index, 1)
+            return state
+        })
+        this.props.onActionRemove(index)
     }
 
     changeDest(dest) {

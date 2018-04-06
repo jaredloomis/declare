@@ -114,7 +114,13 @@ export default {
             }
         }
 
-        const report      = await executeCustomTest(customTest)
+        let report
+        try {
+            report      = await executeCustomTest(customTest)
+        } catch(ex) {
+            console.log(ex)
+            return ex
+        }
         report.packID = id
         report.pageID = customTest.owner
         report.owner  = user.owner

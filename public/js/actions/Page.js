@@ -10,7 +10,8 @@ import {
     LINK_ADD_ACTION, PAGE_REMOVE_LINK, PACK_REMOVE_MANY,
     PAGE_LIST, PAGE_CREATE, PAGE_REMOVE, PACK_EXECUTE,
     REPORT_FETCH, PAGE_SET_BASELINE_SCREENSHOT,
-    PAGE_UPDATE_INFO, ERROR_DISPLAY_MSG
+    PAGE_UPDATE_INFO, LINK_INSERT_ACTION,
+    ERROR_DISPLAY_MSG
 } from "./Types"
 import {fetchPack} from "./TestPack"
 import client from "../graphQL/Client"
@@ -196,6 +197,11 @@ export const updateLinkAction = (pageID: string, linkI: number,
 export const addLinkAction = (pageID: string, linkI: number) => ({
     type: LINK_ADD_ACTION,
     pageID, linkI
+})
+
+export const insertLinkAction = (pageID: string, linkI: number, actionI: number) => ({
+    type: LINK_INSERT_ACTION,
+    pageID, linkI, actionI
 })
 
 export const removeLinkAction = (pageID: string, linkI: number,

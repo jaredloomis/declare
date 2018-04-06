@@ -11,9 +11,7 @@ import ElementQuickSelect from "../containers/ElementQuickSelect"
 import PageSelect    from "../containers/PageSelect"
 import {deepSet}     from "../lib/Deep"
 
-import bulma from "../../style/bulma"
-
-const Action = ({actionType, values, setActionType, setValues, onChange, onRemove}) => {
+const Action = ({actionType, values={}, setActionType, setValues, onChange, onRemove}) => {
     const tyChange  = ty => {
         setActionType(ty)
         onChange({
@@ -49,8 +47,12 @@ const Action = ({actionType, values, setActionType, setValues, onChange, onRemov
             return <NavigateAction {...props}/>
         } else if(actionType === actionTypes.SEND_INPUT) {
             return <SendInputAction {...props}/>
+        } else if(actionType === actionTypes.SLEEP) {
+            return <SleepAction {...props}/>
+        } else if(actionType === actionTypes.GO_TO_URL) {
+            return <GoToUrlAction {...props}/>
         } else {
-            return <span>Kinda-sorta error - no known action type selected.</span>
+            return <span/>
         }
     })()
 
@@ -64,6 +66,8 @@ const Action = ({actionType, values, setActionType, setValues, onChange, onRemov
             <span value={actionTypes.EXTRACT_FROM_JS}>Extract From JavaScript</span>
             <span value={actionTypes.NAVIGATE_TO_PAGE}>Navigate to Page</span>
             <span value={actionTypes.SEND_INPUT}>Send Input</span>
+            <span value={actionTypes.SLEEP}>Sleep</span>
+            <span value={actionTypes.GO_TO_URL}>Go to URL</span>
         </Select>
         </Column>
         {actionSpecificValues}
@@ -143,6 +147,20 @@ const SendInputAction = ({values, onValueChange}) => [
                    label="Input Text"/>
     </Column>
 ]
+
+const SleepAction = ({values, onValueChange}) =>
+    <Column size="7">
+        <TextInput defaultValue={values.duration}
+                   onChange={onValueChange(["duration"])}
+                   label="Duration (ms)"/>
+    </Column>
+
+const GoToUrlAction = ({values, onValueChange}) =>
+    <Column size="7">
+        <TextInput defaultValue={values.url}
+                   onChange={onValueChange(["url"])}
+                   label="URL"/>
+    </Column>
 
 
 const enhance = compose(

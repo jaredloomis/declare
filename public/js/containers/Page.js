@@ -7,7 +7,7 @@ import {
     removePack, removeLinkAction, addLinkAction,
     removeLink, removePackMany, addLink,
     removePage, executePack, updatePageInfo,
-    savePageInfo
+    savePageInfo, insertLinkAction
 } from "../actions/Page"
 import {
     createCustomTest, saveCustomTest
@@ -63,6 +63,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         onLinkActionAdd(linkI) {
             dispatch(addLinkAction(ownProps.pageID, linkI))
+        },
+        onLinkActionInsert(linkI, actionI, action) {
+            dispatch(insertLinkAction(ownProps.pageID, linkI, actionI, action))
         },
         onLinkActionRemove(linkI, actionI) {
             dispatch(removeLinkAction(ownProps.pageID, linkI, actionI))
@@ -122,8 +125,11 @@ class Page extends Component {
     }
 
     componentDidMount() {
-        if(!this.props.startURL)
+        console.log("Mounted!")
+        if(!this.props.startURL) {
+            console.log("FETCHING")
             this.props.fetchPage()
+        }
     }
 
     render() {
@@ -244,6 +250,7 @@ class Page extends Component {
                       onDestChange={this.linkDestChange(linkI)}
                       onActionRemove={this.linkActionRemove(linkI)}
                       onActionAdd={this.linkActionAdd(linkI)}
+                      onActionInsert={this.linkActionInsert(linkI)}
                       onRemove={this.linkRemove(linkI)}/>
             )
             return <div>
@@ -285,6 +292,10 @@ class Page extends Component {
 
     linkActionAdd(linkI) {
         return () => this.props.onLinkActionAdd(linkI)
+    }
+
+    linkActionInsert(linkI) {
+        return actionI => this.props.onLinkActionInsert(linkI, actionI)
     }
 
     linkActionRemove(linkI) {

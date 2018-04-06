@@ -8,5 +8,7 @@ export const actionTypes: any = {
     //
     EXTRACT_FROM_JS: "extractFromJs",
     NAVIGATE_TO_PAGE: "navigateToPage",
-    SEND_INPUT: "sendInput"
+    SEND_INPUT: "sendInput",
+    SLEEP: "sleep",
+    GO_TO_URL: "goToURL"
 }

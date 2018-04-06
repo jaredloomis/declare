@@ -3,7 +3,7 @@ import {
     CUSTOM_TEST_UPDATE_ACTION, CUSTOM_TEST_FETCH,
     CUSTOM_TEST_ADD_ACTION, CUSTOM_TEST_REMOVE_ACTION,
     CUSTOM_TEST_CREATE, CUSTOM_TEST_SAVE, CUSTOM_TEST_UPDATE_INFO,
-    CUSTOM_TEST_REMOVE, CUSTOM_TEST_EXECUTE
+    CUSTOM_TEST_REMOVE, CUSTOM_TEST_EXECUTE, CUSTOM_TEST_INSERT_ACTION
 } from "../actions/Types"
 
 export default (state: any, action: any) => {
@@ -51,6 +51,27 @@ export default (state: any, action: any) => {
             ...curTest,
             actions: curTest.actions.filter((act, i) => i !== action.actionI)
         }
+        return {
+            ...state,
+            customTests: {
+                ...state.customTests,
+                [action.customTestID]: newTest
+            }
+        }
+    } else if(action.type === CUSTOM_TEST_INSERT_ACTION) {
+        const curTest    = state.customTests[action.customTestID]
+        const newActions = []
+        for(let i = 0; i < curTest.actions.length; ++i) {
+            if(i === action.actionI) {
+                newActions.push(action.action || {})
+            }
+            newActions.push(curTest.actions[i])
+        }
+        const newTest = {
+            ...curTest,
+            actions: newActions
+        }
+
         return {
             ...state,
             customTests: {

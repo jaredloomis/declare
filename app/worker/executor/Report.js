@@ -47,6 +47,14 @@ export default class Report {
             return logDest.children
         }
     }
+
+    failed(): boolean {
+        for(let i = 0; i < this.steps.length; ++i) {
+            if(this.steps[i].status === Status.FAIL)
+                return true
+        }
+        return false
+    }
 }
 
 export class Step {

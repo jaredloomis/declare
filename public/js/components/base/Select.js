@@ -28,13 +28,17 @@ const SelectBase = props => {
     const selectedValue = props.selectedValue || props.defaultValue
 
     const childElements = childArr.map((child, childI) => {
-        const isSelected = child.props.value === selectedValue
-        const klass = `${bulma.dropdown_item} ${isSelected ? bulma.is_active : ""}`
+        if(child.props.rawOption) {
+            return child
+        } else {
+            const isSelected = child.props.value === selectedValue
+            const klass = `${bulma.dropdown_item} ${isSelected ? bulma.is_active : ""}`
 
-        return <a className={klass} value={child.props.value} key={childI}
-            onClick={() => change(child.props.value, child.props.children)}>
-            {child.props.children}
-        </a>
+            return <a className={klass} value={child.props.value} key={childI}
+                onClick={() => change(child.props.value, child.props.children)}>
+                {child.props.children}
+            </a>
+        }
     })
 
     const selectedText = (() => {

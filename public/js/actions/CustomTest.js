@@ -6,7 +6,8 @@ import {
     CUSTOM_TEST_UPDATE_ACTION, CUSTOM_TEST_FETCH,
     CUSTOM_TEST_ADD_ACTION, CUSTOM_TEST_REMOVE_ACTION,
     CUSTOM_TEST_CREATE, CUSTOM_TEST_SAVE, CUSTOM_TEST_UPDATE_INFO,
-    CUSTOM_TEST_REMOVE, CUSTOM_TEST_EXECUTE, ERROR_DISPLAY_MSG
+    CUSTOM_TEST_REMOVE, CUSTOM_TEST_EXECUTE, CUSTOM_TEST_INSERT_ACTION,
+    ERROR_DISPLAY_MSG
 } from "./Types"
 import {fetchReport} from "./Page"
 import Fragments from "../graphQL/Fragments"
@@ -128,6 +129,11 @@ export const addCustomTestAction = (customTestID: string, action: any) => ({
 export const removeCustomTestAction = (customTestID: string, actionI: number) => ({
     type: CUSTOM_TEST_REMOVE_ACTION,
     customTestID, actionI
+})
+
+export const insertCustomTestAction = (customTestID: string, actionI: number, action) => ({
+    type: CUSTOM_TEST_INSERT_ACTION,
+    customTestID, actionI, action
 })
 
 export const updateCustomTestInfo = (customTestID: string, update: any) => ({

@@ -11,7 +11,9 @@ export type XPathSelector = {|
 |}
 
 export function showSelector(selector: Selector): string {
-    if(typeof(selector) === "string") {
+    if(!selector) {
+        return "Empty Selector"
+    } else if(typeof(selector) === "string") {
         return selector
     } else {
         return selector.css || selector.xpath ||
