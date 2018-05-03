@@ -21,6 +21,11 @@ const constraintSchema = mongoose.Schema({
 const inputTypeSchema = mongoose.Schema({
     name: String,
     constraints: [constraintSchema],
+    product: {
+        type: ObjectId,
+        ref: "Product",
+        required: true
+    },
     owner: {
         type: ObjectId,
         ref: "Account",
@@ -68,6 +73,11 @@ inputTypeSchema.statics.graphQL = new GraphQLObjectType({
                 fields: constraintGraphQLFields
             }))
         },
+        product: {
+            // XXX Should be non-null. Temporarily allowing null
+            // for testing purposes
+            type: GraphQLID
+        },
         owner: {
             type: new GraphQLNonNull(GraphQLID)
         }
@@ -87,6 +97,9 @@ inputTypeSchema.statics.graphQLInput = new GraphQLInputObjectType({
                 description: "",
                 fields: constraintGraphQLFields
             }))
+        },
+        product: {
+            type: GraphQLID
         },
         owner: {
             type: GraphQLID

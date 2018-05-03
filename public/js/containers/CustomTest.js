@@ -12,7 +12,7 @@ import withReduxDispatch   from "./WithReduxDispatch"
 
 const CustomTestBase = props => {
     const {
-        customTestID, customTests
+        customTestID, customTests, productID
     } = props
     const customTest   = customTests[customTestID]
 
@@ -42,6 +42,7 @@ const CustomTestBase = props => {
     }
 
     return <CustomTestComponent {...customTest}
+                productID={productID}
                 onNameChange={nameChange}
                 onActionChange={actionChange}
                 onActionRemove={actionRemove}
@@ -84,7 +85,7 @@ const enhance = compose(
         }
     }),
     withReduxState(["customTests"]),
-    setDisplayName("CustomTest")
+    setDisplayName("CustomTestContainer")
 )
 
 export default enhance(CustomTestBase)

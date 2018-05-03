@@ -11,7 +11,7 @@ import ElementQuickSelect from "../containers/ElementQuickSelect"
 import PageSelect    from "../containers/PageSelect"
 import {deepSet}     from "../lib/Deep"
 
-const Action = ({actionType, values={}, setActionType, setValues, onChange, onRemove}) => {
+const Action = ({onChange, onRemove, productID, actionType, values={}, setActionType, setValues}) => {
     const tyChange  = ty => {
         setActionType(ty)
         onChange({
@@ -29,6 +29,7 @@ const Action = ({actionType, values={}, setActionType, setValues, onChange, onRe
     }
     const actionSpecificValues = (() => {
         const props = {
+            productID,
             values,
             onValueChange: valChange
         }
@@ -79,16 +80,20 @@ const Action = ({actionType, values={}, setActionType, setValues, onChange, onRe
     </Row>
 }
 
-const ClickAction = ({values, onValueChange}) =>
+const ClickAction = ({productID, values, onValueChange}) =>
     <Column size="7">
-        <ElementQuickSelect defaultValue={values && values.element}
-                       onChange={onValueChange(["element"])}/>
+        <ElementQuickSelect
+            productID={productID}
+            defaultValue={values && values.element}
+            onChange={onValueChange(["element"])}/>
     </Column>
 
-const AssertElementContainsAction = ({values, onValueChange}) => [
+const AssertElementContainsAction = ({productID, values, onValueChange}) => [
     <Column size="4" key="0">
-        <ElementQuickSelect defaultValue={values.element}
-                       onChange={onValueChange(["element"])}/>
+        <ElementQuickSelect
+            productID={productID}
+            defaultValue={values.element}
+            onChange={onValueChange(["element"])}/>
     </Column>,
     <Column size="3" key="1">
         <TextInput defaultValue={values.text}
@@ -97,10 +102,12 @@ const AssertElementContainsAction = ({values, onValueChange}) => [
     </Column>
 ]
 
-const ExtractElementTextAction = ({values, onValueChange}) => [
+const ExtractElementTextAction = ({productID, values, onValueChange}) => [
     <Column size="4" key="0">
-        <ElementQuickSelect defaultValue={values.element}
-                       onChange={onValueChange(["element"])}/>
+        <ElementQuickSelect
+            productID={productID}
+            defaultValue={values.element}
+            onChange={onValueChange(["element"])}/>
     </Column>,
     <Column size="3" key="1">
         <TextInput defaultValue={values.variableName}
@@ -136,10 +143,12 @@ const NavigateAction = ({values, onValueChange}) =>
                     label="Destination"/>
     </Column>
 
-const SendInputAction = ({values, onValueChange}) => [
+const SendInputAction = ({productID, values, onValueChange}) => [
     <Column size="3" key="0">
-        <ElementQuickSelect defaultValue={values.element}
-                       onChange={onValueChange(["element"])}/>
+        <ElementQuickSelect
+            productID={productID}
+            defaultValue={values.element}
+            onChange={onValueChange(["element"])}/>
     </Column>,
     <Column size="4" key="1">
         <TextInput defaultValue={values.input}

@@ -3,9 +3,9 @@ import React, {Component} from "react"
 import Button        from "./base/Button"
 import Select        from "./base/Select"
 import Title         from "./base/Title"
-//import ElementSelect from "../containers/ElementSelect"
 import Action        from "./Action"
 import ActionList    from "./ActionList"
+import PageSelect    from "../containers/PageSelect"
 
 import bulma from "../../style/bulma"
 import style from "../../style/Link.scss"
@@ -45,6 +45,9 @@ export default class Link extends Component {
             </div>
             <div className={bulma.columns}>
                 <div className={`${bulma.column} ${bulma.is_one_quarter}`}>
+                <PageSelect productID={this.props.productID}
+                        onChange={this.changeDest} defaultValue={destID}/>
+                {/*
                 <Select label="Destination" onChange={this.changeDest}
                         defaultValue={destID}>
                     {Object.keys(this.props.pages).map(pageID =>
@@ -53,6 +56,7 @@ export default class Link extends Component {
                         </span>
                     )}
                 </Select>
+                */}
                 </div>
                 <div className={`${bulma.column} ${bulma.is_primary} ${style.linkActions}`}>
                     {this.renderActionList()/*this.props.defaultValue.navigation.map(
@@ -65,6 +69,7 @@ export default class Link extends Component {
 
     renderActionList() {
         return <ActionList actions={this.props.defaultValue.navigation}
+            productID={this.props.productID}
             onAdd={this.addAction}
             onChange={index => action => this.props.onActionChange(index, action)}
             onRemove={this.removeAction}

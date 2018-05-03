@@ -29,14 +29,13 @@ const PageCategoriesBase = ({categories}) => {
 
 const enhance = compose(
     withReduxDispatch({
-        listPages,
-        listCategories
+        listPages, listCategories
     }),
     withReduxState(["categories"]),
     lifecycle({
         componentDidMount() {
-            this.props.listPages()
             this.props.listCategories()
+            this.props.listPages()
         }
     }),
     setDisplayName("PageCategories")

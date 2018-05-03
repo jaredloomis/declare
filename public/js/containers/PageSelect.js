@@ -6,10 +6,12 @@ import Select            from "../components/base/Select"
 import withReduxState    from "./WithReduxState"
 import withReduxDispatch from "./WithReduxDispatch"
 
-const PageSelect = ({pages, defaultValue, onChange}) =>
+const PageSelect = ({productID, defaultValue, onChange, pages}) =>
     <Select label="Page" onChange={onChange}
             defaultValue={defaultValue}>
-        {Object.keys(pages).map(pageID =>
+        {Object.keys(pages)
+            .filter(pageID => pages[pageID].product === productID)
+            .map(pageID =>
             <span value={pageID} key={pageID}>
                 {pages[pageID].name}
             </span>

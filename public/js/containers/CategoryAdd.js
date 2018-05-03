@@ -5,9 +5,9 @@ import {
 
 import withReduxDispatch from "./WithReduxDispatch"
 
-import Row       from "../components/base/Row"
-import TextInput from "../components/base/TextInput"
-import Button    from "../components/base/Button"
+import AddonsField from "../components/base/AddonsField"
+import TextInput   from "../components/base/TextInput"
+import Button      from "../components/base/Button"
 import {
     createCategory, setCategoryAsRoot
 } from "../actions/Category"
@@ -18,15 +18,16 @@ const CategoryAddBase = props => {
             name: props.name,
             items: [],
             itemRef: props.itemRef
-        }).then(category => 
+        }).then(props.onCreate || (() => {}))
+            /*.then(category => {
             props.setCategoryAsRoot(category._id, category.itemRef)
-        )
+        })*/
     }
 
-    return <Row>
+    return <AddonsField>
         <TextInput label="Name" onChange={props.setName}/>
-        <Button type="primary" inline onClick={onAdd}>Create Category</Button>
-    </Row>
+        <Button type="info" inline onClick={onAdd}>Create Category</Button>
+    </AddonsField>
 }
 
 const enhance = compose(

@@ -9,12 +9,14 @@ import withReduxState    from "./WithReduxState"
 import withReduxDispatch from "./WithReduxDispatch"
 
 const ElementSelectBase = props => {
-    const children = !props.elements ? null :
-        Object.keys(props.elements).map(elemID =>
-            <span value={elemID} key={elemID}>
-                {props.elements[elemID].name}
-            </span>
-        )
+    const children = !props.elements ? [] :
+        Object.keys(props.elements)
+            .filter(elemID => props.elements[elemID].product === props.productID)
+            .map(elemID =>
+                <span value={elemID} key={elemID}>
+                    {props.elements[elemID].name}
+                </span>
+            )
 
     return <Select label={props.label || "Element"} onChange={props.onChange} {...props}>
         {children}
@@ -33,7 +35,7 @@ const enhance = compose(
             this.props.listElements()
         }
     }),
-    withReduxState(["elements"]),
+    withReduxState(["elements", "products"]),
     setDisplayName("ElementSelect")
 )
 

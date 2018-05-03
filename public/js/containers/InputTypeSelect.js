@@ -7,11 +7,13 @@ import withReduxState    from "./WithReduxState"
 import withReduxDispatch from "./WithReduxDispatch"
 
 const InputTypeSelectBase = props => {
-    const children = !props.inputTypes ? null : Object.keys(props.inputTypes).map(inputTyID =>
-        <span value={inputTyID} key={inputTyID}>
-            {props.inputTypes[inputTyID].name}
-        </span>
-    )
+    const children = !props.inputTypes ? null : Object.keys(props.inputTypes)
+        .filter(inputTyID => props.inputTypes[inputTyID].product === props.productID)
+        .map(inputTyID =>
+            <span value={inputTyID} key={inputTyID}>
+                {props.inputTypes[inputTyID].name}
+            </span>
+        )
     return <Select label="Input Type" {...props}>{children}</Select>
 }
 

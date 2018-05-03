@@ -17,6 +17,10 @@ export default {
                 name: "name",
                 type: new GraphQLNonNull(GraphQLString)
             },
+            product: {
+                name: "product",
+                type: new GraphQLNonNull(GraphQLID)
+            },
             startURL: {
                 name: "startURL",
                 type: GraphQLString

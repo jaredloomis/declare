@@ -42,6 +42,11 @@ const pageSchema = mongoose.Schema({
             ref: "TestValue"
         }]
     },
+    product: {
+        type: ObjectId,
+        ref: "Product",
+        required: true
+    },
     owner: {
         type: ObjectId,
         ref: "Account",
@@ -76,6 +81,11 @@ pageSchema.statics.graphQL = new GraphQLObjectType({
         testValues: {
             type: new GraphQLList(GraphQLID)
         },
+        product: {
+            // XXX Should be non-null. Temporarily allowing null
+            // for testing purposes
+            type: GraphQLID
+        },
         owner: {
             type: new GraphQLNonNull(GraphQLID)
         }
@@ -93,6 +103,9 @@ pageSchema.statics.graphQLInput = new GraphQLInputObjectType({
         },
         identifier: {
             type: GraphQLString
+        },
+        product: {
+            type: GraphQLID
         }
     }
 })

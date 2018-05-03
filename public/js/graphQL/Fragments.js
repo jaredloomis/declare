@@ -32,6 +32,7 @@ export default {
             fragment FullPage on Page_CanError {
                 data {
                     _id
+                    product
                     name
                     startURL
                     links {
@@ -56,6 +57,7 @@ export default {
             fragment MinimalPageList on List_Page_CanError {
                 data {
                     _id
+                    product
                     name
                 }
                 error
@@ -66,6 +68,7 @@ export default {
             fragment FullElement on Element_CanError {
                 data {
                     _id
+                    product
                     name
                     selector
                     inputType
@@ -77,6 +80,7 @@ export default {
             fragment FullElementList on List_Element_CanError {
                 data {
                     _id
+                    product
                     name
                     selector
                     inputType
@@ -126,6 +130,7 @@ export default {
             fragment FullInputType on InputType_CanError {
                 data {
                     _id
+                    product
                     name
                     constraints {
                         regex
@@ -140,6 +145,7 @@ export default {
             fragment FullInputTypeList on List_InputType_CanError {
                 data {
                     _id
+                    product
                     name
                     constraints {
                         regex
@@ -196,5 +202,35 @@ export default {
                 }
                 error
             }`
-    }
+    },
+    product: {
+        full: gql`
+            fragment FullProduct on Product_CanError {
+                data {
+                    _id
+                    name
+                    pageCategories
+                    elementCategories
+                    inputTypeCategories
+                    owner
+                }
+                error
+            }`,
+        minimal: gql`
+            fragment MinimalProduct on Product_CanError {
+                data {
+                    _id
+                    name
+                }
+                error
+            }`,
+        minimalList: gql`
+            fragment MinimalProductList on List_Product_CanError {
+                data {
+                    _id
+                    name
+                }
+                error
+            }`
+    },
 }

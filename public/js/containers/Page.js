@@ -80,7 +80,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch(savePackData(ownProps.pageID))
         },
         fetchPage() {
-            dispatch(fetchPage(ownProps.pageID, false, false))
+            dispatch(fetchPage(ownProps.pageID, false, false, {
+                fetchCustomTests: true,
+                fetchLinks: true
+            }))
         },
         onPackAdd(packID) {
             dispatch(addPack(ownProps.pageID, packID))
@@ -125,9 +128,7 @@ class Page extends Component {
     }
 
     componentDidMount() {
-        console.log("Mounted!")
         if(!this.props.startURL) {
-            console.log("FETCHING")
             this.props.fetchPage()
         }
     }
@@ -233,7 +234,7 @@ class Page extends Component {
                 .map(customTest => {
                 const id = customTest && (customTest._id || customTest)
                 return <div className={bulma.box} key={id}>
-                    <CustomTest customTestID={id}/>
+                    <CustomTest customTestID={id} productID={this.props.product}/>
                 </div>
             })
         } else {
@@ -246,6 +247,7 @@ class Page extends Component {
             const pages = this.props.pages
             const links = this.props.links.map((link, linkI) =>
                 <Link pages={pages} defaultValue={link} key={linkI}
+                      productID={this.props.product}
                       onActionChange={this.linkActionChange(linkI)}
                       onDestChange={this.linkDestChange(linkI)}
                       onActionRemove={this.linkActionRemove(linkI)}

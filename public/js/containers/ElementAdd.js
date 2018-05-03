@@ -13,6 +13,7 @@ import {createElement} from "../actions/Element"
 const ElementAddBase = props => {
     const create = () => {
         props.createElement({
+            product: props.productID,
             ...props.input
         }).then(
             props.onCreate

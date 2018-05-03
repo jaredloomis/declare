@@ -13,8 +13,11 @@ import {
     PAGE_UPDATE_INFO, LINK_INSERT_ACTION,
     ERROR_DISPLAY_MSG
 } from "./Types"
-import {fetchPack} from "./TestPack"
+
 import client from "../graphQL/Client"
+
+import {fetchPack}       from "./TestPack"
+import {fetchCustomTest} from "./CustomTest"
 
 import type {Func} from "../flow"
 import Fragments from "../graphQL/Fragments"
@@ -22,7 +25,7 @@ import Fragments from "../graphQL/Fragments"
 const fragments = Fragments.page
 
 export const fetchPage = (id: string, fetchPacks: boolean=false,
-                                      fetchReports: boolean=false) =>
+                                      fetchReports: boolean=false, options: any={}) =>
                          async (dispatch: Func, getState: Func) => {
     const token = getState().activeToken
     dispatch({
@@ -67,11 +70,18 @@ export const fetchPage = (id: string, fetchPacks: boolean=false,
     if(fetchReports) {
         const promises = [].concat(page.testPackData.map(datum =>
             datum.reports.map(reportID =>
-                fetchReport(reportID)(dispatch)
+                fetchReport(reportID)(dispatch, getState)
             )
         ))
         await Promise.all(promises)
     }
+    if(options.fetchCustomTests) {
+        await Promise.all(page.customTests.map(testID =>
+            fetchCustomTest(testID)(dispatch, getState)
+        ))
+    }
+
+    return page
 }
 
 export async function listPages(dispatch: Func, getState: Func) {
@@ -275,20 +285,20 @@ export const addLink = (pageID: string) => ({
     pageID
 })
 
-export const createPage = (name: string) => async (dispatch: Func, getState: Func) => {
+export const createPage = (name: string, product: string, startURL: string) => async (dispatch: Func, getState: Func) => {
     const token = getState().activeToken
     dispatch({
         type: PAGE_CREATE,
         name
     })
     const pageRes = await client(token).mutate({
-        mutation: gql`mutation($name: String!) {
-                page: createPage(name: $name, startURL: "", testPackData: []) {
+        mutation: gql`mutation($name: String!, $product: ID!, $startURL: String) {
+                page: createPage(name: $name, product: $product, startURL: $startURL, testPackData: []) {
                     data {_id}
                     error
                 }
             }`,
-        variables: {name}
+        variables: {name, product, startURL}
     })
     const page = pageRes.data.page.data
     const error = pageRes.data.page.error

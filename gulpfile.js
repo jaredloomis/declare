@@ -1,65 +1,43 @@
-const path = require("path")
-
-const gulp = require("gulp")
-
-const babel = require("gulp-babel")
-//const closure = require("google-closure-compiler-js").gulp()
+const gulp   = require("gulp")
+const babel  = require("gulp-babel")
 const eslint = require("gulp-eslint")
-const mocha = require("gulp-mocha")
+const mocha  = require("gulp-mocha")
 
-const ts = require("gulp-typescript")
+const path   = require("path")
+const del    = require("del")
 
-const psc = require("gulp-purescript").psc
+/* Building source code files */
 
-const del = require("del")
+function javascript() {
+    return gulp.src("app/**/*.js")
+        .pipe(babel())
+        .pipe(gulp.dest("dist/app"))
+}
 
-gulp.task(
-    "default",
-    ["typescript", "lint-js", "javascript"],
-    function() {}
-)
+function lintJs() {
+    return gulp.src(["app/**/*.js"])
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError())
+}
 
-gulp.task("test", () => 
-    gulp.src("app/tests/*.js")
-    .pipe(mocha())
-)
+/* Utils */
 
-gulp.task("watch", () =>
-    gulp.watch("app/**/*.js", ["javascript"])
-)
+function watch() {
+    return gulp.watch("app/**/*.js", javascript)
+}
 
-gulp.task("clean", () =>
-    del(["dist"])
-)
+function clean() {
+    return del(["dist"])
+}
 
-gulp.task("javascript", () => {
-    gulp.src("app/**/*.js")
-    .pipe(babel())
-    .pipe(gulp.dest("dist/app"))
-})
+/* Entire build */
 
-gulp.task("typescript", () =>
-    /*
-    tsProject.src()
-    .pipe(tsProject())
-    .js.pipe(gulp.dest("dist/app"))
-    */
-    gulp.src("app/**/*.ts")
-    .pipe(ts({}))
-    .pipe(babel())
-    .pipe(gulp.dest("dist/app"))
-)
+const build = gulp.series(clean, javascript)
 
-gulp.task("purescript", () =>
-    psc({src: "app/**/*.purs"})
-    .pipe(gulp.dest("dest/app"))
-)
-
-gulp.task("lint-js", () =>
-    gulp.src(["app/**/*.js"])
-    .pipe(eslint())
-    // eslint.format() outputs the lint results to the console.
-    // Alternatively use eslint.formatEach() (see Docs).
-    .pipe(eslint.format())
-    .pipe(eslint.failAfterError())
-)
+gulp.task("default", build)
+exports.build      = build
+exports.javascript = javascript
+exports.lintJs     = lintJs
+exports.watch      = watch
+exports.clean      = clean

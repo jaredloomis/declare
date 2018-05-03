@@ -30,6 +30,7 @@ const defaultState = {
     categories: {},
     tokens: {},
     accounts: {},
+    products: {},
     activeToken: getCookieValue("declare_token"),
     error: null
 }

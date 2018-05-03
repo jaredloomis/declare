@@ -14,7 +14,7 @@ import Report        from "../containers/Report"
 
 const CustomTest = props => {
     const {
-        name, actions, reports,
+        name, actions, reports, productID,
         onNameChange,
         onActionChange, onActionRemove, onActionAdd, onActionInsert,
         onRemove, onExecute,
@@ -41,6 +41,7 @@ const CustomTest = props => {
             </Group>
         </SplitRow>
         <ActionList actions={actions}
+            productID={productID}
             onAdd={onActionAdd}
             onChange={onActionChange}
             onRemove={onActionRemove}

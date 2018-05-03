@@ -17,10 +17,10 @@ import withReduxState    from "./WithReduxState"
 import withReduxDispatch from "./WithReduxDispatch"
 
 const CategoryBase = props => {
-    const {categories, categoryID,
+    const {categories, categoryID, productID,
            isAdding, setAdding} = props
     const category = categories[categoryID]
-    const itemRef = category.itemRef.toLowerCase()
+    const itemRef  = category && category.itemRef.toLowerCase()
 
     // XXX manually saves after itemChange. Lots of network traffic
     // Event listeners
@@ -76,11 +76,12 @@ const CategoryBase = props => {
                 onItemRemove={itemRemove}
                 onChildAdd={childAdd}
                 onRemove={remove}
-                onView={viewItem}/>
+                onView={viewItem}
+                productID={productID}/>
         <Modal type="info" onClose={adderClose} active={isAdding}>{
-            itemRef === "page"      ? <PageAdd      onCreate={onItemCreated}/> :
-            itemRef === "element"   ? <ElementAdd   onCreate={onItemCreated}/> :
-            itemRef === "inputtype" ? <InputTypeAdd onCreate={onItemCreated}/> :
+            itemRef === "page"      ? <PageAdd      productID={productID} onCreate={onItemCreated}/> :
+            itemRef === "element"   ? <ElementAdd   productID={productID} onCreate={onItemCreated}/> :
+            itemRef === "inputtype" ? <InputTypeAdd productID={productID} onCreate={onItemCreated}/> :
             <span>Unknown itemRef {itemRef}</span>
         }</Modal>
     </div>

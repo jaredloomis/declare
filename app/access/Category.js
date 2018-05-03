@@ -8,8 +8,12 @@ export default {
     categories({user}) {
         if(user && user.isSuperAdmin()) {
             return Category.find({})
-        } else {
+        } else if(user.owner) {
             return Category.find({owner: user.owner})
+        } else {
+            throw {
+                message: "User not connected to an account."
+            }
         }
     },
 

@@ -1,4 +1,4 @@
-import React          from "react"
+import React from "react"
 import {
     compose, setDisplayName
 } from "recompose"
@@ -6,13 +6,12 @@ import {
 import withReduxDispatch from "./WithReduxDispatch"
 
 import PageAddComponent from "../components/PageAdd"
-import {
-    createPage
-} from "../actions/Page"
+import {createPage} from "../actions/Page"
 
 const PageAddBase = props => {
     const create = name => {
-        props.createPage(name).then(props.onCreate)
+        props.createPage(name, props.productID)
+        .then(props.onCreate || (() => {}))
     }
 
     return <PageAddComponent onCreatePage={create}/>

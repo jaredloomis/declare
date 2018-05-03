@@ -52,6 +52,8 @@ export default class Runner {
      */
 
     async get(url: string) {
+        url = this.expandVariables(url)
+
         try {
             await this.driver.get(url)
             this.log(Status.PASS, `Go to url "${url}"`)
@@ -97,6 +99,8 @@ export default class Runner {
     }
 
     async setValue(selector: Selector, value: string) {
+        value = this.expandVariables(value)
+
         try {
             await this.driver.setValue(selector, value)
             this.log(
@@ -174,7 +178,7 @@ export default class Runner {
 
     async executeScript(script: string, ...args: Array<any>): Promise<any> {
         try {
-            const filledScript = this.fillInVariables(script, this.variables)
+            const filledScript = this.expandVariables(script)
             const ret = await this.driver.executeScript(filledScript, ...args)
             this.log(
                 Status.PASS,
@@ -229,7 +233,33 @@ export default class Runner {
      * Variables
      */
 
-    getVariables(name: string): ?any {
+    expandVariables(str: string): string {
+        // Collect all the occurances of variables
+
+        const regex = /\{\{(\s*[a-zA-Z_][a-zA-Z0-9_]*\s*)\}\}/g
+        let matches = [], match
+
+        do {
+            match = regex.exec(str)
+            if(match) {
+                matches.push(match[1])
+            }
+        } while(match)
+
+        // Replace each occurance with corresponding value
+
+        for(match of matches) {
+            const name  = match.trim()
+            const value = this.getVariable(name)
+            str = str.replace(`{{${match}}}`, value || "")
+        }
+
+        console.log("expanded", str, matches)
+
+        return str
+    }
+
+    getVariable(name: string): ?any {
         return this.variables[name]
     }
 
@@ -242,7 +272,7 @@ export default class Runner {
     }
 
     /*
-     * Logging
+     * Reporting
      */
 
     assert(condition: boolean, trueMsg: string, falseMsg: ?string, data: ?any) {
@@ -266,13 +296,5 @@ export default class Runner {
 
     failed(): boolean {
         return this.report.failed()
-    }
-
-    // priv
-    fillInVariables(text: string, variables: {[string]: any}) {
-        for(const varName in variables) {
-            text.replace(new RegExp(`{{${varName}}}`, "g"), variables[varName])
-        }
-        return text
     }
 }

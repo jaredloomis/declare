@@ -9,6 +9,10 @@ const PageInfo = ({page={}, onChange}) => {
         })
     }
 
+    if(!page.startURL) {
+        return <TextInput label="Start URL"/>
+    }
+
     return <div>
         <TextInput label="Start URL" defaultValue={page.startURL}
                    onChange={change("startURL")}/>

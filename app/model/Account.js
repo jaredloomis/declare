@@ -24,6 +24,10 @@ const accountSchema = mongoose.Schema({
     inputTypeCategories: [{
         type: ObjectId,
         ref: "InputType"
+    }],
+    products: [{
+        type: ObjectId,
+        ref: "Product"
     }]
 })
 
@@ -44,6 +48,9 @@ accountSchema.statics.graphQL = new GraphQLObjectType({
         },
         inputTypeCategories: {
             type: new GraphQLList(GraphQLID)
+        },
+        products: {
+            type: new GraphQLList(GraphQLID)
         }
     }
 })
@@ -61,6 +68,9 @@ accountSchema.statics.graphQLInput = new GraphQLInputObjectType({
             type: new GraphQLList(GraphQLID)
         },
         inputTypeCategories: {
+            type: new GraphQLList(GraphQLID)
+        },
+        products: {
             type: new GraphQLList(GraphQLID)
         }
     }

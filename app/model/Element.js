@@ -16,6 +16,11 @@ const elementSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "InputType"
     },
+    product: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+        required: true
+    },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Account",
@@ -39,6 +44,11 @@ elementSchema.statics.graphQL = new GraphQLObjectType({
         inputType: {
             type: GraphQLID
         },
+        product: {
+            // XXX Should be non-null. Temporarily allowing null
+            // for testing purposes
+            type: GraphQLID
+        },
         owner: {
             type: new GraphQLNonNull(GraphQLID)
         }
@@ -54,6 +64,9 @@ elementSchema.statics.graphQLInput = new GraphQLInputObjectType({
         },
         selector: {
             type: GraphQLString
+        },
+        product: {
+            type: GraphQLID
         },
         inputType: {
             type: GraphQLID

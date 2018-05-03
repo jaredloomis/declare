@@ -86,7 +86,7 @@ export const removeInputTypeConstraint = (id: string, constraintI: number) => ({
     id, constraintI
 })
 
-export const createInputType = (name: string) => async (dispatch: Func, getState: Func) => {
+export const createInputType = (name: string, product: string) => async (dispatch: Func, getState: Func) => {
     const token = getState().activeToken
     const inputTypeRes = await client(token).mutate({
         mutation: gql`mutation ($inputType: InputTypeInput!) {
@@ -98,7 +98,7 @@ export const createInputType = (name: string) => async (dispatch: Func, getState
                     error
                 }
             }`,
-        variables: {inputType: {name}}
+        variables: {inputType: {name, product}}
     })
     const res       = inputTypeRes.data.inputType
     const inputType = res.data

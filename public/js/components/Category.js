@@ -14,7 +14,8 @@ import CategoryContainer from "../containers/Category"
 
 const Category = props => {
     const {
-        _id, parent, name, items=[], itemRef, children=[], onNameChange,
+        _id, parent, name, items=[], itemRef, children=[],
+        productID, onNameChange,
         onItemAdd, onItemChange, onItemRemove, onChildAdd, onRemove,
         onView
     } = props
@@ -25,7 +26,8 @@ const Category = props => {
         if(itemRef.toLowerCase() === "page") {
             return <Row key={key}>
                 <Column size="8">
-                    <PageSelect defaultValue={item} key={key}
+                    <PageSelect productID={productID}
+                            defaultValue={item} key={key}
                             onChange={newItem => onItemChange(i, newItem)}/>
                 </Column>
                 <Column size="2">
@@ -40,7 +42,8 @@ const Category = props => {
         } else if(itemRef.toLowerCase() === "inputtype") {
             return <Row key={key}>
                 <Column size="8">
-                    <InputTypeSelect defaultValue={item} key={key}
+                    <InputTypeSelect productID={productID}
+                            defaultValue={item} key={key}
                             onChange={newItem => onItemChange(i, newItem)}/>
                 </Column>
                 <Column size="2">
@@ -55,7 +58,8 @@ const Category = props => {
         } else if(itemRef.toLowerCase() === "element") {
             return <Row key={key}>
                 <Column size="8">
-                    <ElementSelect defaultValue={item} key={key}
+                    <ElementSelect productID={productID}
+                            defaultValue={item} key={key}
                             onChange={newItem => onItemChange(i, newItem)}/>
                 </Column>
                 <Column size="2">

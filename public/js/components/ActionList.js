@@ -5,7 +5,7 @@ import Button     from "./base/Button"
 import Action     from "./Action"
 import generateID from "../lib/ID"
 
-const ActionList = ({actions, actionKeys, setActionKeys, onAdd, onRemove, onChange, onInsert}) => {
+const ActionList = ({actions, productID, actionKeys, setActionKeys, onAdd, onRemove, onChange, onInsert}) => {
     const add    = () => {
         onAdd()
         setActionKeys([...actionKeys, generateID()])
@@ -35,6 +35,7 @@ const ActionList = ({actions, actionKeys, setActionKeys, onAdd, onRemove, onChan
             <div key={actionKeys[actionI] || actionI}>
                 <Button type="small light" onClick={() => insert(actionI)}>Insert Step</Button>
                 <Action {...action}
+                    productID={productID}
                     onChange={change(actionI)}
                     onRemove={() => remove(actionI)}/>
             </div>

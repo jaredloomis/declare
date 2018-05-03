@@ -12,7 +12,8 @@ import {createInputType} from "../actions/InputType"
 
 const InputTypeAddBase = props => {
     const create = () => {
-        props.createInputType(props.input.name).then(props.onCreate)
+        props.createInputType(props.input.name, props.productID)
+        .then(props.onCreate || (() => {}))
     }
 
     const inputChange = name => value => {

@@ -13,7 +13,7 @@ const QuickSelect = props => {
     const {children, search, setSearch, onChange, onCreate} = props
     const lowerSearch = search.toLowerCase()
 
-    const selectableOptions = children.filter(child =>
+    const selectableOptions = !children ? [] : children.filter(child =>
         !search || !search.length ||
         child.props.children.toLowerCase().indexOf(lowerSearch) > -1
     )
