@@ -2,6 +2,7 @@ import gql from "graphql-tag"
 import client from "../graphQL/Client"
 import {
     TEST_RUN_FETCH, TEST_RUN_LIST, TEST_RUN_CREATE, TEST_RUN_UPDATE,
+    TEST_RUN_EXECUTE,
     ERROR_DISPLAY_MSG
 } from "./Types"
 import Fragments from "../graphQL/Fragments"
@@ -94,6 +95,8 @@ export const createTestRun = testRun => async (dispatch, getState) => {
 }
 
 export const updateTestRun = (id, testRun) => async (dispatch, getState) => {
+    delete testRun._id
+    delete testRun.__typename
     const token = getState().activeToken
     const testRunRes = await client(token).mutate({
         mutation: gql`mutation ($id: ID!, $testRun: TestRunInput!) {
@@ -122,3 +125,32 @@ export const updateTestRun = (id, testRun) => async (dispatch, getState) => {
         testRun: data
     })
 }
+
+export const executeTestRun = id => async (dispatch, getState) => {
+    const token = getState().activeToken
+    const testRunRes = await client(token).mutate({
+        mutation: gql`mutation ($id: ID!) {
+                testRun: executeTestRun(id: $id) {
+                    ...FullTestRun
+                }
+            }
+        
+            ${fragments.full}`,
+        variables: {id}
+    })
+    const {data, error} = testRunRes.data.testRun
+
+    if(error) {
+        return dispatch({
+            type: ERROR_DISPLAY_MSG,
+            message: `Couldn't execute test run. ${error.message}`
+        })
+    }
+
+    dispatch({
+        type: TEST_RUN_EXECUTE,
+        id,
+        testRun: data
+    })
+}
+

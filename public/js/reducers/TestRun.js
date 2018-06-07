@@ -1,5 +1,6 @@
 import {
-    TEST_RUN_FETCH, TEST_RUN_LIST, TEST_RUN_CREATE, TEST_RUN_UPDATE
+    TEST_RUN_FETCH, TEST_RUN_LIST, TEST_RUN_CREATE, TEST_RUN_UPDATE,
+    TEST_RUN_EXECUTE
 } from "../actions/Types"
 
 export default (state, action) => {
@@ -35,6 +36,18 @@ export default (state, action) => {
             }
         }, state)
     } else if(action.type === TEST_RUN_UPDATE) {
+        const currentTestRun = state.testRuns[action.id]
+
+        return {
+            ...state,
+            testRuns: {
+                [action.id]: {
+                    ...currentTestRun,
+                    ...action.testRun
+                }
+            }
+        }
+    } else if(action.type === TEST_RUN_EXECUTE) {
         const currentTestRun = state.testRuns[action.id]
 
         return {
