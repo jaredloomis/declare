@@ -5,7 +5,7 @@ import resemble from "node-resemble-js"
 import {Status}  from "../../Report"
 import Runner    from "../../Runner"
 import type Page from "../../../../model/Page"
-import {getFile} from "../../AssetStorage"
+import {retrieveAsset} from "../../../../access/Asset"
 
 export default async (runner: Runner, page: Page, values: any, data: any) => {
     const url = page.startURL
@@ -18,7 +18,7 @@ export default async (runner: Runner, page: Page, values: any, data: any) => {
     const hasBaseline = data && data.baselineScreenshot
     const refKey      = hasBaseline || newKey
 
-    const refData = await getFile(refKey)
+    const refData = await retrieveAsset(refKey)
 
     const refBuffer = new Buffer(refData, "binary")
  

@@ -3,7 +3,8 @@ import {
     CUSTOM_TEST_UPDATE_ACTION, CUSTOM_TEST_FETCH,
     CUSTOM_TEST_ADD_ACTION, CUSTOM_TEST_REMOVE_ACTION,
     CUSTOM_TEST_CREATE, CUSTOM_TEST_SAVE, CUSTOM_TEST_UPDATE_INFO,
-    CUSTOM_TEST_REMOVE, CUSTOM_TEST_EXECUTE, CUSTOM_TEST_INSERT_ACTION
+    CUSTOM_TEST_REMOVE, CUSTOM_TEST_EXECUTE, CUSTOM_TEST_INSERT_ACTION,
+    CUSTOM_TEST_LIST
 } from "../actions/Types"
 
 export default (state: any, action: any) => {
@@ -145,6 +146,20 @@ export default (state: any, action: any) => {
         } else {
             return state
         }
+    } else if(action.type === CUSTOM_TEST_LIST) {
+        return action.customTests.reduce((st, newTest) => {
+            const currentTest = state.customTests[newTest._id]
+
+            return {
+                ...st,
+                customTests: {
+                    [newTest._id]: {
+                        ...currentTest,
+                        ...newTest
+                    }
+                }
+            }
+        }, state)
     } else {
         return state
     }

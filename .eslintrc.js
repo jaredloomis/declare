@@ -9,7 +9,6 @@ const prodRules = {}
 
 const alwaysRules = {
     "linebreak-style": ["warn", "unix"],
-    "quotes": ["warn", "double"],
     "semi": ["warn", "never"],
     "no-unused-vars": ["warn"],
     "no-console": ["warn"],
@@ -22,7 +21,6 @@ const alwaysRules = {
     "prefer-const": ["warn"],
     "prefer-rest-params": ["warn"],
     "prefer-spread": ["warn"],
-    "prefer-template": ["warn"],
     "camelcase": ["warn"],
     "brace-style": ["warn", "1tbs"],
     "array-bracket-spacing": ["warn", "never"],

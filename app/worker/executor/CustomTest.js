@@ -1,5 +1,4 @@
 import CustomTest     from "../../model/CustomTest"
-import Page           from "../../model/Page"
 import Runner         from "./Runner"
 import SeleniumDriver from "./SeleniumDriver"
 import {runActions}   from "./ActionStepper"
@@ -23,7 +22,9 @@ export const executeCustomTest = async customTest => {
     // Execute steps
     await runActions(runner, customTest.actions)
 
-    // Close browser, return report
+    // Close browser
     await runner.quit()
+
+    // Return report
     return runner.report
 }

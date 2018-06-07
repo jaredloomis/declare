@@ -45,8 +45,7 @@ export default (state: any, action: any) => {
                 ...elements
             }
         }
-    } else if(action.type === ELEMENT_CREATE &&
-              action.element && action.element._id) {
+    } else if(action.type === ELEMENT_CREATE) {
         return {
             ...state,
             elements: {

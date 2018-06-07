@@ -13,6 +13,9 @@ const Nav = () => <nav className={`${bulma.navbar} ${bulma.is_primary}`}>
         <a className={`${bulma.navbar_item} ${bulma.has_text_white}`} href="#/Products">
             Products
         </a>
+        <a className={`${bulma.navbar_item} ${bulma.has_text_white}`} href="#/TestRuns">
+            Test Runs
+        </a>
         <a className={`${bulma.navbar_item} ${bulma.has_text_white}`} href="#/SignIn">
             Sign In
         </a>

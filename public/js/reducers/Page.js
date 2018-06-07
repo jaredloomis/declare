@@ -10,7 +10,7 @@ import {
     LINK_UPDATE_DEST, PAGE_REMOVE_PACK, LINK_REMOVE_ACTION,
     LINK_ADD_ACTION, PAGE_REMOVE_LINK, PACK_REMOVE_MANY,
     PAGE_ADD_LINK, PAGE_LIST, PAGE_CREATE, PAGE_REMOVE,
-    PACK_EXECUTE, REPORT_FETCH, ASSET_RETRIEVE, PAGE_UPDATE_INFO,
+    PACK_EXECUTE, REPORT_FETCH, ASSET_FETCH, PAGE_UPDATE_INFO,
     LINK_INSERT_ACTION
 } from "../actions/Types"
 import {deepSet, deepGet} from "../lib/Deep"
@@ -31,6 +31,8 @@ const defaultState = {
     tokens: {},
     accounts: {},
     products: {},
+    testRuns: {},
+    reportBatches: {},
     activeToken: getCookieValue("declare_token"),
     error: null
 }
@@ -278,13 +280,13 @@ const pagesReducer = (state=defaultState, action) => {
         return Object.assign({}, state, {reports})
     }
     // Retrieve an asset
-    else if(action.type === ASSET_RETRIEVE) {
-        const {asset, key} = action
+    else if(action.type === ASSET_FETCH) {
+        const {url, key} = action
         return {
             ...state,
             assets: {
                 ...state.assets,
-                [key]: asset
+                [key]: url
             }
         }
     }

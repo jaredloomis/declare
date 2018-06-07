@@ -3,7 +3,7 @@ import type {DriverI}         from "./Driver"
 import type {Selector}        from "./Selector"
 import Report, {Step, Status} from "./Report"
 import type {StatusLabel}     from "./Report"
-import {uploadFile}           from "./AssetStorage"
+import {storeAsset}           from "../../access/Asset"
 import Navigator              from "./Navigator"
 import {showSelector}         from "./Selector"
 
@@ -56,14 +56,14 @@ export default class Runner {
 
         try {
             await this.driver.get(url)
-            this.log(Status.PASS, `Go to url "${url}"`)
+            await this.log(Status.PASS, `Go to url "${url}"`)
         } catch(ex) {
-            this.log(Status.FAIL, `Couldn't go to url "${url}"`)
+            await this.log(Status.FAIL, `Couldn't go to url "${url}"`)
         }
     }
 
-    sleep(millis: number): Promise<void> {
-        this.log(Status.INFO, `Sleep for ${millis}ms`)
+    async sleep(millis: number): Promise<void> {
+        await this.log(Status.INFO, `Sleep for ${millis}ms`)
         return new Promise((resolve, reject) => {
             setTimeout(resolve, millis)
         })
@@ -72,26 +72,22 @@ export default class Runner {
     async click(element: Selector) {
         try {
             await this.driver.click(element)
-            this.log(Status.PASS, `Click ${showSelector(element)}`, {
-                screenshot: await this.screenshotKey()
-            })
+            await this.log(Status.PASS, `Click ${showSelector(element)}`)
         } catch(ex) {
-            this.log(Status.FAIL, `Click ${showSelector(element)}`, {
-                screenshot: await this.screenshotKey()
-            })
+            await this.log(Status.FAIL, `Click ${showSelector(element)}`)
         }
     }
 
     async exists(element: Selector) {
         try {
             const ret = await this.driver.exists(element)
-            this.log(
+            await this.log(
                 Status.PASS,
                 `Check if ${showSelector(element)} exists: ${ret.toString()}`
             )
             return ret
         } catch(ex) {
-            this.log(
+            await this.log(
                 Status.FAIL,
                 `Couldn't check if ${showSelector(element)} exists`
             )
@@ -103,12 +99,12 @@ export default class Runner {
 
         try {
             await this.driver.setValue(selector, value)
-            this.log(
+            await this.log(
                 Status.PASS,
                 `Set value of "${showSelector(selector)}" to ${value}`
             )
         } catch(ex) {
-            this.log(
+            await this.log(
                 Status.FAIL,
                 `Couldn't set value of "${showSelector(selector)}" to ${value}`,
                 {ex}
@@ -119,11 +115,11 @@ export default class Runner {
     async screenshot() {
         const screenshot = await this.driver.screenshot()
         const key = `${new Date().toString()}.png`
-        await uploadFile(key, screenshot, {
+        await storeAsset(key, screenshot, {
             ContentEncoding: "base64",
             ContentType: "image/png"
         })
-        this.log(Status.INFO, "Take a screenshot", {screenshot})
+        //await this.log(Status.INFO, "Take a screenshot", {screenshot})
         return {key, raw: screenshot}
     }
 
@@ -138,13 +134,13 @@ export default class Runner {
     async getText(selector: Selector): Promise<string> {
         try {
             const text = await this.driver.getText(selector)
-            this.log(
+            await this.log(
                 Status.PASS,
                 `Get text from "${showSelector(selector)}": "${text}"`
             )
             return text
         } catch(ex) {
-            this.log(
+            await this.log(
                 Status.FAIL,
                 `Couldn't get text from "${showSelector(selector)}"`,
                 {ex}
@@ -156,13 +152,13 @@ export default class Runner {
     async getTextAll(selector: Selector): Promise<Array<string>> {
         try {
             const text = await this.driver.getTextAll(selector)
-            this.log(
+            await this.log(
                 Status.PASS,
                 `Get text from "${showSelector(selector)}": "${text}"`
             )
             return text
         } catch(ex) {
-            this.log(
+            await this.log(
                 Status.FAIL,
                 `Couldn't get text from "${showSelector(selector)}"`,
                 {ex}
@@ -180,14 +176,14 @@ export default class Runner {
         try {
             const filledScript = this.expandVariables(script)
             const ret = await this.driver.executeScript(filledScript, ...args)
-            this.log(
+            await this.log(
                 Status.PASS,
                 `Execute script "${script}", returned ${ret}`,
                 {script, args}
             )
             return ret
         } catch(ex) {
-            this.log(
+            await this.log(
                 Status.FAIL,
                 `Ran into trouble executing script "${script}"`,
                 {ex, script, args}
@@ -237,7 +233,8 @@ export default class Runner {
         // Collect all the occurances of variables
 
         const regex = /\{\{(\s*[a-zA-Z_][a-zA-Z0-9_]*\s*)\}\}/g
-        let matches = [], match
+        const matches = []
+        let   match
 
         do {
             match = regex.exec(str)
@@ -254,8 +251,6 @@ export default class Runner {
             str = str.replace(`{{${match}}}`, value || "")
         }
 
-        console.log("expanded", str, matches)
-
         return str
     }
 
@@ -265,7 +260,7 @@ export default class Runner {
 
     setVariable(name: string, value: any): void {
         this.variables[name] = value
-        this.log(
+        this.logRaw(
             Status.INFO,
             `Set variable "${name}" to "${value}"`
         )
@@ -281,7 +276,14 @@ export default class Runner {
         this.report.log(new Step("runner", status, message, data))
     }
 
-    log(status: StatusLabel, message: string, data: ?any) {
+    async log(status: StatusLabel, message: string, data: ?any) {
+        this.logRaw(status, message, {
+            ...(data || {}),
+            screenshot: await this.screenshotKey()
+        })
+    }
+
+    logRaw(status: StatusLabel, message: string, data: ?any) {
         this.report.log(new Step("runner", status, message, data))
     }
 

@@ -136,7 +136,7 @@ export const saveCategory = (categoryID: string) => async (dispatch: Func, getSt
     if(error) {
         dispatch({
             type: ERROR_DISPLAY_MSG,
-            message: `Couldn't save category. ${error}`
+            message: `Couldn't save category. ${error.message}`
         })
     }
 }
@@ -187,7 +187,6 @@ export const setCategoryAsRoot = (categoryID: string, itemRef: string) => async 
         })
     }
 }
-
 
 export const addItemToCategory = (categoryID: string, item: any) => ({
     type: CATEGORY_ADD_ITEM,

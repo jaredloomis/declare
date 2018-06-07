@@ -8,7 +8,9 @@ import Column                  from "../components/base/Column"
 import FeatherIcon             from "../components/base/FeatherIcon"
 import ReportScreenshot        from "../components/ReportScreenshot"
 import ReportDestructive       from "../components/ReportDestructive"
+import Screenshot              from "./Screenshot"
 import {setBaselineScreenshot, fetchReport} from "../actions/Page"
+import {fetchAsset}            from "../actions/Asset"
 import {internalIDs} from "../../../app/config/TestPack"
 import {deepSet, deepGet} from "../lib/Deep"
 
@@ -19,7 +21,8 @@ const mapStateToProps = (state, ownProps) => {
     return {
         ...ownProps,
         ...state.reports[ownProps.reportID],
-        testPacks: state.testPacks
+        testPacks: state.testPacks,
+        assets: state.assets
     }
 }
 
@@ -27,6 +30,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         fetchReport() {
             dispatch(fetchReport(ownProps.reportID))
+                .then(report => dispatch(fetchAsset(report.summary.video)))
         },
         setBaselineScreenshot(image) {
             dispatch(
@@ -44,8 +48,7 @@ class Report extends Component {
     }
 
     componentDidMount() {
-        if(!this.props.name)
-            this.props.fetchReport()
+        this.props.fetchReport()
     }
 
     render() {
@@ -53,7 +56,7 @@ class Report extends Component {
         return <div className={`${bulma.box} ${bulma.is_info}`}>
             <Title>{name}</Title>
             <div className={style.reportMain}>
-                {renderReportMain(this.props)}
+                <ReportSummary {...this.props}/>
             </div>
             <ul className={style.reportSteps}>
                 {(steps || []).map((step, stepI) =>
@@ -73,20 +76,35 @@ class Report extends Component {
     }
 }
 
-const renderReportMain = props => {
+const ReportSummary = props => {
     const internalID = props.testPacks && props.testPacks[props.packID] ?
             props.testPacks[props.packID].internalID :
             null
-    if(internalID === internalIDs.screenshot)
-        return <ReportScreenshot {...props}/>
-    else if(internalID === internalIDs.destructive)
-        return <ReportDestructive {...props}/>
-    else
-        <span></span>
-        //throw new Error("Unknown report")
+
+    const packDOM = internalID === internalIDs.screenshot  ?
+                        <ReportScreenshot {...props}/>     :
+                    internalID === internalIDs.destructive ?
+                        <ReportDestructive {...props}/> :
+                        null
+
+    const videoDOM = (() => {
+        if(props.assets && props.summary && props.assets[props.summary.video]) {
+            return <video width="320" height="240" controls>
+                <source src={props.assets[props.summary.video]} type="video/mp4"/>
+            </video>
+        } else {
+            return <span>No vid.</span>
+        }
+    })()
+
+        return <div>
+            {packDOM}
+            {videoDOM}
+        </div>
 }
 
-const Step = ({status, time, message, data, stepPath, children, expandedSteps, onExpand}) => {
+const Step = props => {
+    const {status, time, message, data, stepPath, children, expandedSteps, onExpand} = props
     // Values computed from props
     const hasChildren = children && children.length
     const isExpanded  = deepGet(stepPath, expandedSteps)
@@ -123,6 +141,9 @@ const Step = ({status, time, message, data, stepPath, children, expandedSteps, o
             </Column>
             <Column>
                 {message}
+            </Column>
+            <Column>
+                {data && data.screenshot && <Screenshot assetKey={data.screenshot}/>}
             </Column>
         </Row>
         {childList}

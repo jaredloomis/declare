@@ -2,7 +2,11 @@ import {connect}          from "react-redux"
 import {compose, setDisplayName} from "recompose"
 import {deepGet, deepSet} from "../lib/Deep"
 
-const mapStateToProps = fields => (state, ownProps) => {
+const mapStateToProps = (...fields) => (state, ownProps) => {
+    if(fields.length === 1 && Array.isArray(fields[0])) {
+        fields = fields[0]
+    }
+
     // Copy over all requested fields
     return fields.reduce((acc, field) => {
         const normalizedField = typeof field === "string" ?

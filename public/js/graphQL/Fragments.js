@@ -120,7 +120,19 @@ export default {
             }`,
         minimal: gql`
             fragment MinimalCustomTest on CustomTest_CanError {
-                data {_id}
+                data {
+                    _id
+                    name
+                }
+                error
+            }
+        `,
+        minimalList: gql`
+            fragment MinimalCustomTestList on List_CustomTest_CanError {
+                data {
+                    _id
+                    name
+                }
                 error
             }
         `
@@ -233,4 +245,52 @@ export default {
                 error
             }`
     },
+    testRun: {
+        full: gql`
+            fragment FullTestRun on TestRun_CanError {
+                data {
+                    _id
+                    name
+                    description
+                    tests {
+                        testType
+                        customTestID
+                    }
+                    reportBatches
+                }
+                error
+            }`,
+        minimal: gql`
+            fragment MinimalTestRun on TestRun_CanError {
+                data {
+                    _id
+                    name
+                    description
+                    owner
+                }
+                error
+            }`,
+        minimalList: gql`
+            fragment MinimalTestRunList on List_TestRun_CanError {
+                data {
+                    _id
+                    name
+                    description
+                    owner
+                }
+                error
+            }`
+    },
+    reportBatch: {
+        full: gql`
+            fragment FullReportBatch on ReportBatch_CanError {
+                data {
+                    _id
+                    testRun
+                    reports
+                    owner
+                }
+                error
+            }`
+    }
 }

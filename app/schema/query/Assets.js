@@ -2,7 +2,7 @@ import {
     GraphQLString, GraphQLNonNull
 } from "graphql"
 
-import {getFile} from "../../worker/executor/AssetStorage"
+import {retrieveAsset, getAssetURL} from "../../access/Asset"
 
 export default {
     asset: {
@@ -14,8 +14,20 @@ export default {
             }
         },
         async resolve(parent, {key}) {
-            const binary = await getFile(key)
+            const binary = await retrieveAsset(key)
             return new Buffer(binary, "binary").toString("base64")
+        }
+    },
+    assetURL: {
+        type: GraphQLString,
+        args: {
+            key: {
+                name: "key",
+                type: new GraphQLNonNull(GraphQLString)
+            }
+        },
+        resolve(parent, {key}) {
+            return getAssetURL(key)
         }
     }
 }

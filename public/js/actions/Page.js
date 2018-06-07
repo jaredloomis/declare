@@ -373,6 +373,8 @@ export const fetchReport = (reportID: string) => async (dispatch: Func, getState
             message: error.message
         })
     }
+
+    return report
 }
 
 export const setBaselineScreenshot = (pageID: string, packID: string, image: string) =>

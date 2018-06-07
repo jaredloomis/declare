@@ -22,8 +22,10 @@ import ErrorBoundary       from "../containers/ErrorBoundary"
 import Workspace           from "../containers/Workspace"
 import ProductList         from "../containers/ProductList"
 import Product             from "../containers/Product"
+import TestRun             from "../containers/TestRun"
+import TestRunList         from "../containers/TestRunList"
 
-// Don't remove. Applies global style rules
+// XXX Don't remove. Applies global style rules
 import style               from "../../style/App.scss"
 
 const PageRoute = props => {
@@ -37,6 +39,10 @@ const InputTypeRoute = props => {
 }
 const ProductRoute = props => {
     return <Product productID={props.match.params.productID} {...props}/>
+}
+
+const TestRunRoute = props => {
+    return <TestRun testRunID={props.match.params.testRunID} {...props}/>
 }
 
 const App = () =>
@@ -59,6 +65,8 @@ const App = () =>
                     <Route path="/Product/:productID" component={ProductRoute}/>
                     <Route path="/SignIn"        component={SignIn}/>
                     <Route path="/SignUp"        component={SignUp}/>
+                    <Route path="/TestRun/:testRunID" component={TestRunRoute}/>
+                    <Route path="/TestRuns"      component={TestRunList}/>
                 </Switch>
             </Router>
         <ErrorModal/>

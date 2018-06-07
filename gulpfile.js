@@ -1,25 +1,30 @@
 const gulp   = require("gulp")
 const babel  = require("gulp-babel")
 const eslint = require("gulp-eslint")
-const mocha  = require("gulp-mocha")
 
-const path   = require("path")
 const del    = require("del")
 
 /* Building source code files */
 
-function javascript() {
+function appJs() {
     return gulp.src("app/**/*.js")
         .pipe(babel())
         .pipe(gulp.dest("dist/app"))
 }
 
-function lintJs() {
+function lintAppJs() {
     return gulp.src(["app/**/*.js"])
         .pipe(eslint())
         .pipe(eslint.format())
-        .pipe(eslint.failAfterError())
 }
+
+function commonJs() {
+    return gulp.src("common/**/*.js")
+        .pipe(babel())
+        .pipe(gulp.dest("dist/common"))
+}
+
+const javascript = gulp.series(appJs, commonJs)
 
 /* Utils */
 
@@ -33,11 +38,11 @@ function clean() {
 
 /* Entire build */
 
-const build = gulp.series(clean, javascript)
+const build = gulp.series(clean, appJs, commonJs)
 
 gulp.task("default", build)
 exports.build      = build
 exports.javascript = javascript
-exports.lintJs     = lintJs
+exports.lintJs     = lintAppJs
 exports.watch      = watch
 exports.clean      = clean

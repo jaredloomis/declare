@@ -1,40 +1,117 @@
 import mongoose from "mongoose"
 import {
-    GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLID
+    GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLID,
+    GraphQLList, GraphQLInputObjectType
 } from "graphql"
-
-import DateTime from "../schema/scalar/DateTime"
+import GraphQLJSON from "graphql-type-json"
 
 const ObjectId = mongoose.Schema.Types.ObjectId
 
 const testRunSchema = mongoose.Schema({
-    exact: {
-        type:     String,
-        required: true,
-        index:    true
+    name: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+        default: ""
+    },
+    /**
+     * A list of tests of the form:
+     *
+     * > {
+     * >   testType: "customtest" | "testpack" | "external" | ...
+     * >   other_fields_here...
+     * > }
+     *
+     * For example:
+     *
+     * > {
+     * >   testType: "customTest"
+     * >   customTestID: "hbsdf78323hb34r"
+     * > }
+     *
+     */
+    tests: {
+        type: Object,
+        default: []
+    },
+    reportBatches: {
+        type: [{
+            type: ObjectId,
+            ref: "ReportBatch"
+        }],
+        default: []
+    },
+    owner: {
+        type: ObjectId,
+        ref: "Account",
+        required: true
     }
+})
+
+const testReference = new GraphQLObjectType({
+    name: "TestReference",
+    description: "A reference to some kind of test.",
+    fields: {
+        testType: {
+            type: new GraphQLNonNull(GraphQLString)
+        },
+        customTestID: {
+            type: GraphQLID
+        }
+    }
+
 })
 
 testRunSchema.statics.graphQL = new GraphQLObjectType({
     name: "TestRun",
-    description: "A token used to grant temporary access to resources.",
+    description: "A collection of tests that can be run as a batch.",
     fields: {
         _id: {
             type: new GraphQLNonNull(GraphQLID)
         },
-        token: {
+        name: {
             type: new GraphQLNonNull(GraphQLString)
         },
-        expires: {
-            type: new GraphQLNonNull(DateTime)
+        description: {
+            type: new GraphQLNonNull(GraphQLString)
         },
-        account: {
-            type: new GraphQLNonNull(GraphQLID)
+        tests: {
+            type: new GraphQLList(testReference)
         },
-        user: {
+        reportBatches: {
+            type: new GraphQLList(GraphQLID)
+        },
+        owner: {
             type: new GraphQLNonNull(GraphQLID)
         }
     }
 })
+
+testRunSchema.statics.graphQLInput = new GraphQLInputObjectType({
+    name: "TestRunInput",
+    fields: {
+        name: {
+            type: GraphQLString
+        },
+        description: {
+            type: GraphQLString
+        },
+        tests: {
+            type: new GraphQLList(GraphQLJSON)
+        },
+        reportBatches: {
+            type: new GraphQLList(GraphQLID)
+        },
+        owner: {
+            type: GraphQLID
+        }
+    }
+})
+
+testRunSchema.statics.testTypes = {
+    CUSTOM_TEST: "customtest"
+}
 
 module.exports = mongoose.model("TestRun", testRunSchema)

@@ -10,11 +10,19 @@ export default {
      * Queries
      */
 
-    customTests({user}) {
+    async customTests({user}) {
         if(user && user.isSuperAdmin()) {
             return CustomTest.find({})
         } else {
-            return CustomTest.find({owner: user.owner})
+            const pages = await Page.find({owner: user.owner})
+
+            const tests = []
+            for(const page of pages) {
+                const chunk = await CustomTest.find({owner: page._id})
+                for(const test of chunk)
+                    tests.push(test)
+            }
+            return tests
         }
     },
 
@@ -118,13 +126,13 @@ export default {
         try {
             report      = await executeCustomTest(customTest)
         } catch(ex) {
-            console.log(ex)
             return ex
         }
         report.packID = id
         report.pageID = customTest.owner
         report.owner  = user.owner
         const reportModel = new Report(report)
+        await reportModel.generateVideo()
         await reportModel.save()
         customTest.reports = customTest.reports.concat([reportModel._id])
         await customTest.save()

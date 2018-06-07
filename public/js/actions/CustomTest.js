@@ -7,6 +7,7 @@ import {
     CUSTOM_TEST_ADD_ACTION, CUSTOM_TEST_REMOVE_ACTION,
     CUSTOM_TEST_CREATE, CUSTOM_TEST_SAVE, CUSTOM_TEST_UPDATE_INFO,
     CUSTOM_TEST_REMOVE, CUSTOM_TEST_EXECUTE, CUSTOM_TEST_INSERT_ACTION,
+    CUSTOM_TEST_LIST,
     ERROR_DISPLAY_MSG
 } from "./Types"
 import {fetchReport} from "./Page"
@@ -41,6 +42,34 @@ export const fetchCustomTest = (customTestID: string) => async (dispatch: Func, 
             message: `Couldn't fetch custom test. ${error.message}`
         })
     }
+}
+
+export const listCustomTests = async (dispatch: Func, getState: Func) => {
+    const token = getState().activeToken
+    const customTestRes = await client(token).query({
+        query: gql`query {
+                customTests {
+                    ...MinimalCustomTestList
+                }
+            }
+        
+            ${fragments.minimalList}`
+    })
+    const res         = customTestRes.data.customTests
+    const customTests = res.data
+    const error       = res.error
+
+    if(error) {
+        return dispatch({
+            type: ERROR_DISPLAY_MSG,
+            message: `Couldn't list custom tests. ${error.message}`
+        })
+    }
+
+    dispatch({
+        type: CUSTOM_TEST_LIST,
+        customTests
+    })
 }
 
 export const createCustomTest = (pageID: string, customTestInput: any) => async (dispatch: Func, getState: Func) => {

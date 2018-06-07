@@ -3,6 +3,7 @@ import {setDisplayName} from "recompose"
 
 import Title            from "./base/Title"
 import Box              from "./base/Box"
+import Panel            from "./base/Panel"
 import PageLink         from "../containers/PageLink"
 import Category         from "../containers/Category"
 import CategoryAdd      from "../containers/CategoryAdd"
