@@ -15,7 +15,7 @@ import withReduxDispatch from "./WithReduxDispatch"
 
 const TestRunList = props => {
     const testRunsView = Object.keys(props.testRuns).map(id =>
-        <Row>
+        <Row key={id}>
             <Column>
                 <Link to={`#/TestRun/${id}`} key={id}>
                     {props.testRuns[id].name}
