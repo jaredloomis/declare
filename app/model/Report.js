@@ -15,13 +15,11 @@ const reportSchema = mongoose.Schema({
     pageID: {
         type: ObjectId,
         ref: "Page",
-        required: true,
         index: true
     },
     packID: {
         type: ObjectId,
-        ref: "TestPack",
-        required: true
+        ref: "TestPack"
     },
     name: {
         type: String,

@@ -10,6 +10,7 @@ import withReduxState    from "../WithReduxState"
 import withReduxDispatch from "../WithReduxDispatch"
 
 import {listCustomTests} from "../../actions/CustomTest"
+import {TEST_TYPE}       from "../../../../common/TestRun"
 
 const SelectedTestList = ({tests, onDeselect, customTests}) => {
     return <div>
@@ -19,7 +20,7 @@ const SelectedTestList = ({tests, onDeselect, customTests}) => {
                 <Row key={testI}>
                     <Column>Null Test!!!</Column>
                 </Row>
-            else if(test && test.testType === "customTest")
+            else if(test && test.testType === TEST_TYPE.CUSTOM_TEST)
                 return <Row key={test.customTestID} onClick={() => onDeselect(testI)}>
                     <Column>
                         {customTests[test.customTestID] && customTests[test.customTestID].name}
