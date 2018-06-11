@@ -63,7 +63,7 @@ const Panel = ({title, tabs, onBlockClick, state, setState}) =>
             .map((block, blockI) =>
                 <a onClick={() => onBlockClick(state.activeTab, blockI)}
                    className={`${bulma.panel_block} ${block.active && bulma.is_active}`}
-                   key={blockI}>
+                   key={block.key || blockI}>
                     {block && block.element || block}
                 </a>
             )}

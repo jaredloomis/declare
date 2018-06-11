@@ -153,6 +153,7 @@ export default (state: any, action: any) => {
             return {
                 ...st,
                 customTests: {
+                    ...st.customTests,
                     [newTest._id]: {
                         ...currentTest,
                         ...newTest

@@ -50,7 +50,9 @@ const TestRun = props => {
             .filter(testID =>
                 computedSelectedTests.filter(test => test.customTestID === testID).length === 0
             )
-            .map(testID => customTests[testID].name)
+            .map(testID =>
+                <span key={testID}>{customTests[testID].name}</span>
+            )
     }]
 
     const selectTest = (tabI, itemI) => {

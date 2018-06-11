@@ -14,14 +14,23 @@ export default {
         if(user && user.isSuperAdmin()) {
             return CustomTest.find({})
         } else {
-            const pages = await Page.find({owner: user.owner})
+            const pages   = await Page.find({owner: user.owner})
+            const testIDs = [].concat.apply([], pages.map(p => p.customTests))
 
+            console.log(JSON.stringify(testIDs))
+            const tests = await CustomTest.find({
+                "_id": {
+                    $in: testIDs
+                }
+            })
+                /*
             const tests = []
             for(const page of pages) {
                 const chunk = await CustomTest.find({owner: page._id})
                 for(const test of chunk)
                     tests.push(test)
             }
+            */
             return tests
         }
     },
@@ -138,5 +147,4 @@ export default {
         await customTest.save()
         return customTest
     }
-
 }
