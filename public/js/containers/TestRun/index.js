@@ -13,6 +13,7 @@ import SelectedTestList  from "./SelectedTestList"
 import withReduxState    from "../WithReduxState"
 import withReduxDispatch from "../WithReduxDispatch"
 import ReportBatch       from "../ReportBatch"
+import EnvironmentSelect from "../EnvironmentSelect"
 
 import {TEST_TYPE}       from "../../../../common/TestRun"
 import {
@@ -91,10 +92,17 @@ const TestRun = props => {
             selectedTests: selectedTests.filter((item, i) => i !== itemI)
         })
 
+    const changeEnvironment = environmentID =>
+        setState({
+            ...state,
+            environment: environmentID
+        })
+
     const save = () =>
         props.updateTestRun(testRunID, {
             ...testRun,
-            tests: computedSelectedTests
+            tests: computedSelectedTests,
+            environment: state.environment || testRun.environment
         }).then(() =>
             setState({
                 ...state,
@@ -112,6 +120,7 @@ const TestRun = props => {
                 onDeselect={deselectTest}/>
         </Box>
         <Panel title={testRun.name} tabs={tabs} onBlockClick={selectTest}/>
+        <EnvironmentSelect onChange={changeEnvironment} defaultValue={testRun.environment}/>
         <AddonsField>
             <Button type="info"    onClick={save}>Save</Button>
             <Button type="primary" onClick={execute}>Execute</Button>

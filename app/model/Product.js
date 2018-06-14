@@ -33,6 +33,11 @@ const productSchema = mongoose.Schema({
         }],
         default: []
     },
+    defaultEnvironment: {
+        type: ObjectId,
+        ref: "Environment",
+        required: true
+    },
     owner: {
         type: ObjectId,
         ref: "Account"
@@ -57,6 +62,9 @@ productSchema.statics.graphQL = new GraphQLObjectType({
         inputTypeCategories: {
             type: new GraphQLNonNull(new GraphQLList(GraphQLID))
         },
+        defaultEnvironment: {
+            type: new GraphQLNonNull(GraphQLID)
+        },
         owner: {
             type: GraphQLID
         }
@@ -77,6 +85,9 @@ productSchema.statics.graphQLInput = new GraphQLInputObjectType({
         },
         inputTypeCategories: {
             type: new GraphQLNonNull(new GraphQLList(GraphQLID))
+        },
+        defaultEnvironment: {
+            type: GraphQLID
         }
     }
 })

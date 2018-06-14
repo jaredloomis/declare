@@ -266,6 +266,15 @@ export default class Runner {
         )
     }
 
+    /**
+     * Import all variables from environment.
+     */
+    importEnvironment(environment: any) {
+        for(const {identifier, value} of environment.variables) {
+            this.variables[identifier] = value
+        }
+    }
+
     /*
      * Reporting
      */

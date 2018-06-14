@@ -256,6 +256,7 @@ export default {
                         testType
                         customTestID
                     }
+                    environment
                     reportBatches
                 }
                 error

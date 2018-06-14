@@ -10,6 +10,7 @@ import Modal                from "../components/base/Modal"
 
 import withReduxState       from "./WithReduxState"
 import withReduxDispatch    from "./WithReduxDispatch"
+import EnvironmentSelect    from "./EnvironmentSelect"
 
 const TestRunList = props => {
     const closeModal = () => props.setCreateInProgress(false)
@@ -20,6 +21,7 @@ const TestRunList = props => {
 
     return [
         ...testRunsView,
+        <EnvironmentSelect/>,
         <Modal active={props.createInProgress} onClose={closeModal} key="testrunlist-modal">
         </Modal>
     ]
