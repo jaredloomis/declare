@@ -8,7 +8,10 @@ export default async (testRun, options) => {
     for(const test of testRun.tests) {
         if(test.testType === TEST_TYPE.CUSTOM_TEST) {
             const report = await executeCustomTest(test.customTestID)
-            const reportModel = new Report(report)
+            const reportModel = new Report({
+                ...report,
+                owner: testRun.owner
+            })
             await reportModel.save()
             reports.push(reportModel._id)
         }

@@ -1,3 +1,5 @@
+import Promise from "bluebird"
+
 import React from "react"
 import {
     setDisplayName, withState, lifecycle, compose
@@ -10,12 +12,14 @@ import AddonsField       from "../../components/base/AddonsField"
 import SelectedTestList  from "./SelectedTestList"
 import withReduxState    from "../WithReduxState"
 import withReduxDispatch from "../WithReduxDispatch"
-import {TEST_TYPE}       from "../../../../common/TestRun"
+import ReportBatch       from "../ReportBatch"
 
+import {TEST_TYPE}       from "../../../../common/TestRun"
 import {
     fetchTestRun, updateTestRun, executeTestRun
 } from "../../actions/TestRun"
-import {listCustomTests}             from "../../actions/CustomTest"
+import {listCustomTests}  from "../../actions/CustomTest"
+import {fetchReportBatch} from "../../actions/ReportBatch"
 
 /**
  * == Props ==
@@ -54,6 +58,10 @@ const TestRun = props => {
                 <span key={testID}>{customTests[testID].name}</span>
             )
     }]
+
+    const batches = (testRun.reportBatches || []).map(batchID =>
+        <ReportBatch batchID={batchID} key={batchID}/>
+    )
 
     const selectTest = (tabI, itemI) => {
         if(tabI === 0) {
@@ -108,6 +116,7 @@ const TestRun = props => {
             <Button type="info"    onClick={save}>Save</Button>
             <Button type="primary" onClick={execute}>Execute</Button>
         </AddonsField>
+        {batches}
     </div>
 }
 
@@ -128,12 +137,18 @@ const enhance = compose(
         executeTestRun: {
             parameterized: executeTestRun
         },
-        listCustomTests
+        listCustomTests,
+        fetchReportBatch: {
+            parameterized: fetchReportBatch
+        }
     }),
     lifecycle({
         componentDidMount() {
-            this.props.fetchTestRun(this.props.testRunID)
             this.props.listCustomTests()
+            this.props.fetchTestRun(this.props.testRunID)
+            .then(testRun => Promise.all(
+                (testRun.reportBatches || []).map(this.props.fetchReportBatch)
+            ))
         }
     })
 )

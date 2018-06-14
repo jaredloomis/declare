@@ -36,6 +36,8 @@ export const fetchTestRun = id => async (dispatch, getState) => {
         type: TEST_RUN_FETCH,
         id, testRun
     })
+
+    return testRun
 }
 
 export const listTestRuns = async (dispatch, getState) => {

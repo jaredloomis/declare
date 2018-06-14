@@ -41,7 +41,8 @@ export default class Navigator {
             .filter(root => {
                 if(root.startURL.length === 0) return false
                 const path = findPath(this.pageGraph, root._id.toString(), target)
-                return path.size > 1
+                const isTarget = String(root._id) === String(target)
+                return path.size > 1 || isTarget
             })
         } else {
             return roots

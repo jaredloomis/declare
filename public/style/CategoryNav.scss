@@ -1,0 +1,29 @@
+@import "./variables";
+
+$border: 1px solid $black-ter;
+
+.selectionsColumn {
+    background-color: $grey-dark;
+    border-right: $border;
+    height: 100%;
+}
+
+.selectionItem {
+    background-color: $grey-dark;
+    color: $grey-light;
+    border-top: $border;
+    padding: 2px;
+    cursor: default;
+    transition: all 0.2s;
+}
+
+.selectionItem.active {
+    background-color: $grey-darker;
+}
+.selectionItem:hover {
+    background-color: $grey-darker;
+}
+
+.selectionItem:last-child {
+    border-bottom: $border;
+}

@@ -292,5 +292,32 @@ export default {
                 }
                 error
             }`
-    }
+    },
+    environment: {
+        full: gql`
+            fragment FullEnvironment on Environment_CanError {
+                data {
+                    _id
+                    name
+                    description
+                    variables {
+                        identifier
+                        value
+                    }
+                    owner
+                }
+                error
+            }
+        `,
+        minimalList: gql`
+            fragment MinimalEnvironmentList on List_Environment_CanError {
+                data {
+                    _id
+                    name
+                    description
+                    owner
+                }
+                error
+            }`
+    },
 }

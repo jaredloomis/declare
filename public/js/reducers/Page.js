@@ -33,6 +33,7 @@ const defaultState = {
     products: {},
     testRuns: {},
     reportBatches: {},
+    environments: {},
     activeToken: getCookieValue("declare_token"),
     error: null
 }

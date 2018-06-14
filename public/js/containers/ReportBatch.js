@@ -4,7 +4,7 @@ import {
     compose, withState, lifecycle, setDisplayName
 } from "recompose"
 
-import {fetchReport}      from "../actions/Report"
+import {fetchReport}      from "../actions/Page"
 import {fetchReportBatch} from "../actions/ReportBatch"
 import VerticalTabs       from "../components/base/VerticalTabs"
 import Report             from "./Report"
@@ -22,7 +22,14 @@ const ReportBatch = props => {
     } = props
 
     const batch = reportBatches[batchID]
-    const tabs  = batch.reports.map(id => reports[id].name)
+
+    if(!batch) {
+        return <span>Loading...</span>
+    }
+
+    const tabs  = batch.reports.map(id =>
+        <span key={id}>{reports[id] ? reports[id].name : id}</span>
+    )
 
     return <VerticalTabs tabs={tabs} onTabSelect={setSelectedReport}>
         <Report reportID={batch.reports[selectedReport]}/>

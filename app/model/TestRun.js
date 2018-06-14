@@ -43,6 +43,11 @@ const testRunSchema = mongoose.Schema({
         }],
         default: []
     },
+    environment: {
+        type: ObjectId,
+        ref: "Environment",
+        required: true
+    },
     owner: {
         type: ObjectId,
         ref: "Account",
@@ -83,6 +88,9 @@ testRunSchema.statics.graphQL = new GraphQLObjectType({
         reportBatches: {
             type: new GraphQLList(GraphQLID)
         },
+        environment: {
+            type: new GraphQLNonNull(GraphQLID)
+        },
         owner: {
             type: new GraphQLNonNull(GraphQLID)
         }
@@ -103,6 +111,9 @@ testRunSchema.statics.graphQLInput = new GraphQLInputObjectType({
         },
         reportBatches: {
             type: new GraphQLList(GraphQLID)
+        },
+        environment: {
+            type: GraphQLID
         },
         owner: {
             type: GraphQLID

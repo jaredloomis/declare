@@ -14,7 +14,7 @@ const List = props => {
             selectable ? <a onClick={() => onSelect(itemI)}>{item}</a> :
                          item
 
-        return <Row>
+        return <Row key={item.key || itemI}>
             <Column>{selectableItem}</Column>
         </Row>
     })
