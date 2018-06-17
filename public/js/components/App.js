@@ -24,6 +24,8 @@ import ProductList         from "../containers/ProductList"
 import Product             from "../containers/Product"
 import TestRun             from "../containers/TestRun"
 import TestRunList         from "../containers/TestRunList"
+import Environment         from "../containers/Environment"
+import EnvironmentList     from "../containers/EnvironmentList"
 
 // XXX Don't remove. Applies global style rules
 import style               from "../../style/App.scss"
@@ -43,6 +45,10 @@ const ProductRoute = props => {
 
 const TestRunRoute = props => {
     return <TestRun testRunID={props.match.params.testRunID} {...props}/>
+}
+
+const EnvironmentRoute = props => {
+    return <Environment environmentID={props.match.params.environmentID} {...props}/>
 }
 
 const App = () =>
@@ -67,6 +73,8 @@ const App = () =>
                     <Route path="/SignUp"        component={SignUp}/>
                     <Route path="/TestRun/:testRunID" component={TestRunRoute}/>
                     <Route path="/TestRuns"      component={TestRunList}/>
+                    <Route path="/Environment/:environmentID" component={EnvironmentRoute}/>
+                    <Route path="/Environments"  component={EnvironmentList}/>
                 </Switch>
             </Router>
         <ErrorModal/>

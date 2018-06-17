@@ -44,6 +44,9 @@ environmentSchema.statics.graphQL = new GraphQLObjectType({
                 name: "Variable",
                 description: "A key value pair.",
                 fields: {
+                    _id: {
+                        type: new GraphQLNonNull(GraphQLID)
+                    },
                     identifier: {
                         type: new GraphQLNonNull(GraphQLString)
                     },

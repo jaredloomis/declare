@@ -178,7 +178,7 @@ export default class Runner {
             const ret = await this.driver.executeScript(filledScript, ...args)
             await this.log(
                 Status.PASS,
-                `Execute script "${script}", returned ${ret}`,
+                `Execute script "${filledScript}", returned ${ret}`,
                 {script, args}
             )
             return ret

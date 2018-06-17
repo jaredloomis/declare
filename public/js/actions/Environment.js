@@ -12,13 +12,13 @@ const fragments = Fragments.environment
 export const fetchEnvironment = id => async (dispatch, getState) => {
     const token = getState().activeToken
     const environmentRes = await client(token).query({
-        query: gql`($id: ID!) {
+        query: gql`query ($id: ID!) {
             environment(id: $id) {
                 ...FullEnvironment
             }
+        }
 
-            ${fragments.full}
-        }`,
+        ${fragments.full}`,
         variables: {id}
     })
     const {data, error} = environmentRes.data.environment
@@ -104,6 +104,11 @@ export const saveEnvironment = (id) => async (dispatch, getState) => {
     const curEnvironment = getState().environments[id]
     delete curEnvironment._id
     delete curEnvironment.__typename
+    curEnvironment.variables = curEnvironment.variables.map(x => ({...x}))
+    for(let i = 0; i < curEnvironment.variables.length; ++i) {
+        delete curEnvironment.variables[i].__typename
+        delete curEnvironment.variables[i]._id
+    }
     const newEnvironmentRes = await client(token).mutate({
         mutation: gql`mutation ($id: ID!, $environment: EnvironmentInput) {
                 environment: updateEnvironment(id: $id, environment: $environment) {

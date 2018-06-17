@@ -302,6 +302,7 @@ export default {
                     name
                     description
                     variables {
+                        _id
                         identifier
                         value
                     }
