@@ -13,7 +13,7 @@ const EnvironmentSelectBase = props => {
                 {props.environments[inputTyID].name}
             </span>
         )
-    return <Select label="Environment" {...props}>{children}</Select>
+    return <Select label={props.label || "Environment"} {...props}>{children}</Select>
 }
 
 const enhance = compose(

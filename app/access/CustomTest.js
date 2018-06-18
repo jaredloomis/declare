@@ -133,7 +133,9 @@ export default {
 
         let report
         try {
-            report      = await executeCustomTest(customTest)
+            report = await executeCustomTest(customTest, {
+                environment: page.defaultEnvironment
+            })
         } catch(ex) {
             return ex
         }

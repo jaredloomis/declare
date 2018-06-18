@@ -27,7 +27,6 @@ const ProductList = props => {
 
     return [
         <ProductListComponent {...props} onCreate={openModal} key="productlist-child-1"/>,
-        <Environment environmentID="5b21a8a0e032dd670bd857e6"/>,
         <Modal active={props.createInProgress} onClose={closeModal} key="productlist-modal">
             <ProductCreate onCreate={createProd}/>
         </Modal>

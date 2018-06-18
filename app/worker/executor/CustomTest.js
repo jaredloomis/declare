@@ -4,7 +4,7 @@ import Runner         from "./Runner"
 import SeleniumDriver from "./SeleniumDriver"
 import {runActions}   from "./ActionStepper"
 
-export const executeCustomTest = async (customTest, options) => {
+export const executeCustomTest = async (customTest, options={}) => {
     if(typeof customTest === "string" || !customTest._id) {
         customTest = await CustomTest.findById(customTest)
     }
