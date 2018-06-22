@@ -6,6 +6,7 @@ import client from "../graphQL/Client"
 import type {Func} from "../flow"
 
 export const fetchAsset = (key: string) => async (dispatch: Func, getState: Func) => {
+    if(!key) return
     const token   = getState().activeToken
     const assetRes = await client(token).query({
         query: gql`query ($key: String!) {

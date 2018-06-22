@@ -101,6 +101,19 @@ export default {
                     }
                 }
                 error
+            }`,
+        fullList: gql`
+            fragment FullReportList on List_Report_CanError {
+                data {
+                    _id
+                    name
+                    pageID packID
+                    summary
+                    steps {
+                        status time message data children
+                    }
+                }
+                error
             }`
     },
     customTest: {

@@ -21,6 +21,10 @@ const reportSchema = mongoose.Schema({
         type: ObjectId,
         ref: "TestPack"
     },
+    testID: {
+        type: ObjectId,
+        ref: "CustomTest"
+    },
     name: {
         type: String,
         required: true

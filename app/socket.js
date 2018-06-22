@@ -1,11 +1,26 @@
-import Server from "socket.io"
+import {Server, OPEN} from "ws"
+import pubSub         from "./pubSub"
 
 module.exports = server => {
-    const io = new Server(server)
-    io.on("connection", socket => {
+    const wss = new Server({server})
+
+    wss.on("connection", ws => {
         console.log("A user connected")
-        socket.on("disconnect", () => {
+        ws.on("message", msg => {
+            console.log("Message from WebSocket: ", msg)
+        })
+        ws.on("close", () => {
             console.log("user disconnected")
         })
+        ws.on("error", err => {
+            console.log("WebSocket error: ", err)
+        })
+        pubSub.then(({sub}) =>
+            sub.on("data", msg => {
+                if(ws && ws.readyState === OPEN) {
+                    ws.send(JSON.stringify(msg))
+                }
+            })
+        )
     })
 }

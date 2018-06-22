@@ -55,6 +55,6 @@ const Subscription = new GraphQLObjectType({
 
 export default new GraphQLSchema({
     query: Query,
-    mutation: Mutation
-    //subscription: Subscription
+    mutation: Mutation,
+    subscription: Subscription
 })

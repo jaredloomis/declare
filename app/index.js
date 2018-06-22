@@ -12,12 +12,13 @@ import websockify    from "koa-websocket"
 
 import mongoose      from "mongoose"
 
+import socket        from "./socket"
 import logger        from "./common/Logger"
 import requestLogger from "./middleware/RequestLogger.js"
 import authenticate  from "./middleware/Auth.js"
 import {development as dbConfig} from "./config/database"
 
-const app = websockify(new Koa())
+const app = new Koa() //websockify(new Koa())
 
 // Use bluebird promises
 mongoose.Promise = Promise
@@ -82,3 +83,4 @@ fs
 
 const server = http.createServer(app.callback())
 server.listen(process.env.PORT || 3000)
+socket(server)

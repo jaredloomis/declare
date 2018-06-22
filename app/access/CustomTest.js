@@ -1,5 +1,6 @@
 import mongoose            from "mongoose"
 
+import pubSub              from "../pubSub"
 import CustomTest          from "../model/CustomTest"
 import Page                from "../model/Page"
 import Report              from "../model/Report"
@@ -17,7 +18,6 @@ export default {
             const pages   = await Page.find({owner: user.owner})
             const testIDs = [].concat.apply([], pages.map(p => p.customTests))
 
-            console.log(JSON.stringify(testIDs))
             const tests = await CustomTest.find({
                 "_id": {
                     $in: testIDs
@@ -131,22 +131,18 @@ export default {
             }
         }
 
-        let report
+        // Execute test - returns report
         try {
-            report = await executeCustomTest(customTest, {
+            const report = await executeCustomTest(customTest, {
                 environment: page.defaultEnvironment
             })
         } catch(ex) {
-            return ex
+            throw {
+                message: "Failed executing test.",
+                ex
+            }
         }
-        report.packID = id
-        report.pageID = customTest.owner
-        report.owner  = user.owner
-        const reportModel = new Report(report)
-        await reportModel.generateVideo()
-        await reportModel.save()
-        customTest.reports = customTest.reports.concat([reportModel._id])
-        await customTest.save()
+
         return customTest
     }
 }

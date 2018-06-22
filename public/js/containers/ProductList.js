@@ -4,6 +4,7 @@ import {
 } from "recompose"
 
 import {listProducts, createProduct}  from "../actions/Product"
+import {watchReports}  from "../actions/Report"
 
 import Modal                from "../components/base/Modal"
 import ProductListComponent from "../components/ProductList"

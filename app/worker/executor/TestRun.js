@@ -14,6 +14,7 @@ export default async (testRun, options) => {
                 ...report,
                 owner: testRun.owner
             })
+
             await reportModel.save()
             reports.push(reportModel._id)
         }

@@ -27,7 +27,7 @@ const ReportBatch = props => {
         return <span>Loading...</span>
     }
 
-    const tabs  = batch.reports.map(id =>
+    const tabs  = batch.reports.slice().reverse().map(id =>
         <span key={id}>{reports[id] ? reports[id].name : id}</span>
     )
 
@@ -46,6 +46,7 @@ const enhance = compose(
         }
     }),
     withReduxState(["reports", "reportBatches"]),
+    withState("selectedReport", "setSelectedReport", 0),
     lifecycle({
         componentDidMount() {
             this.props.fetchReportBatch(this.props.batchID)
@@ -54,7 +55,6 @@ const enhance = compose(
             )
         }
     }),
-    withState("selectedReport", "setSelectedReport", 0),
     setDisplayName("ReportBatch")
 )
 
