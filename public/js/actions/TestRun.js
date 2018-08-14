@@ -6,6 +6,7 @@ import {
     ERROR_DISPLAY_MSG
 } from "./Types"
 import Fragments from "../graphQL/Fragments"
+import {fetchReportBatch} from "./ReportBatch"
 
 const fragments = Fragments.testRun
 
@@ -141,6 +142,7 @@ export const executeTestRun = id => async (dispatch, getState) => {
         variables: {id}
     })
     const {data, error} = testRunRes.data.testRun
+    const testRun       = data
 
     if(error) {
         return dispatch({
@@ -149,10 +151,17 @@ export const executeTestRun = id => async (dispatch, getState) => {
         })
     }
 
+    // Get the id of the report batch added to test
+    const latestBatchID = testRun.reportBatches[testRun.reportBatches.length-1]
+    if(latestBatchID) {
+        // Fetch that ReportBatch
+        dispatch(fetchReportBatch(latestBatchID))
+    }
+
     dispatch({
         type: TEST_RUN_EXECUTE,
         id,
-        testRun: data
+        testRun
     })
 }
 

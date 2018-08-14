@@ -1,5 +1,6 @@
 import {
-    PRODUCT_CREATE, PRODUCT_FETCH, PRODUCT_LIST, PRODUCT_ADD_CATEGORY
+    PRODUCT_CREATE, PRODUCT_FETCH, PRODUCT_LIST, PRODUCT_ADD_CATEGORY,
+    PRODUCT_SET_FOCUS
 } from "../actions/Types"
 
 export default (state, action) => {
@@ -26,6 +27,7 @@ export default (state, action) => {
             return {
                 ...st,
                 products: {
+                    ...st.products,
                     [newProduct._id]: {
                         ...currentProduct,
                         ...newProduct
@@ -40,6 +42,11 @@ export default (state, action) => {
                 ...state.products,
                 [action.product._id]: action.product
             }
+        }
+    } else if(action.type === PRODUCT_SET_FOCUS) {
+        return {
+            ...state,
+            focusProduct: action.productID
         }
     } else {
         return state

@@ -49,21 +49,6 @@ const TestRun = props => {
         .concat(selectedTests)
         .filter(test => deselectedTests.indexOf(test) === -1)
 
-    const tabs = [{
-        title: "Custom Tests",
-        blocks: !customTests ? [] : Object.keys(customTests)
-            .filter(testID =>
-                computedSelectedTests.filter(test => test.customTestID === testID).length === 0
-            )
-            .map(testID =>
-                <span key={testID}>{customTests[testID].name}</span>
-            )
-    }]
-
-    const batches = (testRun.reportBatches || []).map(batchID =>
-        <ReportBatch batchID={batchID} key={batchID}/>
-    )
-
     const selectTest = (tabI, itemI) => {
         if(tabI === 0) {
             const testID = Object.keys(customTests)[itemI]
@@ -113,6 +98,25 @@ const TestRun = props => {
 
     const execute = () =>
         props.executeTestRun(testRunID)
+
+    const tabs = [{
+        title: "Custom Tests",
+        blocks: !customTests ? [] : Object.keys(customTests)
+            .filter(testID =>
+                computedSelectedTests.filter(test => test.customTestID === testID).length === 0
+            )
+            .map(testID =>
+                <span key={testID}>{customTests[testID].name}</span>
+            )
+    }]
+
+    const rawBatches  = testRun.reportBatches || []
+    const batchCount  = rawBatches.length
+    const simpBatches = rawBatches.slice(batchCount-5, batchCount)
+    simpBatches.reverse()
+    const batches = simpBatches.map(batchID =>
+        <ReportBatch batchID={batchID} key={batchID}/>
+    )
 
     return <div>
         <Box>

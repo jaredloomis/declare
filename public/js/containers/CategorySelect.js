@@ -11,7 +11,10 @@ import withReduxDispatch from "./WithReduxDispatch"
 const CategorySelectBase = props => {
     const children = !props.categories ? [] :
         Object.keys(props.categories)
-            .filter(catID => props.categories[catID].itemRef === props.itemRef)
+            .filter(catID =>
+                props.categories[catID] &&
+                props.categories[catID].itemRef === props.itemRef
+            )
             .map(catID =>
                 <span value={catID} key={catID}>
                     {props.categories[catID].name}

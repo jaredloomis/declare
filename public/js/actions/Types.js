@@ -82,6 +82,7 @@ export const PRODUCT_FETCH        = "PRODUCT_FETCH"
 export const PRODUCT_LIST         = "PRODUCT_LIST"
 export const PRODUCT_CREATE       = "PRODUCT_CREATE"
 export const PRODUCT_ADD_CATEGORY = "PRODUCT_ADD_CATEGORY"
+export const PRODUCT_SET_FOCUS    = "PRODUCT_SET_FOCUS"
 
 export const TEST_RUN_FETCH   = "TEST_RUN_FETCH"
 export const TEST_RUN_LIST    = "TEST_RUN_LIST"

@@ -35,7 +35,8 @@ const defaultState = {
     reportBatches: {},
     environments: {},
     activeToken: getCookieValue("declare_token"),
-    error: null
+    error: null,
+    focusProduct: null
 }
 
 const pagesReducer = (state=defaultState, action) => {

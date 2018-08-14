@@ -1,4 +1,3 @@
-import Report              from "../../model/Report"
 import ReportBatch         from "../../model/ReportBatch"
 import {TEST_TYPE}         from "../../../common/TestRun"
 import {executeCustomTest} from "./CustomTest"
@@ -10,13 +9,8 @@ export default async (testRun, options) => {
             const report = await executeCustomTest(test.customTestID, {
                 environment: testRun.environment
             })
-            const reportModel = new Report({
-                ...report,
-                owner: testRun.owner
-            })
 
-            await reportModel.save()
-            reports.push(reportModel._id)
+            reports.push(report._id)
         }
     }
 

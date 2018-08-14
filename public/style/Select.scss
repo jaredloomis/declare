@@ -1,7 +1,6 @@
 @import "./variables";
 
 .select {
-    margin-top: 20px;
 }
 
 .selectButton label {
@@ -11,5 +10,15 @@
 .activeLabel {
     width: 0px;
     color: $primary;
-    transform: scale(0.9) translateX(-13px) translateY(-33px);
+    transform: scale(0.7) translateX(-13px) translateY(-39px);
+}
+
+.flat:focus {
+    border: none;
+    box-shadow: none;
+}
+
+.flatBody {
+    user-select: none;
+    cursor: default;
 }

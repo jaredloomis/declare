@@ -6,9 +6,10 @@ import createHistory from "history/createHashHistory"
 
 import Dashboard           from "./Dashboard"
 import PageCategories      from "../containers/PageCategories"
+import PageList            from "../containers/PageList"
 import InputTypeCategories from "../containers/InputTypeCategories"
 import ElementCategories   from "../containers/ElementCategories"
-import Nav                 from "./Nav"
+import Nav                 from "../containers/Nav"
 import Page                from "../containers/Page"
 import Element             from "../containers/Element"
 import InputType           from "../containers/InputType"
@@ -57,7 +58,7 @@ const App = () =>
             <Router history={createHistory()}>
                 <Switch>
                     <Route path="/" exact        component={Dashboard}/>
-                    <Route path="/Pages"         component={PageCategories}/>
+                    <Route path="/Pages"         component={PageList}/>
                     <Route path="/PagesRaw"      component={Pages}/>
                     <Route path="/Elements"      component={ElementCategories}/>
                     <Route path="/ElementsRaw"   component={Elements}/>
