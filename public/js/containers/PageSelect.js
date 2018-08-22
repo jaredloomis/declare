@@ -20,7 +20,7 @@ const PageSelect = ({productID, defaultValue, onChange, pages}) =>
 
 const enhance = compose(
     setDisplayName("PageSelect"),
-    withReduxState(["pages"]),
+    withReduxState(["pages", "activeProduct"]),
     withReduxDispatch({listPages}),
     lifecycle({
         componentDidMount() {

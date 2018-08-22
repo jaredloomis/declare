@@ -46,7 +46,7 @@ export const fetchPage = (id: string, fetchPacks: boolean=false,
     const page = Object.assign({}, page2)
     const error = pageRes.data.page.error
 
-    if(page) {
+    if(page && page.links) {
         page.links = page.links.map(x => Object.assign({}, x))
         dispatch({
             type: PAGE_FETCH,

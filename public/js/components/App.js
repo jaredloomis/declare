@@ -55,29 +55,29 @@ const EnvironmentRoute = props => {
 const App = () =>
     <ErrorBoundary>
         <Nav/>
-            <Router history={createHistory()}>
-                <Switch>
-                    <Route path="/" exact        component={Dashboard}/>
-                    <Route path="/Pages"         component={PageList}/>
-                    <Route path="/PagesRaw"      component={Pages}/>
-                    <Route path="/Elements"      component={ElementCategories}/>
-                    <Route path="/ElementsRaw"   component={Elements}/>
-                    <Route path="/InputTypes"    component={InputTypeCategories}/>
-                    <Route path="/InputTypesRaw" component={InputTypes}/>
-                    <Route path="/Page/:pageID"  component={PageRoute}/>
-                    <Route path="/Element/:elementID" component={ElementRoute}/>
-                    <Route path="/InputType/:inputTypeID" component={InputTypeRoute}/>
-                    <Route path="/Workspace"     component={Workspace}/>
-                    <Route path="/Products"      component={ProductList}/>
-                    <Route path="/Product/:productID" component={ProductRoute}/>
-                    <Route path="/SignIn"        component={SignIn}/>
-                    <Route path="/SignUp"        component={SignUp}/>
-                    <Route path="/TestRun/:testRunID" component={TestRunRoute}/>
-                    <Route path="/TestRuns"      component={TestRunList}/>
-                    <Route path="/Environment/:environmentID" component={EnvironmentRoute}/>
-                    <Route path="/Environments"  component={EnvironmentList}/>
-                </Switch>
-            </Router>
+        <Router history={createHistory()}>
+            <Switch>
+                <Route path="/" exact        component={Dashboard}/>
+                <Route path="/Pages"         component={PageList}/>
+                <Route path="/PagesRaw"      component={Pages}/>
+                <Route path="/Elements"      component={ElementCategories}/>
+                <Route path="/ElementsRaw"   component={Elements}/>
+                <Route path="/InputTypes"    component={InputTypeCategories}/>
+                <Route path="/InputTypesRaw" component={InputTypes}/>
+                <Route path="/Page/:pageID"  component={PageRoute}/>
+                <Route path="/Element/:elementID" component={ElementRoute}/>
+                <Route path="/InputType/:inputTypeID" component={InputTypeRoute}/>
+                <Route path="/Workspace"     component={Workspace}/>
+                <Route path="/Products"      component={ProductList}/>
+                <Route path="/Product/:productID" component={ProductRoute}/>
+                <Route path="/SignIn"        component={SignIn}/>
+                <Route path="/SignUp"        component={SignUp}/>
+                <Route path="/TestRun/:testRunID" component={TestRunRoute}/>
+                <Route path="/TestRuns"      component={TestRunList}/>
+                <Route path="/Environment/:environmentID" component={EnvironmentRoute}/>
+                <Route path="/Environments"  component={EnvironmentList}/>
+            </Switch>
+        </Router>
         <ErrorModal/>
     </ErrorBoundary>
 

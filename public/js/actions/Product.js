@@ -2,7 +2,7 @@ import gql from "graphql-tag"
 import client from "../graphQL/Client"
 import {
     PRODUCT_FETCH, PRODUCT_LIST, PRODUCT_CREATE, PRODUCT_ADD_CATEGORY,
-    PRODUCT_SET_FOCUS, ERROR_DISPLAY_MSG
+    ERROR_DISPLAY_MSG
 } from "./Types"
 import Fragments from "../graphQL/Fragments"
 
@@ -119,8 +119,3 @@ export const addCategoryToProduct = (productID, categoryID) => async (dispatch, 
         })
     }
 }
-
-export const setFocusProduct = productID => ({
-    type: PRODUCT_SET_FOCUS,
-    productID
-})

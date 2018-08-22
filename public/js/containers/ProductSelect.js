@@ -10,7 +10,7 @@ const ProductSelectBase = props => {
     const children = !props.products ? null : Object.keys(props.products)
         .map(inputTyID =>
             <span value={inputTyID} key={inputTyID}>
-                {props.products[inputTyID].name}
+                {props.products[inputTyID] && props.products[inputTyID].name}
             </span>
         )
     return <Select label={props.label || "Product"} {...props}>

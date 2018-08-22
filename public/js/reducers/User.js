@@ -1,6 +1,7 @@
 // @flow
 import {
-    USER_TOKEN_CREATE, USER_CREATE
+    USER_TOKEN_CREATE, USER_CREATE, USER_SET_FOCUS_PRODUCT,
+    USER_LIST, USER_FETCH
 } from "../actions/Types"
 
 export default (state: any, action: any) => {
@@ -14,6 +15,39 @@ export default (state: any, action: any) => {
             activeToken: action.token.token
         }
     } else if(action.type === USER_CREATE) {
+        return {
+            ...state,
+            users: {
+                ...state.users,
+                [action.user._id]: action.user
+            }
+        }
+    } else if(action.type === USER_SET_FOCUS_PRODUCT) {
+        const newUser = {
+            ...state.users[state.activeToken.user],
+            focusProduct: action.productID
+        }
+
+        return {
+            ...state,
+            users: {
+                ...state.users,
+                [state.activeToken.user]: newUser
+            }
+        }
+    } else if(action.type === USER_LIST) {
+        const newUsers = action.users.reduce((st, user) => {
+            return {
+                ...st,
+                [user._id]: user
+            }
+        }, state)
+
+        return {
+            ...state,
+            users: newUsers
+        }
+    } else if(action.type === USER_FETCH) {
         return {
             ...state,
             users: {

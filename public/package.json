@@ -9,7 +9,7 @@
     "apollo-link-context": "^1.0.5",
     "apollo-link-http": "^1.3.3",
     "apollo-link-ws": "^1.0.8",
-    "bulma": "^0.5.3",
+    "bulma": "^0.7.1",
     "feather-icons": "^3.2.2",
     "graphql.js": "^0.4.16",
     "headjs": "^1.0.3",

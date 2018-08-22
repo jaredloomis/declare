@@ -1,77 +1,69 @@
-/*
-import React            from "react"
-import {setDisplayName} from "recompose"
-
-import Box              from "./base/Box"
-import Category         from "../containers/Category"
-
-const PageListBase = ({rootCategoryIDs}) => {
-    return <div>
-        {rootCategoryIDs.map(categoryID =>
-            <Category categoryID={categoryID}/>
-        )}
-    </div>
-}
-
-const enhance = setDisplayName("PageList")
-export default enhance(PageListBase)
-
 import React from "react"
 import {
     compose, lifecycle, setDisplayName, withState
 } from "recompose"
 
-import {listProducts, createProduct}  from "../actions/Product"
-import {watchReports}  from "../actions/Report"
+import {listPages, createPage} from "../actions/Page"
+import {listCategories}        from "../actions/Category"
 
-import Modal                from "../components/base/Modal"
-import ProductListComponent from "../components/ProductList"
-import ProductCreate        from "../components/ProductCreate"
+import Container               from "../components/base/Container"
+import Section                 from "../components/base/Section"
+import Row                     from "../components/base/Row"
+import Column                  from "../components/base/Column"
+import Button                  from "../components/base/Button"
+import Title                   from "../components/base/Title"
+import FeatherIcon             from "../components/base/FeatherIcon"
+import Modal                   from "../components/base/Modal"
+import Category                from "./Category"
+import PageAdd                 from "./PageAdd"
 
-import withReduxState       from "./WithReduxState"
-import withReduxDispatch    from "./WithReduxDispatch"
+import withReduxState          from "./WithReduxState"
+import withReduxDispatch       from "./WithReduxDispatch"
 
-import Environment    from "./Environment"
+const PageList = props => {
+    const openModal  = () => props.setCreateInProgress(true)
+    const closeModal = () => props.setCreateInProgress(false)
 
-const ProductList = props => {
-    const createProd    = prod => props.createProduct({
-        pageCategories: [],
-        elementCategories: [],
-        inputTypeCategories: [],
-        ...prod
-    })
+    const rootCategoryIDs = Object.keys(props.categories).filter(categoryID =>
+        props.categories[categoryID] && props.categories[categoryID].itemRef === "page"
+    )
 
-    const openModal     = () => props.setCreateInProgress(true)
-    const closeModal    = () => props.setCreateInProgress(false)
-
-    return <div>
+    return <Section><Container>
+        <Row>
+            <Column size="10">
+                <Title size="2">Pages</Title>
+            </Column>
+            <Column size="2">
+                <Button type="rounded primary" onClick={openModal}>
+                    <FeatherIcon icon="plus" size={16}/>
+                </Button>
+            </Column>
+        </Row>
         {rootCategoryIDs.map(categoryID =>
-            <Category categoryID={categoryID}/>
+            <Category categoryID={categoryID} productID={props.focusProduct} key={categoryID}/>
         )}
-        <Modal active={props.createInProgress} onClose={closeModal} key="productlist-modal">
-            <ProductCreate onCreate={createProd}/>
+        <Modal active={props.createInProgress} onClose={closeModal}>
+            <PageAdd productID={props.focusProduct}/>
         </Modal>
-    </div>
+    </Container></Section>
 }
 
 const enhance = compose(
-    withReduxState(["products"]),
+    withReduxState(["categories", "focusProduct"]),
     withReduxDispatch({
-        listProducts,
-        createProduct: {
-            parameterized: createProduct
+        listPages,
+        listCategories,
+        createPage: {
+            parameterized: createPage
         }
     }),
     withState("createInProgress", "setCreateInProgress", false),
     lifecycle({
         componentDidMount() {
-            this.props.listProducts()
+            this.props.listCategories()
         }
     }),
-    setDisplayName("ProductListContainer")
+    setDisplayName("PageListContainer")
 )
 
-export default enhance(ProductList)
-    */
-
-export default null
+export default enhance(PageList)

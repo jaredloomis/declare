@@ -10,10 +10,10 @@ import {
     updateCategoryItem, updateCategoryName, removeCategoryItem,
     createCategory, removeCategory
 } from "../actions/Category"
-import PageAddOrSelect           from "./PageAddOrSelect"
+import {listPages}       from "../actions/Page"
+import PageAdd           from "./PageAdd"
 import ElementAdd        from "./ElementAdd"
 import InputTypeAdd      from "./InputTypeAdd"
-import CategoryCreate    from "./CategoryCreate"
 import withReduxState    from "./WithReduxState"
 import withReduxDispatch from "./WithReduxDispatch"
 
@@ -31,10 +31,7 @@ const CategoryBase = props => {
         save()
     }
     const itemAdd    = ()   => {
-        setAdding("item")
-    }
-    const childAdd   = ()   => {
-        setAdding("category")
+        setAdding(true)
     }
     const itemChange = (i, item) => {
         // TODO buffer changes or something
@@ -45,10 +42,10 @@ const CategoryBase = props => {
         props.removeCategoryItem(categoryID, i)
         save()
     }
-    const onCategoryCreated = () => {
+    const childAdd = () => {
         props.createCategory({
             parent:  categoryID,
-            name:    "NEW CATEGORY",
+            name:    "CHANGE CATEGORY NAME",
             items:   [],
             itemRef: category.itemRef
         })
@@ -57,17 +54,11 @@ const CategoryBase = props => {
         props.removeCategory(categoryID)
     }
     const adderClose = () => {
-        setAdding(null)
+        setAdding(false)
     }
     const onItemCreated = item => {
         props.addItemToCategory(categoryID, item._id)
         save()
-        adderClose()
-    }
-    const onItemSelected = itemID => {
-        props.addItemToCategory(categoryID, itemID)
-        save()
-        adderClose()
     }
     const viewItem = itemID => {
         window.location.hash =
@@ -89,15 +80,12 @@ const CategoryBase = props => {
                 onView={viewItem}
                 productID={productID}
                 store={props.pages}/>
-        <Modal type="info" onClose={adderClose} active={isAdding === "item"}>{
-            itemRef === "page"      ? <PageAddOrSelect productID={productID} onCreate={onItemCreated} onSelect={onItemSelected}/> :
-            itemRef === "element"   ? <ElementAdd      productID={productID} onCreate={onItemCreated}/> :
-            itemRef === "inputtype" ? <InputTypeAdd    productID={productID} onCreate={onItemCreated}/> :
+        <Modal type="info" onClose={adderClose} active={isAdding}>{
+            itemRef === "page"      ? <PageAdd      productID={productID} onCreate={onItemCreated}/> :
+            itemRef === "element"   ? <ElementAdd   productID={productID} onCreate={onItemCreated}/> :
+            itemRef === "inputtype" ? <InputTypeAdd productID={productID} onCreate={onItemCreated}/> :
             <span>Unknown itemRef {itemRef}</span>
         }</Modal>
-        <Modal type="info" onClose={adderClose} active={isAdding === "category"}>
-            <CategoryCreate parent={categoryID} itemRef={category.itemRef} onCreate={adderClose}/>
-        </Modal>
     </div>
 }
 
@@ -126,17 +114,19 @@ const enhance = compose(
         },
         removeCategory: {
             parameterized: removeCategory
-        }
+        },
+        listPages
     }),
     withReduxState(["categories", "pages"]),
-    withState("isAdding", "setAdding", null),
+    withState("isAdding", "setAdding", false),
     lifecycle({
         componentDidMount() {
             if(!this.props.categories[this.props.categoryID])
                 this.props.fetchCategory(this.props.categoryID)
+            this.props.listPages()
         }
     }),
-    setDisplayName("CategoryContainer")
+    setDisplayName("PageCategoryContainer")
 )
 
 export default enhance(CategoryBase)

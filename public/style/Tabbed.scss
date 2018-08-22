@@ -1,8 +1,19 @@
-.tab-label {
+@import "./variables";
 
+.tabLabel {
+    padding: 3px;
+    border: 1px solid $grey-lighter;
 }
 
-.tab-label .active {
+.tabLabel:first-of-type {
+    border-top-left-radius: 5px;
+}
+
+.tabLabel:last-of-type {
+    border-top-right-radius: 5px;
+}
+
+.tabLabel.active {
     background-color: $primary;
     color: $light;
 }

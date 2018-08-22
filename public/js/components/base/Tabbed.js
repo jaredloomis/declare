@@ -9,19 +9,23 @@ import Row from "./Row"
 
 const Tabbed = ({tabs, activeTab, setActiveTab}) => {
     const tabLabels = tabs.map((tab, tabI) =>
-        <TabLabel active={tabI === activeTab} onClick={() => setActiveTab(tabI)} {...tab}>
+        <TabLabel active={tabI === activeTab} onClick={() => setActiveTab(tabI)} {...tab} key={tabI}>
             {tab.label}
         </TabLabel>
     )
 
     return <div>
-        <Row>{tabLabels}</Row>
+        <Row>
+            <div className={style.tabs}>
+                {tabLabels}
+            </div>
+        </Row>
         {tabs[activeTab].component}
     </div>
 }
 
 const TabLabel = ({active, children, ...props}) =>
-    <span {...props} className={`${style.tab_label} ${active ? style.active : ""}`}>
+    <span {...props} className={`${style.tabLabel} ${active ? style.active : ""}`}>
         {children}
     </span>
 

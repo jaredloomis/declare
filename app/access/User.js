@@ -22,7 +22,7 @@ export default {
         const commonAcct = account && account.containsUser(id)
         // If they share an account, let 'em in, otherwise error
         // TODO per-user permissions in account
-        if(commonAcct || user.isSuperAdmin()) {
+        if(commonAcct || (user && user.isSuperAdmin())) {
             return User.findById(id)
         } else {
             throw {
@@ -51,7 +51,7 @@ export default {
         // Ensure user is in account
         const acct      = await Account.containingUser(user._id)
         const matchAcct = acct && acct.containsUser(state.user._id)
-        if(!user || (!matchAcct && !user.isSuperAdmin())) {
+        if(!user || (!matchAcct && (user && user.isSuperAdmin && !user.isSuperAdmin()))) {
             throw {
                 message: "You don't have permission to modify this user."
             }

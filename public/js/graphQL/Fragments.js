@@ -223,6 +223,27 @@ export default {
                     email
                     password
                     passwordSalt
+                    focusProduct
+                    owner
+                }
+                error
+            }`,
+        minimal: gql`
+            fragment MinimalUser on User_CanError {
+                data {
+                    _id
+                    email
+                    focusProduct
+                    owner
+                }
+                error
+            }`,
+        minimalList: gql`
+            fragment MinimalUserList on List_User_CanError {
+                data {
+                    _id
+                    email
+                    focusProduct
                     owner
                 }
                 error

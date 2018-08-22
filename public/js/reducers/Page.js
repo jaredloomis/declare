@@ -29,14 +29,14 @@ const defaultState = {
     customTests: {},
     categories: {},
     tokens: {},
+    users: {},
     accounts: {},
     products: {},
     testRuns: {},
     reportBatches: {},
     environments: {},
     activeToken: getCookieValue("declare_token"),
-    error: null,
-    focusProduct: null
+    error: null
 }
 
 const pagesReducer = (state=defaultState, action) => {

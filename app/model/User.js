@@ -30,6 +30,10 @@ const userSchema = mongoose.Schema({
         enum: ["user", "admin", "superadmin"],
         default: "user"
     },
+    focusProduct: {
+        type: ObjectId,
+        ref: "Product"
+    },
     // Account this user belongs to
     owner: {
         type: ObjectId,
@@ -53,6 +57,9 @@ userSchema.statics.graphQL = new GraphQLObjectType({
         passwordSalt: {
             type: GraphQLString // Prob could be non-null
         },
+        focusProduct: {
+            type: GraphQLID
+        },
         owner: {
             type: new GraphQLNonNull(GraphQLID)
         }
@@ -67,6 +74,9 @@ userSchema.statics.graphQLInput = new GraphQLInputObjectType({
         },
         password: {
             type: GraphQLString
+        },
+        focusProduct: {
+            type: GraphQLID
         },
         owner: {
             type: GraphQLID

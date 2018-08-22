@@ -1,21 +1,20 @@
 import React from "react"
 
-import Select        from "./base/Select"
 import FeatherIcon   from "./base/FeatherIcon"
 import ProductSelect from "../containers/ProductSelect"
 
 import bulma from "../../style/bulma.scss"
 import style from "../../style/Nav.scss"
 
-const Nav = ({onSelectFocusProduct}) =>
+const Nav = ({focusProduct, onSelectFocusProduct}) =>
     <nav className={`${bulma.navbar} ${bulma.has_shadow} ${bulma.is_spaced}`}>
     <div className={bulma.container}>
         <div className={bulma.navbar_brand}>
-            <span className={`${bulma.navbar_item}`}>
+            <a className={`${bulma.navbar_item} ${style.logo}`} href="#/">
                 Declare
-            </span>
+            </a>
             <span className={`${bulma.navbar_item}`}>
-                <ProductSelect flat defaultValue="default" onChange={onSelectFocusProduct}/>
+                <ProductSelect flat defaultValue={focusProduct} onChange={onSelectFocusProduct}/>
             </span>
         </div>
         <div className={`${bulma.navbar_menu} ${style.menu}`}>

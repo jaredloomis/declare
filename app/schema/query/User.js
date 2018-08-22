@@ -25,13 +25,19 @@ export default {
         args: {
             id: {
                 name: "id",
-                type: new GraphQLNonNull(GraphQLID)
+                type: GraphQLID
             }
         },
         async resolve(parent, args, {state}) {
             try {
-                return {
-                    data: await UserAccess.user(args, {user: state.user})
+                if(args.id || !state.user) {
+                    return {
+                        data: await UserAccess.user(args, {user: state.user})
+                    }
+                } else {
+                    return {
+                        data: await UserAccess.user({id: state.user._id}, {user: state.user})
+                    }
                 }
             } catch(ex) {
                 return {error: ex}

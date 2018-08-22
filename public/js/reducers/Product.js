@@ -1,6 +1,5 @@
 import {
-    PRODUCT_CREATE, PRODUCT_FETCH, PRODUCT_LIST, PRODUCT_ADD_CATEGORY,
-    PRODUCT_SET_FOCUS
+    PRODUCT_CREATE, PRODUCT_FETCH, PRODUCT_LIST, PRODUCT_ADD_CATEGORY
 } from "../actions/Types"
 
 export default (state, action) => {
@@ -21,7 +20,7 @@ export default (state, action) => {
             }
         }
     } else if(action.type === PRODUCT_LIST) {
-        return action.products.reduce((st, newProduct) => {
+        return (action.products || []).reduce((st, newProduct) => {
             const currentProduct = state.products[newProduct._id]
 
             return {
@@ -42,11 +41,6 @@ export default (state, action) => {
                 ...state.products,
                 [action.product._id]: action.product
             }
-        }
-    } else if(action.type === PRODUCT_SET_FOCUS) {
-        return {
-            ...state,
-            focusProduct: action.productID
         }
     } else {
         return state
