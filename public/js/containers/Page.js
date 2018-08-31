@@ -24,8 +24,8 @@ import PageInfo    from "../components/PageInfo"
 import PageComponent from "../components/Page"
 import TestPack    from "./TestPack"
 import CustomTest  from "./CustomTest"
-import Link        from "../components/LinkDesc"
-//import Link from "./Link"
+import LinkDesc    from "../components/LinkDesc"
+import Link from "./Link"
 import TestPackSelect from "./TestPackSelect"
 
 import bulma from "../../style/bulma.js"
@@ -185,10 +185,21 @@ class Page extends Component {
 
         if(!active) {
             return modalOf(null, null)
-        } else if(modal.type === "linkview") {
+        } else if(modal.type === "linkedit") {
             const {linkI} = modal
             const link    = this.props.links[linkI]
             return modalOf(this.props.onLinksSave, <Link pages={this.props.pages} defaultValue={link}
+                productID={this.props.product}
+                onActionChange={this.linkActionChange(linkI)}
+                onDestChange={this.linkDestChange(linkI)}
+                onActionRemove={this.linkActionRemove(linkI)}
+                onActionAdd={this.linkActionAdd(linkI)}
+                onActionInsert={this.linkActionInsert(linkI)}
+                onRemove={this.linkRemove(linkI)}/>)
+        } else if(modal.type === "linkview") {
+            const {linkI} = modal
+            const link    = this.props.links[linkI]
+            return modalOf(this.props.onLinksSave, <LinkDesc defaultValue={link}
                 productID={this.props.product}
                 onActionChange={this.linkActionChange(linkI)}
                 onDestChange={this.linkDestChange(linkI)}

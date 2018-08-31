@@ -2,12 +2,12 @@ import React from "react"
 
 import bulma from "../../../style/bulma"
 
-const Code = ({children, language}) =>
+const CodeBlock = ({children, language}) =>
     <pre>
         <code className={`${language ? bulma[`language_${language}`] : ""}`}>
             {children}
         </code>
     </pre>
 
-Code.displayName = "Code"
-export default Code
+CodeBlock.displayName = "CodeBlock"
+export default CodeBlock

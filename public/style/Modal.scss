@@ -10,5 +10,16 @@
     background-color: $background;
     width: 70%;
     min-height: 60%;
+//    padding: 3em;
+}
+
+.innerContent {
     padding: 3em;
+}
+
+.topBar {
+}
+
+.bottomBar {
+    border-top: 1px solid $grey-light;
 }

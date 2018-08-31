@@ -1,23 +1,16 @@
 import React, {Component} from "react"
 
-import Heading         from "./base/Heading"
-import ActionDescList    from "./ActionDescList"
+import Heading        from "./base/Heading"
+import ActionDescList from "./ActionDescList"
+import withReduxState from "../containers/WithReduxState"
 
 import bulma from "../../style/bulma"
 import style from "../../style/Link.scss"
 
-export default class LinkDesc extends Component {
+class LinkDesc extends Component {
     constructor(props) {
         super(props)
         this.renderActionList = this.renderActionList.bind(this)
-
-        const inputKeys = this.props.defaultValue.navigation.map((n, i) =>
-            this.generateKey(i)
-        )
-
-        this.state = {
-            inputKeys
-        }
     }
 
     render() {
@@ -31,10 +24,7 @@ export default class LinkDesc extends Component {
                 </div>
             </div>
             <div className={bulma.columns}>
-                <div className={`${bulma.column} ${bulma.is_one_quarter}`}>
-                    <span>Destination: {destID}</span>
-                </div>
-                <div className={`${bulma.column} ${bulma.is_primary} ${style.linkActions}`}>
+                <div className={`${bulma.column} ${bulma.is_primary}`}>
                     {this.renderActionList()}
                 </div>
             </div>
@@ -45,8 +35,8 @@ export default class LinkDesc extends Component {
         return <ActionDescList actions={this.props.defaultValue.navigation}
             productID={this.props.productID}/>
     }
-
-    generateKey(index) {
-        return Math.random()
-    }
 }
+
+const enhance = withReduxState(["pages"])
+
+export default enhance(LinkDesc)
