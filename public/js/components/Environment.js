@@ -3,7 +3,7 @@ import {
     setDisplayName, compose, withState, withPropsOnChange
 } from "recompose"
 
-import Title            from "./base/Title"
+import Heading            from "./base/Heading"
 import Button           from "./base/Button"
 import TextInput        from "./base/TextInput"
 import Row              from "./base/Row"
@@ -83,7 +83,7 @@ const Environment = props => {
     })
 
     return <div>
-        <Title>{name}</Title>
+        <Heading>{name}</Heading>
         <p>{description}</p>
         {variablesView}
         <Button type="info"    onClick={addVariable}>+</Button>

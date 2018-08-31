@@ -6,7 +6,7 @@ import Group             from "./base/Group"
 import Column            from "./base/Column"
 import Button            from "./base/Button"
 import FeatherIcon       from "./base/FeatherIcon"
-import EditableTitle     from "./base/EditableTitle"
+import EditableHeading     from "./base/EditableHeading"
 import PageSelect        from "../containers/PageSelect"
 import InputTypeSelect   from "../containers/InputTypeSelect"
 import ElementSelect     from "../containers/ElementSelect"
@@ -93,9 +93,9 @@ const Category = props => {
         <div className={style.titleBar}>
         <Row>
             <Column size="10">
-                <EditableTitle size="5" onChange={onNameChange}>
+                <EditableHeading size="5" onChange={onNameChange}>
                     {name}
-                </EditableTitle>
+                </EditableHeading>
             </Column>
             <Column size="2">
                 <div className={style.itemActions}>

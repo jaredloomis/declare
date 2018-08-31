@@ -30,7 +30,7 @@ const Action = ({onChange, onRemove, productID, actionType, values={}, setAction
     const actionSpecificValues = (() => {
         const props = {
             productID,
-            values: values || {},
+            values,
             onValueChange: valChange
         }
 
@@ -71,11 +71,7 @@ const Action = ({onChange, onRemove, productID, actionType, values={}, setAction
             <span value={actionTypes.GO_TO_URL}>Go to URL</span>
         </Select>
         </Column>
-        <Column size="7">
-            <Row>
-                {actionSpecificValues}
-            </Row>
-        </Column>
+        {actionSpecificValues}
         <Column size="2">
         <Button inline={true} type="danger outlined" onClick={onRemove}>
             <i className="material-icons">delete</i>
@@ -85,7 +81,7 @@ const Action = ({onChange, onRemove, productID, actionType, values={}, setAction
 }
 
 const ClickAction = ({productID, values, onValueChange}) =>
-    <Column>
+    <Column size="7">
         <ElementQuickSelect
             productID={productID}
             defaultValue={values && values.element}
@@ -93,13 +89,13 @@ const ClickAction = ({productID, values, onValueChange}) =>
     </Column>
 
 const AssertElementContainsAction = ({productID, values, onValueChange}) => [
-    <Column size="5" key="0">
+    <Column size="4" key="0">
         <ElementQuickSelect
             productID={productID}
             defaultValue={values.element}
             onChange={onValueChange(["element"])}/>
     </Column>,
-    <Column size="7" key="1">
+    <Column size="3" key="1">
         <TextInput defaultValue={values.text}
                    onChange={onValueChange(["text"])}
                    label="Text"/>
@@ -107,13 +103,13 @@ const AssertElementContainsAction = ({productID, values, onValueChange}) => [
 ]
 
 const ExtractElementTextAction = ({productID, values, onValueChange}) => [
-    <Column size="5" key="0">
+    <Column size="4" key="0">
         <ElementQuickSelect
             productID={productID}
             defaultValue={values.element}
             onChange={onValueChange(["element"])}/>
     </Column>,
-    <Column size="7" key="1">
+    <Column size="3" key="1">
         <TextInput defaultValue={values.variableName}
                    onChange={onValueChange(["variableName"])}
                    label="Variable Name"/>
@@ -121,19 +117,19 @@ const ExtractElementTextAction = ({productID, values, onValueChange}) => [
 ]
 
 const AssertJsAction = ({values, onValueChange}) =>
-    <Column>
+    <Column size="7">
         <TextInput defaultValue={values.code}
                    onChange={onValueChange(["code"])}
                    label="Javascript Code"/>
     </Column>
 
 const ExtractJsAction = ({values, onValueChange}) => [
-    <Column size="7" key="0">
+    <Column size="4" key="0">
         <TextInput defaultValue={values.code}
                    onChange={onValueChange(["code"])}
                    label="JavaScript Code"/>
     </Column>,
-    <Column size="5" key="1">
+    <Column size="3" key="1">
         <TextInput defaultValue={values.variableName}
                    onChange={onValueChange(["variableName"])}
                    label="Variable Name"/>
@@ -141,20 +137,20 @@ const ExtractJsAction = ({values, onValueChange}) => [
 ]
 
 const NavigateAction = ({values, onValueChange}) =>
-    <Column>
+    <Column size="7">
         <PageSelect defaultValue={values.page}
                     onChange={onValueChange(["page"])}
                     label="Destination"/>
     </Column>
 
 const SendInputAction = ({productID, values, onValueChange}) => [
-    <Column size="5" key="0">
+    <Column size="3" key="0">
         <ElementQuickSelect
             productID={productID}
             defaultValue={values.element}
             onChange={onValueChange(["element"])}/>
     </Column>,
-    <Column size="7" key="1">
+    <Column size="4" key="1">
         <TextInput defaultValue={values.input}
                    onChange={onValueChange(["input"])}
                    label="Input Text"/>
@@ -162,14 +158,14 @@ const SendInputAction = ({productID, values, onValueChange}) => [
 ]
 
 const SleepAction = ({values, onValueChange}) =>
-    <Column>
+    <Column size="7">
         <TextInput defaultValue={values.duration}
                    onChange={onValueChange(["duration"])}
                    label="Duration (ms)"/>
     </Column>
 
 const GoToUrlAction = ({values, onValueChange}) =>
-    <Column>
+    <Column size="7">
         <TextInput defaultValue={values.url}
                    onChange={onValueChange(["url"])}
                    label="URL"/>

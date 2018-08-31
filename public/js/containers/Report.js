@@ -2,7 +2,7 @@ import React, {Component} from "react"
 import {connect}          from "react-redux"
 import {compose, withState, setDisplayName} from "recompose"
 
-import Title                   from "../components/base/Title"
+import Heading                   from "../components/base/Heading"
 import Row                     from "../components/base/Row"
 import Column                  from "../components/base/Column"
 import FeatherIcon             from "../components/base/FeatherIcon"
@@ -54,7 +54,7 @@ class Report extends Component {
     render() {
         const {name, steps} = this.props
         return <div className={`${bulma.box} ${bulma.is_info}`}>
-            <Title>{name}</Title>
+            <Heading>{name}</Heading>
             <div className={style.reportMain}>
                 <ReportSummary {...this.props}/>
             </div>

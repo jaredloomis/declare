@@ -11,7 +11,7 @@ import Section                 from "../components/base/Section"
 import Row                     from "../components/base/Row"
 import Column                  from "../components/base/Column"
 import Button                  from "../components/base/Button"
-import Title                   from "../components/base/Title"
+import Heading                   from "../components/base/Heading"
 import FeatherIcon             from "../components/base/FeatherIcon"
 import Modal                   from "../components/base/Modal"
 import Category                from "./Category"
@@ -31,7 +31,7 @@ const PageList = props => {
     return <Section><Container>
         <Row>
             <Column size="10">
-                <Title size="2">Pages</Title>
+                <Heading size="2">Pages</Heading>
             </Column>
             <Column size="2">
                 <Button type="rounded primary" onClick={openModal}>

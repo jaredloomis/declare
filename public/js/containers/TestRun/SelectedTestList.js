@@ -3,7 +3,7 @@ import {
     setDisplayName, lifecycle, compose
 } from "recompose"
 
-import Title             from "../../components/base/Title"
+import Heading             from "../../components/base/Heading"
 import Row               from "../../components/base/Row"
 import Column            from "../../components/base/Column"
 import withReduxState    from "../WithReduxState"
@@ -14,7 +14,7 @@ import {TEST_TYPE}       from "../../../../common/TestRun"
 
 const SelectedTestList = ({tests, onDeselect, customTests}) => {
     return <div>
-        <Title>Selected Tests</Title>
+        <Heading>Selected Tests</Heading>
         {tests.map((test, testI) => {
             if(!test)
                 <Row key={testI}>

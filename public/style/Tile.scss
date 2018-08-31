@@ -1,0 +1,34 @@
+@import "./variables";
+
+.tile {
+    height: 6em;
+    padding: 2em;
+    border: 1px solid $grey-lighter;
+    background-color: $info;
+    text-align: center;
+    color: $text-invert;
+    position: relative;
+    cursor: pointer;
+}
+
+.tile.isHovered {
+    background-color: darken($info, 40%);
+}
+
+.tile.isHovered.hasOverlay {
+    color:            darken($text-invert, 50%);
+}
+
+.hoverIcon {
+    color: $text-invert;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: 0.2s ease;
+}
+
+.isHovered .hoverIcon {
+    opacity: 1;
+}

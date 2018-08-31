@@ -12,15 +12,20 @@ import {
 import {
     createCustomTest, saveCustomTest
 } from "../actions/CustomTest"
+import Container               from "../components/base/Container"
+import Section                 from "../components/base/Section"
+import Modal                from "../components/base/Modal"
 import Sep         from "../components/base/Sep"
 import AddonsField from "../components/base/AddonsField"
-import Title       from "../components/base/Title"
+import Heading       from "../components/base/Heading"
 import Button      from "../components/base/Button"
 import Group       from "../components/base/Group"
 import PageInfo    from "../components/PageInfo"
+import PageComponent from "../components/Page"
 import TestPack    from "./TestPack"
 import CustomTest  from "./CustomTest"
-import Link        from "./Link"
+import Link        from "../components/LinkDesc"
+//import Link from "./Link"
 import TestPackSelect from "./TestPackSelect"
 
 import bulma from "../../style/bulma.js"
@@ -99,7 +104,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch(savePageInfo(ownProps.pageID))
         },
         onCustomTestAdd() {
-            dispatch(createCustomTest(ownProps.pageID, {name: "x"}))
+            return dispatch(createCustomTest(ownProps.pageID, {name: "x"}))
         },
         onCustomTestSave(testID) {
             dispatch(saveCustomTest(testID))
@@ -120,10 +125,11 @@ class Page extends Component {
         this.infoChange = this.infoChange.bind(this)
         this.customTestAdd = this.customTestAdd.bind(this)
         this.customTestsSave = this.customTestsSave.bind(this)
+        this.setModal = this.setModal.bind(this)
+        this.renderModal = this.renderModal.bind(this)
 
         this.state = {
-            addPackSelection: "",
-            packOpen: null
+            modal: null
         }
     }
 
@@ -134,80 +140,74 @@ class Page extends Component {
     }
 
     render() {
-        if(!this.props.name) {
-            return <span>Loading...</span>
+        const addLink = () => {
+            this.props.onLinkAdd()
+            this.setModal({
+                type: "linkview",
+                linkI: this.props.links.length
+            })
+        }
+        const addTest = () => {
+            this.props.onCustomTestAdd().then(test =>
+                this.setModal({
+                    type: "testview",
+                    testID: test._id
+                })
+            )
         }
 
-        const GRID_WIDTH = 1
-        const COL_WIDTH  = 12 / GRID_WIDTH
+        return <Section><Container>
+            <PageComponent {...this.props}
+                onInfoChange={this.infoChange}
+                onViewLink={linkI  => this.setModal({type: "linkview", linkI})}
+                onViewTest={testID => this.setModal({type: "testview", testID})}
+                onAddLink={addLink}
+                onAddTest={addTest}/>
+            {this.renderModal()}
+        </Container></Section>
+    }
 
-        const testPacksDOM = chunk(this.props.testPackData, GRID_WIDTH,
-            (row, rowI) => this.renderRow(row, rowI, COL_WIDTH)
-        )
+    renderModal() {
+        const modal  = this.state.modal || {}
+        const active = modal && modal.type
 
-        return <div>
-            <Title size="1">{this.props.name}</Title>
-            <Title size="3">Page Info</Title>
-            <div className={style.pageInfo}>
-                <PageInfo page={this.props} onChange={this.infoChange}/>
-            </div>
-            <Sep/>
-            <Title size="3">Page Links</Title>
-            <div className="page-links">
-                {this.renderLinks()}
-                <div className={`${bulma.field} ${bulma.is_grouped} ${style.linkControls}`}>
-                    <p className={bulma.control}>
-                        <Button onClick={this.linkAdd} type="info">
-                            + Add Link
-                        </Button>
-                    </p>
-                    <p className={bulma.control}>
-                        <Button type="primary" onClick={this.props.onLinksSave}>
-                            Save Links
-                        </Button>
-                    </p>
-                </div>
-            </div>
-            <Sep/>
-            <Title size="3">Page Custom Tests</Title>
-            {this.renderCustomTests()}
-            <Group>
-                <Button onClick={this.customTestAdd} type="info">
-                    + Add Custom Test
-                </Button>
-                <Button onClick={this.customTestsSave} type="primary">
-                    Save Custom Tests
-                </Button>
-            </Group>
-            <Sep/>
-            <Title size="3">Page Test Packs</Title>
-            <div className="page-test-packs">
-                {testPacksDOM}
-                <div className={`${bulma.field} ${bulma.is_grouped}`}>
-                    <div className={bulma.control}>
-                        <TestPackSelect label="Test Pack" noExteriorLabel="true"
-                            onChange={this.addPackChange}/>
-                    </div>
-                    <div className={bulma.control}>
-                        <Button inline={true} type="info" onClick={this.addPack}>
-                            + Add Test Pack
-                        </Button>
-                    </div>
-                </div>
-            </div>
-            <AddonsField>
-                <div className={bulma.control}>
-                    <Button type="primary" onClick={this.props.onPacksSave}>
-                        Save Pack Data
-                    </Button>
-                </div>
-                <div className={bulma.control}>
-                    <Button type="danger outlined" onClick={this.props.onPageDelete}>
-                        Delete Page
-                    </Button>
-                </div>
-            </AddonsField>
-        </div>
+        const closeModal = () => this.setModal(null)
+        const modalOf = (closeAction, children) => {
+            const close = () => {
+                closeModal()
+                closeAction && closeAction()
+            }
+
+            return <Modal wide active={active} onClose={close} key={`${modal.type}-modal`}>
+                {children}
+            </Modal>
+        }
+
+        if(!active) {
+            return modalOf(null, null)
+        } else if(modal.type === "linkview") {
+            const {linkI} = modal
+            const link    = this.props.links[linkI]
+            return modalOf(this.props.onLinksSave, <Link pages={this.props.pages} defaultValue={link}
+                productID={this.props.product}
+                onActionChange={this.linkActionChange(linkI)}
+                onDestChange={this.linkDestChange(linkI)}
+                onActionRemove={this.linkActionRemove(linkI)}
+                onActionAdd={this.linkActionAdd(linkI)}
+                onActionInsert={this.linkActionInsert(linkI)}
+                onRemove={this.linkRemove(linkI)}/>)
+        } else if(modal.type === "testview") {
+            const {testID} = modal
+            return modalOf(() => this.props.onCustomTestSave(testID),
+                <CustomTest customTestID={testID} productID={this.props.product}/>
+            )
+        } else {
+            return modalOf(null, null)
+        }
+    }
+
+    setModal(modal) {
+        this.setState({modal})
     }
 
     renderRow(row, rowI, colWidth) {

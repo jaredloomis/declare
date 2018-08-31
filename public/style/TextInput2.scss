@@ -1,0 +1,50 @@
+@import "./variables";
+
+.textInput input {
+    max-width: 100%;
+    width: 100%;
+    border: 1px solid $grey-light;
+    align-items: center;
+    display: inline-flex;
+    font-size: 1rem;
+    height: 2em;
+    justify-content: flex-start;
+    line-height: 1.5;
+    padding-bottom: calc(.375em - 1px);
+    padding-left: calc(.625em - 1px);
+    padding-right: calc(.625em - 1px);
+    padding-top: calc(.375em - 1px);
+    position: relative;
+    vertical-align: top;
+    outline-width: 0;
+}
+
+.textInput input:focus {
+    border: 1px solid $grey;
+}
+
+/*
+.textInput {
+    position: relative;
+    margin-top: 20px;
+}
+
+.textInput label {
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    // Text input is z-index 4 when focused
+    z-index: 5;
+    transition: all 0.2s;
+    cursor: text;
+}
+
+.textInput label:not(.activeLabel) {
+    color: $grey-light;
+}
+
+.activeLabel {
+    transform: scale(0.9) translateX(-14px) translateY(-30px);
+    color: $primary;
+}
+*/

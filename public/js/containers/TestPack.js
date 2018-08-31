@@ -6,7 +6,7 @@ import {listElements}       from "../actions/Element"
 import {updatePackValue} from "../actions/Page"
 import {fetchPack} from "../actions/TestPack"
 import Button from "../components/base/Button"
-import Title  from "../components/base/Title"
+import Heading  from "../components/base/Heading"
 import Field from "../components/Field"
 import Report from "./Report"
 import {deepGet} from "../lib/Deep"
@@ -82,7 +82,7 @@ class TestPack extends Component {
         return <div className={`test-pack ${bulma.box}`}>
             <div className={style.testPackHeader}>
                 <div className={bulma.is_pulled_left}>
-                    <Title>{this.props.name}</Title>
+                    <Heading>{this.props.name}</Heading>
                 </div>
                 <div className={style.testPackControls}>
                     <Button onClick={this.remove} type="danger outlined">

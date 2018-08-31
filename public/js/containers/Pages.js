@@ -2,7 +2,7 @@ import React, {Component} from "react"
 import {connect} from "react-redux"
 
 import {listPages, createPage} from "../actions/Page"
-import Title                   from "../components/base/Title"
+import Heading                   from "../components/base/Heading"
 import PageAdd                 from "../components/PageAdd"
 import InputTypes              from "./InputTypes"
 import Elements                from "./Elements"
@@ -43,7 +43,7 @@ class Pages extends Component {
     render() {
         if(this.props.pages)
             return <div>
-                <Title size="2">Pages</Title>
+                <Heading size="2">Pages</Heading>
                 {Object.keys(this.props.pages).map(this.renderPageItem)}
                 <PageAdd onCreatePage={this.createPage}/>
             </div>

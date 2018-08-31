@@ -1,0 +1,22 @@
+@import "./variables";
+
+.menu {
+    border-left: 1px solid $grey-lighter;
+}
+
+.navItem {
+    display: block;
+    text-align: center;
+    border-bottom: 1px solid $background;
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+.navItem:hover {
+    background-color: $white !important;
+    border-bottom: 1px solid $primary;
+}
+
+.logo:hover {
+    background-color: $white !important;
+}

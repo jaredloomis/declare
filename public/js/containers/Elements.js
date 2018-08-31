@@ -9,7 +9,7 @@ import Element     from "./Element"
 import TextInput   from "../components/base/TextInput"
 import Button      from "../components/base/Button"
 import AddonsField from "../components/base/AddonsField"
-import Title       from "../components/base/Title"
+import Heading       from "../components/base/Heading"
 
 import bulma from "../../style/bulma"
 
@@ -36,7 +36,7 @@ const ElementsBase = props => {
                 </div>
             )
     return <div>
-        <Title size="2">Elements</Title>
+        <Heading size="2">Elements</Heading>
         {elements}
         <AddonsField>
             <TextInput label="Selector"

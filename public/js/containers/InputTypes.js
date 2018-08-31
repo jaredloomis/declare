@@ -11,7 +11,7 @@ import {
 import Button      from "../components/base/Button"
 import TextInput   from "../components/base/TextInput"
 import AddonsField from "../components/base/AddonsField"
-import Title       from "../components/base/Title"
+import Heading       from "../components/base/Heading"
 
 import bulma       from "../../style/bulma.js"
 
@@ -28,7 +28,7 @@ const InputTypesBase = props => {
         )
     // Display list and add controls
     return <div>
-        <Title size="2">Input Types</Title>
+        <Heading size="2">Input Types</Heading>
         {inTyDOMs}
         <AddonsField>
             <TextInput onChange={setNewName} label="Input Type Name"/>

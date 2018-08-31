@@ -1,22 +1,27 @@
 import React from "react"
 
-import bulma from "../../../style/bulma.js"
+import Heading         from "./Heading"
+import EditableHeading from "./EditableHeading"
+
+import style from "../../../style/Title.scss"
 
 const Title = props => {
-    const {children, primary=false} = props
-    const size = primary ? 1 : (props.size || 5)
-    // Parse boolean strings for primary prop
-    const primaryBool =
-        typeof(primary) === "string" ? primary === "true" : primary
+    const {
+        leftLabel, editable
+    } = props
 
-    if(primaryBool)
-        return <h1 onClick={props.onClick} className={bulma.title}>{children}</h1>
-    else
-        return <h3 onClick={props.onClick} className={`${bulma.title} ${bulma[`is_${size}`]} ${bulma.is_spaced}`}>
-            {children}
-        </h3>
+    return <div className={style.wrapper}>
+        <div className={style.leftLabel}>
+            {typeof(leftLabel) === "string" ?
+                <span>{leftLabel}</span>    :
+                leftLabel
+            }
+        </div>
+        {editable ? <EditableHeading size="2" {...props}/> :
+                    <Heading         size="2" {...props}/>
+        }
+    </div>
 }
 
 Title.displayName = "Title"
-
 export default Title

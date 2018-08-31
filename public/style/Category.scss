@@ -1,0 +1,36 @@
+@import "./variables";
+
+.wrapper {
+    border-left: solid 1px $grey;
+    padding-left: 1px;
+}
+
+.wrapper:hover {
+    border-left: solid 2px $primary;
+    padding-left: 0px;
+}
+
+.items {
+    padding-left: 1em;
+    padding-bottom: 1em;
+}
+
+.item {
+    padding-top: 0.25em;
+}
+
+.child {
+    padding-left: 1em;
+}
+
+.itemActions {
+    float: right;
+}
+
+.titleBar {
+    padding-left: 1em;
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
+    border-bottom: solid 1px $grey-light;
+    margin-bottom: 0.5em;
+}

@@ -6,7 +6,7 @@ import {
 import Flexbox     from "./base/Flexbox"
 import CategoryNav from "../containers/CategoryNav"
 
-import Title       from "./base/Title"
+import Heading       from "./base/Heading"
 import Container   from "./base/Container"
 import Section     from "./base/Section"
 import Page        from "../containers/Page"
@@ -17,7 +17,7 @@ const Workspace = ({pages, inputTypes, elements, selection, setSelection}) => {
     const lastSelection = selection[selection.length-1]
 
     const workView      = (() => {
-        const def = <Title>Select an item from the left</Title>
+        const def = <Heading>Select an item from the left</Heading>
 
         if(!lastSelection) {
             return def

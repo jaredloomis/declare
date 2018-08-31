@@ -6,7 +6,7 @@ import Group             from "./base/Group"
 import Column            from "./base/Column"
 import Button            from "./base/Button"
 import FeatherIcon       from "./base/FeatherIcon"
-import EditableTitle     from "./base/EditableTitle"
+import EditableHeading     from "./base/EditableHeading"
 import PageSelect        from "../containers/PageSelect"
 import InputTypeSelect   from "../containers/InputTypeSelect"
 import ElementSelect     from "../containers/ElementSelect"
@@ -83,9 +83,9 @@ const Category = props => {
     )
 
     return <div>
-        <EditableTitle size="4" onChange={onNameChange}>
+        <EditableHeading size="4" onChange={onNameChange}>
             {name}
-        </EditableTitle>
+        </EditableHeading>
         {itemsDOM}
         <Group>
             <Button type="info" onClick={onItemAdd}>+ Add Item to Category</Button>

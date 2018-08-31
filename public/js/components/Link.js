@@ -2,7 +2,7 @@ import React, {Component} from "react"
 
 import Button        from "./base/Button"
 import Select        from "./base/Select"
-import Title         from "./base/Title"
+import Heading         from "./base/Heading"
 import Action        from "./Action"
 import ActionList    from "./ActionList"
 import PageSelect    from "../containers/PageSelect"
@@ -32,10 +32,10 @@ export default class Link extends Component {
         const destID   = this.props.defaultValue.destination
         const dest     = this.props.pages[destID]
         const destName = dest ? dest.name : ""
-        return <div className={bulma.box}>
+        return <div>
             <div className={`${bulma.columns} ${style.linkHeader}`}>
                 <div className={`${bulma.column} ${bulma.is_three_quarters}`}>
-                    <Title>Link To: {destName}</Title>
+                    <Heading>Link To: {destName}</Heading>
                 </div>
                 <div className={bulma.column}>
                     <Button type="danger outlined" onClick={this.props.onRemove}>

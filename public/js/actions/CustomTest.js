@@ -100,6 +100,8 @@ export const createCustomTest = (pageID: string, customTestInput: any) => async 
             message: `Couldn't create custom test. ${error.message}`
         })
     }
+
+    return customTest
 }
 
 export const saveCustomTest = (testID: string) => async (dispatch: Func, getState: Func) => {

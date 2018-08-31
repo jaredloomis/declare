@@ -7,7 +7,7 @@ import {
 } from "recompose"
 
 import bulma from "../../../style/bulma"
-import style from "../../../style/TextInput.scss"
+import style from "../../../style/TextInput2.scss"
 
 const TextInputBase = props => {
     // Extract props
@@ -45,11 +45,12 @@ const TextInputBase = props => {
     }
 
     return <div className={style.textInput}>
-        <label className={labelActive ? style.activeLabel : ""} onClick={labelClick}>
+        {/*<label className={labelActive ? style.activeLabel : ""} onClick={labelClick}>
             {label}
-        </label>
-        <input type="text" className={bulma.input} defaultValue={defaultValue}
-            onFocus={focus} onBlur={unfocus} onChange={change} id={randID}/>
+        </label>*/}
+        <input type="text" className={/*bulma.input*/ null} defaultValue={defaultValue}
+            onFocus={focus} onBlur={unfocus} onChange={change} id={randID}
+            placeholder={label}/>
     </div>
 }
 

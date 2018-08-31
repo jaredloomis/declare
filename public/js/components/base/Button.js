@@ -4,7 +4,7 @@ import bulma from "../../../style/bulma"
 import style from "../../../style/Button.scss"
 
 const Button = ({onClick, children, color, type, inline}) => {
-    const klass = `${bulma.button} ${typeToClasses(type)} ${typeToClasses(color)} ${inline ? style.inlineInputButton : ""}`
+    const klass = `${bulma.button} ${typeToClasses(type)} ${typeToClasses(color)}`
     return <button onClick={onClick} className={klass}>
         {children}
     </button>

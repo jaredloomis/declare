@@ -1,7 +1,7 @@
 import React            from "react"
 import {setDisplayName} from "recompose"
 
-import Title            from "./base/Title"
+import Heading            from "./base/Heading"
 import Box              from "./base/Box"
 import Panel            from "./base/Panel"
 import PageLink         from "../containers/PageLink"
@@ -25,19 +25,19 @@ const Product = props => {
     )
 
     return <div>
-        <Title size="2">{name}</Title>
+        <Heading size="2">{name}</Heading>
         <Box>
-            <Title size="3">Pages</Title>
+            <Heading size="3">Pages</Heading>
             {pageList}
             <CategoryAdd itemRef="page" onCreate={props.onCategoryCreate}/>
         </Box>
         <Box>
-            <Title size="3">Elements</Title>
+            <Heading size="3">Elements</Heading>
             {elementList}
             <CategoryAdd itemRef="element" onCreate={props.onCategoryCreate}/>
         </Box>
         <Box>
-            <Title size="3">Input Types</Title>
+            <Heading size="3">Input Types</Heading>
             {inputTypeList}
             <CategoryAdd itemRef="inputType" onCreate={props.onCategoryCreate}/>
         </Box>

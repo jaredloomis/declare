@@ -7,7 +7,7 @@ import TextInput from "./base/TextInput"
 import Button    from "./base/Button"
 import Select    from "./base/Select"
 import Group     from "./base/Group"
-import EditableTitle from "./base/EditableTitle"
+import EditableHeading from "./base/EditableHeading"
 
 import bulma from "../../style/bulma.js"
 
@@ -96,8 +96,8 @@ const InputTypeBase = props => {
 
     // Render outline
     return <div>
-        <EditableTitle size="5" onChange={onNameChange}>{name}</EditableTitle>
-        {/*<Title size="5">{name}</Title>*/}
+        <EditableHeading size="5" onChange={onNameChange}>{name}</EditableHeading>
+        {/*<Heading size="5">{name}</Heading>*/}
         <div className={bulma.field}>
             {constraintElems}
         </div>

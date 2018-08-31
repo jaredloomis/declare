@@ -7,6 +7,7 @@ import Column        from "./base/Column"
 import Button        from "./base/Button"
 import Select        from "./base/Select"
 import TextInput     from "./base/TextInput"
+import Code          from "./base/Code"
 import ElementQuickSelect from "../containers/ElementQuickSelect"
 import PageSelect    from "../containers/PageSelect"
 import {deepSet}     from "../lib/Deep"
@@ -35,62 +36,39 @@ const Action = ({onChange, onRemove, productID, actionType, values={}, setAction
         }
 
         if(actionType === actionTypes.CLICK) {
-            return <ClickAction {...props}/>
-        } else if(actionType === actionTypes.ASSERT_ELEMENT_CONTAINS) {
-            return <AssertElementContainsAction {...props}/>
+            return <ClickActionDesc {...props}/>
+        }/* else if(actionType === actionTypes.ASSERT_ELEMENT_CONTAINS) {
+            return <AssertElementContainsActionDesc {...props}/>
         } else if(actionType === actionTypes.EXTRACT_FROM_ELEMENT) {
-            return <ExtractElementTextAction {...props}/>
+            return <ExtractElementTextActionDesc {...props}/>
         } else if(actionType === actionTypes.ASSERT_JS_TRUE) {
-            return <AssertJsAction {...props}/>
+            return <AssertJsActionDesc {...props}/>
         } else if(actionType === actionTypes.EXTRACT_FROM_JS) {
-            return <ExtractJsAction {...props}/>
+            return <ExtractJsActionDesc {...props}/>
         } else if(actionType === actionTypes.NAVIGATE_TO_PAGE) {
-            return <NavigateAction {...props}/>
+            return <NavigateActionDesc {...props}/>
         } else if(actionType === actionTypes.SEND_INPUT) {
-            return <SendInputAction {...props}/>
+            return <SendInputActionDesc {...props}/>
         } else if(actionType === actionTypes.SLEEP) {
-            return <SleepAction {...props}/>
+            return <SleepActionDesc {...props}/>
         } else if(actionType === actionTypes.GO_TO_URL) {
-            return <GoToUrlAction {...props}/>
-        } else {
+            return <GoToUrlActionDesc {...props}/>
+        }*/ else {
             return <span/>
         }
     })()
 
     return <Row>
-        <Column size="3">
-        <Select label="Action" onChange={tyChange} defaultValue={actionType}>
-            <span value={actionTypes.CLICK}>Click</span>
-            <span value={actionTypes.ASSERT_ELEMENT_CONTAINS}>Assert Element Contains</span>
-            <span value={actionTypes.EXTRACT_FROM_ELEMENT}>Extract From Element</span>
-            <span value={actionTypes.ASSERT_JS_TRUE}>Assert JavaScript Returns true</span>
-            <span value={actionTypes.EXTRACT_FROM_JS}>Extract From JavaScript</span>
-            <span value={actionTypes.NAVIGATE_TO_PAGE}>Navigate to Page</span>
-            <span value={actionTypes.SEND_INPUT}>Send Input</span>
-            <span value={actionTypes.SLEEP}>Sleep</span>
-            <span value={actionTypes.GO_TO_URL}>Go to URL</span>
-        </Select>
-        </Column>
-        <Column size="7">
-            <Row>
-                {actionSpecificValues}
-            </Row>
-        </Column>
-        <Column size="2">
-        <Button inline={true} type="danger outlined" onClick={onRemove}>
-            <i className="material-icons">delete</i>
-        </Button>
+        <Column>
+            {actionSpecificValues}
         </Column>
     </Row>
 }
 
-const ClickAction = ({productID, values, onValueChange}) =>
-    <Column>
-        <ElementQuickSelect
-            productID={productID}
-            defaultValue={values && values.element}
-            onChange={onValueChange(["element"])}/>
-    </Column>
+const ClickActionDesc = ({productID, values, onValueChange}) =>
+    <span>
+        Click <Code>values.element</Code>
+    </span>
 
 const AssertElementContainsAction = ({productID, values, onValueChange}) => [
     <Column size="5" key="0">

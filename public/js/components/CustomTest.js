@@ -6,7 +6,7 @@ import {
 import Group         from "./base/Group"
 import Button        from "./base/Button"
 import Sep           from "./base/Sep"
-import EditableTitle from "./base/EditableTitle"
+import EditableHeading from "./base/EditableHeading"
 import SplitRow      from "./base/SplitRow"
 import FeatherIcon   from "./base/FeatherIcon"
 import ActionList    from "./ActionList"
@@ -30,7 +30,7 @@ const CustomTest = props => {
 
     return <div>
         <SplitRow>
-            <EditableTitle size="4" onChange={onNameChange}>{name}</EditableTitle>
+            <EditableHeading size="4" onChange={onNameChange}>{name}</EditableHeading>
             <Group>
                 <Button type="danger outlined" onClick={onRemove}>
                     <FeatherIcon icon="trash"/>
