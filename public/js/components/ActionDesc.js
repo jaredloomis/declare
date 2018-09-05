@@ -80,7 +80,7 @@ const ExtractJsDesc = ({values}) =>
 
 const NavigateDesc = ({values, pages}) =>
     <span>
-        Navigate to <CodeInline>{pages[values.page]}</CodeInline>
+        Navigate to <CodeInline>{pages[values.page] && pages[values.page].name}</CodeInline>
     </span>
 
 const SendInputDesc = ({values, elements}) => {

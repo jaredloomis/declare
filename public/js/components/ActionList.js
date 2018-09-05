@@ -1,23 +1,37 @@
 import React from "react"
-import {withState, setDisplayName, compose, withPropsOnChange} from "recompose"
+import {withState, setDisplayName, compose, withProps} from "recompose"
 
 import Button     from "./base/Button"
 import Action     from "./Action"
 import generateID from "../lib/ID"
 
 const ActionList = ({actions, productID, actionKeys, setActionKeys, onAdd, onRemove, onChange, onInsert}) => {
+    const updateActionKeys = () => {
+        if(actionKeys.length === actions.length)
+            return null
+
+        const newActionKeys = actionKeys
+        while(newActionKeys.length < actions.length)
+            newActionKeys.push(generateID())
+        while(newActionKeys.length > actions.length)
+            newActionKeys.push(generateID())
+    }
     const add    = () => {
         onAdd()
+        updateActionKeys()
         setActionKeys([...actionKeys, generateID()])
     }
-    const remove = index => {
+    const remove = index => () => {
         onRemove(index)
+        updateActionKeys()
         setActionKeys(actionKeys.filter((key, i) => i !== index))
     }
     const change = index => action => {
+        updateActionKeys()
         onChange(index)(action)
     }
     const insert = index => {
+        updateActionKeys()
         onInsert(index)
 
         const newActionKeys = []
@@ -37,7 +51,7 @@ const ActionList = ({actions, productID, actionKeys, setActionKeys, onAdd, onRem
                 <Action {...action}
                     productID={productID}
                     onChange={change(actionI)}
-                    onRemove={() => remove(actionI)}/>
+                    onRemove={remove(actionI)}/>
             </div>
         )}
         <Button onClick={add} type="info">+</Button>
@@ -45,17 +59,20 @@ const ActionList = ({actions, productID, actionKeys, setActionKeys, onAdd, onRem
 }
 
 const enhance = compose(
-    withState("actionKeys", "setActionKeys"),
-    withPropsOnChange(["actions"], props => {
+    withState("actionKeys", "setActionKeys", []),
+    /*
+    withProps(props => {
         if(props.actionKeys && props.actionKeys.length) {
+            console.log("NUL")
             return {
                 actionKeys: props.actionKeys
             }
         }
         return {
-            actionKeys: props.actions && props.actions.map(action => generateID())
+            actionKeys: props.actions ? props.actions.map(action => generateID()) : []
         }
     }),
+    */
     setDisplayName("ActionList")
 )
 

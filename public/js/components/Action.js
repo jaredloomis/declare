@@ -7,6 +7,7 @@ import Column        from "./base/Column"
 import Button        from "./base/Button"
 import Select        from "./base/Select"
 import TextInput     from "./base/TextInput"
+import FeatherIcon   from "./base/FeatherIcon"
 import ElementQuickSelect from "../containers/ElementQuickSelect"
 import PageSelect    from "../containers/PageSelect"
 import {deepSet}     from "../lib/Deep"
@@ -78,7 +79,7 @@ const Action = ({onChange, onRemove, productID, actionType, values={}, setAction
         </Column>
         <Column size="2">
         <Button inline={true} type="danger outlined" onClick={onRemove}>
-            <i className="material-icons">delete</i>
+            <FeatherIcon icon="trash-2"/>
         </Button>
         </Column>
     </Row>
@@ -140,10 +141,11 @@ const ExtractJsAction = ({values, onValueChange}) => [
     </Column>
 ]
 
-const NavigateAction = ({values, onValueChange}) =>
+const NavigateAction = ({productID, values, onValueChange}) =>
     <Column>
         <PageSelect defaultValue={values.page}
                     onChange={onValueChange(["page"])}
+                    productID={productID}
                     label="Destination"/>
     </Column>
 

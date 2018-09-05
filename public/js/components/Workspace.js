@@ -9,7 +9,7 @@ import CategoryNav from "../containers/CategoryNav"
 import Heading       from "./base/Heading"
 import Container   from "./base/Container"
 import Section     from "./base/Section"
-import Page        from "../containers/Page"
+import Page        from "../pages/Page"
 import Element     from "../containers/Element"
 import InputType   from "../containers/InputType"
 

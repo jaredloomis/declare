@@ -2,6 +2,7 @@
 import gql from "graphql-tag"
 import type {Func} from "../flow"
 import client from "../graphQL/Client"
+import {cacheExpired} from "../constants/cache"
 import {
     CATEGORY_FETCH, CATEGORY_CREATE, CATEGORY_SAVE,
     CATEGORY_ADD_ITEM, CATEGORY_UPDATE_ITEM, CATEGORY_REMOVE_ITEM,
@@ -44,7 +45,13 @@ export const fetchCategory = (categoryID: string) => async (dispatch: Func, getS
 }
 
 export const listCategories = async (dispatch: Func, getState: Func) => {
-    const token = getState().activeToken
+    const state = getState()
+
+    // Check if we should just use cache
+    if(!cacheExpired(state.meta.categories.lastList))
+        return state.elements
+
+    const token = state.activeToken
     const categoriesRes = await client(token).query({
         query: gql`
             query {

@@ -42,6 +42,8 @@ export const fetchCustomTest = (customTestID: string) => async (dispatch: Func, 
             message: `Couldn't fetch custom test. ${error.message}`
         })
     }
+
+    return customTest
 }
 
 export const listCustomTests = async (dispatch: Func, getState: Func) => {

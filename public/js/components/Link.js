@@ -1,7 +1,7 @@
 import React, {Component} from "react"
 
 import Button        from "./base/Button"
-import Select        from "./base/Select"
+import FeatherIcon   from "./base/FeatherIcon"
 import Heading         from "./base/Heading"
 import Action        from "./Action"
 import ActionList    from "./ActionList"
@@ -19,7 +19,7 @@ export default class Link extends Component {
         this.removeAction = this.removeAction.bind(this)
         this.changeDest   = this.changeDest.bind(this)
 
-        const inputKeys = this.props.defaultValue.navigation.map((n, i) =>
+        const inputKeys = this.props.defaultValue && this.props.defaultValue.navigation.map((n, i) =>
             this.generateKey(i)
         )
 
@@ -39,7 +39,7 @@ export default class Link extends Component {
                 </div>
                 <div className={bulma.column}>
                     <Button type="danger outlined" onClick={this.props.onRemove}>
-                        <i className="material-icons">delete</i>
+                        <FeatherIcon icon="trash-2"/>
                     </Button>
                 </div>
             </div>

@@ -2,6 +2,7 @@
 import gql from "graphql-tag"
 import type {Func} from "../flow"
 import client from "../graphQL/Client"
+import {cacheExpired} from "../constants/cache"
 import {
     ELEMENT_FETCH, ELEMENT_UPDATE, ELEMENT_LIST,
     ELEMENT_CREATE, ELEMENT_SAVE, ELEMENT_REMOVE,
@@ -40,7 +41,13 @@ export const fetchElement = (id: string) => async (dispatch: Func, getState: Fun
 }
 
 export const listElements = async (dispatch: Func, getState: Func) => {
-    const token = getState().activeToken
+    const state = getState()
+
+    // Check if we should just use cache
+    if(!cacheExpired(state.meta.elements.lastList))
+        return state.elements
+
+    const token = state.activeToken
     const elementsRes = await client(token).query({
         query: gql`{
                 elements {
@@ -64,6 +71,8 @@ export const listElements = async (dispatch: Func, getState: Func) => {
             message: error.message
         })
     }
+
+    return elements
 }
 
 export const updateElement = (id: string, element: any) => ({

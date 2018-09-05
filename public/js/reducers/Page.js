@@ -36,7 +36,12 @@ const defaultState = {
     reportBatches: {},
     environments: {},
     activeToken: getCookieValue("declare_token"),
-    error: null
+    error: null,
+    meta: {
+        pages: {},
+        elements: {},
+        categories: {}
+    }
 }
 
 const pagesReducer = (state=defaultState, action) => {
@@ -100,7 +105,7 @@ const pagesReducer = (state=defaultState, action) => {
     else if(action.type === PAGE_LIST) {
         const {pages} = action
         if(pages) {
-            return pages.reduce((st, page) => {
+            const st = pages.reduce((st, page) => {
                 const stPage = st.pages[page._id]
                 const newPage = !stPage ?
                     page :
@@ -109,6 +114,17 @@ const pagesReducer = (state=defaultState, action) => {
                 const ret = Object.assign({}, st, {pages: newPages})
                 return ret
             }, state)
+
+            return {
+                ...st,
+                meta: {
+                    ...st.meta,
+                    pages: {
+                        ...st.meta.pages,
+                        lastList: new Date()
+                    }
+                }
+            }
         } else {
             return state
         }

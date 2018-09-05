@@ -22,6 +22,13 @@ export default (state: any, action: any) => {
             categories: {
                 ...state.categories,
                 ...transformedCats
+            },
+            meta: {
+                ...state.meta,
+                categories: {
+                    ...state.meta.categories,
+                    lastList: new Date()
+                }
             }
         }
     } else if(action.type === CATEGORY_CREATE) {

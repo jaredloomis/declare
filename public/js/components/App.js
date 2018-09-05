@@ -10,7 +10,7 @@ import PageList            from "../containers/PageList"
 import InputTypeCategories from "../containers/InputTypeCategories"
 import ElementCategories   from "../containers/ElementCategories"
 import Nav                 from "../containers/Nav"
-import Page                from "../containers/Page"
+import Page                from "../pages/Page"
 import Element             from "../containers/Element"
 import InputType           from "../containers/InputType"
 import Elements            from "../containers/Elements"
@@ -27,6 +27,8 @@ import TestRun             from "../containers/TestRun"
 import TestRunList         from "../containers/TestRunList"
 import Environment         from "../containers/Environment"
 import EnvironmentList     from "../containers/EnvironmentList"
+import Link                from "../pages/Link"
+import CustomTest          from "../pages/CustomTest"
 
 // XXX Don't remove. Applies global style rules
 import style               from "../../style/App.scss"
@@ -52,11 +54,23 @@ const EnvironmentRoute = props => {
     return <Environment environmentID={props.match.params.environmentID} {...props}/>
 }
 
+const LinkRoute = props => {
+    return <Link pageID={props.match.params.pageID}
+                 linkI={parseInt(props.match.params.linkI)} {...props}/>
+}
+
+const CustomTestRoute = props => {
+    return <CustomTest customTestID={props.match.params.customTestID}/>
+}
+
 const App = () =>
     <ErrorBoundary>
         <Nav/>
         <Router history={createHistory()}>
             <Switch>
+                <Route path="/Page/:pageID/Link/:linkI" component={LinkRoute}/>
+                <Route path="/Test/:customTestID" component={CustomTestRoute}/>
+
                 <Route path="/" exact        component={Dashboard}/>
                 <Route path="/Pages"         component={PageList}/>
                 <Route path="/PagesRaw"      component={Pages}/>

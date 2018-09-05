@@ -43,6 +43,13 @@ export default (state: any, action: any) => {
             elements: {
                 ...state.elements,
                 ...elements
+            },
+            meta: {
+                ...state.meta,
+                elements: {
+                    ...state.meta.elements,
+                    lastList: new Date()
+                }
             }
         }
     } else if(action.type === ELEMENT_CREATE) {

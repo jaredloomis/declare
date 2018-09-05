@@ -1,8 +1,12 @@
-import React, {Component} from "react"
+import React, {Component}   from "react"
+import {compose, lifecycle} from "recompose"
 
-import Heading        from "./base/Heading"
-import ActionDescList from "./ActionDescList"
-import withReduxState from "../containers/WithReduxState"
+import Heading           from "./base/Heading"
+import ActionDescList    from "./ActionDescList"
+import withReduxState    from "../containers/WithReduxState"
+import withReduxDispatch from "../containers/WithReduxDispatch"
+
+import {listElements}    from "../actions/Element"
 
 import bulma from "../../style/bulma"
 import style from "../../style/Link.scss"
@@ -37,6 +41,14 @@ class LinkDesc extends Component {
     }
 }
 
-const enhance = withReduxState(["pages"])
+const enhance = compose(
+    withReduxState(["pages"]),
+    withReduxDispatch({listElements}),
+    lifecycle({
+        componentDidMount() {
+            this.props.listElements()
+        }
+    })
+)
 
 export default enhance(LinkDesc)
