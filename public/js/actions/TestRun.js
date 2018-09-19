@@ -67,6 +67,8 @@ export const listTestRuns = async (dispatch, getState) => {
         type: TEST_RUN_LIST,
         testRuns
     })
+
+    return testRuns
 }
 
 export const createTestRun = testRun => async (dispatch, getState) => {

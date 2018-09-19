@@ -2,7 +2,8 @@ import React, {Component} from "react"
 
 import Button        from "./base/Button"
 import FeatherIcon   from "./base/FeatherIcon"
-import Heading         from "./base/Heading"
+import Heading       from "./base/Heading"
+import Flexbox       from "./base/Flexbox"
 import Action        from "./Action"
 import ActionList    from "./ActionList"
 import PageSelect    from "../containers/PageSelect"
@@ -31,11 +32,14 @@ export default class Link extends Component {
     render() {
         const destID   = this.props.defaultValue.destination
         const dest     = this.props.pages[destID]
-        const destName = dest ? dest.name : ""
         return <div>
             <div className={`${bulma.columns} ${style.linkHeader}`}>
                 <div className={`${bulma.column} ${bulma.is_three_quarters}`}>
-                    <Heading>Link To: {destName}</Heading>
+                    <Flexbox>
+                        <Heading>Link To: </Heading>
+                        <PageSelect productID={this.props.productID}
+                            onChange={this.changeDest} defaultValue={destID}/>
+                    </Flexbox>
                 </div>
                 <div className={bulma.column}>
                     <Button type="danger outlined" onClick={this.props.onRemove}>
@@ -43,27 +47,7 @@ export default class Link extends Component {
                     </Button>
                 </div>
             </div>
-            <div className={bulma.columns}>
-                <div className={`${bulma.column} ${bulma.is_one_quarter}`}>
-                <PageSelect productID={this.props.productID}
-                        onChange={this.changeDest} defaultValue={destID}/>
-                {/*
-                <Select label="Destination" onChange={this.changeDest}
-                        defaultValue={destID}>
-                    {Object.keys(this.props.pages).map(pageID =>
-                        <span value={pageID} key={pageID}>
-                            {this.props.pages[pageID].name}
-                        </span>
-                    )}
-                </Select>
-                */}
-                </div>
-                <div className={`${bulma.column} ${bulma.is_primary} ${style.linkActions}`}>
-                    {this.renderActionList()/*this.props.defaultValue.navigation.map(
-                        this.renderAction
-                    )*/}
-                </div>
-            </div>
+            {this.renderActionList()}
         </div>
     }
 

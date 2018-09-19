@@ -6,6 +6,7 @@ import {
 import Button            from "../components/base/Button"
 import TextInput         from "../components/base/TextInput"
 import AddonsField       from "../components/base/AddonsField"
+import EnvironmentSelect from "./EnvironmentSelect"
 import withReduxDispatch from "./WithReduxDispatch"
 
 import {createTestRun} from "../actions/TestRun"
@@ -13,7 +14,7 @@ import {createTestRun} from "../actions/TestRun"
 const TestRunAdd = props => {
     const create = () => {
         props.createTestRun(props.input).then(
-            props.onCreate
+            props.onCreate || (() => {})
         )
     }
 
@@ -27,6 +28,7 @@ const TestRunAdd = props => {
     return <AddonsField>
         <TextInput label="Name" defaultValue={props.input.name}
                    onChange={inputChange("name")}/>
+        <EnvironmentSelect onChange={inputChange("environment")}/>
         <Button onClick={create} inline type="info">
             Create Test Run
         </Button>

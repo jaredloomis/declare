@@ -96,6 +96,7 @@ export default {
                     name
                     pageID packID
                     summary
+                    startTime
                     steps {
                         status time message data children
                     }
@@ -109,6 +110,7 @@ export default {
                     name
                     pageID packID
                     summary
+                    startTime
                     steps {
                         status time message data children
                     }
@@ -301,6 +303,7 @@ export default {
                     _id
                     name
                     description
+                    reportBatches
                     owner
                 }
                 error
@@ -311,6 +314,7 @@ export default {
                     _id
                     name
                     description
+                    reportBatches
                     owner
                 }
                 error
@@ -323,6 +327,8 @@ export default {
                     _id
                     testRun
                     reports
+                    startTime
+                    passPercentage
                     owner
                 }
                 error

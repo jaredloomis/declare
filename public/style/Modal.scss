@@ -17,9 +17,11 @@
     padding: 3em;
 }
 
-.topBar {
-}
-
 .bottomBar {
     border-top: 1px solid $grey-light;
+}
+
+.topBar {
+    padding: 5px;
+    border-bottom: 1px solid $grey-light;
 }

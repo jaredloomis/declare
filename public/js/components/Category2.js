@@ -6,8 +6,7 @@ import Group             from "./base/Group"
 import Column            from "./base/Column"
 import Button            from "./base/Button"
 import FeatherIcon       from "./base/FeatherIcon"
-import EditableHeading     from "./base/EditableHeading"
-import PageSelect        from "../containers/PageSelect"
+import EditableHeading   from "./base/EditableHeading"
 import InputTypeSelect   from "../containers/InputTypeSelect"
 import ElementSelect     from "../containers/ElementSelect"
 import CategoryContainer from "../containers/Category"
@@ -18,25 +17,28 @@ const Category = props => {
     const {
         _id, parent, name, items=[], itemRef, children=[],
         productID, onNameChange,
+        onItemSelect,
         onItemAdd, onItemChange, onItemRemove, onChildAdd, onRemove,
-        onView,
         store
     } = props
 
     // Rendering
     const itemsDOM = items.map((item, i) => {
         const key = item ? item+i : i
-        if(itemRef.toLowerCase() === "page") {
+        const ref = itemRef.toLowerCase()
+        const rootURL = ref === "inputtype" ? "#/InputType/" :
+                        ref === "element"   ? "#/Element/"   :
+                                              "#/Page/"
+        //if(itemRef.toLowerCase() === "page") {
             return <Row key={key}>
                 <Column size="10">
-                    <Link to={`#/Page/${item}`}>
+                    <Link onClick={() => onItemSelect(item)}>
                         {(store && store[item] && store[item].name) || "Loading..."}
                     </Link>
                     {/*
-                    <PageSelect productID={productID}
-                            defaultValue={item} key={key}
-                            onChange={newItem => onItemChange(i, newItem)}/>
-                            */}
+                    <Link to={`${rootURL}${item}`}>
+                        {(store && store[item] && store[item].name) || "Loading..."}
+                    </Link>*/}
                 </Column>
                 <Column size="2">
                     <Button type="danger" onClick={() => onItemRemove(i)}>
@@ -44,7 +46,7 @@ const Category = props => {
                     </Button>
                 </Column>
             </Row>
-        } else if(itemRef.toLowerCase() === "inputtype") {
+            /*} else if(itemRef.toLowerCase() === "inputtype") {
             return <Row key={key}>
                 <Column size="8">
                     <InputTypeSelect productID={productID}
@@ -78,7 +80,7 @@ const Category = props => {
             </Row>
         } else {
             return <span key={key}>Unknown itemRef! {itemRef}</span>
-        }
+        }*/
     }).map((dom, i) =>
         <div className={style.item} key={items[i] || i}>{dom}</div>
     )

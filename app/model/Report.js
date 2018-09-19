@@ -8,6 +8,7 @@ import createType  from "mongoose-schema-to-graphql"
 
 import encodeVideo           from "../common/encodeVideo"
 import {retrieveAsset, storeAsset} from "../access/Asset"
+import {Status} from "../worker/executor/Report"
 
 const ObjectId = mongoose.Schema.Types.ObjectId
 
@@ -82,6 +83,14 @@ reportSchema.statics.graphQL = createType({
         }))}
     }
 })
+
+reportSchema.methods.status = function() {
+    for(let i = this.steps.length-1; i >= 0; --i) {
+        const status = this.steps[i].status
+        if(status === Status.PASS || status === Status.FAIL)
+            return status
+    }
+}
 
 reportSchema.methods.generateVideo = async function() {
     // Collect screenshots from report

@@ -1,9 +1,12 @@
 import mongoose from "mongoose"
 import {
     GraphQLObjectType, GraphQLNonNull, GraphQLString, GraphQLID,
-    GraphQLList, GraphQLInputObjectType
+    GraphQLList, GraphQLInputObjectType, GraphQLFloat
 } from "graphql"
 import GraphQLJSON from "graphql-type-json"
+
+import ReportBatch from "./ReportBatch"
+import {Status}    from "../worker/executor/Report"
 
 const ObjectId = mongoose.Schema.Types.ObjectId
 

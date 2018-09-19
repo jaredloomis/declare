@@ -6,7 +6,6 @@ cache:
 
 stages:
     - build
-    - test
 
 build_job:
     stage: build
@@ -15,12 +14,3 @@ build_job:
         - cd public
         - npm install
         - cd ..
-
-test_job:
-    stage: test
-    script:
-        - npm install
-        - cd public
-        - npm install
-        - cd ..
-        - ./node_modules/mocha/bin/mocha dist/app/tests

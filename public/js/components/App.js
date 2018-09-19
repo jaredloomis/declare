@@ -6,14 +6,14 @@ import createHistory from "history/createHashHistory"
 
 import Dashboard           from "./Dashboard"
 import PageCategories      from "../containers/PageCategories"
-import PageList            from "../containers/PageList"
+import PageList            from "../pages/PageList"
 import InputTypeCategories from "../containers/InputTypeCategories"
 import ElementCategories   from "../containers/ElementCategories"
 import Nav                 from "../containers/Nav"
 import Page                from "../pages/Page"
 import Element             from "../containers/Element"
 import InputType           from "../containers/InputType"
-import Elements            from "../containers/Elements"
+import ElementList         from "../pages/ElementList"
 import InputTypes          from "../containers/InputTypes"
 import Pages               from "../containers/Pages"
 import SignIn              from "../containers/SignIn"
@@ -24,7 +24,7 @@ import Workspace           from "../containers/Workspace"
 import ProductList         from "../containers/ProductList"
 import Product             from "../containers/Product"
 import TestRun             from "../containers/TestRun"
-import TestRunList         from "../containers/TestRunList"
+import TestRunList         from "../pages/TestRunList"
 import Environment         from "../containers/Environment"
 import EnvironmentList     from "../containers/EnvironmentList"
 import Link                from "../pages/Link"
@@ -74,8 +74,7 @@ const App = () =>
                 <Route path="/" exact        component={Dashboard}/>
                 <Route path="/Pages"         component={PageList}/>
                 <Route path="/PagesRaw"      component={Pages}/>
-                <Route path="/Elements"      component={ElementCategories}/>
-                <Route path="/ElementsRaw"   component={Elements}/>
+                <Route path="/Elements"      component={ElementList}/>
                 <Route path="/InputTypes"    component={InputTypeCategories}/>
                 <Route path="/InputTypesRaw" component={InputTypes}/>
                 <Route path="/Page/:pageID"  component={PageRoute}/>

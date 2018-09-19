@@ -3,8 +3,12 @@ import React from "react"
 import bulma from "../../../style/bulma"
 import style from "../../../style/Button.scss"
 
-const Button = ({onClick, children, color, type, inline}) => {
+const Button = ({onClick, children, color, type, inline, to}) => {
     const klass = `${bulma.button} ${typeToClasses(type)} ${typeToClasses(color)}`
+
+    if(!onClick && to)
+        onClick = () => window.location.href = to
+
     return <button onClick={onClick} className={klass}>
         {children}
     </button>

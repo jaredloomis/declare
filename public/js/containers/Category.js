@@ -3,7 +3,9 @@ import {
     lifecycle, compose, setDisplayName, withState
 } from "recompose"
 
+import Heading           from "../components/base/Heading"
 import Modal             from "../components/base/Modal"
+import Box               from "../components/base/Box"
 import CategoryComponent from "../components/Category2"
 import {
     fetchCategory, saveCategory, addItemToCategory,
@@ -12,6 +14,7 @@ import {
 } from "../actions/Category"
 import PageAddOrSelect           from "./PageAddOrSelect"
 import ElementAdd        from "./ElementAdd"
+import Element           from "./Element"
 import InputTypeAdd      from "./InputTypeAdd"
 import CategoryCreate    from "./CategoryCreate"
 import withReduxState    from "./WithReduxState"
@@ -19,7 +22,7 @@ import withReduxDispatch from "./WithReduxDispatch"
 
 const CategoryBase = props => {
     const {categories, categoryID, productID,
-           isAdding, setAdding} = props
+           modal, setModal} = props
     const category = categories[categoryID]
     const itemRef  = category && category.itemRef.toLowerCase()
 
@@ -31,10 +34,10 @@ const CategoryBase = props => {
         save()
     }
     const itemAdd    = ()   => {
-        setAdding("item")
+        setModal({type: "itemadd"})
     }
     const childAdd   = ()   => {
-        setAdding("category")
+        setModal({type: "categoryadd"})
     }
     const itemChange = (i, item) => {
         // TODO buffer changes or something
@@ -56,28 +59,56 @@ const CategoryBase = props => {
     const remove = () => {
         props.removeCategory(categoryID)
     }
-    const adderClose = () => {
-        setAdding(null)
+    const modalClose = () => {
+        setModal({type: null})
     }
     const onItemCreated = item => {
         props.addItemToCategory(categoryID, item._id)
         save()
-        adderClose()
+        modalClose()
     }
     const onItemSelected = itemID => {
         props.addItemToCategory(categoryID, itemID)
         save()
-        adderClose()
+        modalClose()
     }
     const viewItem = itemID => {
-        window.location.hash =
-            itemRef === "page"      ? `/Page/${itemID}`      :
-            itemRef === "element"   ? `/Element/${itemID}`   :
-            itemRef === "inputtype" ? `/InputType/${itemID}` :
-            window.location.hash
+        if(itemRef === "page")
+            window.location.hash = `/Page/${itemID}`
+        else {
+            setModal({type: `${itemRef}view`, itemID})
+        }
     }
+    const store =
+        itemRef === "element"   ? props.elements  :
+        itemRef === "inputtype" ? props.inputType :
+                                  props.pages
 
-    // Render
+    const modalContents = (() => {
+        if(modal.type === "itemadd") {
+            return <div>
+                <Heading>Add Item</Heading>
+                {itemRef === "page"        ?
+                <PageAddOrSelect productID={productID} onCreate={onItemCreated} onSelect={onItemSelected}/> :
+                   itemRef === "element"   ?
+                <ElementAdd      productID={productID} onCreate={onItemCreated}/> :
+                   itemRef === "inputtype" ?
+                <InputTypeAdd    productID={productID} onCreate={onItemCreated}/> :
+                <span>Unknown itemRef {itemRef}</span>}
+            </div>
+        } else if(modal.type === "categoryadd") {
+            return <div>
+                <Heading>Create Category</Heading>
+                <CategoryCreate parent={categoryID} itemRef={category.itemRef} onCreate={modalClose}/>
+            </div>
+        } else if(modal.type === "elementview") {
+            return <div>
+                <Heading>Edit Element</Heading>
+                <Element elementID={modal.itemID}/>
+            </div>
+        }
+    })()
+
     return <div>
         <CategoryComponent {...category}
                 onNameChange={nameChange}
@@ -86,17 +117,13 @@ const CategoryBase = props => {
                 onItemRemove={itemRemove}
                 onChildAdd={childAdd}
                 onRemove={remove}
-                onView={viewItem}
+                onItemSelect={viewItem}
                 productID={productID}
-                store={props.pages}/>
-        <Modal type="info" onClose={adderClose} active={isAdding === "item"}>{
-            itemRef === "page"      ? <PageAddOrSelect productID={productID} onCreate={onItemCreated} onSelect={onItemSelected}/> :
-            itemRef === "element"   ? <ElementAdd      productID={productID} onCreate={onItemCreated}/> :
-            itemRef === "inputtype" ? <InputTypeAdd    productID={productID} onCreate={onItemCreated}/> :
-            <span>Unknown itemRef {itemRef}</span>
-        }</Modal>
-        <Modal type="info" onClose={adderClose} active={isAdding === "category"}>
-            <CategoryCreate parent={categoryID} itemRef={category.itemRef} onCreate={adderClose}/>
+                store={store}/>
+        <Modal type="info" onClose={modalClose} active={modal.type}>
+            <Box>
+                {modalContents}
+            </Box>
         </Modal>
     </div>
 }
@@ -128,8 +155,8 @@ const enhance = compose(
             parameterized: removeCategory
         }
     }),
-    withReduxState(["categories", "pages"]),
-    withState("isAdding", "setAdding", null),
+    withReduxState(["categories", "pages", "elements", "inputTypes"]),
+    withState("modal", "setModal", {type: null}),
     lifecycle({
         componentDidMount() {
             if(!this.props.categories[this.props.categoryID])

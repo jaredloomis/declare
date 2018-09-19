@@ -5,6 +5,8 @@ import Button     from "./base/Button"
 import Action     from "./Action"
 import generateID from "../lib/ID"
 
+import style from "../../style/ActionList.scss"
+
 const ActionList = ({actions, productID, actionKeys, setActionKeys, onAdd, onRemove, onChange, onInsert}) => {
     const updateActionKeys = () => {
         if(actionKeys.length === actions.length)
@@ -46,7 +48,7 @@ const ActionList = ({actions, productID, actionKeys, setActionKeys, onAdd, onRem
 
     return <div>
         {actions && actions.map((action, actionI) =>
-            <div key={actionKeys[actionI] || actionI}>
+            <div className={style.action} key={actionKeys[actionI] || actionI}>
                 <Button type="small light" onClick={() => insert(actionI)}>Insert Step</Button>
                 <Action {...action}
                     productID={productID}

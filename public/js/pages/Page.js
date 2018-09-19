@@ -33,6 +33,7 @@ import TestPackSelect from "../containers/TestPackSelect"
 
 import bulma from "../../style/bulma.js"
 import style from "../../style/Page.scss"
+import styleUtil from "../../style/Utils.scss"
 
 const mapStateToProps = (state, ownProps) => {
     const props = state.pages ?
@@ -187,19 +188,20 @@ class Page extends Component {
 
             const topBar = (() => {
                 const ret = []
+
                 if(edit)
-                    ret.push(<Button onClick={() => this.setModal({...this.state.modal, type: edit})}>
+                    ret.push(<Button onClick={() => this.setModal({...this.state.modal, type: edit})} key="edit">
                         <FeatherIcon icon="edit"/>
                     </Button>)
                 else if(view)
-                    ret.push(<Button onClick={() => this.setModal({...this.state.modal, type: view})}>
+                    ret.push(<Button onClick={() => this.setModal({...this.state.modal, type: view})} key="view">
                         <FeatherIcon icon="eye"/>
                     </Button>)
 
                 if(url)
-                    ret.push(<A to={url}><FeatherIcon icon="external-link"/></A>)
+                    ret.push(<Button to={url}><FeatherIcon icon="external-link" key="link"/></Button>)
 
-                return ret
+                return <AddonsField>{ret}</AddonsField>
             })()
 
             return <Modal wide active={active} topBar={topBar} onClose={close} key={`${modal.type}-modal`}>

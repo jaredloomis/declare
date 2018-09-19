@@ -11,6 +11,9 @@ $roboto-font-path: "../node_modules/materialize-css/fonts/roboto/";
 @import "../node_modules/bulma/sass/utilities/initial-variables";
 
 // Override bulma vars here
+$primary: #242582;
+$info: #99738E;
+$danger: #F64C72;
 
 // Let bulma create more derived vars
 @import "../node_modules/bulma/sass/utilities/functions.sass";
