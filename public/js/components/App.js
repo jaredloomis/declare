@@ -23,8 +23,9 @@ import ErrorBoundary       from "../containers/ErrorBoundary"
 import Workspace           from "../containers/Workspace"
 import ProductList         from "../containers/ProductList"
 import Product             from "../containers/Product"
-import TestRun             from "../containers/TestRun"
+import TestRun             from "../pages/TestRun"
 import TestRunList         from "../pages/TestRunList"
+import ReportBatch         from "../pages/ReportBatch"
 import Environment         from "../containers/Environment"
 import EnvironmentList     from "../containers/EnvironmentList"
 import Link                from "../pages/Link"
@@ -45,23 +46,21 @@ const InputTypeRoute = props => {
 const ProductRoute = props => {
     return <Product productID={props.match.params.productID} {...props}/>
 }
-
 const TestRunRoute = props => {
     return <TestRun testRunID={props.match.params.testRunID} {...props}/>
 }
-
 const EnvironmentRoute = props => {
     return <Environment environmentID={props.match.params.environmentID} {...props}/>
 }
-
 const LinkRoute = props => {
     return <Link pageID={props.match.params.pageID}
                  linkI={parseInt(props.match.params.linkI)} {...props}/>
 }
-
 const CustomTestRoute = props => {
     return <CustomTest customTestID={props.match.params.customTestID}/>
 }
+const ReportBatchRoute = props =>
+    <ReportBatch batchID={props.match.params.batchID}/>
 
 const App = () =>
     <ErrorBoundary>
@@ -89,6 +88,7 @@ const App = () =>
                 <Route path="/TestRuns"      component={TestRunList}/>
                 <Route path="/Environment/:environmentID" component={EnvironmentRoute}/>
                 <Route path="/Environments"  component={EnvironmentList}/>
+                <Route path="/ReportBatch/:batchID" component={ReportBatchRoute}/>
             </Switch>
         </Router>
         <ErrorModal/>

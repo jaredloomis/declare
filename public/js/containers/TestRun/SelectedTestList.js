@@ -3,9 +3,8 @@ import {
     setDisplayName, lifecycle, compose
 } from "recompose"
 
-import Heading             from "../../components/base/Heading"
-import Row               from "../../components/base/Row"
-import Column            from "../../components/base/Column"
+import Heading           from "../../components/base/Heading"
+import List              from "../../components/base/List"
 import withReduxState    from "../WithReduxState"
 import withReduxDispatch from "../WithReduxDispatch"
 
@@ -15,21 +14,15 @@ import {TEST_TYPE}       from "../../../../common/TestRun"
 const SelectedTestList = ({tests, onDeselect, customTests}) => {
     return <div>
         <Heading>Selected Tests</Heading>
-        {tests.map((test, testI) => {
-            if(!test)
-                <Row key={testI}>
-                    <Column>Null Test!!!</Column>
-                </Row>
-            else if(test && test.testType === TEST_TYPE.CUSTOM_TEST)
-                return <Row key={test.customTestID} onClick={() => onDeselect(testI)}>
-                    <Column>
-                        {customTests[test.customTestID] && customTests[test.customTestID].name}
-                    </Column>
-                </Row>
-            else <Row key={testI}>
-                <Column>Unknown Test Type!!! {test.testType}</Column>
-            </Row>
-        })}
+        <List selectable onSelect={onDeselect}>
+            {tests.map(test => {
+                if(!test)
+                    return "Null Test!!!"
+                else if(test && test.testType === TEST_TYPE.CUSTOM_TEST)
+                    return customTests[test.customTestID] && customTests[test.customTestID].name
+                else `Unknown Test Type: ${test.testType}`
+            })}
+        </List>
     </div>
 }
 

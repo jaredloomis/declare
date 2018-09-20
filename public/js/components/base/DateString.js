@@ -3,8 +3,8 @@
 /**
  * Renders a date
  */
-const DateString = ({date}) => {
-    return new Date(date).toLocaleString()
+const DateString = ({date, children}) => {
+    return new Date(date || children).toLocaleString()
 }
 
 DateString.displayName = "DateString"

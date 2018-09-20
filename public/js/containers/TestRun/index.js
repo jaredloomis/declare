@@ -5,9 +5,15 @@ import {
     setDisplayName, withState, lifecycle, compose
 } from "recompose"
 
+import Row               from "../../components/base/Row"
+import Column            from "../../components/base/Column"
+import Heading           from "../../components/base/Heading"
+import Title             from "../../components/base/Title"
 import Box               from "../../components/base/Box"
 import Button            from "../../components/base/Button"
-import Panel             from "../../components/base/Panel"
+import List              from "../../components/base/List"
+import Link              from "../../components/base/Link"
+import DateString        from "../../components/base/DateString"
 import AddonsField       from "../../components/base/AddonsField"
 import SelectedTestList  from "./SelectedTestList"
 import withReduxState    from "../WithReduxState"
@@ -99,36 +105,57 @@ const TestRun = props => {
     const execute = () =>
         props.executeTestRun(testRunID)
 
-    const tabs = [{
-        title: "Custom Tests",
-        blocks: !customTests ? [] : Object.keys(customTests)
-            .filter(testID =>
-                computedSelectedTests.filter(test => test.customTestID === testID).length === 0
-            )
-            .map(testID =>
-                <span key={testID}>{customTests[testID].name}</span>
-            )
-    }]
-
     const rawBatches  = testRun.reportBatches || []
     const batchCount  = rawBatches.length
     const simpBatches = rawBatches.slice(batchCount-5, batchCount)
     simpBatches.reverse()
-    const batches = simpBatches.map(batchID =>
-        <ReportBatch batchID={batchID} key={batchID}/>
-    )
+    const batches = <List>
+        {simpBatches.map(batchID => {
+            const batch = props.reportBatches[batchID]
+            return <Link to={`#/ReportBatch/${batchID}`}>
+                {batch ? <DateString date={batch.startTime}/> : "Loading..."}
+            </Link>
+            //<ReportBatch batchID={batchID} key={batchID}/>
+        })}
+    </List>
 
     return <div>
-        <Box>
-            <SelectedTestList tests={computedSelectedTests} customTests={customTests}
-                onDeselect={deselectTest}/>
-        </Box>
-        <Panel title={testRun.name} tabs={tabs} onBlockClick={selectTest}/>
+        <Title leftLabel={<span><Link to="#/TestRuns">Test Runs</Link>/</span>}>
+            {testRun.name}
+        </Title>
+        <br/>
+        <Row>
+            <Column>
+                <Box>
+                    <SelectedTestList
+                        tests={computedSelectedTests}
+                        customTests={customTests}
+                        onDeselect={deselectTest}/>
+                </Box>
+            </Column>
+            <Column>
+                <Box>
+                <Heading>Test Library</Heading>
+                <List selectable search onSelect={selectTest}>
+                    {Object.keys(customTests)
+                        .filter(testID =>
+                            computedSelectedTests.filter(test =>
+                                test.customTestID === testID
+                            ).length === 0
+                        )
+                        .map(testID =>
+                            customTests[testID].name
+                        )}
+                </List>
+                </Box>
+            </Column>
+        </Row>
         <EnvironmentSelect onChange={changeEnvironment} defaultValue={testRun.environment}/>
         <AddonsField>
             <Button type="info"    onClick={save}>Save</Button>
             <Button type="primary" onClick={execute}>Execute</Button>
         </AddonsField>
+        <Heading>Previous Runs</Heading>
         {batches}
     </div>
 }
@@ -139,7 +166,7 @@ const enhance = compose(
         selectedTests:   [],
         deselectedTests: []
     }),
-    withReduxState(["testRuns", "customTests"]),
+    withReduxState(["testRuns", "customTests", "reportBatches"]),
     withReduxDispatch({
         fetchTestRun: {
             parameterized: fetchTestRun
