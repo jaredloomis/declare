@@ -6,16 +6,17 @@ import {
 import {listElements, createElement} from "../actions/Element"
 import {listCategories}        from "../actions/Category"
 
+import Heading                 from "../components/base/Heading"
 import Container               from "../components/base/Container"
 import Section                 from "../components/base/Section"
 import Row                     from "../components/base/Row"
 import Column                  from "../components/base/Column"
+import Box                     from "../components/base/Box"
 import Button                  from "../components/base/Button"
-import Heading                 from "../components/base/Heading"
 import FeatherIcon             from "../components/base/FeatherIcon"
 import Modal                   from "../components/base/Modal"
 import Category                from "../containers/Category"
-import ElementAdd                 from "../containers/ElementAdd"
+import CategoryCreate          from "../containers/CategoryCreate"
 
 import withReduxState          from "../containers/WithReduxState"
 import withReduxDispatch       from "../containers/WithReduxDispatch"
@@ -46,7 +47,11 @@ const ElementList = props => {
             <Category categoryID={categoryID} productID={productID} key={categoryID}/>
         )}
         <Modal active={props.createInProgress} onClose={closeModal}>
-            <ElementAdd productID={productID}/>
+            <Box>
+                <Heading>Create Category</Heading>
+                <CategoryCreate itemRef="element" onCreate={closeModal}/>
+            </Box>
+            {/*<ElementAdd productID={productID}/>*/}
         </Modal>
     </Container></Section>
 }
