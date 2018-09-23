@@ -185,4 +185,6 @@ export const fetchUser = id => async (dispatch, getState) => {
             message: `Couldn't fetch input type. ${error.message}`
         })
     }
+
+    return user
 }

@@ -27,7 +27,7 @@ const enhance = compose(
     }),
     lifecycle({
         componentDidMount() {
-            this.props.fetchUser(null/*this.props.tokens[this.props.activeToken].user*/)
+            this.props.fetchUser(null)
         }
     }),
     setDisplayName("NavContainer")
