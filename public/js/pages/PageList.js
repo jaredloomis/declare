@@ -49,7 +49,7 @@ const PageList = props => {
         <Modal active={props.createInProgress} onClose={closeModal}>
             <Box>
                 <Heading>Create Category</Heading>
-                <CategoryCreate itemRef={"page"} onCreate={closeModal}/>
+                <CategoryCreate itemRef="page" onCreate={closeModal}/>
             </Box>
         </Modal>
     </Container></Section>

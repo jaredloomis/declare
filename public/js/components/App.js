@@ -4,7 +4,7 @@ import {
 } from "react-router"
 import createHistory from "history/createHashHistory"
 
-import Dashboard           from "./Dashboard"
+import Dashboard           from "../pages/Dashboard"
 import PageCategories      from "../containers/PageCategories"
 import PageList            from "../pages/PageList"
 import InputTypeCategories from "../containers/InputTypeCategories"
