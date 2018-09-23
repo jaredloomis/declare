@@ -8,7 +8,7 @@ import {createToken} from "../actions/User"
 
 const SignInBase = props => {
     const createTokenU = authData => {
-        props.createToken(/* "5a54198ba3f45d732d9a130f" */ null, authData)
+        props.createToken(null, authData)
     }
     return <SignInComponent onSubmit={createTokenU}/>
 }

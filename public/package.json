@@ -52,7 +52,7 @@
   "scripts": {
     "prepublish": "./node_modules/webpack/bin/webpack.js",
     "dev": "webpack-dev-server --open --inline --hot",
-    "build": "npm run static && webpack",
+    "build": "npm run static && ./node_modules/webpack/bin/webpack.js",
     "static": "npm run html && npm run style && npm run headjs",
     "html": "mkdir -p dist/view && cp view/Main.html dist/view/Main.html",
     "style": "mkdir -p dist/style && ./node_modules/node-sass/bin/node-sass style/bulma.scss > dist/style/bulma.css",

@@ -1,5 +1,3 @@
-import mongoose from "mongoose"
-
 import Token   from "../model/Token"
 import Account from "../model/Account"
 import User    from "../model/User"
@@ -24,12 +22,12 @@ export default {
         } else {
             user = await User.findOne({email})
 
-            if(user.owner) {
-                accountModel = await Account.findById(user.owner)
-            } else {
-                accountModel = await Account.findOne({
-                    users: new mongoose.Types.ObjectId(user._id)
-                })
+            if(user) {
+                if(user.owner) {
+                    accountModel = await Account.findById(user.owner)
+                } else {
+                    accountModel = await Account.containingUser(user._id)
+                }
             }
         }
 
@@ -65,12 +63,7 @@ export default {
             account: accountModel._id,
             user:    user._id
         })
-        try {
         await tokenModel.save()
-        } catch(ex) {
-            console.log("caught ex", ex)
-            console.log(accountModel)
-        }
         return tokenModel
     }
 }

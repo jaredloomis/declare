@@ -74,6 +74,7 @@
     "eslint-plugin-flowtype": "^2.33.0",
     "eslint-plugin-react": "^6.9.0",
     "flow-bin": "^0.46.0",
+    "forever": "^0.15.3",
     "google-closure-compiler-js": "^20161201.0.0",
     "grunt-cli": "^1.2.0",
     "gulp": "^4.0.0",
