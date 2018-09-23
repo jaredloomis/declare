@@ -27,11 +27,11 @@ const ReportBatch = props => {
         return <span>Loading...</span>
     }
 
-    const tabs  = batch.reports.slice().reverse().map(id =>
+    const tabs  = batch.reports.map(id =>
         <span key={id}>{reports[id] ? reports[id].name : id}</span>
     )
 
-    return <VerticalTabs tabs={tabs} onTabSelect={setSelectedReport}>
+    return <VerticalTabs tabs={tabs} onTabSelect={setSelectedReport} activeItem={selectedReport}>
         <Report reportID={batch.reports[selectedReport]}/>
     </VerticalTabs>
 }

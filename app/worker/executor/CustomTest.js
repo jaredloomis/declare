@@ -48,7 +48,7 @@ export const executeCustomTest = async (customTest, options={}) => {
     runner.report.pageID = page._id
     runner.report.owner  = page.owner
     runner.report.name   =
-        options.executionName || `${customTest.name} @ ${runner.report.startTime}`
+        options.executionName || customTest.name
     // Add to database after generating video
     const reportModel = new Report(runner.report)
     await reportModel.generateVideo()

@@ -2,9 +2,12 @@ import React, {Component} from "react"
 import {connect}          from "react-redux"
 import {compose, withState, setDisplayName} from "recompose"
 
-import Heading                   from "../components/base/Heading"
+import {Status}                from "../constants/Report"
+import Heading                 from "../components/base/Heading"
 import Row                     from "../components/base/Row"
+import Tag                     from "../components/base/Tag"
 import Column                  from "../components/base/Column"
+import DateString              from "../components/base/DateString"
 import FeatherIcon             from "../components/base/FeatherIcon"
 import ReportScreenshot        from "../components/ReportScreenshot"
 import ReportDestructive       from "../components/ReportDestructive"
@@ -81,6 +84,14 @@ const ReportSummary = props => {
             props.testPacks[props.packID].internalID :
             null
 
+    const statusDOM = (() => {
+        const tagType =
+            props.status === Status.PASS ? "success" :
+            props.status === Status.FAIL ? "danger"  :
+                                           ""
+        return <Tag type={`medium ${tagType}`}>{props.status}</Tag>
+    })()
+
     const packDOM = internalID === internalIDs.screenshot  ?
                         <ReportScreenshot {...props}/>     :
                     internalID === internalIDs.destructive ?
@@ -93,13 +104,19 @@ const ReportSummary = props => {
                 <source src={props.assets[props.summary.video]} type="video/mp4"/>
             </video>
         } else {
-            return <span>No vid.</span>
+            return null
         }
     })()
 
         return <div>
+            <Row>
+                <Column>
+                    Status: {statusDOM}<br/>
+                    Start Time: <DateString date={props.startTime}/>
+                </Column>
+                <Column>{videoDOM}</Column>
+            </Row>
             {packDOM}
-            {videoDOM}
         </div>
 }
 
@@ -142,9 +159,11 @@ const Step = props => {
             <Column>
                 {message}
             </Column>
+            {/*
             <Column>
                 {data && data.screenshot && <Screenshot assetKey={data.screenshot}/>}
             </Column>
+            */}
         </Row>
         {childList}
     </li>

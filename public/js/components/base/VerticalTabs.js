@@ -11,10 +11,10 @@ import List   from "./List"
  * - children : Component
  *   What to render in main view
  */
-const VerticalTabs = ({tabs, onTabSelect, children}) => {
+const VerticalTabs = ({tabs, onTabSelect, children, ...props}) => {
     return <Row>
         <Column size="2">
-            <List selectable onSelect={onTabSelect}>{tabs}</List>
+            <List selectable onSelect={onTabSelect} {...props}>{tabs}</List>
         </Column>
         <Column>
             {children}

@@ -33,7 +33,7 @@ const List = props => {
         {searchBar}
         <div className={style.list}>
             {items.map((item, itemI) => {
-                const itemStyle = `${style.item} ${activeItem === itemI ? style.active : ""}
+                const itemStyle = `${style.item} ${itemI === activeItem ? style.active : ""}
                                    ${selectable ? style.selectable : ""}`
                 const selectableItem = <span className={itemStyle} onClick={() => onSelect(itemI)}>
                     {item}

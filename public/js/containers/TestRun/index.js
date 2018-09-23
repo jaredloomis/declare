@@ -8,6 +8,7 @@ import {
 import Row               from "../../components/base/Row"
 import Column            from "../../components/base/Column"
 import Heading           from "../../components/base/Heading"
+import Group             from "../../components/base/Group"
 import Title             from "../../components/base/Title"
 import Box               from "../../components/base/Box"
 import Button            from "../../components/base/Button"
@@ -55,33 +56,40 @@ const TestRun = props => {
         .concat(selectedTests)
         .filter(test => deselectedTests.indexOf(test) === -1)
 
-    const selectTest = (tabI, itemI) => {
-        if(tabI === 0) {
-            const testID = Object.keys(customTests)[itemI]
-            const test   = {
-                testType: TEST_TYPE.CUSTOM_TEST,
-                customTestID: testID
-            }
+    const unselectedTests = Object.keys(customTests)
+        .filter(testID =>
+            computedSelectedTests.filter(test =>
+                test.customTestID === testID
+            ).length === 0
+        )
 
-            const stateUpdate = {
-                ...state,
-                deselectedTests: deselectedTests.filter(item => item.customTestID !== testID)
-            }
-
-            if(testRun.tests.filter(item => item.customTestID === testID).length === 0) {
-                stateUpdate.selectedTests = selectedTests.concat([test])
-            }
-
-            setState(stateUpdate)
+    const selectTest = (itemI) => {
+        const testID = unselectedTests[itemI]
+        const test   = {
+            testType: TEST_TYPE.CUSTOM_TEST,
+            customTestID: testID
         }
+
+        const stateUpdate = {
+            ...state,
+            deselectedTests: deselectedTests.filter(item => item.customTestID !== testID)
+        }
+
+        if(testRun.tests.filter(item => item.customTestID === testID).length === 0) {
+            stateUpdate.selectedTests = selectedTests.concat([test])
+        }
+
+        setState(stateUpdate)
     }
 
-    const deselectTest = itemI =>
+    const deselectTest = itemI => {
+        const {customTestID} = computedSelectedTests[itemI]
         setState({
             ...state,
             deselectedTests: deselectedTests.concat([computedSelectedTests[itemI]]),
-            selectedTests: selectedTests.filter((item, i) => i !== itemI)
+            selectedTests: selectedTests.filter(item => item.customTestID !== customTestID)
         })
+    }
 
     const changeEnvironment = environmentID =>
         setState({
@@ -112,10 +120,9 @@ const TestRun = props => {
     const batches = <List>
         {simpBatches.map(batchID => {
             const batch = props.reportBatches[batchID]
-            return <Link to={`#/ReportBatch/${batchID}`}>
+            return <Link to={`#/ReportBatch/${batchID}`} key={batchID}>
                 {batch ? <DateString date={batch.startTime}/> : "Loading..."}
             </Link>
-            //<ReportBatch batchID={batchID} key={batchID}/>
         })}
     </List>
 
@@ -150,11 +157,14 @@ const TestRun = props => {
                 </Box>
             </Column>
         </Row>
-        <EnvironmentSelect onChange={changeEnvironment} defaultValue={testRun.environment}/>
-        <AddonsField>
-            <Button type="info"    onClick={save}>Save</Button>
+        <Group>
+            <EnvironmentSelect onChange={changeEnvironment}
+                defaultValue={testRun.environment}/>
+        </Group>
+        <Group>
+            <Button type="info" onClick={save}>Save</Button>
             <Button type="primary" onClick={execute}>Execute</Button>
-        </AddonsField>
+        </Group>
         <Heading>Previous Runs</Heading>
         {batches}
     </div>

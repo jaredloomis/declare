@@ -34,6 +34,9 @@ const reportSchema = mongoose.Schema({
         type: Date,
         required: true
     },
+    status: {
+        type: String
+    },
     summary: {
         type: Object,
         default: {}
@@ -84,13 +87,15 @@ reportSchema.statics.graphQL = createType({
     }
 })
 
-reportSchema.methods.status = function() {
+reportSchema.pre("save", function(next) {
+    // Define .status
     for(let i = this.steps.length-1; i >= 0; --i) {
         const status = this.steps[i].status
         if(status === Status.PASS || status === Status.FAIL)
-            return status
+            this.status = status
     }
-}
+    next()
+})
 
 reportSchema.methods.generateVideo = async function() {
     // Collect screenshots from report

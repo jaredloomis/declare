@@ -96,6 +96,7 @@ export default {
                     name
                     pageID packID
                     summary
+                    status
                     startTime
                     steps {
                         status time message data children
@@ -109,6 +110,7 @@ export default {
                     _id
                     name
                     pageID packID
+                    status
                     summary
                     startTime
                     steps {

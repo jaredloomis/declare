@@ -74,7 +74,7 @@ reportBatchSchema.pre("save", async function(next) {
             }
         })
         this.passPercentage = 100 * reports.reduce((acc, report) =>
-            acc + (report.status() === Status.PASS ? 1 : 0)
+            acc + (report.status === Status.PASS ? 1 : 0)
         , 0) / reports.length
     }
 

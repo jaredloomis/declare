@@ -8,6 +8,7 @@ import Container            from "../components/base/Container"
 import Section              from "../components/base/Section"
 import Breadcrumb           from "../components/base/Breadcrumb"
 import Button               from "../components/base/Button"
+import DateString           from "../components/base/DateString"
 import withReduxState       from "../containers/WithReduxState"
 import withReduxDispatch    from "../containers/WithReduxDispatch"
 import ReportBatchContainer from "../containers/ReportBatch"
@@ -19,7 +20,7 @@ const ReportBatchBase = props => {
     const crumbs = testRun && [
         {text: "Test Runs", url: "#/TestRuns"},
         {text: testRun.name, url: `#/TestRun/${testRun._id}`},
-        {text: `Report Batch: ${batch.startTime}`}
+        {text: <span>Report Batch: <DateString date={batch.startTime}/></span>}
     ]
 
     return <Section><Container>

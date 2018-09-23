@@ -10,6 +10,7 @@ import {fetchReport}                 from "../actions/Page"
 import Box               from "../components/base/Box"
 import DateString        from "../components/base/DateString"
 import Heading           from "../components/base/Heading"
+import FloatingPoint     from "../components/base/FloatingPoint"
 import Button            from "../components/base/Button"
 import Title             from "../components/base/Title"
 import Link              from "../components/base/Link"
@@ -36,9 +37,9 @@ const TestRunList = props => {
         return [
             <Link to={`#/TestRun/${id}`}>{props.testRuns[id].name}</Link>,
             latestBatch && latestBatch.startTime && <DateString date={latestBatch.startTime}/>,
-            (latestBatch && typeof(latestBatch.passPercentage) === "number" &&
-                latestBatch.passPercentage + "%") ||
-                ""
+            latestBatch && typeof(latestBatch.passPercentage) === "number" && <span>
+                <FloatingPoint number={latestBatch.passPercentage}/>%
+            </span>
         ]
     })
 
