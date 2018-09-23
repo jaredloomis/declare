@@ -5,37 +5,22 @@ import SignUpComponent from "../components/SignUp"
 import withReduxDispatch from "./WithReduxDispatch"
 
 import {createAccount} from "../actions/Account"
-import {createUser, assignUser} from "../actions/User"
+import {createUser, createToken, assignUser} from "../actions/User"
 
 const SignUpBase = props => {
-    const submit = authData => {
-        props.createAccount({
+    const submit = async authData => {
+        const account = await props.createAccount({
             users: [],
             pageCategories: [],
             elementCategories: [],
             inputTypeCategories: []
-        }).then(account =>
-            props.createUser({
-                ...authData,
-                owner: account._id
-            }).then(user =>
-                props.assignUser(account._id, user._id)
-            )
-        )
-
-            /*
-        props.createUser(authData)
-        .then(user =>
-            props.createAccount({
-                users: [user._id],
-                pageCategories: [],
-                elementCategories: [],
-                inputTypeCategories: []
-            })
-            .then(account =>
-                props.assignUser(account._id, user._id)
-            )
-        )*/
+        })
+        const user = await props.createUser({
+            ...authData,
+            owner: account._id
+        })
+        await props.assignUser(account._id, user._id)
+        await props.createToken(account._id, authData)
     }
 
     return <SignUpComponent onSubmit={submit}/>
@@ -45,6 +30,9 @@ const enhance = compose(
     withReduxDispatch({
         createAccount: {
             parameterized: createAccount
+        },
+        createToken: {
+            parameterized: createToken
         },
         createUser: {
             parameterized: createUser

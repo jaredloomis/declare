@@ -5,14 +5,15 @@ import {
 
 import TextInput from "./base/TextInput"
 import Button    from "./base/Button"
+import Group     from "./base/Group"
 
-const SignUpBase = ({email, password, setEmail, setPassword, onSubmit}) => <div>
+const SignUpBase = ({email, password, setEmail, setPassword, onSubmit}) => <Group>
     <TextInput label="Email"    onChange={setEmail}/>
     <TextInput label="Password" onChange={setPassword}/>
-    <Button onClick={() => onSubmit({email, password})}>
-        Submit
+    <Button type="primary" onClick={() => onSubmit({email, password})}>
+        Sign Up
     </Button>
-</div>
+</Group>
 
 
 const enhance = compose(

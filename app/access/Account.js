@@ -85,13 +85,14 @@ export default {
 
         // Ensure user making request is in account
         // TODO make sure is admin
+            /*
         const acct      = await Account.containingUser(user._id)
         const matchAcct = acct && acct._id === accountID
         if(!user || (!matchAcct && !user.isSuperAdmin())) {
             throw {
                 message: "You don't have access to this account."
             }
-        }
+        }*/
 
         // Set user's owner
         await User.findByIdAndUpdate(userID, {
