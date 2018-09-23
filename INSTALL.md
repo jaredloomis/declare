@@ -1,0 +1,6 @@
+- Install NodeJS, yarn, RabbitMQ, nginx, mongodb
+- `yarn` in root directory
+- `yarn` in `public/`
+- `yarn run static` in `public/`
+- Copy `nginx/declare` to `/etc/nginx/sites-enabled/declare` (ensuring the main nginx conf file is loading this file)
+- `yarn run start` in root directory
