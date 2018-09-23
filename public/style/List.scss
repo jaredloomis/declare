@@ -1,0 +1,41 @@
+@import "./variables";
+
+$item-border: 1px solid $grey-lighter;
+$item-padding: 0.5em;
+$active-border: 2px solid $primary;
+$search-padding: 0.5em;
+
+.list {
+    border-left: $item-border;
+    border-right: $item-border;
+}
+
+/* Item spacing and borders */
+
+.itemWrapper {
+    padding: $item-padding;
+    border-bottom: $item-border;
+}
+.itemWrapper:nth-of-type(1) {
+    border-top: $item-border;
+}
+
+/* Style of actual item text */
+
+.item {
+    transition: border-bottom 0.2s;
+}
+
+.item:hover, .item.active {
+    border-bottom: $active-border;
+}
+
+.selectable {
+    cursor: pointer;
+}
+
+/* Search bar */
+
+.search {
+    margin-bottom: $search-padding;
+}

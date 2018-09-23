@@ -1,0 +1,10 @@
+@import "./variables";
+
+.code {
+    border: 1px solid $grey-light;
+    border-radius: 3px;
+    background-color: $grey-lighter;
+    font-family: monospace, monospace;
+    padding-left: 3px;
+    padding-right: 3px;
+}

@@ -1,0 +1,14 @@
+@import "./variables";
+
+.header {
+    border-bottom: 1px solid $primary;
+}
+
+.row {
+    padding-bottom: 0.1em;
+    padding-top:    0.1em;
+}
+
+.row:hover {
+    background-color: $white-ter;
+}
