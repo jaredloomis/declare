@@ -9,13 +9,14 @@ import {listCategories}        from "../actions/Category"
 import Container               from "../components/base/Container"
 import Section                 from "../components/base/Section"
 import Row                     from "../components/base/Row"
+import Box                     from "../components/base/Box"
 import Column                  from "../components/base/Column"
 import Button                  from "../components/base/Button"
 import Heading                 from "../components/base/Heading"
 import FeatherIcon             from "../components/base/FeatherIcon"
 import Modal                   from "../components/base/Modal"
 import Category                from "../containers/Category"
-import PageAdd                 from "../containers/PageAdd"
+import CategoryCreate          from "../containers/CategoryCreate"
 
 import withReduxState          from "../containers/WithReduxState"
 import withReduxDispatch       from "../containers/WithReduxDispatch"
@@ -46,7 +47,10 @@ const PageList = props => {
             <Category categoryID={categoryID} productID={productID} key={categoryID}/>
         )}
         <Modal active={props.createInProgress} onClose={closeModal}>
-            <PageAdd productID={productID}/>
+            <Box>
+                <Heading>Create Category</Heading>
+                <CategoryCreate itemRef={"page"} onCreate={closeModal}/>
+            </Box>
         </Modal>
     </Container></Section>
 }

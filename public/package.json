@@ -55,7 +55,7 @@
     "build": "npm run static && webpack",
     "static": "npm run html && npm run style && npm run headjs",
     "html": "mkdir -p dist/view && cp view/Main.html dist/view/Main.html",
-    "style": "mkdir -p dist/style && sass style/materialize.scss > dist/style/materialize.css && sass style/bulma.scss > dist/style/bulma.css",
+    "style": "mkdir -p dist/style && ./node_modules/node-sass/bin/node-sass style/bulma.scss > dist/style/bulma.css",
     "headjs": "cp node_modules/headjs/dist/1.0.0/head.load.min.js dist/js"
   },
   "author": "Jared Loomis",
