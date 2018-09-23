@@ -35,7 +35,6 @@ export default {
                         data: await UserAccess.user(args, {user: state.user})
                     }
                 } else {
-                    console.log("USER:", state.user)
                     return {
                         data: await UserAccess.user({id: state.user._id}, {user: state.user})
                     }
