@@ -28,7 +28,11 @@ export default class SeleniumDriver extends Driver {
 
         this.driver = new webdriver.Builder()
             .forBrowser(options.browser)
-            .setChromeOptions(new chrome.Options().headless())
+            .setChromeOptions(new chrome.Options()
+                .headless()
+                .addArguments("--no-sandbox")
+                .addArguments("--disable-dev-shm-usage")
+                .addArguments("--disable-software-rasterizer"))
             .build()
     }
 
