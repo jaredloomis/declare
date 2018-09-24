@@ -91,8 +91,10 @@ reportSchema.pre("save", function(next) {
     // Define .status
     for(let i = this.steps.length-1; i >= 0; --i) {
         const status = this.steps[i].status
-        if(status === Status.PASS || status === Status.FAIL)
+        if(status === Status.PASS || status === Status.FAIL) {
             this.status = status
+            break
+        }
     }
     next()
 })

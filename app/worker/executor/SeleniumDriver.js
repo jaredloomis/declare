@@ -32,7 +32,10 @@ export default class SeleniumDriver extends Driver {
                 .headless()
                 .addArguments("--no-sandbox")
                 .addArguments("--disable-dev-shm-usage")
-                .addArguments("--disable-software-rasterizer"))
+                .addArguments("--disable-software-rasterizer")
+                .addArguments("--disable-extensions")
+                .addArguments("disable-infobars")
+                .addArguments("start-maximized"))
             .build()
     }
 
@@ -42,7 +45,8 @@ export default class SeleniumDriver extends Driver {
 
     async get(url: string): Promise<void> {
         await this.driver.get(url)
-        return this.wait(until.urlContains(url))
+        // TODO wait for page to load?
+        //return this.wait(until.urlContains(url))
     }
 
     async click(selector: Selector): Promise<void> {
