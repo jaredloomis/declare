@@ -43,7 +43,7 @@ export const createToken = (accountID: string, authData: any) => async (dispatch
     if(error) {
         dispatch({
             type: ERROR_DISPLAY_MSG,
-            message: error.message
+            message: `Couldn't create token. ${error.message}`
         })
     }
 }
@@ -151,9 +151,11 @@ export const listUsers = async (dispatch, getState) => {
     if(error) {
         dispatch({
             type: ERROR_DISPLAY_MSG,
-            message: `Couldn't fetch input type. ${error.message}`
+            message: `Couldn't list users. ${error.message}`
         })
     }
+
+    return users
 }
 
 export const fetchUser = id => async (dispatch, getState) => {
@@ -182,7 +184,7 @@ export const fetchUser = id => async (dispatch, getState) => {
     if(error) {
         dispatch({
             type: ERROR_DISPLAY_MSG,
-            message: `Couldn't fetch input type. ${error.message}`
+            message: `Couldn't fetch user. ${error.message}`
         })
     }
 

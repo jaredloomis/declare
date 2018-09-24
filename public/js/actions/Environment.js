@@ -27,7 +27,7 @@ export const fetchEnvironment = id => async (dispatch, getState) => {
     if(error) {
         return dispatch({
             type: ERROR_DISPLAY_MSG,
-            message: error.message
+            message: `Couldn't fetch environment. ${error.message}`
         })
     }
 
@@ -59,7 +59,7 @@ export const listEnvironments = async (dispatch, getState) => {
     if(error) {
         dispatch({
             type: ERROR_DISPLAY_MSG,
-            message: error.message
+            message: `Couldn't list environments. ${error.message}`
         })
     }
 }

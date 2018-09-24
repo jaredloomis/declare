@@ -8,11 +8,14 @@ import style from "../../style/Nav.scss"
 
 const Nav = ({focusProduct, onSelectFocusProduct}) =>
     <nav className={`${bulma.navbar} ${bulma.has_shadow} ${bulma.is_spaced}`}>
+    <img src="/logo-blue.png" width="70" height="70" style={{width: "70px", height: "70px"}}/>
     <div className={bulma.container}>
         <div className={bulma.navbar_brand}>
+            {/*
             <a className={`${bulma.navbar_item} ${style.logo}`} href="#/">
                 Declare
             </a>
+            */}
             <span className={`${bulma.navbar_item}`}>
                 <ProductSelect flat defaultValue={focusProduct} onChange={onSelectFocusProduct}/>
             </span>

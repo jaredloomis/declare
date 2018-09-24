@@ -32,7 +32,7 @@ export const fetchProduct = id => async (dispatch, getState) => {
     if(error) {
         dispatch({
             type: ERROR_DISPLAY_MSG,
-            message: `Couldn't fetch input type. ${error.message}`
+            message: `Couldn't fetch product. ${error.message}`
         })
     }
 }
@@ -59,7 +59,7 @@ export const listProducts = async (dispatch, getState) => {
     if(error) {
         dispatch({
             type: ERROR_DISPLAY_MSG,
-            message: `Couldn't fetch input type. ${error.message}`
+            message: `Couldn't list products. ${error.message}`
         })
     }
 }
@@ -87,7 +87,7 @@ export const createProduct = product => async (dispatch, getState) => {
     if(error) {
         dispatch({
             type: ERROR_DISPLAY_MSG,
-            message: `Couldn't fetch input type. ${error.message}`
+            message: `Couldn't create product. ${error.message}`
         })
     }
 }

@@ -35,7 +35,7 @@ export const fetchElement = (id: string) => async (dispatch: Func, getState: Fun
     if(error) {
         dispatch({
             type: ERROR_DISPLAY_MSG,
-            message: error.message
+            message: `Couldn't fetch element. ${error.message}`
         })
     }
 }
@@ -68,7 +68,7 @@ export const listElements = async (dispatch: Func, getState: Func) => {
     if(error) {
         dispatch({
             type: ERROR_DISPLAY_MSG,
-            message: error.message
+            message: `Couldn't list elements. ${error.message}`
         })
     }
 
@@ -103,7 +103,7 @@ export const createElement = (elementInput: any) => async (dispatch: Func, getSt
     if(error) {
         dispatch({
             type: ERROR_DISPLAY_MSG,
-            message: error.message
+            message: `Couldn't create element. ${error.message}`
         })
     }
 
@@ -137,7 +137,7 @@ export const saveElement = (id: string) => async (dispatch: Func, getState: Func
     if(error) {
         dispatch({
             type: ERROR_DISPLAY_MSG,
-            message: error.message
+            message: `Couldn't save element. ${error.message}`
         })
     }
 }
@@ -164,7 +164,7 @@ export const removeElement = (id: string) => async (dispatch: Func, getState: Fu
     if(error) {
         dispatch({
             type: ERROR_DISPLAY_MSG,
-            message: error.message
+            message: `Couldn't remove element. ${error.message}`
         })
     }
 }

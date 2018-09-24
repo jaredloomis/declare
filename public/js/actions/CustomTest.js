@@ -229,7 +229,7 @@ export const executeCustomTest = (customTestID: string) => async (dispatch: Func
     if(error) {
         dispatch({
             type: ERROR_DISPLAY_MSG,
-            message: `Couldn't fetch custom test. ${error}`
+            message: `Couldn't execute custom test. ${error}`
         })
     }
 }
