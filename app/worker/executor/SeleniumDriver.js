@@ -1,5 +1,6 @@
 // @flow
 import webdriver, {By, until} from "selenium-webdriver"
+import chrome from "selenium-webdriver/chrome"
 
 import      Driver                   from "./Driver"
 import type {DriverI, DriverOptions} from "./Driver"
@@ -27,6 +28,7 @@ export default class SeleniumDriver extends Driver {
 
         this.driver = new webdriver.Builder()
             .forBrowser(options.browser)
+            .setChromeOptions(new chrome.Options().headless())
             .build()
     }
 

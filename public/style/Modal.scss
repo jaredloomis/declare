@@ -3,14 +3,13 @@
 .content {
     // Prevent scrollbar
     overflow: auto;
-    //padding-top: 0px;
+    background-color: $background;
+    border-radius: 2px;
 }
 
 .wideModal .content {
-    background-color: $background;
     width: 70%;
     min-height: 60%;
-//    padding: 3em;
 }
 
 .innerContent {
@@ -24,4 +23,10 @@
 .topBar {
     padding: 5px;
     border-bottom: 1px solid $grey-light;
+}
+
+.handle {
+    height: 1.25em;
+    background: $grey-light;
+    border-bottom: 1px solid $grey;
 }

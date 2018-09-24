@@ -47,7 +47,7 @@
     "re-classnames": "^0.0.3",
     "reason-react": "^0.3.2",
     "seedrandom": "^2.4.3",
-    "selenium-webdriver": "^3.4.0",
+    "selenium-webdriver": "^4.0.0-alpha.1",
     "socket.io": "^2.0.1",
     "stream-worker": "^2.0.1",
     "winston": "^2.3.0",

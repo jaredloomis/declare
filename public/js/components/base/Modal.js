@@ -1,4 +1,5 @@
 import React from "react"
+//import Draggable from "react-draggable"
 
 import bulma from "../../../style/bulma.scss"
 import style from "../../../style/Modal.scss"
@@ -9,6 +10,8 @@ const Modal = ({children, topBar, bottomBar, active, wide, large, onClose}) =>
         <div className={bulma.modal_background} onClick={onClose}>
         </div>
         <div className={`${bulma.modal_content} ${style.content}`}>
+            <div className={style.handle}>
+            </div>
             {topBar && <div className={style.topBar}>
                 {topBar}
             </div>}

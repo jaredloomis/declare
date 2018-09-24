@@ -11,7 +11,10 @@ const FloatingPoint = ({number, children, precision=2}) => {
     if(typeof(float) === "string")
         float = parseFloat(float)
 
-    return float.toFixed(precision)
+    if(typeof(float) === "number")
+        return float.toFixed(precision)
+    else
+        return float || null
 }
 
 FloatingPoint.displayName = "FloatingPoint"

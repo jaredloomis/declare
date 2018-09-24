@@ -21,6 +21,7 @@
     "ramda": "^0.23.0",
     "react": "16.0.0",
     "react-dom": "16.0.0",
+    "react-draggable": "^3.0.5",
     "react-modal": "^1.7.7",
     "react-redux": "5.0.4",
     "react-router": "^4.2.0",
