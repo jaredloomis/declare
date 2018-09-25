@@ -7,6 +7,7 @@ import {
 } from "./Types"
 import Fragments from "../graphQL/Fragments"
 import {fetchReportBatch} from "./ReportBatch"
+import {handleError} from "./Error"
 
 const fragments = Fragments.testRun
 
@@ -27,10 +28,7 @@ export const fetchTestRun = id => async (dispatch, getState) => {
     const error   = res.error
 
     if(error) {
-        return dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't fetch test run. ${error.message}`
-        })
+        return dispatch(handleError(error, "Couldn't fetch test run."))
     }
 
     dispatch({
@@ -57,10 +55,7 @@ export const listTestRuns = async (dispatch, getState) => {
     const error    = res.error
 
     if(error) {
-        return dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't list test runs. ${error.message}`
-        })
+        return dispatch(handleError(error, "Couldn't list test runs."))
     }
 
     dispatch({
@@ -87,10 +82,7 @@ export const createTestRun = testRun => async (dispatch, getState) => {
     const {data, error} = res
 
     if(error) {
-        return dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't create test run. ${error.message}`
-        })
+        return dispatch(handleError(error, "Couldn't create test run."))
     }
 
     dispatch({
@@ -118,10 +110,7 @@ export const updateTestRun = (id, testRun) => async (dispatch, getState) => {
     const {data, error} = testRunRes.data.testRun
 
     if(error) {
-        return dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't update test run. ${error.message}`
-        })
+        return dispatch(handleError(error, "Couldn't update test run."))
     }
 
     dispatch({
@@ -147,10 +136,7 @@ export const executeTestRun = id => async (dispatch, getState) => {
     const testRun       = data
 
     if(error) {
-        return dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't execute test run. ${error.message}`
-        })
+        return dispatch(handleError(error, "Couldn't execute test run."))
     }
 
     // Get the id of the report batch added to test

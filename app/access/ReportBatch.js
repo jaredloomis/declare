@@ -1,5 +1,5 @@
 import ReportBatch from "../model/ReportBatch"
-import accountAuth from "./validation/accountAuthValidation"
+import accountAuth from "./validation/accountAuth"
 
 export default {
     /*
@@ -8,7 +8,7 @@ export default {
 
     async reportBatch({id}, {user}) {
         const reportBatch = await ReportBatch.findById(id)
-        accountAuth(reportBatch, user, {
+        accountAuth(user, reportBatch, {
             entityName: "ReportBatch"
         })
         return reportBatch

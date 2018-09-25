@@ -8,6 +8,7 @@ import {
     ELEMENT_CREATE, ELEMENT_SAVE, ELEMENT_REMOVE,
     ERROR_DISPLAY_MSG
 } from "./Types"
+import {handleError} from "./Error"
 import Fragments from "../graphQL/Fragments"
 
 const fragments = Fragments.element
@@ -27,17 +28,16 @@ export const fetchElement = (id: string) => async (dispatch: Func, getState: Fun
     const {data, error} = elementRes.data.element
     const element = data
 
+    if(error) {
+        return dispatch(handleError(error, "Couldn't fetch element."))
+    }
+
     dispatch({
         type: ELEMENT_FETCH,
         id, element
     })
 
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't fetch element. ${error.message}`
-        })
-    }
+    return element
 }
 
 export const listElements = async (dispatch: Func, getState: Func) => {
@@ -60,17 +60,14 @@ export const listElements = async (dispatch: Func, getState: Func) => {
     const {data, error} = elementsRes.data.elements
     const elements = data
 
+    if(error) {
+        return dispatch(handleError(error, "Couldn't list elements."))
+    }
+
     dispatch({
         type: ELEMENT_LIST,
         elements
     })
-
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't list elements. ${error.message}`
-        })
-    }
 
     return elements
 }
@@ -95,17 +92,14 @@ export const createElement = (elementInput: any) => async (dispatch: Func, getSt
     const {data, error} = elementRes.data.element
     const element = data
 
+    if(error) {
+        return dispatch(handleError(error, "Couldn't create element."))
+    }
+
     dispatch({
         type: ELEMENT_CREATE,
         element
     })
-
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't create element. ${error.message}`
-        })
-    }
 
     return element
 }
@@ -128,18 +122,15 @@ export const saveElement = (id: string) => async (dispatch: Func, getState: Func
     const {data, error} = newElementRes.data.element
     const newElement = data
 
+    if(error) {
+        return dispatch(handleError(error, "Couldn't save element."))
+    }
+
     dispatch({
         type: ELEMENT_SAVE,
         element: newElement,
         id
     })
-
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't save element. ${error.message}`
-        })
-    }
 }
 
 export const removeElement = (id: string) => async (dispatch: Func, getState: Func) => {
@@ -156,15 +147,12 @@ export const removeElement = (id: string) => async (dispatch: Func, getState: Fu
     })
     const {error} = elementRes.data.element
 
+    if(error) {
+        return dispatch(handleError(error, "Couldn't remove element."))
+    }
+
     dispatch({
         type: ELEMENT_REMOVE,
         id
     })
-
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't remove element. ${error.message}`
-        })
-    }
 }

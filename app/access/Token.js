@@ -1,6 +1,6 @@
-import Token   from "../model/Token"
-import Account from "../model/Account"
-import User    from "../model/User"
+import Token       from "../model/Token"
+import Account     from "../model/Account"
+import User        from "../model/User"
 
 export default {
     /*

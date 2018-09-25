@@ -2,9 +2,9 @@ import gql from "graphql-tag"
 import client from "../graphQL/Client"
 import {
     ENVIRONMENT_FETCH, ENVIRONMENT_UPDATE, ENVIRONMENT_LIST,
-    ENVIRONMENT_CREATE, ENVIRONMENT_SAVE, ENVIRONMENT_REMOVE,
-    ERROR_DISPLAY_MSG
+    ENVIRONMENT_CREATE, ENVIRONMENT_SAVE, ENVIRONMENT_REMOVE
 } from "./Types"
+import {handleError} from "./Error"
 import Fragments from "../graphQL/Fragments"
 
 const fragments = Fragments.environment
@@ -25,16 +25,15 @@ export const fetchEnvironment = id => async (dispatch, getState) => {
     const environment = data
 
     if(error) {
-        return dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't fetch environment. ${error.message}`
-        })
+        return dispatch(handleError(error, "Couldn't fetch environment."))
     }
 
     dispatch({
         type: ENVIRONMENT_FETCH,
         id, environment
     })
+
+    return environment
 }
 
 export const listEnvironments = async (dispatch, getState) => {
@@ -51,17 +50,16 @@ export const listEnvironments = async (dispatch, getState) => {
     const {data, error} = environmentsRes.data.environments
     const environments = data
 
+    if(error) {
+        return dispatch(handleError(error, "Couldn't list environments."))
+    }
+
     dispatch({
         type: ENVIRONMENT_LIST,
         environments
     })
 
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't list environments. ${error.message}`
-        })
-    }
+    return environments
 }
 
 export const updateEnvironment = (id, environment: any) => ({
@@ -84,17 +82,14 @@ export const createEnvironment = (environmentInput: any) => async (dispatch, get
     const {data, error} = environmentRes.data.environment
     const environment = data
 
+    if(error) {
+        return dispatch(handleError(error, "Couldn't create environment."))
+    }
+
     dispatch({
         type: ENVIRONMENT_CREATE,
         environment
     })
-
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: error.message
-        })
-    }
 
     return environment
 }
@@ -122,18 +117,17 @@ export const saveEnvironment = (id) => async (dispatch, getState) => {
     const {data, error} = newEnvironmentRes.data.environment
     const newEnvironment = data
 
+    if(error) {
+        return dispatch(handleError(error, "Couldn't save environment."))
+    }
+
     dispatch({
         type: ENVIRONMENT_SAVE,
         environment: newEnvironment,
         id
     })
 
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: error.message
-        })
-    }
+    return newEnvironment
 }
 
 export const removeEnvironment = (id) => async (dispatch, getState) => {
@@ -150,15 +144,12 @@ export const removeEnvironment = (id) => async (dispatch, getState) => {
     })
     const {error} = environmentRes.data.environment
 
+    if(error) {
+        return dispatch(handleError(error, "Couldn't remove environment."))
+    }
+
     dispatch({
         type: ENVIRONMENT_REMOVE,
         id
     })
-
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: error.message
-        })
-    }
 }

@@ -13,7 +13,7 @@ import {
     PAGE_UPDATE_INFO, LINK_INSERT_ACTION,
     ERROR_DISPLAY_MSG
 } from "./Types"
-
+import {handleError} from "./Error"
 import client from "../graphQL/Client"
 
 import {fetchPack}       from "./TestPack"
@@ -46,19 +46,16 @@ export const fetchPage = (id: string, fetchPacks: boolean=false,
     const page = Object.assign({}, page2)
     const error = pageRes.data.page.error
 
+    if(error) {
+        return dispatch(handleError(error, "Couldn't fetch page."))
+    }
+
     if(page && page.links) {
         page.links = page.links.map(x => Object.assign({}, x))
         dispatch({
             type: PAGE_FETCH,
             id,
             page
-        })
-    }
-
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: error.message
         })
     }
 
@@ -100,17 +97,16 @@ export async function listPages(dispatch: Func, getState: Func) {
     const pages = pagesRes.data.pages.data
     const error = pagesRes.data.pages.error
 
+    if(error) {
+        return dispatch(handleError(error, "Couldn't list pages."))
+    }
+
     dispatch({
         type: PAGE_LIST,
         pages
     })
 
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: error.message
-        })
-    }
+    return pages
 }
 
 export const updatePageInfo = (id: string, info: any) => ({
@@ -303,14 +299,11 @@ export const createPage = (name: string, product: string, startURL: string) => a
     const page = pageRes.data.page.data
     const error = pageRes.data.page.error
 
-    await fetchPage(page._id)(dispatch, getState)
-
     if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: error.message
-        })
+        return dispatch(handleError(error, "Couldn't create page."))
     }
+
+    await fetchPage(page._id)(dispatch, getState)
 
     return page
 }

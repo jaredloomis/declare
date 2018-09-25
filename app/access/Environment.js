@@ -1,5 +1,5 @@
 import Environment from "../model/Environment"
-import accountAuth from "./validation/accountAuthValidation"
+import accountAuth from "./validation/accountAuth"
 
 export default {
     /*
@@ -7,11 +7,7 @@ export default {
      */
 
     environments({user}) {
-        if(!user) {
-            throw {
-                message: "You don't have permission to access environments."
-            }
-        }
+        accountAuth(user, null, {validateEntity: false})
         
         if(user.isSuperAdmin()) {
             return Environment.find({})
@@ -24,7 +20,7 @@ export default {
 
     async environment({id}, {user}) {
         const env = await Environment.findById(id)
-        accountAuth(env, user, {
+        accountAuth(user, env, {
             entityName: "Environment"
         })
         return env
@@ -41,7 +37,7 @@ export default {
 
     async updateEnvironment({id, environment}, {user}) {
         const environmentModel = await Environment.findById(id)
-        accountAuth(environmentModel, user, {
+        accountAuth(user, environmentModel, {
             entityName: "Environment"
         })
         await environmentModel.update(environment)
@@ -50,7 +46,7 @@ export default {
 
     async removeEnvironment({id}, {user}) {
         const environmentModel = await Environment.findById(id)
-        accountAuth(environmentModel, user, {
+        accountAuth(user, environmentModel, {
             entityName: "Environment"
         })
         await environmentModel.remove()

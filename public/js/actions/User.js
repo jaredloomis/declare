@@ -5,9 +5,9 @@ import client from "../graphQL/Client"
 import {
     USER_TOKEN_CREATE, USER_CREATE, USER_ASSIGN,
     USER_SET_FOCUS_PRODUCT, USER_LIST, USER_FETCH,
-    USER_SET_ACTIVE,
-    ERROR_DISPLAY_MSG
+    USER_SET_ACTIVE
 } from "./Types"
+import {handleError} from "./Error"
 import Fragments from "../graphQL/Fragments"
 
 const fragments = Fragments.user
@@ -34,6 +34,10 @@ export const createToken = (accountID: string, authData: any) => async (dispatch
     const token = tokenRes.data.token.data
     const error = tokenRes.data.token.error
 
+    if(error) {
+        return dispatch(handleError(error, "Couldn't create token."))
+    }
+
     dispatch({
         type: USER_TOKEN_CREATE,
         token
@@ -41,12 +45,7 @@ export const createToken = (accountID: string, authData: any) => async (dispatch
 
     await dispatch(fetchUser(token.user._id))
 
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't create token. ${error.message}`
-        })
-    }
+    return token
 }
 
 export const createUser = (userInput: any) => async (dispatch: Func, getState: Func) => {
@@ -65,17 +64,14 @@ export const createUser = (userInput: any) => async (dispatch: Func, getState: F
     const user  = res.data
     const error = res.error
 
+    if(error) {
+        return dispatch(handleError(error, "Couldn't create user."))
+    }
+
     dispatch({
         type: USER_CREATE,
         user
     })
-
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't create user. ${error.message}`
-        })
-    }
 
     return user
 }
@@ -144,17 +140,15 @@ export const listUsers = async (dispatch, getState) => {
     const res   = userRes.data.users
     const users = res.data
     const error = res.error
+
+    if(error) {
+        return dispatch(handleError(error, "Couldn't list users."))
+    }
+
     dispatch({
         type: USER_LIST,
         users
     })
-
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't list users. ${error.message}`
-        })
-    }
 
     return users
 }
@@ -183,10 +177,7 @@ export const fetchUser = id => async (dispatch, getState) => {
     }
 
     if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't fetch user. ${error.message}`
-        })
+        dispatch(handleError(error, "Couldn't fetch user."))
     }
 
     return user

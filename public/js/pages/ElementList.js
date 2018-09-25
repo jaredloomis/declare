@@ -28,10 +28,17 @@ const ElementList = props => {
 
     const product   = props.focusProduct
     const productID = product && product._id
+
     const rootCategoryIDs = Object.keys(props.categories).filter(categoryID =>
         props.categories[categoryID] && props.categories[categoryID].itemRef === "element" &&
         props.categories[categoryID].product === productID
     )
+
+    if(!productID) {
+        return <Section><Container>
+            <span>Please select a product!</span>
+        </Container></Section>
+    }
 
     return <Section><Container>
         <Row>

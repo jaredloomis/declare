@@ -10,7 +10,7 @@ import {
     CATEGORY_LIST, CATEGORY_SET_ROOT
 } from "./Types"
 import {focusProduct} from "../selectors/Product"
-
+import {handleError} from "./Error"
 import Fragments from "../graphQL/Fragments"
 
 const fragments = Fragments.category
@@ -32,17 +32,14 @@ export const fetchCategory = (categoryID: string) => async (dispatch: Func, getS
     const category = res.data
     const error    = res.error
 
-    if(category) {
-        dispatch({
-            type: CATEGORY_FETCH,
-            categoryID, category
-        })
-    } else {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't fetch category ${categoryID}. ${error}`
-        })
+    if(error) {
+        return dispatch(handleError(error, "Couldn't fetch category."))
     }
+
+    dispatch({
+        type: CATEGORY_FETCH,
+        categoryID, category
+    })
 }
 
 export const listCategories = async (dispatch: Func, getState: Func) => {
@@ -67,17 +64,14 @@ export const listCategories = async (dispatch: Func, getState: Func) => {
     const categories = res.data
     const error      = res.error
 
-    if(categories) {
-        dispatch({
-            type: CATEGORY_LIST,
-            categories
-        })
-    } else {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't list categories. ${error}`
-        })
+    if(error) {
+        return dispatch(handleError(error, "Couldn't list categories."))
     }
+
+    dispatch({
+        type: CATEGORY_LIST,
+        categories
+    })
 }
 
 export const createCategory = (categoryInput: any) => async (dispatch: Func, getState: Func) => {
@@ -103,17 +97,14 @@ export const createCategory = (categoryInput: any) => async (dispatch: Func, get
     const {data, error} = categoryRes.data.category
     const category = data
 
+    if(error) {
+        return dispatch(handleError(error, "Couldn't create category."))
+    }
+
     dispatch({
         type: CATEGORY_CREATE,
         category
     })
-
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't create category. ${error.message}`
-        })
-    }
     
     return category
 }
@@ -142,18 +133,15 @@ export const saveCategory = (categoryID: string) => async (dispatch: Func, getSt
     const {data, error} = categoryRes.data.category
     const category = data
 
+    if(error) {
+        return dispatch(handleError(error, "Couldn't save category."))
+    }
+
     dispatch({
         type: CATEGORY_SAVE,
         categoryID,
         category
     })
-
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't save category. ${error.message}`
-        })
-    }
 }
 
 export const removeCategory = (categoryID: string) => async (dispatch: Func, getState: Func) => {
@@ -190,17 +178,14 @@ export const setCategoryAsRoot = (categoryID: string, itemRef: string) => async 
     const {data, error} = accountRes.data.account
     const account = data
 
+    if(error) {
+        return dispatch(handleError(error, "Couldn't make category root."))
+    }
+
     dispatch({
         type: CATEGORY_SET_ROOT,
         account
     })
-
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't make category root. ${error.message}`
-        })
-    }
 }
 
 export const addItemToCategory = (categoryID: string, item: any) => ({

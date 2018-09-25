@@ -1,7 +1,9 @@
-import Report from "../model/Report"
+import Report      from "../model/Report"
+import accountAuth from "./validation/accountAuth"
 
 export default {
     reports({pageID}, {user}) {
+        accountAuth(user, null, {validateEntity: false})
         // Check if user has access
         if(!user || !user.isSuperAdmin()) {
             throw {
@@ -14,20 +16,7 @@ export default {
 
     async report({id}, {user}) {
         const rep = await Report.findById(id)
-
-        // Check if report exists with id
-        if(!rep) {
-            throw {
-                message: `Report not found with id \"${id}\"`
-            }
-        }
-        // Check if user has access
-        if(!(user && (user.owner.equals(rep.owner) || user.isSuperAdmin()))) {
-            throw {
-                message: "Cannot access reports not in your account."
-            }
-        }
-
+        accountAuth(user, rep)
         return rep
     }
 }

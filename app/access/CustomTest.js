@@ -5,6 +5,7 @@ import CustomTest          from "../model/CustomTest"
 import Page                from "../model/Page"
 import Report              from "../model/Report"
 import {executeCustomTest} from "../worker/executor"
+import accountAuth         from "./validation/accountAuth"
 
 export default {
     /*
@@ -12,6 +13,7 @@ export default {
      */
 
     async customTests({user}) {
+        accountAuth(user, null, {validateEntity: false})
         if(user && user.isSuperAdmin()) {
             return CustomTest.find({})
         } else {
@@ -23,34 +25,17 @@ export default {
                     $in: testIDs
                 }
             })
-                /*
-            const tests = []
-            for(const page of pages) {
-                const chunk = await CustomTest.find({owner: page._id})
-                for(const test of chunk)
-                    tests.push(test)
-            }
-            */
+
             return tests
         }
     },
 
     async customTest({id}, {user}) {
         const test = await CustomTest.findById(id)
-        const page       = await Page.findById(test.owner)
+        const page = await Page.findById(test.owner)
 
-        // Check if test exists with id
-        if(!test) {
-            throw {
-                message: `Custom test not found with id "${id}"`
-            }
-        }
-        // Check if user has access
-        if(!(user && (user.owner.equals(page.owner) || user.isSuperAdmin()))) {
-            throw {
-                message: "Cannot access custom tests not in your account."
-            }
-        }
+        accountAuth(user, test)
+        accountAuth(user, page)
 
         return test
     },
@@ -69,41 +54,19 @@ export default {
         const test = await CustomTest.findById(id)
         const page = await Page.findById(test.owner)
 
-        // Ensure test id is valid
-        if(!test) {
-            throw {
-                message: "No known custom test with id."
-            }
-        }
-
-        // Ensure user has permissions to modify test
-        if(!(user && (user.owner.equals(page.owner) || user.isSuperAdmin()))) {
-            throw {
-                message: "You don't have permission to modify this custom test."
-            }
-        }
+        accountAuth(user, test)
+        accountAuth(user, page)
 
         await CustomTest.findByIdAndUpdate(id, customTest)
-        return await CustomTest.findById(id)
+        return CustomTest.findById(id)
     },
 
     async removeCustomTest({id}, {user}) {
         const customTest = await CustomTest.findById(id)
         const page       = await Page.findById(customTest.owner)
 
-        // Ensure test id is valid
-        if(!customTest) {
-            throw {
-                message: `No known custom test with id ${id}.`
-            }
-        }
-
-        // Ensure user has permissions to modify test
-        if(!(user && (user.owner.equals(page.owner) || user.isSuperAdmin()))) {
-            throw {
-                message: "You don't have permission to modify this custom test."
-            }
-        }
+        accountAuth(user, customTest)
+        accountAuth(user, page)
 
         if(customTest.owner) {
             await Page.findByIdAndUpdate(customTest.owner,
@@ -117,21 +80,9 @@ export default {
         const customTest  = await CustomTest.findById(id)
         const page        = await Page.findById(customTest.owner)
 
-        // Ensure test id is valid
-        if(!customTest) {
-            throw {
-                message: `No known custom test with id ${id}.`
-            }
-        }
+        accountAuth(user, customTest)
+        accountAuth(user, page)
 
-        // Ensure user has permissions to execute test
-        if(!(user && (user.owner.equals(page.owner) || user.isSuperAdmin()))) {
-            throw {
-                message: "You don't have permission to modify this custom test."
-            }
-        }
-
-        // Execute test - returns report
         try {
             const report = await executeCustomTest(customTest, {
                 environment: page.defaultEnvironment

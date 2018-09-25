@@ -2,12 +2,16 @@ import Account  from "../model/Account"
 import User     from "../model/User"
 import Category from "../model/Category"
 
+import accountAuth from "./validation/accountAuth"
+
 export default {
     /*
      * Queries
      */
 
     accounts({user}) {
+        accountAuth(user, null, {validateEntity: false})
+
         if(user && user.isSuperAdmin()) {
             return Account.find({})
         } else {
@@ -18,8 +22,9 @@ export default {
     },
 
     async account({id}, {user}) {
-        // TODO check if user is in account
         const account = await Account.findById(id)
+
+        accountAuth(user, account)
 
         if(user && account.containsUser(user._id)) {
             return account
@@ -50,12 +55,7 @@ export default {
         // Ensure user is in account
         // TODO make sure is admin
         const acct = await Account.findById(id)
-        if(!(user && (user.owner.equals(acct._id) || user.isSuperAdmin()))) {
-            throw {
-                message: "You don't have access to this account."
-            }
-        }
-
+        accountAuth(user, acct)
         return Account.findByIdAndUpdate(id, account)
     },
 
@@ -63,12 +63,7 @@ export default {
         // Ensure user is in account
         // TODO make sure is admin
         const acct = await Account.findById(id)
-        if(!(user && (user.owner.equals(acct._id) || user.isSuperAdmin()))) {
-            throw {
-                message: "You don't have access to this account."
-            }
-        }
-
+        accountAuth(user, acct)
         return await Account.findByIdAndRemove(id)
     },
 

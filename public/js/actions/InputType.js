@@ -8,6 +8,7 @@ import {
     INPUT_TYPE_SAVE, INPUT_TYPE_REMOVE, INPUT_TYPE_CONSTRAINT_REMOVE,
     INPUT_TYPE_UPDATE, ERROR_DISPLAY_MSG
 } from "./Types"
+import {handleError} from "./Error"
 import Fragments from "../graphQL/Fragments"
 
 const fragments = Fragments.inputType
@@ -27,17 +28,17 @@ export const fetchInputType = (id: string) => async (dispatch: Func, getState: F
     const res       = inputTypeRes.data.inputType
     const inputType = res.data
     const error     = res.error
+
+    if(error) {
+        return dispatch(handleError(error, "Couldn't fetch input type."))
+    }
+
     dispatch({
         type: INPUT_TYPE_FETCH,
         id, inputType
     })
 
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't fetch input type. ${error.message}`
-        })
-    }
+    return inputType
 }
 
 export const listInputTypes = async (dispatch: Func, getState: Func) => {
@@ -55,17 +56,16 @@ export const listInputTypes = async (dispatch: Func, getState: Func) => {
     const inputTypes = res.data
     const error      = res.error
 
+    if(error) {
+        return dispatch(handleError(error, "Couldn't list input types."))
+    }
+
     dispatch({
         type: INPUT_TYPE_LIST,
         inputTypes
     })
 
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't list input types. ${error.message}`
-        })
-    }
+    return inputTypes
 }
 
 /* For updating top-level simple properties of InputType (like name) */
@@ -104,17 +104,14 @@ export const createInputType = (name: string, product: string) => async (dispatc
     const inputType = res.data
     const error     = res.error
 
+    if(error) {
+        return dispatch(handleError(error, "Couldn't create input type."))
+    }
+
     dispatch({
         type: INPUT_TYPE_CREATE,
         inputType
     })
-
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't create input type. ${error}`
-        })
-    }
 
     return inputType
 }
@@ -144,18 +141,17 @@ export const saveInputType = (inputTypeID: string) =>
         const inputTypeNew = res.data
         const error        = res.error
 
+        if(error) {
+            return dispatch(handleError(error, "Couldn't save input type."))
+        }
+
         dispatch({
             type: INPUT_TYPE_SAVE,
             id: inputTypeID,
             inputType: inputTypeNew
         })
 
-        if(error) {
-            dispatch({
-                type: ERROR_DISPLAY_MSG,
-                message: `Couldn't save input type. ${error}`
-            })
-        }
+        return inputTypeNew
     }
 
 export const removeInputType = (id: string) => async (dispatch: Func, getState: Func) => {

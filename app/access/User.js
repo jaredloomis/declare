@@ -1,5 +1,6 @@
-import User    from "../model/User"
-import Account from "../model/Account"
+import User        from "../model/User"
+import Account     from "../model/Account"
+import accountAuth from "./validation/accountAuth"
 
 export default {
     /*
@@ -7,6 +8,8 @@ export default {
      */
 
     users({user}) {
+        accountAuth(user, null, {validateEntity: false})
+
         if(user && user.isSuperAdmin()) {
             return User.find({})
         } else {
@@ -17,13 +20,16 @@ export default {
     },
 
     async user({id}, {user}) {
+        const ret = await User.findById(id)
+        accountAuth(user, ret)
+
         // Find any accounts requested user and requesting user have in common
         const account    = await Account.containingUser(id)
         const commonAcct = account && account.containsUser(id)
         // If they share an account, let 'em in, otherwise error
         // TODO per-user permissions in account
         if(commonAcct || (user && user.isSuperAdmin())) {
-            return User.findById(id)
+            return ret
         } else {
             throw {
                 message: "You don't have permission to access this user."

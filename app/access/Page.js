@@ -4,6 +4,7 @@ import TestPackData  from "../model/TestPackData"
 import Report        from "../model/Report"
 import Link          from "../model/Link"
 import {executePack} from "../worker/executor"
+import accountAuth   from "./validation/accountAuth"
 
 export default {
     /*
@@ -11,12 +12,7 @@ export default {
      */
 
     pages({user}) {
-        // Check if user has access        
-        if(!user) {
-            throw {
-                message: "You don't have permission to access pages."
-            }
-        }
+        accountAuth(user, null, {validateEntity: false})
 
         // For super admin, send all pages. Otherwise
         // find pages in account
@@ -29,21 +25,7 @@ export default {
 
     async page({id}, {user}) {
         const page = await Page.findById(id)
-
-        // Check if page exists with id
-        if(!page) {
-            throw {
-                message: `Page not found with id \"${id}\"`
-            }
-        }
-
-        // Check if user has access
-        if(!(user && (user.owner.equals(page.owner) || user.isSuperAdmin()))) {
-            throw {
-                message: "Cannot access page not in your account."
-            }
-        }
-
+        accountAuth(user, page)
         return page
     },
 
@@ -52,31 +34,21 @@ export default {
      */
 
     createPage(page, {user}) {
+        accountAuth(user, null, {validateEntity: false})
         page.owner = user.owner
         return new Page(page).save()
     },
 
     async removePage({pageID}, {user}) {
         const page = await Page.findById(pageID)
-
-        if(!(user && (user.owner.equals(page.owner) || user.isSuperAdmin()))) {
-            throw {
-                message: "You don't have permission to delete this page."
-            }
-        }
-
+        accountAuth(user, page)
         page.remove()
         return page
     },
 
     async executePack({pageID, packID}, {user}) {
         const page = await Page.findById(pageID)
-
-        if(!(user && (user.owner.equals(page.owner) || user.isSuperAdmin()))) {
-            throw {
-                message: "You don't have permission to execute tests on this page."
-            }
-        }
+        accountAuth(user, page)
 
         executePack(pageID, packID)
         .then(async result => {
@@ -90,12 +62,7 @@ export default {
 
     async addTestPack({pageID, packID}, {user}) {
         const page = await Page.findById(pageID)
-
-        if(!(user && (user.owner.equals(page.owner) || user.isSuperAdmin()))) {
-            throw {
-                message: "You don't have permission to modify this page."
-            }
-        }
+        accountAuth(user, page)
 
         const data = new TestPackData({
             testPack: packID,
@@ -109,12 +76,7 @@ export default {
 
     async removeTestPack({pageID, packID}, {user}) {
         const page = await Page.findById(pageID)
-
-        if(!(user && (user.owner.equals(page.owner) || user.isSuperAdmin()))) {
-            throw {
-                message: "You don't have permission to modify this page."
-            }
-        }
+        accountAuth(user, page)
 
         page.testPackData = page.testPackData.filter(dat =>
             dat.testPack.toString() !== packID
@@ -124,12 +86,7 @@ export default {
 
     async updatePackData({pageID, data}, {user}) {
         let page = await Page.findById(pageID)
-
-        if(!(user && (user.owner.equals(page.owner) || user.isSuperAdmin()))) {
-            throw {
-                message: "You don't have permission to modify this page."
-            }
-        }
+        accountAuth(user, page)
 
         if(typeof(data) === "string") {
             data = JSON.parse(data).map(pack => new TestPackData(pack))
@@ -145,12 +102,7 @@ export default {
 
     async addLink({pageID, link}, {user}) {
         const page = await Page.findById(pageID)
-
-        if(!(user && (user.owner.equals(page.owner) || user.isSuperAdmin()))) {
-            throw {
-                message: "You don't have permission to modify this page."
-            }
-        }
+        accountAuth(user, page)
 
         const linkModel = new Link(link)
         return Page.findOneAndUpdate(
@@ -161,12 +113,7 @@ export default {
 
     async updateLink({pageID, linkID, link}, {user}) {
         const page = await Page.findById(pageID)
-
-        if(!(user && (user.owner.equals(page.owner) || user.isSuperAdmin()))) {
-            throw {
-                message: "You don't have permission to modify this page."
-            }
-        }
+        accountAuth(user, page)
 
         if(link) {
             if(linkID) {
@@ -183,12 +130,7 @@ export default {
 
     async updateInfo({id, page}, {user}) {
         const pageModel = await Page.findById(id)
-
-        if(!(user && (user.owner.equals(pageModel.owner) || user.isSuperAdmin()))) {
-            throw {
-                message: "You don't have permission to modify this page."
-            }
-        }
+        accountAuth(user, pageModel)
 
         const update = {
             startURL: page.startURL

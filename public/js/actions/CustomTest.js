@@ -11,6 +11,7 @@ import {
     ERROR_DISPLAY_MSG
 } from "./Types"
 import {fetchReport} from "./Page"
+import {handleError} from "./Error"
 import Fragments from "../graphQL/Fragments"
 
 const fragments = Fragments.customTest
@@ -31,17 +32,14 @@ export const fetchCustomTest = (customTestID: string) => async (dispatch: Func, 
     const customTest = {...res.data}
     const error      = res.error
 
+    if(error) {
+        return dispatch(handleError(error, "Couldn't fetch custom test."))
+    }
+
     dispatch({
         type: CUSTOM_TEST_FETCH,
         customTestID, customTest
     })
-
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't fetch custom test. ${error.message}`
-        })
-    }
 
     return customTest
 }
@@ -62,16 +60,15 @@ export const listCustomTests = async (dispatch: Func, getState: Func) => {
     const error       = res.error
 
     if(error) {
-        return dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't list custom tests. ${error.message}`
-        })
+        return dispatch(handleError(error, "Couldn't list custom test."))
     }
 
     dispatch({
         type: CUSTOM_TEST_LIST,
         customTests
     })
+
+    return customTests
 }
 
 export const createCustomTest = (pageID: string, customTestInput: any) => async (dispatch: Func, getState: Func) => {
@@ -91,17 +88,14 @@ export const createCustomTest = (pageID: string, customTestInput: any) => async 
     const customTest = res.data
     const error      = res.error
 
+    if(error) {
+        return dispatch(handleError(error, "Couldn't create custom test."))
+    }
+
     dispatch({
         type: CUSTOM_TEST_CREATE,
         customTest, pageID
     })
-
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't create custom test. ${error.message}`
-        })
-    }
 
     return customTest
 }
@@ -134,18 +128,17 @@ export const saveCustomTest = (testID: string) => async (dispatch: Func, getStat
     const customTest = res.data
     const error      = res.error
 
+    if(error) {
+        return dispatch(handleError(error, "Couldn't save custom test."))
+    }
+
     dispatch({
         type: CUSTOM_TEST_SAVE,
         testID,
         customTest
     })
 
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't save custom test. ${error.message}`
-        })
-    }
+    return customTest
 }
 
 export const updateCustomTestAction = (customTestID: string,
@@ -213,6 +206,11 @@ export const executeCustomTest = (customTestID: string) => async (dispatch: Func
     const res        = customTestRes.data.customTest
     const customTest = res.data
     const error      = res.error
+
+    if(error) {
+        return dispatch(handleError(error, "Couldn't execute custom test."))
+    }
+
     // Get the id of the report added to test
     const latestReportID = customTest.reports[customTest.reports.length-1]
     if(latestReportID) {
@@ -226,10 +224,5 @@ export const executeCustomTest = (customTestID: string) => async (dispatch: Func
         })
     }
 
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't execute custom test. ${error}`
-        })
-    }
+    return customTest
 }

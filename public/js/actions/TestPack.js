@@ -3,7 +3,7 @@ import gql     from "graphql-tag"
 import {
     PACK_FETCH, PACK_LIST, ERROR_DISPLAY_MSG
 } from "./Types"
-
+import {handleError} from "./Error"
 import client from "../graphQL/Client"
 import Fragments from "../graphQL/Fragments"
 
@@ -28,18 +28,17 @@ export const fetchPack = id => async (dispatch, getState) => {
     const testPack = res.data
     const error    = res.error
 
+    if(error) {
+        return dispatch(handleError(error, "Couldn't fetch test pack."))
+    }
+
     dispatch({
         type: PACK_FETCH,
         id,
         testPack
     })
 
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't fetch test pack. ${error.message}`
-        })
-    }
+    return testPack
 }
 
 export const listPacks = async (dispatch, getState) => {
@@ -59,16 +58,15 @@ export const listPacks = async (dispatch, getState) => {
     const res       = testPacksRes.data.testPacks
     const testPacks = res.data
     const error     = res.error
+
+    if(error) {
+        return dispatch(handleError(error, "Couldn't list test packs."))
+    }
     
     dispatch({
         type: PACK_LIST,
         testPacks
     })
 
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't list test packs. ${error.message}`
-        })
-    }
+    return testPacks
 }

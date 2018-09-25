@@ -1,12 +1,16 @@
 import Category from "../model/Category"
 import Product  from "../model/Product"
 
+import accountAuth from "./validation/accountAuth"
+
 export default {
     /*
      * Queries
      */
 
     categories({user}) {
+        accountAuth(user, null, {validateEntity: false})
+
         if(user && user.isSuperAdmin()) {
             return Category.find({})
         } else if(user.owner) {
@@ -20,13 +24,8 @@ export default {
 
     async category({id}, {user}) {
         const cat = await Category.findById(id)
-        if(user && (user.owner.equals(cat.owner) || user.isSuperAdmin())) {
-            return cat
-        } else {
-            throw {
-                message: "Cannot access categories not in your account."
-            }
-        }
+        accountAuth(user, cat)
+        return cat
     },
 
     /*
@@ -45,6 +44,8 @@ export default {
             await categoryModel.save()
         }
 
+        accountAuth(user, categoryModel)
+
         // Add category to product.{itemRef}Categories
         if(!parent) {
             const product = await Product.findById(category.product)
@@ -59,18 +60,7 @@ export default {
     async updateCategory({id, category}, {user}) {
         const categoryModel = await Category.findById(id)
 
-        if(!categoryModel) {
-            throw {
-                message: `Category with id "${id}" not found.`
-            }
-        }
-
-        // Ensure user has permission to access category
-        if(!(user && (user.owner.equals(categoryModel.owner) || user.isSuperAdmin()))) {
-            throw {
-                message: "You don't have permission to modify this category."
-            }
-        }
+        accountAuth(user, categoryModel)
 
         const parent = category.parent
         delete category.parent
@@ -85,11 +75,7 @@ export default {
     async removeCategory({id}, {user}) {
         const cat = await Category.findById(id)
 
-        if(!(user && (user.owner.equals(cat.owner) || user.isSuperAdmin()))) {
-            throw {
-                message: "You don't have permission to delete this category."
-            }
-        }
+        accountAuth(user, cat)
 
         // Remove category from product.{itemRef}Categories
         if(!cat.parent) {

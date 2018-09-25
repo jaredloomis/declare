@@ -1,6 +1,5 @@
-import pubSub         from "../pubSub"
 import TestRun        from "../model/TestRun"
-import accountAuth    from "./validation/accountAuthValidation"
+import accountAuth    from "./validation/accountAuth"
 
 import executeTestRun from "../worker/executor/TestRun"
 
@@ -19,8 +18,9 @@ export default {
 
     async testRun({id}, {user}) {
         const testRun = await TestRun.findById(id)
-        accountAuth(testRun, user, {
-            entityName: "TestRun"
+        accountAuth(user, testRun, {
+            entityName: "TestRun",
+            validateEntity: true
         })
         return testRun
     },
@@ -42,27 +42,30 @@ export default {
 
     async updateTestRun({id, testRun}, {user}) {
         const testRunModel = await TestRun.findById(id, {owner: true})
-        accountAuth(testRunModel, user, {
+        accountAuth(user, testRunModel, {
             entityName: "TestRun",
-            operation: "update"
+            operation: "update",
+            validateEntity: true
         })
         return TestRun.findByIdAndUpdate(id, testRun, {new: true})
     },
 
     async removeTestRun({id}, {user}) {
         const testRunModel = await TestRun.findById(id, {owner: true})
-        accountAuth(testRunModel, user, {
+        accountAuth(user, testRunModel, {
             entityName: "TestRun",
-            operation: "remove"
+            operation: "remove",
+            validateEntity: true
         })
         return TestRun.findByIdAndRemove(id)
     },
 
     async executeTestRun({id}, {user}) {
         const testRun = await TestRun.findById(id)
-        accountAuth(testRun, user, {
+        accountAuth(user, testRun, {
             entityName: "TestRun",
-            operation: "execute"
+            operation: "execute",
+            validateEntity: true
         })
         const reportBatch = await executeTestRun(testRun)
         testRun.reportBatches = (testRun.reportBatches || []).concat([reportBatch._id])

@@ -32,7 +32,7 @@ const enhance = compose(
         componentDidMount() {
             this.props.fetchUser(null)
             .then(user =>
-                this.props.setActiveUser(user._id)
+                user && this.props.setActiveUser(user._id)
             )
         }
     }),

@@ -4,6 +4,7 @@ import {
     PRODUCT_FETCH, PRODUCT_LIST, PRODUCT_CREATE, PRODUCT_ADD_CATEGORY,
     ERROR_DISPLAY_MSG
 } from "./Types"
+import {handleError} from "./Error"
 import Fragments from "../graphQL/Fragments"
 
 const fragments = Fragments.product
@@ -24,17 +25,16 @@ export const fetchProduct = id => async (dispatch, getState) => {
     const product = res.data
     const error   = res.error
 
+    if(error) {
+        return dispatch(handleError(error, "Couldn't fetch product."))
+    }
+
     dispatch({
         type: PRODUCT_FETCH,
         id, product
     })
 
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't fetch product. ${error.message}`
-        })
-    }
+    return product
 }
 
 export const listProducts = async (dispatch, getState) => {
@@ -51,17 +51,17 @@ export const listProducts = async (dispatch, getState) => {
     const res      = productRes.data.products
     const products = res.data
     const error    = res.error
+
+    if(error) {
+        return dispatch(handleError(error, "Couldn't list products."))
+    }
+
     dispatch({
         type: PRODUCT_LIST,
         products
     })
 
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't list products. ${error.message}`
-        })
-    }
+    return products
 }
 
 export const createProduct = product => async (dispatch, getState) => {
@@ -79,17 +79,16 @@ export const createProduct = product => async (dispatch, getState) => {
     const res           = productRes.data.product
     const {data, error} = res
 
+    if(error) {
+        return dispatch(handleError(error, "Couldn't create product."))
+    }
+
     dispatch({
         type: PRODUCT_CREATE,
         product: data
     })
 
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't create product. ${error.message}`
-        })
-    }
+    return data
 }
 
 export const addCategoryToProduct = (productID, categoryID) => async (dispatch, getState) => {
@@ -107,15 +106,14 @@ export const addCategoryToProduct = (productID, categoryID) => async (dispatch, 
     const res           = productRes.data.product
     const {data, error} = res
 
+    if(error) {
+        return dispatch(handleError(error, "Couldn't add category to product."))
+    }
+
     dispatch({
         type: PRODUCT_ADD_CATEGORY,
         product: data
     })
 
-    if(error) {
-        dispatch({
-            type: ERROR_DISPLAY_MSG,
-            message: `Couldn't add category to product. ${error.message}`
-        })
-    }
+    return data
 }
