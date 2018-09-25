@@ -5,6 +5,7 @@ import client from "../graphQL/Client"
 import {
     USER_TOKEN_CREATE, USER_CREATE, USER_ASSIGN,
     USER_SET_FOCUS_PRODUCT, USER_LIST, USER_FETCH,
+    USER_SET_ACTIVE,
     ERROR_DISPLAY_MSG
 } from "./Types"
 import Fragments from "../graphQL/Fragments"
@@ -190,3 +191,8 @@ export const fetchUser = id => async (dispatch, getState) => {
 
     return user
 }
+
+export const setActiveUser = userID => ({
+    type: USER_SET_ACTIVE,
+    userID
+})

@@ -11,6 +11,8 @@ export default {
                     items
                     itemRef
                     children
+                    product
+                    owner
                 }
                 error
             }`,
@@ -23,6 +25,8 @@ export default {
                     items
                     itemRef
                     children
+                    product
+                    owner
                 }
                 error
             }`

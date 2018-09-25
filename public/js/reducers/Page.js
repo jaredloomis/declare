@@ -36,6 +36,7 @@ const defaultState = {
     reportBatches: {},
     environments: {},
     activeToken: getCookieValue("declare_token"),
+    activeUserID: null,
     error: null,
     meta: {
         pages: {},

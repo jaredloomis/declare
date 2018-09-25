@@ -9,10 +9,25 @@ const mapStateToProps = (...fields) => (state, ownProps) => {
 
     // Copy over all requested fields
     return fields.reduce((acc, field) => {
-        const normalizedField = typeof field === "string" ?
-            field.split(".") :
-            [].concat(...field)
-        return deepSet(normalizedField, deepGet(normalizedField, state), acc)
+        if(typeof field === "object") {
+            const keys = Object.keys(field)
+            return keys.reduce((a, key) => {
+                const fieldVal = field[key]
+                const value    = typeof(fieldVal) === "string" ?
+                    deepGet(fieldVal.split("."), state)        :
+                    fieldVal(state)
+
+                return {
+                    ...a,
+                    [key]: value
+                }
+            }, acc)
+        } else {
+            const normalizedField = typeof field === "string" ?
+                field.split(".") :
+                [].concat(...field)
+            return deepSet(normalizedField, deepGet(normalizedField, state), acc)
+        }
     }, {})
 }
 

@@ -9,6 +9,7 @@ import {
     CATEGORY_UPDATE_NAME, CATEGORY_REMOVE, ERROR_DISPLAY_MSG,
     CATEGORY_LIST, CATEGORY_SET_ROOT
 } from "./Types"
+import {focusProduct} from "../selectors/Product"
 
 import Fragments from "../graphQL/Fragments"
 
@@ -80,7 +81,14 @@ export const listCategories = async (dispatch: Func, getState: Func) => {
 }
 
 export const createCategory = (categoryInput: any) => async (dispatch: Func, getState: Func) => {
-    const token = getState().activeToken
+    const state = getState()
+    const token = state.activeToken
+
+    // Use focusProduct as category.product if not already defined
+    if(!categoryInput.product) {
+        categoryInput.product = focusProduct(state)._id
+    }
+
     const categoryRes = await client(token).mutate({
         mutation: gql`
             mutation ($category: CategoryInput!) {

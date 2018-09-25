@@ -14,6 +14,9 @@ const categorySchema = new mongoose.Schema({
     items:  [{type: ObjectId}],
     // The type of ObjectIds stored in items (ex. "page")
     itemRef: {type: String, required: true},
+    // Product this category is associated with
+    product: {type: ObjectId, ref: "Product",
+              required: true},
     // Account that owns this Category
     owner:   {type: ObjectId, ref: "Account",
               required: true}
@@ -47,6 +50,9 @@ categorySchema.statics.graphQL = new GraphQLObjectType({
         children: {
             type: new GraphQLList(GraphQLID)
         },
+        product: {
+            type: GraphQLID //new GraphQLNonNull(GraphQLID)
+        },
         owner: {
             type: new GraphQLNonNull(GraphQLID)
         }
@@ -67,6 +73,9 @@ categorySchema.statics.graphQLInput = new GraphQLInputObjectType({
         },
         itemRef: {
             type: GraphQLString
+        },
+        product: {
+            type: GraphQLID
         },
         owner: {
             type: GraphQLID

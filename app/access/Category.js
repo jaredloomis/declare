@@ -1,4 +1,5 @@
 import Category from "../model/Category"
+import Product  from "../model/Product"
 
 export default {
     /*
@@ -43,6 +44,15 @@ export default {
             categoryModel.parent = parent
             await categoryModel.save()
         }
+
+        // Add category to product.{itemRef}Categories
+        if(!parent) {
+            const product = await Product.findById(category.product)
+            product[`${category.itemRef}Categories`] = product[`${category.itemRef}Categories`]
+                .concat([categoryModel._id])
+            await product.save()
+        }
+
         return categoryModel
     },
 
@@ -79,6 +89,14 @@ export default {
             throw {
                 message: "You don't have permission to delete this category."
             }
+        }
+
+        // Remove category from product.{itemRef}Categories
+        if(!cat.parent) {
+            const product = await Product.findById(cat.product)
+            product[`${cat.itemRef}Categories`] = product[`${cat.itemRef}Categories`]
+                .filter(tid => !tid.equals(cat._id))
+            await product.save()
         }
 
         await cat.remove()

@@ -5,6 +5,7 @@ import {
 
 import {listElements, createElement} from "../actions/Element"
 import {listCategories}        from "../actions/Category"
+import {focusProduct}          from "../selectors/Product"
 
 import Heading                 from "../components/base/Heading"
 import Container               from "../components/base/Container"
@@ -25,12 +26,12 @@ const ElementList = props => {
     const openModal  = () => props.setCreateInProgress(true)
     const closeModal = () => props.setCreateInProgress(false)
 
+    const product   = props.focusProduct
+    const productID = product && product._id
     const rootCategoryIDs = Object.keys(props.categories).filter(categoryID =>
-        props.categories[categoryID] && props.categories[categoryID].itemRef === "element"
+        props.categories[categoryID] && props.categories[categoryID].itemRef === "element" &&
+        props.categories[categoryID].product === productID
     )
-
-    const user      = props.users && props.users[Object.keys(props.users)[0]]
-    const productID = user && user.focusProduct
 
     return <Section><Container>
         <Row>
@@ -57,7 +58,11 @@ const ElementList = props => {
 }
 
 const enhance = compose(
-    withReduxState(["categories", "users"]),
+    withReduxState([
+        "categories",
+        "users",
+        {focusProduct}
+    ]),
     withReduxDispatch({
         listElements,
         listCategories,

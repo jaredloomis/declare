@@ -4,7 +4,7 @@ import {compose, setDisplayName, lifecycle} from "recompose"
 import Nav               from "../components/Nav"
 
 import {
-    fetchUser, setFocusProduct
+    fetchUser, setFocusProduct, setActiveUser
 } from "../actions/User"
 import withReduxDispatch from "./WithReduxDispatch"
 import withReduxState    from "./WithReduxState"
@@ -23,11 +23,17 @@ const enhance = compose(
         },
         fetchUser: {
             parameterized: fetchUser
+        },
+        setActiveUser: {
+            parameterized: setActiveUser
         }
     }),
     lifecycle({
         componentDidMount() {
             this.props.fetchUser(null)
+            .then(user =>
+                this.props.setActiveUser(user._id)
+            )
         }
     }),
     setDisplayName("NavContainer")

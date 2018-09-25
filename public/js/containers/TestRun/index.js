@@ -14,7 +14,9 @@ import Box               from "../../components/base/Box"
 import Button            from "../../components/base/Button"
 import List              from "../../components/base/List"
 import Link              from "../../components/base/Link"
+import Table             from "../../components/base/Table"
 import DateString        from "../../components/base/DateString"
+import FloatingPoint     from "../../components/base/FloatingPoint"
 import AddonsField       from "../../components/base/AddonsField"
 import SelectedTestList  from "./SelectedTestList"
 import withReduxState    from "../WithReduxState"
@@ -115,16 +117,21 @@ const TestRun = props => {
 
     const rawBatches  = testRun.reportBatches || []
     const batchCount  = rawBatches.length
-    const simpBatches = rawBatches.slice(batchCount-5, batchCount)
+    const simpBatches = rawBatches.slice(/*batchCount-5, batchCount*/)
     simpBatches.reverse()
-    const batches = <List>
+    const batches = <Table header={["Date", "Status"]}>
         {simpBatches.map(batchID => {
             const batch = props.reportBatches[batchID]
-            return <Link to={`#/ReportBatch/${batchID}`} key={batchID}>
-                {batch ? <DateString date={batch.startTime}/> : "Loading..."}
-            </Link>
+            return [
+                <Link to={`#/ReportBatch/${batchID}`} key={batchID}>
+                    {batch ? <DateString date={batch.startTime}/> : "Loading..."}
+                </Link>,
+                <span>
+                    <FloatingPoint>{batch ? batch.passPercentage : ""}</FloatingPoint>%
+                </span>
+            ]
         })}
-    </List>
+    </Table>
 
     return <div>
         <Title leftLabel={<span><Link to="#/TestRuns">Test Runs</Link>/</span>}>

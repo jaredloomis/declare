@@ -7,7 +7,7 @@ import FlexItem from "./FlexItem"
 
 import style from "../../../style/Table.scss"
 
-const Table = ({header, data}) => {
+const Table = ({header, children, data}) => {
     return <div>
         <div className={style.header}>
         <Flexbox>
@@ -16,7 +16,7 @@ const Table = ({header, data}) => {
             )}
         </Flexbox>
         </div>
-        {data.map((dataRow, i) =>
+        {(children || data).map((dataRow, i) =>
             <div className={style.row} key={i}>
             <Flexbox>
                 {dataRow.map((datum, j) =>

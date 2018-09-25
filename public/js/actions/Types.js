@@ -75,6 +75,7 @@ export const USER_ASSIGN            = "USER_ASSIGN"
 export const USER_SET_FOCUS_PRODUCT = "USER_SET_FOCUS_PRODUCT"
 export const USER_LIST              = "USER_LIST"
 export const USER_FETCH             = "USER_FETCH"
+export const USER_SET_ACTIVE        = "USER_SET_ACTIVE"
 
 export const ERROR_DISPLAY_MSG = "ERROR_DISPLAY_MSG"
 export const ERROR_ACKNOWLEDGE = "ERROR_ACKNOWLEDGE"
