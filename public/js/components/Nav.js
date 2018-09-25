@@ -21,10 +21,15 @@ const Nav = ({focusProduct, onSelectFocusProduct}) =>
             </span>
         </div>
         <div className={`${bulma.navbar_menu} ${style.menu}`}>
-            <a className={`${bulma.navbar_item} ${style.navItem}`} href="#/">
-                <FeatherIcon icon="home"/>
+            <a className={`${bulma.navbar_item} ${style.navItem}`} href="#/Products">
+                <FeatherIcon icon="gift"/>
                 <br/>
-                Home
+                Products
+            </a>
+            <a className={`${bulma.navbar_item} ${style.navItem}`} href="#/Environments">
+                <FeatherIcon icon="list"/>
+                <br/>
+                Environments
             </a>
             <a className={`${bulma.navbar_item} ${style.navItem}`} href="#/Pages">
                 <FeatherIcon icon="file-text"/>

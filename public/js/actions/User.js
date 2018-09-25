@@ -9,6 +9,7 @@ import {
 } from "./Types"
 import {handleError} from "./Error"
 import Fragments from "../graphQL/Fragments"
+import {activeUser} from "../selectors/User"
 
 const fragments = Fragments.user
 
@@ -98,7 +99,7 @@ export const assignUser = (accountID: string, userID: string) => async (dispatch
 export const setFocusProduct = productID => async (dispatch, getState) => {
     const state  = getState()
     const token  = state.activeToken
-    const user   = {...state.users[Object.keys(state.users)[0]]}
+    const user   = {...activeUser(state)}
     const userID = user._id
     delete user._id
     delete user.__typename

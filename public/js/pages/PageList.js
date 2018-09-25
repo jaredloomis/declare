@@ -33,6 +33,11 @@ const PageList = props => {
         props.categories[categoryID].product === productID
     )
 
+    if(!productID) {
+        window.location.hash = "/Products"
+        return null
+    }
+
     return <Section><Container>
         <Row>
             <Column size="10">

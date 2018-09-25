@@ -92,4 +92,16 @@ environmentSchema.statics.graphQLInput = new GraphQLInputObjectType({
     }
 })
 
+/**
+ * Create a default environment for a Product
+ */
+environmentSchema.statics.defaultEnvironment = function(product) {
+    return new this({
+        name: `${product.name} Default Environment`,
+        description: `Auto-generated Default Environment for ${product.name}.`,
+        variables: [],
+        owner: product.owner
+    })
+}
+
 module.exports = mongoose.model("Environment", environmentSchema)

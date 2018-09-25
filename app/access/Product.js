@@ -1,5 +1,6 @@
 import Product     from "../model/Product"
 import Category    from "../model/Category"
+import Environment from "../model/Environment"
 import accountAuth from "./validation/accountAuth"
 
 export default {
@@ -22,10 +23,8 @@ export default {
      * Mutations
      */
 
-    createProduct({product}, {user}) {
+    async createProduct({product}, {user}) {
         accountAuth(user, null, {validateEntity: false})
-
-        product.owner = product.owner || user.owner
 
         // Validate account
         // TODO: Just checking it exists
@@ -33,6 +32,15 @@ export default {
             throw {
                 message: "Product is not valid."
             }
+        }
+
+        product.owner = product.owner || user.owner
+
+        // Create an environment if none specified
+        if(!product.defaultEnvironment) {
+            const env = Environment.defaultEnvironment(product)
+            await env.save()
+            product.defaultEnvironment = env._id
         }
 
         return new Product(product).save()

@@ -3,43 +3,41 @@ import {
     compose, lifecycle, setDisplayName, withState
 } from "recompose"
 
-import {listProducts, createProduct}  from "../actions/Product"
-import {watchReports}  from "../actions/Report"
+import {listProducts}       from "../actions/Product"
+import {setFocusProduct}    from "../actions/User"
+import {focusProduct}       from "../selectors/Product"
 
 import Modal                from "../components/base/Modal"
+import Heading              from "../components/base/Heading"
 import ProductListComponent from "../components/ProductList"
-import ProductCreate        from "../components/ProductCreate"
+import ProductCreate        from "./ProductCreate"
 
 import withReduxState       from "./WithReduxState"
 import withReduxDispatch    from "./WithReduxDispatch"
 
-import Environment    from "./Environment"
-
 const ProductList = props => {
-    const createProd    = prod => props.createProduct({
-        pageCategories: [],
-        elementCategories: [],
-        inputTypeCategories: [],
-        ...prod
-    })
-
     const openModal     = () => props.setCreateInProgress(true)
     const closeModal    = () => props.setCreateInProgress(false)
+    const activate      = props.setFocusProduct
 
     return [
-        <ProductListComponent {...props} onCreate={openModal} key="productlist-child-1"/>,
+        <ProductListComponent {...props}
+            onCreate={openModal} onActivate={activate}
+            focusProduct={props.focusProduct}
+            key="productlist-child-1"/>,
         <Modal active={props.createInProgress} onClose={closeModal} key="productlist-modal">
-            <ProductCreate onCreate={createProd}/>
+            <Heading>Create Product</Heading>
+            <ProductCreate/>
         </Modal>
     ]
 }
 
 const enhance = compose(
-    withReduxState(["products"]),
+    withReduxState(["products", {focusProduct}]),
     withReduxDispatch({
         listProducts,
-        createProduct: {
-            parameterized: createProduct
+        setFocusProduct: {
+            parameterized: setFocusProduct
         }
     }),
     withState("createInProgress", "setCreateInProgress", false),

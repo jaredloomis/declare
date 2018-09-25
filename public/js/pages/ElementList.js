@@ -35,9 +35,8 @@ const ElementList = props => {
     )
 
     if(!productID) {
-        return <Section><Container>
-            <span>Please select a product!</span>
-        </Container></Section>
+        window.location.hash = "/Products"
+        return null
     }
 
     return <Section><Container>
