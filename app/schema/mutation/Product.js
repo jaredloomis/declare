@@ -21,6 +21,22 @@ export default {
             )
         }
     },
+    updateProduct: {
+        type: CanError(ProductModel.graphQL),
+        args: {
+            id: {
+                type: new GraphQLNonNull(GraphQLID)
+            },
+            product: {
+                type: ProductModel.graphQLInput
+            }
+        },
+        resolve(parent, args, {state}) {
+            return wrapExceptional(() =>
+                ProductAccess.updateProduct(args, {user: state.user})
+            )
+        }
+    },
     addCategoryToProduct: {
         type: CanError(ProductModel.graphQL),
         args: {

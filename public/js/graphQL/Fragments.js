@@ -263,6 +263,7 @@ export default {
                 data {
                     _id
                     name
+                    defaultEnvironment
                     pageCategories
                     elementCategories
                     inputTypeCategories

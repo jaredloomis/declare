@@ -3,7 +3,10 @@ import {
     compose, lifecycle, setDisplayName, withProps
 } from "recompose"
 
-import {fetchProduct, addCategoryToProduct}  from "../actions/Product"
+import {
+    fetchProduct, addCategoryToProduct,
+    updateProduct
+}  from "../actions/Product"
 
 import Product from "../components/Product"
 
@@ -18,11 +21,14 @@ const enhance = compose(
         },
         addCategoryToProduct: {
             parameterized: addCategoryToProduct
+        },
+        updateProduct: {
+            parameterized: updateProduct
         }
     }),
     withProps(props => ({
-        onCategoryCreate(category) {
-            return props.addCategoryToProduct(props.productID, category._id)
+        onChange(changes) {
+            props.updateProduct(props.productID, changes)
         },
         ...props.products[props.productID],
     })),

@@ -6,49 +6,46 @@ import ProductSelect from "../containers/ProductSelect"
 import bulma from "../../style/bulma.scss"
 import style from "../../style/Nav.scss"
 
-const Nav = ({focusProduct, onSelectFocusProduct}) =>
-    <nav className={`${bulma.navbar} ${bulma.has_shadow} ${bulma.is_spaced}`}>
-    <img src="/logo-blue.png" width="70" height="70" style={{width: "70px", height: "70px"}}/>
-    <div className={bulma.container}>
-        <div className={bulma.navbar_brand}>
-            {/*
-            <a className={`${bulma.navbar_item} ${style.logo}`} href="#/">
-                Declare
-            </a>
-            */}
-            <span className={`${bulma.navbar_item}`}>
-                <ProductSelect flat defaultValue={focusProduct} onChange={onSelectFocusProduct}/>
-            </span>
+const Nav = ({focusProduct, onSelectFocusProduct}) => <nav className={style.nav}>
+    <div className={style.content}>
+    <div className={style.left}>
+        <div className={style.navItem}>
+            <img src="/logo-blue.png" width="70" height="70" style={{width: "70px", height: "70px"}}/>
         </div>
-        <div className={`${bulma.navbar_menu} ${style.menu}`}>
-            <a className={`${bulma.navbar_item} ${style.navItem}`} href="#/Products">
-                <FeatherIcon icon="gift"/>
-                <br/>
-                Products
-            </a>
-            <a className={`${bulma.navbar_item} ${style.navItem}`} href="#/Environments">
-                <FeatherIcon icon="list"/>
-                <br/>
-                Environments
-            </a>
-            <a className={`${bulma.navbar_item} ${style.navItem}`} href="#/Pages">
-                <FeatherIcon icon="file-text"/>
-                <br/>
-                Pages
-            </a>
-            <a className={`${bulma.navbar_item} ${style.navItem}`} href="#/TestRuns">
-                <FeatherIcon icon="play"/>
-                <br/>
-                Test Runs
-            </a>
-            <a className={`${bulma.navbar_item} ${style.navItem}`} href="#/Elements">
-                <FeatherIcon icon="arrow-up-left"/>
-                <br/>
-                Elements
-            </a>
+        <div className={style.navItem}>
+            <ProductSelect flat defaultValue={focusProduct}
+                onChange={onSelectFocusProduct}/>
         </div>
     </div>
-    </nav>
+    <div className={style.right}>
+        <a className={style.navItem} href="#/Products">
+            <FeatherIcon icon="gift"/>
+            <br/>
+            Products
+        </a>
+        <a className={style.navItem} href="#/Environments">
+            <FeatherIcon icon="list"/>
+            <br/>
+            Environments
+        </a>
+        <a className={style.navItem} href="#/Pages">
+            <FeatherIcon icon="file-text"/>
+            <br/>
+            Pages
+        </a>
+        <a className={style.navItem} href="#/TestRuns">
+            <FeatherIcon icon="play"/>
+            <br/>
+            Test Runs
+        </a>
+        <a className={style.navItem} href="#/Elements">
+            <FeatherIcon icon="arrow-up-left"/>
+            <br/>
+            Elements
+        </a>
+    </div>
+    </div>
+</nav>
 
 Nav.displayName = "Nav"
 export default Nav

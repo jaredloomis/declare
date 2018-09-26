@@ -2,7 +2,7 @@ import gql from "graphql-tag"
 import client from "../graphQL/Client"
 import {
     PRODUCT_FETCH, PRODUCT_LIST, PRODUCT_CREATE, PRODUCT_ADD_CATEGORY,
-    ERROR_DISPLAY_MSG
+    PRODUCT_UPDATE
 } from "./Types"
 import {handleError} from "./Error"
 import Fragments from "../graphQL/Fragments"
@@ -89,6 +89,34 @@ export const createProduct = product => async (dispatch, getState) => {
     })
 
     return data
+}
+
+export const updateProduct = (id, product) => async (dispatch, getState) => {
+    const token = getState().activeToken
+    const newProductRes = await client(token).mutate({
+        mutation: gql`mutation ($id: ID!, $product: ProductInput) {
+                product: updateProduct(id: $id, product: $product) {
+                    ...FullProduct
+                }
+            }
+        
+            ${fragments.full}`,
+        variables: {id, product}
+    })
+    const {data, error} = newProductRes.data.product
+    const newProduct = data
+
+    if(error) {
+        return dispatch(handleError(error, "Couldn't update product."))
+    }
+
+    dispatch({
+        type: PRODUCT_UPDATE,
+        product: newProduct,
+        id
+    })
+
+    return newProduct
 }
 
 export const addCategoryToProduct = (productID, categoryID) => async (dispatch, getState) => {

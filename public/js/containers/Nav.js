@@ -16,7 +16,7 @@ const NavBase = props => {
 }
 
 const enhance = compose(
-    withReduxState(["users"]),
+    withReduxState(["users", "activeToken"]),
     withReduxDispatch({
         setFocusProduct: {
             parameterized: setFocusProduct
@@ -30,10 +30,12 @@ const enhance = compose(
     }),
     lifecycle({
         componentDidMount() {
-            this.props.fetchUser(null)
-            .then(user =>
-                user && this.props.setActiveUser(user._id)
-            )
+            if(this.props.activeToken) {
+                this.props.fetchUser(null)
+                .then(user =>
+                    user && this.props.setActiveUser(user._id)
+                )
+            }
         }
     }),
     setDisplayName("NavContainer")

@@ -1,5 +1,6 @@
 import {
-    PRODUCT_CREATE, PRODUCT_FETCH, PRODUCT_LIST, PRODUCT_ADD_CATEGORY
+    PRODUCT_CREATE, PRODUCT_FETCH, PRODUCT_LIST, PRODUCT_ADD_CATEGORY,
+    PRODUCT_UPDATE
 } from "../actions/Types"
 
 export default (state, action) => {
@@ -35,6 +36,14 @@ export default (state, action) => {
             }
         }, state)
     } else if(action.type === PRODUCT_ADD_CATEGORY) {
+        return {
+            ...state,
+            products: {
+                ...state.products,
+                [action.product._id]: action.product
+            }
+        }
+    } else if(action.type === PRODUCT_UPDATE) {
         return {
             ...state,
             products: {

@@ -46,6 +46,15 @@ export default {
         return new Product(product).save()
     },
 
+    async updateProduct({id, product}, {user}) {
+        const productModel = await Product.findById(id)
+        accountAuth(user, productModel, {
+            entityName: "Product"
+        })
+        await productModel.update(product)
+        return Product.findById(id)
+    },
+
     async addCategory({productID, categoryID}, {user}) {
         const product  = await Product.findById(productID)
         const category = await Category.findById(categoryID)

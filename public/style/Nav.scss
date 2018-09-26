@@ -1,5 +1,54 @@
 @import "./variables";
 
+@mixin container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.nav {
+    @include container;
+    border-bottom: 1px solid $grey-lighter;
+}
+
+.content {
+    @include container;
+    margin: 0 auto;
+    position: relative;
+    width: 80%;
+}
+
+.nav .left {
+    @include container;
+    border-right: 1px solid $grey-lighter;
+}
+
+.nav .left .navItem {
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+.nav .right {
+    @include container;
+}
+
+.navItem {
+    display: block;
+    text-align: center;
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+}
+
+.right .navItem {
+    color: $text;
+}
+
+.right .navItem:hover {
+    color: $link;
+}
+
+/*
 .menu {
     border-left: 1px solid $grey-lighter;
 }
@@ -19,4 +68,4 @@
 
 .logo:hover {
     //background-color: $white !important;
-}
+}*/

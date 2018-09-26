@@ -1,49 +1,32 @@
 import React            from "react"
-import {setDisplayName} from "recompose"
+import {
+    compose, withState, setDisplayName
+} from "recompose"
 
-import Heading            from "./base/Heading"
-import Box              from "./base/Box"
-import Panel            from "./base/Panel"
-import PageLink         from "../containers/PageLink"
-import Category         from "../containers/Category"
-import CategoryAdd      from "../containers/CategoryAdd"
-import PageAdd          from "../containers/PageAdd"
+import Button            from "./base/Button"
+import EnvironmentSelect from "../containers/EnvironmentSelect"
 
 const Product = props => {
-    const {name, pageCategories, elementCategories, inputTypeCategories} = props
+    const change = key => value =>
+        props.setChanges({
+            ...props.changes,
+            [key]: value
+        })
 
-    const pageList = pageCategories && pageCategories.map(categoryID =>
-        <Category categoryID={categoryID} productID={props._id} key={categoryID}/>
-    )
-
-    const elementList = elementCategories && elementCategories.map(categoryID =>
-        <Category categoryID={categoryID} productID={props._id} key={categoryID}/>
-    )
-
-    const inputTypeList = inputTypeCategories && inputTypeCategories.map(categoryID =>
-        <Category categoryID={categoryID} productID={props._id} key={categoryID}/>
-    )
+    const save = () => props.onChange(props.changes)
 
     return <div>
-        <Heading size="2">{name}</Heading>
-        <Box>
-            <Heading size="3">Pages</Heading>
-            {pageList}
-            <CategoryAdd itemRef="page" onCreate={props.onCategoryCreate}/>
-        </Box>
-        <Box>
-            <Heading size="3">Elements</Heading>
-            {elementList}
-            <CategoryAdd itemRef="element" onCreate={props.onCategoryCreate}/>
-        </Box>
-        <Box>
-            <Heading size="3">Input Types</Heading>
-            {inputTypeList}
-            <CategoryAdd itemRef="inputType" onCreate={props.onCategoryCreate}/>
-        </Box>
+        Default Environment:
+        <EnvironmentSelect
+            onChange={change("defaultEnvironment")}
+            defaultValue={props.defaultEnvironment}/>
+        <Button type="primary" onClick={save}>Save</Button>
     </div>
 }
 
-const enhance = setDisplayName("Product")
+const enhance = compose(
+    withState("changes", "setChanges", {}),
+    setDisplayName("Product")
+)
 
 export default enhance(Product)

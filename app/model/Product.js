@@ -75,16 +75,16 @@ productSchema.statics.graphQLInput = new GraphQLInputObjectType({
     name: "ProductInput",
     fields: {
         name: {
-            type: new GraphQLNonNull(GraphQLString)
+            type: GraphQLString
         },
         pageCategories: {
-            type: new GraphQLNonNull(new GraphQLList(GraphQLID))
+            type: new GraphQLList(GraphQLID)
         },
         elementCategories: {
-            type: new GraphQLNonNull(new GraphQLList(GraphQLID))
+            type: new GraphQLList(GraphQLID)
         },
         inputTypeCategories: {
-            type: new GraphQLNonNull(new GraphQLList(GraphQLID))
+            type: new GraphQLList(GraphQLID)
         },
         defaultEnvironment: {
             type: GraphQLID
