@@ -21,7 +21,7 @@ export default {
 
     async user({id}, {user}) {
         const ret = await User.findById(id)
-        accountAuth(user, ret)
+        //accountAuth(user, ret)
 
         // Find any accounts requested user and requesting user have in common
         const account    = await Account.containingUser(id)
