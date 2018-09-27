@@ -8,6 +8,7 @@ import Button        from "./base/Button"
 import Select        from "./base/Select"
 import TextInput     from "./base/TextInput"
 import FeatherIcon   from "./base/FeatherIcon"
+import CodeEditor    from "./base/CodeEditor"
 import ElementQuickSelect from "../containers/ElementQuickSelect"
 import PageSelect    from "../containers/PageSelect"
 import {deepSet}     from "../lib/Deep"
@@ -123,21 +124,22 @@ const ExtractElementTextAction = ({productID, values, onValueChange}) => [
 
 const AssertJsAction = ({values, onValueChange}) =>
     <Column>
-        <TextInput defaultValue={values.code}
+        <CodeEditor defaultValue={values.code}
                    onChange={onValueChange(["code"])}
                    label="Javascript Code"/>
     </Column>
 
 const ExtractJsAction = ({values, onValueChange}) => [
-    <Column size="7" key="0">
-        <TextInput defaultValue={values.code}
-                   onChange={onValueChange(["code"])}
-                   label="JavaScript Code"/>
-    </Column>,
     <Column size="5" key="1">
         <TextInput defaultValue={values.variableName}
                    onChange={onValueChange(["variableName"])}
                    label="Variable Name"/>
+    </Column>,
+    <Column size="7" key="0">
+        <CodeEditor
+            defaultValue={values.code}
+            onChange={onValueChange(["code"])}
+            label="JavaScript Code"/>
     </Column>
 ]
 

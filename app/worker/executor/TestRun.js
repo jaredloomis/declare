@@ -9,7 +9,6 @@ export default async (testRun, options) => {
             const report = await executeCustomTest(test.customTestID, {
                 environment: testRun.environment
             })
-
             reports.push(report._id)
         }
     }

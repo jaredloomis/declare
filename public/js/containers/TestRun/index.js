@@ -116,9 +116,9 @@ const TestRun = props => {
         props.executeTestRun(testRunID)
 
     const rawBatches  = testRun.reportBatches || []
-    const batchCount  = rawBatches.length
-    const simpBatches = rawBatches.slice(/*batchCount-5, batchCount*/)
+    const simpBatches = rawBatches.slice()
     simpBatches.reverse()
+
     const batches = <Table header={["Date", "Status"]}>
         {simpBatches.map(batchID => {
             const batch = props.reportBatches[batchID]

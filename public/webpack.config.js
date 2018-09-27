@@ -62,6 +62,9 @@ module.exports = {
                  }},
                  "sass-loader"
              ]},
+            {test: /\.css$/,
+             use: ["style-loader", "css-loader"]
+            },
             // Load .html files
             {test: /\.html$/, loader: "html-loader"},
             // Load .graphql files with graphql-tag

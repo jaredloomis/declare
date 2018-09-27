@@ -37,15 +37,14 @@ export default class Navigator {
         const roots = await Page.find({startURL: {$exists: true}})
 
         if(target) {
-            return roots
-            .filter(root => {
-                if(root.startURL.length === 0) return false
+            return roots.filter(root => {
+                if(root.startURL && root.startURL.length === 0) return false
                 const path = findPath(this.pageGraph, root._id.toString(), target)
                 const isTarget = String(root._id) === String(target)
                 return path.size > 1 || isTarget
             })
         } else {
-            return roots
+            return roots || []
         }
     }
 

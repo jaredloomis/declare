@@ -1,4 +1,23 @@
+@import "./variables";
+
 .action > * {
     padding-top: 0.25em;
     padding-bottom: 0.25em;
+}
+
+.action {
+    border: 1px solid $grey-light;
+    border-radius: 3px;
+    padding: 5px;
+    margin-bottom: 8px;
+    transition: border 0.5s;
+}
+
+.action:hover {
+    border: 1px solid $grey;
+}
+
+.stepNumber {
+    color: $grey;
+    float: left;
 }

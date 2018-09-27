@@ -1,4 +1,5 @@
 // @flow
+import Page                   from "../../model/Page"
 import type {DriverI}         from "./Driver"
 import type {Selector}        from "./Selector"
 import Report, {Step, Status} from "./Report"
@@ -64,7 +65,7 @@ export default class Runner {
 
     async sleep(millis: number): Promise<void> {
         await this.log(Status.INFO, `Sleep for ${millis}ms`)
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             setTimeout(resolve, millis)
         })
     }
@@ -119,7 +120,6 @@ export default class Runner {
             ContentEncoding: "base64",
             ContentType: "image/png"
         })
-        //await this.log(Status.INFO, "Take a screenshot", {screenshot})
         return {key, raw: screenshot}
     }
 
@@ -195,8 +195,25 @@ export default class Runner {
      * Navigation
      */
 
-    navigateTo(pageID: string): Promise<void> {
-        return this.navigator.navigateTo(pageID)
+    async navigateTo(pageID: string): Promise<void> {
+        const page = await Page.findById(pageID)
+
+        try {
+            const ret = this.navigator.navigateTo(pageID)
+
+            await this.log(
+                Status.PASS,
+                `Navigate to "${page.name}"`
+            )
+
+            return ret
+        } catch(ex) {
+            await this.log(
+                Status.FAIL,
+                `Couldn't navigate to "${page.name}"`,
+                {ex, pageID}
+            )
+        }
     }
 
     /**

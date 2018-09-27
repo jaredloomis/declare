@@ -1,9 +1,10 @@
 import React from "react"
 import {withState, setDisplayName, compose, withProps} from "recompose"
 
-import Button     from "./base/Button"
-import Action     from "./Action"
-import generateID from "../lib/ID"
+import Button      from "./base/Button"
+import FeatherIcon from "./base/FeatherIcon"
+import Action      from "./Action"
+import generateID  from "../lib/ID"
 
 import style from "../../style/ActionList.scss"
 
@@ -49,7 +50,10 @@ const ActionList = ({actions, productID, actionKeys, setActionKeys, onAdd, onRem
     return <div>
         {actions && actions.map((action, actionI) =>
             <div className={style.action} key={actionKeys[actionI] || actionI}>
-                <Button type="small light" onClick={() => insert(actionI)}>Insert Step</Button>
+                <span className={style.stepNumber}>#{actionI + 1}</span>
+                <Button type="small light" onClick={() => insert(actionI)}>
+                    Insert Step &nbsp; <FeatherIcon icon="corner-right-up" size="12px"/>
+                </Button>
                 <Action {...action}
                     productID={productID}
                     onChange={change(actionI)}

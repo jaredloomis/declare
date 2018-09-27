@@ -1,0 +1,17 @@
+@import "./variables";
+
+.handle {
+    display: block;
+    height: 1.25em;
+    background-color: $grey-lighter;
+    text-align: center;
+}
+
+.handle:before {
+    content: '\2261';
+    color: $grey;
+}
+
+.handle:hover {
+  background: lighten($grey-lighter, 2%);
+}

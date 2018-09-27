@@ -33,10 +33,7 @@ export default {
     async customTest({id}, {user}) {
         const test = await CustomTest.findById(id)
         const page = await Page.findById(test.owner)
-
-        accountAuth(user, test)
         accountAuth(user, page)
-
         return test
     },
 
@@ -54,7 +51,6 @@ export default {
         const test = await CustomTest.findById(id)
         const page = await Page.findById(test.owner)
 
-        accountAuth(user, test)
         accountAuth(user, page)
 
         await CustomTest.findByIdAndUpdate(id, customTest)
@@ -65,7 +61,6 @@ export default {
         const customTest = await CustomTest.findById(id)
         const page       = await Page.findById(customTest.owner)
 
-        accountAuth(user, customTest)
         accountAuth(user, page)
 
         if(customTest.owner) {
@@ -80,7 +75,6 @@ export default {
         const customTest  = await CustomTest.findById(id)
         const page        = await Page.findById(customTest.owner)
 
-        accountAuth(user, customTest)
         accountAuth(user, page)
 
         try {
