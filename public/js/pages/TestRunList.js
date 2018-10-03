@@ -76,7 +76,7 @@ const enhance = compose(
     lifecycle({
         async componentWillMount() {
             const testRuns = await this.props.listTestRuns()
-            for(const testRun of testRuns) {
+            for(const testRun of testRuns || []) {
                 const batches = await Promise.all(
                     testRun.reportBatches.map(this.props.fetchReportBatch)
                 )

@@ -179,6 +179,7 @@ export const fetchUser = id => async (dispatch, getState) => {
 
     if(error) {
         dispatch(handleError(error, "Couldn't fetch user."))
+        //throw error
     }
 
     return user

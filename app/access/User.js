@@ -1,6 +1,7 @@
 import User        from "../model/User"
 import Account     from "../model/Account"
 import accountAuth from "./validation/accountAuth"
+import {ErrorType} from "../../common/Error"
 
 export default {
     /*
@@ -32,6 +33,7 @@ export default {
             return ret
         } else {
             throw {
+                type: ErrorType.NotLoggedIn,
                 message: "You don't have permission to access this user."
             }
         }

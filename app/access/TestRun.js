@@ -9,6 +9,11 @@ export default {
      */
 
     testRuns({user}) {
+        accountAuth(user, null, {
+            entityName: "TestRun",
+            validateEntity: false
+        })
+
         if(user && user.isSuperAdmin()) {
             return TestRun.find({})
         }

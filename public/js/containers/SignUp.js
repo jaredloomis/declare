@@ -21,6 +21,7 @@ const SignUpBase = props => {
         })
         await props.assignUser(account._id, user._id)
         await props.createToken(account._id, authData)
+        window.location.hash = "/Products"
     }
 
     return <SignUpComponent onSubmit={submit}/>

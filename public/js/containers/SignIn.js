@@ -7,8 +7,9 @@ import withReduxDispatch from "./WithReduxDispatch"
 import {createToken} from "../actions/User"
 
 const SignInBase = props => {
-    const createTokenU = authData => {
-        props.createToken(null, authData)
+    const createTokenU = async authData => {
+        await props.createToken(null, authData)
+        window.location.hash = "/Products"
     }
     return <SignInComponent onSubmit={createTokenU}/>
 }

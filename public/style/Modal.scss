@@ -5,6 +5,8 @@
     overflow: auto;
     background-color: $background;
     border-radius: 2px;
+    border: 1px solid $grey;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .wideModal .content {
@@ -26,7 +28,11 @@
 }
 
 .handle {
-    height: 1.25em;
-    background: $grey-light;
+    height: 1.5em;
+    background: $grey-lighter;
     border-bottom: 1px solid $grey;
+}
+
+.closeButton {
+    float: right;
 }
