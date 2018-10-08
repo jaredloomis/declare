@@ -11,8 +11,14 @@ import style from "../../../style/TextInput2.scss"
 
 const TextInputBase = props => {
     // Extract props
-    const {label, focused, setFocused, defaultValue, onChange,
-           text, setText, onBlur} = props
+    const {
+        label, focused, setFocused, defaultValue,
+        onChange,
+        text, setText, onBlur,
+        state, setState, children,
+        password,
+        ...passProps
+    } = props
 
     // Create an ID for element
     const randID = `${Math.random()}`
@@ -48,9 +54,9 @@ const TextInputBase = props => {
         {/*<label className={labelActive ? style.activeLabel : ""} onClick={labelClick}>
             {label}
         </label>*/}
-        <input type="text" className={/*bulma.input*/ null} defaultValue={defaultValue}
+        <input type={password ? "password" : "text"} defaultValue={defaultValue}
             onFocus={focus} onBlur={unfocus} onChange={change} id={randID}
-            placeholder={label}/>
+            placeholder={label} {...passProps}/>
     </div>
 }
 

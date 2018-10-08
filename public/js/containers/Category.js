@@ -79,6 +79,12 @@ const CategoryBase = props => {
             setModal({type: `${itemRef}view`, itemID})
         }
     }
+    const moveItem = (itemI, destCatID) => {
+        props.addItemToCategory(destCatID, category.items[itemI])
+        props.removeCategoryItem(categoryID, itemI)
+        props.saveCategory(destCatID)
+        save()
+    }
     const store =
         itemRef === "element"   ? props.elements  :
         itemRef === "inputtype" ? props.inputType :
@@ -118,6 +124,7 @@ const CategoryBase = props => {
                 onChildAdd={childAdd}
                 onRemove={remove}
                 onItemSelect={viewItem}
+                onItemMove={moveItem}
                 productID={productID}
                 store={store}/>
         <Modal type="info" onClose={modalClose} active={modal.type}>

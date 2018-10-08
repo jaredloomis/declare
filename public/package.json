@@ -19,6 +19,7 @@
     "lokka": "^1.7.0",
     "lokka-transport-http": "^1.6.1",
     "materialize-css": "^0.98.0",
+    "prop-types": "^15.6.2",
     "ramda": "^0.23.0",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",

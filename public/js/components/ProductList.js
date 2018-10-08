@@ -24,8 +24,10 @@ const ProductList = ({products=[], focusProduct, onCreate, onActivate}) => {
                         </Link>
                     </Column>
                     <Column>
-                        <Button type="primary" onClick={() => onActivate(id)}>
-                            Activate
+                        <Button type={`primary ${focusProduct && focusProduct._id === id && "static"}`}
+                                onClick={() => onActivate(id)}>
+                            {focusProduct && focusProduct._id === id ?
+                                "Active" : "Activate"}
                         </Button>
                     </Column>
                 </Row>

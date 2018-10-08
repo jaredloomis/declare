@@ -1,7 +1,11 @@
-import Category from "../model/Category"
-import Product  from "../model/Product"
+import Category  from "../model/Category"
+import Product   from "../model/Product"
+import Page      from "../model/Page"
+import Element   from "../model/Element"
+import InputType from "../model/InputType"
 
 import accountAuth from "./validation/accountAuth"
+import EntityRef   from "../../common/entityRef"
 
 export default {
     /*
@@ -96,5 +100,54 @@ export default {
         }
 
         return cat
+    },
+
+    async addItemToCategory({id, itemID}, {user}) {
+        const category = await Category.findByid(id)
+
+        // Ensure user has access to category
+        accountAuth(user, category, {
+            entityName: "Category"
+        })
+
+        // Ensure user has access to item
+        let entity
+        switch(category.itemRef) {
+            case EntityRef.page:
+                entity = await Page.findById(itemID)
+                break
+            case EntityRef.element:
+                entity = await Element.findById(itemID)
+                break
+            case EntityRef.inputType:
+                entity = await InputType.findById(itemID)
+                break
+        }
+        accountAuth(user, entity, {
+            entityName: category.itemRef
+        })
+
+        // Add item to category
+        category.items = category.items
+            .concat([itemID])
+        await category.save()
+
+        return category
+    },
+
+    async removeItemFromCategory({id, itemID}, {user}) {
+        const category = await Category.findByid(id)
+
+        // Ensure user has access to category
+        accountAuth(user, category, {
+            entityName: "Category"
+        })
+
+        // Remove item from category
+        category.items = category.items
+            .filter(iid => iid !== itemID)
+        await category.save()
+
+        return category
     }
 }

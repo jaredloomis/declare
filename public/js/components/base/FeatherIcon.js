@@ -10,7 +10,7 @@ const FeatherIcon = props => {
         width, height
     }
 
-    return <span dangerouslySetInnerHTML={{__html: feather.toSvg(props.icon, computedProps)}} {...computedProps}>
+    return <span dangerouslySetInnerHTML={{__html: feather.icons[props.icon].toSvg(computedProps)/*feather.toSvg(props.icon, computedProps)*/}} {...computedProps}>
     </span>
 }
 

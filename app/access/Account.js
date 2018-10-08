@@ -1,6 +1,6 @@
-import Account  from "../model/Account"
-import User     from "../model/User"
-import Category from "../model/Category"
+import Account     from "../model/Account"
+import User        from "../model/User"
+import Category    from "../model/Category"
 
 import accountAuth from "./validation/accountAuth"
 

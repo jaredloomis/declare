@@ -30,7 +30,7 @@ export default (state: any, action: any) => {
         }
     } else if(action.type === USER_SET_FOCUS_PRODUCT) {
         const newUser = {
-            ...state.users[state.activeToken.user],
+            ...state.users[state.activeUserID],
             focusProduct: action.productID
         }
 
@@ -38,7 +38,7 @@ export default (state: any, action: any) => {
             ...state,
             users: {
                 ...state.users,
-                [state.activeToken.user]: newUser
+                [state.activeUserID]: newUser
             }
         }
     } else if(action.type === USER_LIST) {

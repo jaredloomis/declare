@@ -43,7 +43,37 @@ export default {
             product.defaultEnvironment = env._id
         }
 
-        return new Product(product).save()
+        const productModel = new Product(product)
+        await productModel.save()
+
+        // Create a root Element category
+        const elementsCat = new Category({
+            name: `${product.name} Elements`,
+            items: [],
+            itemRef: "element",
+            product: productModel._id,
+            owner: productModel.owner
+        })
+        await elementsCat.save()
+
+        // Create a root Page category
+        const pagesCat = new Category({
+            name: `${product.name} Pages`,
+            items: [],
+            itemRef: "page",
+            product: productModel._id,
+            owner: productModel.owner
+        })
+        await pagesCat.save()
+
+        // Add root categories to product
+        productModel.elementCategories = productModel.elementCategories
+            .concat([elementsCat._id])
+        productModel.pageCategories = productModel.pageCategories
+            .concat([pagesCat._id])
+        await productModel.save()
+
+        return productModel
     },
 
     async updateProduct({id, product}, {user}) {

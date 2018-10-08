@@ -12,6 +12,10 @@ import {
 import {
     createCustomTest, saveCustomTest
 } from "../actions/CustomTest"
+import {
+    addItemToCategory, removeCategoryItem,
+    saveCategory
+} from "../actions/Category"
 import Container   from "../components/base/Container"
 import Section     from "../components/base/Section"
 import Modal       from "../components/base/Modal"
@@ -27,6 +31,7 @@ import PageComponent from "../components/Page"
 import TestPack    from "../containers/TestPack"
 import CustomTestDesc    from "../containers/CustomTestDesc"
 import CustomTest  from "../containers/CustomTest"
+import CustomTestCreate  from "../containers/CustomTestCreate"
 import LinkDesc    from "../components/LinkDesc"
 import Link from "../containers/Link"
 import TestPackSelect from "../containers/TestPackSelect"
@@ -110,8 +115,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch(updatePageInfo(ownProps.pageID, valMap))
             dispatch(savePageInfo(ownProps.pageID))
         },
-        onCustomTestAdd() {
-            return dispatch(createCustomTest(ownProps.pageID, {name: "x"}))
+        onCustomTestAdd(name) {
+            return dispatch(createCustomTest(ownProps.pageID, {name}))
         },
         onCustomTestSave(testID) {
             dispatch(saveCustomTest(testID))
@@ -148,20 +153,17 @@ class Page extends Component {
     }
 
     render() {
-        const addLink = () => {
+        const handleAddLink = () => {
             this.props.onLinkAdd()
             this.setModal({
-                type: "linkview",
+                type: "linkedit",
                 linkI: this.props.links.length
             })
         }
-        const addTest = () => {
-            this.props.onCustomTestAdd().then(test =>
-                this.setModal({
-                    type: "testview",
-                    testID: test._id
-                })
-            )
+        const handleAddTest = () => {
+            this.setModal({
+                type: "testadd"
+            })
         }
 
         return <Section><Container>
@@ -169,8 +171,8 @@ class Page extends Component {
                 onInfoChange={this.infoChange}
                 onViewLink={linkI  => this.setModal({type: "linkview", linkI})}
                 onViewTest={testID => this.setModal({type: "testview", testID})}
-                onAddLink={addLink}
-                onAddTest={addTest}/>
+                onAddLink={handleAddLink}
+                onAddTest={handleAddTest}/>
             {this.renderModal()}
         </Container></Section>
     }
@@ -248,6 +250,15 @@ class Page extends Component {
                     edit: "testedit",
                     url: `#/Test/${testID}`
                 }
+            )
+        } else if(modal.type === "testadd") {
+            return modalOf(() => {},
+                <CustomTestCreate pageID={this.props._id} onCreate={test =>
+                    this.setModal({
+                        type: "testedit",
+                        testID: test._id
+                    })}
+                />
             )
         } else {
             return modalOf(null, null)

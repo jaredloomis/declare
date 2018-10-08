@@ -3,8 +3,6 @@ import {
     withState, compose, withProps
 } from "recompose"
 
-import Row       from "./base/Row"
-import Column    from "./base/Column"
 import Section   from "./base/Section"
 import Heading   from "./base/Heading"
 import Title     from "./base/Title"
@@ -14,7 +12,8 @@ import Optional  from "./base/Optional"
 import Tile  from "./base/Tile"
 import FlexGrid  from "./base/FlexGrid"
 import FeatherIcon  from "./base/FeatherIcon"
-
+import EntityRef    from "../../../common/entityRef"
+import CategorySelect from "../containers/CategorySelect"
 import withReduxState from "../containers/WithReduxState"
 
 /**
@@ -24,11 +23,13 @@ import withReduxState from "../containers/WithReduxState"
  * @prop onViewTest {ObjectID -> any} called back when a Test is clicked on
  * @prop onAddLink {() -> any} called back when add link btn is clicked
  * @prop onAddTest {() -> any} called back when add Test btn is clicked
+ * @prop onCategoryChange {ObjectID -> any} called when page is moved to a different category
  */
 const Page = props => {
     const {
         name, startURL, links, pageCustomTests,
         onInfoChange, onViewLink, onViewTest, onAddLink, onAddTest,
+        onCategoryChange,
         editingURL, setEditingURL
     } = props
 

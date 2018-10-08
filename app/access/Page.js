@@ -1,10 +1,13 @@
+import mongoose      from "mongoose"
 import Page          from "../model/Page"
 import TestPack      from "../model/TestPack"
 import TestPackData  from "../model/TestPackData"
 import Report        from "../model/Report"
 import Link          from "../model/Link"
+import Category      from "../model/Category"
 import {executePack} from "../worker/executor"
 import accountAuth   from "./validation/accountAuth"
+import EntityRef     from "../../common/entityRef"
 
 export default {
     /*
@@ -42,6 +45,15 @@ export default {
     async removePage({pageID}, {user}) {
         const page = await Page.findById(pageID)
         accountAuth(user, page)
+
+        // Remove page from category(ies)
+        await Category.update({
+            itemRef: EntityRef.page,
+            items: {$in: [mongoose.Types.ObjectId(pageID)]}
+        }, {
+            $pull: {items: mongoose.Types.ObjectId(pageID)}
+        })
+
         page.remove()
         return page
     },

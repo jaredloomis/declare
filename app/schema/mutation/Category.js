@@ -50,5 +50,41 @@ export default {
                 CategoryAccess.removeCategory({id}, {user: state.user})
             )
         }
+    },
+    addItemToCategory: {
+        type: CanError(CategoryModel.graphQL),
+        args: {
+            id: {
+                name: "id",
+                type: new GraphQLNonNull(GraphQLID)
+            },
+            itemID: {
+                name: "itemID",
+                type: new GraphQLNonNull(GraphQLID)
+            },
+        },
+        resolve(object, args, {state}) {
+            return wrapExceptional(() =>
+                CategoryAccess.addItemToCategory(args, {user: state.user})
+            )
+        }
+    },
+    removeItemFromCategory: {
+        type: CanError(CategoryModel.graphQL),
+        args: {
+            id: {
+                name: "id",
+                type: new GraphQLNonNull(GraphQLID)
+            },
+            itemID: {
+                name: "itemID",
+                type: new GraphQLNonNull(GraphQLID)
+            },
+        },
+        resolve(object, args, {state}) {
+            return wrapExceptional(() =>
+                CategoryAccess.removeItemFromCategory(args, {user: state.user})
+            )
+        }
     }
 }

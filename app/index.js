@@ -9,6 +9,7 @@ import body          from "koa-bodyparser"
 import session       from "koa-session"
 import assets        from "koa-static"
 import websockify    from "koa-websocket"
+import compress      from "koa-compress"
 
 import mongoose      from "mongoose"
 
@@ -44,7 +45,7 @@ db.once("open", () => {/* we're connected! */})
 app.use(body())
 
 // Session
-app.keys = ["super-secret"]
+app.keys = ["wizardbutterfly" + Math.random()]
 app.use(convert(session(app)))
 
 // Authentication
@@ -56,8 +57,20 @@ app.use(requestLogger)
 // Static assets
 app.use(assets(path.join(__dirname, "..", "..", "public", "dist"), {
     // 1 week
-    //maxage: 657000
-    maxage: 0
+    maxage: 3000,
+    // Brotli compression
+    br: true,
+    // GZip compression
+    gzip: true
+}))
+
+// Compression
+app.use(compress({
+    /*filter(contentType) {
+        return /text/i.test(contentType)
+    },*/
+    //threshold: 2048,
+    //flush: require("zlib").Z_SYNC_FLUSH
 }))
 
 /*

@@ -163,7 +163,7 @@ export default class Runner {
                 `Couldn't get text from "${showSelector(selector)}"`,
                 {ex}
             )
-            return ""
+            return []
         }
     }
 

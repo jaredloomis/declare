@@ -161,7 +161,7 @@ export const removeCategory = (categoryID: string) => async (dispatch: Func, get
     })
 }
 
-// XXX Deprecated - categories do not exist on accounts no more
+// XXX Deprecated - categories do not exist on accounts no more WHAT YES THEY DO...
 // Make specified category a "root" category - no parent category, but connected
 // to the account itself
 export const setCategoryAsRoot = (categoryID: string, itemRef: string) => async (dispatch: Func, getState: Func) => {

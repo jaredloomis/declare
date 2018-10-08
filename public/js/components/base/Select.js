@@ -7,8 +7,17 @@ import bulma       from "../../../style/bulma"
 import style       from "../../../style/Select.scss"
 
 const SelectBase = props => {
-    const click = () => {
-        props.setExpanded(!props.expanded)
+    const toggleExpanded = expanded => {
+        expanded = typeof(expanded) === "boolean" ?
+            expanded :
+            !props.expanded
+
+        if(expanded) {
+            window.addEventListener("mousedown", () => {
+                props.setExpanded(false)
+            })
+        }
+        props.setExpanded(expanded)
     }
     const change = value => {
         props.setExpanded(false)
@@ -61,7 +70,7 @@ const SelectBase = props => {
             return <span className={`${style.flatBody} ${style.selectButton}
                                        ${isFlat ? style.flat : ""}`}
                     aria-haspopup="true" aria-controls="dropdown-menu"
-                    onClick={click}>
+                    onClick={toggleExpanded}>
                 <label className={selectedText ? style.activeLabel : ""}>
                     {props.label}
                 </label>
@@ -72,7 +81,7 @@ const SelectBase = props => {
             return <button className={`${bulma.button} ${style.selectButton}
                                        ${isFlat ? style.flat : ""}`}
                     aria-haspopup="true" aria-controls="dropdown-menu"
-                    onClick={click}>
+                    onClick={toggleExpanded}>
                 <label className={selectedText ? style.activeLabel : ""}>
                     {props.label}
                 </label>

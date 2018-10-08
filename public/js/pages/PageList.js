@@ -30,7 +30,8 @@ const PageList = props => {
     const productID = product && product._id
     const rootCategoryIDs = Object.keys(props.categories).filter(categoryID =>
         props.categories[categoryID] && props.categories[categoryID].itemRef === "page" &&
-        props.categories[categoryID].product === productID
+        props.categories[categoryID].product === productID &&
+        !props.categories[categoryID].parent
     )
 
     if(!productID) {

@@ -1,30 +1,51 @@
 import React from "react"
 import {compose, withState, setDisplayName} from "recompose"
 
+import FeatherIcon from "./FeatherIcon"
+
+import style from "../../../style/Editable.scss"
+
 const enhance = compose(
-    withState("isEditing", "setIsEditing", false),
+    withState("state", "setState", {
+        isEditing: false
+    }),
     setDisplayName("Editable")
 )
 
-export default EditComponent => DisplayComponent => enhance(props => {
-    const {setIsEditing, isEditing} = props
+export default (EditComponent, DisplayComponent) => enhance(props => {
+    const {setState, state, ...passProps} = props
 
     const displayClicked = event => {
-        setIsEditing(true)
+        setState({
+            ...state,
+            isEditing: true
+        })
 
         if(props.onClick) {
             props.onClick(event)
         }
     }
-    const editComplete   = () => {
-        setIsEditing(false)
+    const editComplete = () => setState({
+        ...state,
+        isEditing: false
+    })
+    const mouseMove = event => {
+        event.target.focus()
     }
 
-    if(!isEditing) {
-        return <DisplayComponent {...props} onClick={displayClicked}>
-            {props.children}
-        </DisplayComponent>
+    if(!state.isEditing) {
+        return <div className={style.display} onClick={displayClicked}>
+            <DisplayComponent {...passProps}>
+                {props.children}
+            </DisplayComponent>
+            <span className={style.icon}>
+                <FeatherIcon icon="edit-2" size={props.iconSize || 20}/>
+            </span>
+        </div>
     } else {
-        return <EditComponent {...props} defaultValue={props.children} onBlur={editComplete}/>
+        return <EditComponent {...passProps}
+            defaultValue={props.children}
+            onMouseOver={mouseMove}
+            onBlur={editComplete}/>
     }
 })

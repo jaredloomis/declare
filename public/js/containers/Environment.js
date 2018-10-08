@@ -62,6 +62,12 @@ const enhance = compose(
         onSave() {
             return props.saveEnvironment(props.environmentID)
         },
+        onInfoChange(info) {
+            return props.updateEnvironment(props.environmentID, {
+                ...props.environments[props.environmentID],
+                ...info
+            })
+        },
         ...props.environments[props.environmentID],
     })),
     lifecycle({

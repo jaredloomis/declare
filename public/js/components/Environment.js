@@ -1,28 +1,31 @@
 import React            from "react"
 import {
-    setDisplayName, compose, withState, withPropsOnChange
+    setDisplayName, compose, withState
 } from "recompose"
 
-import Heading            from "./base/Heading"
-import Button           from "./base/Button"
-import TextInput        from "./base/TextInput"
-import Row              from "./base/Row"
-import Column           from "./base/Column"
+import Button          from "./base/Button"
+import TextInput       from "./base/TextInput"
+import Row             from "./base/Row"
+import Column          from "./base/Column"
+import EditableText    from "./base/EditableText"
+import EditableHeading from "./base/EditableHeading"
 
 /**
  * Props:
- * - name             : String
- * - variables        : [Variable]
- * - onVariableChange : (variableIndex: Number,
- *                       {identifier : String} | {value : String})
- *                       => any
- * - onVariableAdd    : () => any
- * - onSave           : () => any
+ * name             : String
+ * variables        : [Variable]
+ * onVariableChange : (variableIndex: Number,
+ *                     {identifier : String} | {value : String})
+ *                     => any
+ * onVariableAdd    : () => any
+ * onSave           : () => any
+ * onInfoChange     : Object -> any
  */
 const Environment = props => {
     const {
         name, description, variables,
         onVariableChange, onVariableAdd, onVariableRemove, onSave,
+        onInfoChange,
         setState, state
     } = props
 
@@ -52,6 +55,11 @@ const Environment = props => {
         onVariableAdd()
         recomputeIDs(variables.length + 1)
     }
+
+    const infoChange = key => value =>
+        onInfoChange({
+            [key]: value
+        })
 
     const variablesView = variables && variables.map((variable, variableI) => {
         const identifierChange = identifier =>
@@ -83,8 +91,12 @@ const Environment = props => {
     })
 
     return <div>
-        <Heading>{name}</Heading>
-        <p>{description}</p>
+        <EditableHeading onChange={infoChange("name")}>
+            {name}
+        </EditableHeading>
+        <EditableText onChange={infoChange("description")}>
+            {description}
+        </EditableText>
         {variablesView}
         <Button type="info"    onClick={addVariable}>+</Button>
         <br/>

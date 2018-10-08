@@ -8,8 +8,8 @@ import Button    from "./base/Button"
 import Group     from "./base/Group"
 
 const SignUpBase = ({email, password, setEmail, setPassword, onSubmit}) => <Group>
-    <TextInput label="Email"    onChange={setEmail}/>
-    <TextInput label="Password" onChange={setPassword}/>
+    <TextInput label="Email"             onChange={setEmail}/>
+    <TextInput label="Password" password onChange={setPassword}/>
     <Button type="primary" onClick={() => onSubmit({email, password})}>
         Sign Up
     </Button>

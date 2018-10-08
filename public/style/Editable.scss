@@ -1,0 +1,13 @@
+.display {
+    cursor: pointer;
+    display: flex;
+}
+
+.icon {
+    display: none;
+    padding-left: 5px;
+}
+
+.display:hover .icon {
+    display: inline;
+}

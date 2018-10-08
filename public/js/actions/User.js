@@ -10,6 +10,7 @@ import {
 import {handleError} from "./Error"
 import Fragments from "../graphQL/Fragments"
 import {activeUser} from "../selectors/User"
+import DError from "../lib/DError"
 
 const fragments = Fragments.user
 
@@ -36,7 +37,8 @@ export const createToken = (accountID: string, authData: any) => async (dispatch
     const error = tokenRes.data.token.error
 
     if(error) {
-        return dispatch(handleError(error, "Couldn't create token."))
+        throw new DError("Couldn't create token", error)
+        //return dispatch(handleError(error, "Couldn't create token."))
     }
 
     dispatch({
@@ -44,7 +46,7 @@ export const createToken = (accountID: string, authData: any) => async (dispatch
         token
     })
 
-    await dispatch(fetchUser(token.user._id))
+    await dispatch(fetchUser(token.user))
 
     return token
 }
