@@ -7,19 +7,19 @@ const del    = require("del")
 /* Building source code files */
 
 function appJs() {
-    return gulp.src("app/**/*.js")
+    return gulp.src("src/**/*.js")
         .pipe(babel())
         .pipe(gulp.dest("dist/app"))
 }
 
 function lintAppJs() {
-    return gulp.src(["app/**/*.js"])
+    return gulp.src(["src/**/*.js"])
         .pipe(eslint())
         .pipe(eslint.format())
 }
 
 function commonJs() {
-    return gulp.src("common/**/*.js")
+    return gulp.src("../common/**/*.js")
         .pipe(babel())
         .pipe(gulp.dest("dist/common"))
 }
@@ -29,7 +29,7 @@ const javascript = gulp.series(appJs, commonJs)
 /* Utils */
 
 function watch() {
-    return gulp.watch("app/**/*.js", javascript)
+    return gulp.watch("src/**/*.js", javascript)
 }
 
 function clean() {

@@ -55,7 +55,7 @@ app.use(authenticate)
 app.use(requestLogger)
 
 // Static assets
-app.use(assets(path.join(__dirname, "..", "..", "public", "dist"), {
+app.use(assets(path.join(__dirname, "..", "..", "..", "client", "dist"), {
     // 1 week
     maxage: 3000,
     // Brotli compression
@@ -77,7 +77,7 @@ app.use(compress({
  * Routes
  */
 
-// Read all controllers and set them up
+// Read all controllers and register their returned routes
 fs
 .readdirSync(path.join(__dirname, "controller"))
 .filter(file => file.indexOf(".") !== 0)

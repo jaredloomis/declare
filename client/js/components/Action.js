@@ -1,7 +1,7 @@
 import React from "react"
 import {withState, compose, setDisplayName} from "recompose"
 
-import {actionTypes} from "../../../app/config/Action"
+import {actionTypes} from "../../../common/config/Action"
 import Row           from "./base/Row"
 import Column        from "./base/Column"
 import Button        from "./base/Button"

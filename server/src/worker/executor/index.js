@@ -1,5 +1,5 @@
 // @flow
-import {internalIDs}  from "../../config/TestPack"
+import {internalIDs}  from "../../../common/config/TestPack"
 import Page           from "../../model/Page"
 import TestPack       from "../../model/TestPack"
 import Runner         from "./Runner"

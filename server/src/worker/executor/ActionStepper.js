@@ -1,6 +1,6 @@
 // @flow
 import Element        from "../../model/Element"
-import {actionTypes}  from "../../config/Action"
+import {actionTypes}  from "../../../common/config/Action"
 import Runner         from "./Runner"
 import {Status}       from "./Report"
 
