@@ -9,7 +9,7 @@ const del    = require("del")
 function appJs() {
     return gulp.src("src/**/*.js")
         .pipe(babel())
-        .pipe(gulp.dest("dist/app"))
+        .pipe(gulp.dest("dist"))
 }
 
 function lintAppJs() {
@@ -18,13 +18,7 @@ function lintAppJs() {
         .pipe(eslint.format())
 }
 
-function commonJs() {
-    return gulp.src("../common/**/*.js")
-        .pipe(babel())
-        .pipe(gulp.dest("dist/common"))
-}
-
-const javascript = gulp.series(appJs, commonJs)
+const javascript = gulp.series(appJs)
 
 /* Utils */
 
@@ -38,7 +32,7 @@ function clean() {
 
 /* Entire build */
 
-const build = gulp.series(clean, appJs, commonJs)
+const build = gulp.series(clean, appJs)
 
 gulp.task("default", build)
 exports.build      = build

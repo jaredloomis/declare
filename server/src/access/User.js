@@ -1,7 +1,8 @@
 import User        from "../model/User"
 import Account     from "../model/Account"
 import accountAuth from "./validation/accountAuth"
-import {ErrorType} from "../../common/Error"
+import {Error}     from "declare-common"
+const {ErrorType} = Error
 
 export default {
     /*

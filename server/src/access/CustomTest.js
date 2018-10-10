@@ -1,10 +1,8 @@
 import mongoose            from "mongoose"
 
-import pubSub              from "../pubSub"
 import CustomTest          from "../model/CustomTest"
 import Page                from "../model/Page"
-import Report              from "../model/Report"
-import {executeCustomTest} from "../worker/executor"
+import {executeCustomTest} from "declare-executor"
 import accountAuth         from "./validation/accountAuth"
 
 export default {

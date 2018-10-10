@@ -5,7 +5,7 @@ import {
 } from "graphql"
 
 import Report   from "./Report"
-import {Status} from "../worker/executor/Report"
+import {Status} from "declare-executor/Report"
 
 const ObjectId = mongoose.Schema.Types.ObjectId
 

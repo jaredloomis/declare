@@ -8,7 +8,7 @@ import createType  from "mongoose-schema-to-graphql"
 
 import encodeVideo           from "../common/encodeVideo"
 import {retrieveAsset, storeAsset} from "../access/Asset"
-import {Status} from "../worker/executor/Report"
+import {Status} from "declare-executor/Report"
 
 const ObjectId = mongoose.Schema.Types.ObjectId
 

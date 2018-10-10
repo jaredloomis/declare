@@ -5,9 +5,9 @@ import {expect}    from "chai"
 import mongoose    from "mongoose"
 
 import {development as dbConfig} from "../config/database"
-import Navigator      from "../worker/executor/Navigator"
+/*import Navigator      from "../worker/executor/Navigator"
 import Runner         from "../worker/executor/Runner"
-import SeleniumDriver from "../worker/executor/SeleniumDriver"
+import SeleniumDriver from "../worker/executor/SeleniumDriver"*/
 import Page from "../model/Page"
 
 describe("Navigator", () => {

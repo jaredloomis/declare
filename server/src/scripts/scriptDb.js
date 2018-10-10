@@ -2,7 +2,7 @@ import mongoose  from "mongoose"
 import Promise   from "bluebird"
 
 import {development as dbConfig} from "../../config/database"
-import logger                    from "../../common/Logger"
+import {logger}                  from "declare-common"
 
 // Use bluebird promises
 mongoose.Promise = Promise

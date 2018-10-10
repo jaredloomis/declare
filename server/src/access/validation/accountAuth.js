@@ -1,4 +1,5 @@
-import {ErrorType} from "../../../common/Error"
+//import {Error} from "declare-common"
+const {ErrorType} = require("declare-common").Error//Error
 
 const defaultOptions = {
     validateEntity: true,

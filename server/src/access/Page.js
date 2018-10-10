@@ -5,9 +5,9 @@ import TestPackData  from "../model/TestPackData"
 import Report        from "../model/Report"
 import Link          from "../model/Link"
 import Category      from "../model/Category"
-import {executePack} from "../worker/executor"
+import {executePack} from "declare-executor/index"
 import accountAuth   from "./validation/accountAuth"
-import EntityRef     from "../../common/entityRef"
+import {EntityRef}    from "declare-common"
 
 export default {
     /*

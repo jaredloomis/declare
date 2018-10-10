@@ -5,7 +5,7 @@ import Element   from "../model/Element"
 import InputType from "../model/InputType"
 
 import accountAuth from "./validation/accountAuth"
-import EntityRef   from "../../common/entityRef"
+import {EntityRef} from "declare-common"
 
 export default {
     /*
