@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import Product from "../model/Product"
+import {Product} from "declare-db"
 
 mongoose.Promise = require("bluebird")
 

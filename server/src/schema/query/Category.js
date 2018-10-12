@@ -3,7 +3,7 @@ import {
 } from "graphql"
 
 import CanError       from "../GraphQLCanError"
-import CategoryModel  from "../../model/Category"
+import {Category as CategoryModel}  from "declare-db"
 import CategoryAccess from "../../access/Category"
 
 export default {

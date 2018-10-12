@@ -1,4 +1,4 @@
-import Element     from "../model/Element"
+import {Element}     from "declare-db"
 import accountAuth from "./validation/accountAuth"
 
 export default {

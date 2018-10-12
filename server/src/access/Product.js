@@ -1,6 +1,6 @@
-import Product     from "../model/Product"
-import Category    from "../model/Category"
-import Environment from "../model/Environment"
+import {Product}     from "declare-db"
+import {Category}    from "declare-db"
+import {Environment} from "declare-db"
 import accountAuth from "./validation/accountAuth"
 
 export default {

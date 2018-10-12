@@ -2,7 +2,7 @@ import {
     GraphQLNonNull, GraphQLID
 } from "graphql"
 
-import InputTypeModel  from "../../model/InputType"
+import {InputType as InputTypeModel}  from "declare-db"
 import InputTypeAccess from "../../access/InputType"
 
 import CanError, {wrapExceptional} from "../GraphQLCanError"

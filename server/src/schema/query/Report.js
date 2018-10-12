@@ -1,6 +1,6 @@
 import {GraphQLList, GraphQLID, GraphQLNonNull} from "graphql"
 
-import ReportModel  from "../../model/Report"
+import {Report as ReportModel}  from "declare-db"
 import ReportAccess from "../../access/Report"
 
 import CanError, {wrapExceptional} from "../GraphQLCanError"

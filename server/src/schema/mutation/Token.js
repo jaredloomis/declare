@@ -2,7 +2,7 @@ import {
     GraphQLNonNull, GraphQLID, GraphQLString
 } from "graphql"
 
-import TokenModel  from "../../model/Token"
+import {Token as TokenModel}  from "declare-db"
 import TokenAccess from "../../access/Token"
 
 import CanError, {wrapExceptional} from "../GraphQLCanError"

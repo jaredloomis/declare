@@ -1,6 +1,6 @@
 import {GraphQLList, GraphQLNonNull, GraphQLID} from "graphql"
 
-import TestPackModel  from "../../model/TestPack"
+import {TestPack as TestPackModel}  from "declare-db"
 import TestPackAccess from "../../access/TestPack"
 
 import CanError, {wrapExceptional} from "../GraphQLCanError"

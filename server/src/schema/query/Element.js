@@ -2,7 +2,7 @@ import {
     GraphQLID, GraphQLNonNull, GraphQLList
 } from "graphql"
 
-import ElementModel  from "../../model/Element"
+import {Element as ElementModel}  from "declare-db"
 import ElementAccess from "../../access/Element"
 
 import CanError, {wrapExceptional} from "../GraphQLCanError"

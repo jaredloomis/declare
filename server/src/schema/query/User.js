@@ -1,10 +1,10 @@
 import {
-    GraphQLID, GraphQLNonNull, GraphQLList
+    GraphQLID, GraphQLList
 } from "graphql"
 
 import CanError from "../GraphQLCanError"
 
-import UserModel  from "../../model/User"
+import {User as UserModel}  from "declare-db"
 import UserAccess from "../../access/User"
 
 export default {

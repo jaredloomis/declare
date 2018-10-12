@@ -2,7 +2,7 @@ import {
     GraphQLID, GraphQLNonNull, GraphQLString
 } from "graphql"
 
-import AccountModel  from "../../model/Account"
+import {Account as AccountModel}  from "declare-db"
 import AccountAccess from "../../access/Account"
 
 import CanError, {wrapExceptional} from "../GraphQLCanError"

@@ -1,4 +1,4 @@
-import Report      from "../model/Report"
+import {Report}      from "declare-db"
 import accountAuth from "./validation/accountAuth"
 
 export default {

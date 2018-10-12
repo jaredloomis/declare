@@ -2,9 +2,9 @@ import {
     GraphQLString, GraphQLError
 } from "graphql"
 
-import Viewer  from "../../model/Viewer"
-import Account from "../../model/Account"
-import Token   from "../../model/Token"
+import {Viewer}  from "declare-db"
+import {Account} from "declare-db"
+import {Token}   from "declare-db"
 
 export default {
     viewer: {

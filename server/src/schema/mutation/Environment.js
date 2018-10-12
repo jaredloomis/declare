@@ -2,7 +2,7 @@ import {
     GraphQLID, GraphQLNonNull
 } from "graphql"
 
-import EnvironmentModel  from "../../model/Environment"
+import {Environment as EnvironmentModel}  from "declare-db"
 import EnvironmentAccess from "../../access/Environment"
 
 import CanError, {wrapExceptional} from "../GraphQLCanError"

@@ -1,5 +1,5 @@
-import User        from "../model/User"
-import Account     from "../model/Account"
+import {User}        from "declare-db"
+import {Account}     from "declare-db"
 import accountAuth from "./validation/accountAuth"
 import {Error}     from "declare-common"
 const {ErrorType} = Error

@@ -1,4 +1,4 @@
-import TestRun        from "../model/TestRun"
+import {TestRun}        from "declare-db"
 import accountAuth    from "./validation/accountAuth"
 
 import executeTestRun from "declare-executor/TestRun"

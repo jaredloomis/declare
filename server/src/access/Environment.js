@@ -1,4 +1,4 @@
-import Environment from "../model/Environment"
+import {Environment} from "declare-db"
 import accountAuth from "./validation/accountAuth"
 
 export default {

@@ -1,6 +1,6 @@
 import {GraphQLID, GraphQLNonNull} from "graphql"
 
-import ReportBatchModel  from "../../model/ReportBatch"
+import {ReportBatch as ReportBatchModel}  from "declare-db"
 import ReportBatchAccess from "../../access/ReportBatch"
 
 import CanError, {wrapExceptional} from "../GraphQLCanError"

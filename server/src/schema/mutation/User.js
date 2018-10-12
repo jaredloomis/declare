@@ -2,7 +2,7 @@ import {
     GraphQLID, GraphQLNonNull
 } from "graphql"
 
-import UserModel  from "../../model/User"
+import {User as UserModel}  from "declare-db"
 import UserAccess from "../../access/User"
 
 import CanError, {wrapExceptional} from "../GraphQLCanError"

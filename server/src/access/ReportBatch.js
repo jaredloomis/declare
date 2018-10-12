@@ -1,4 +1,4 @@
-import ReportBatch from "../model/ReportBatch"
+import {ReportBatch} from "declare-db"
 import accountAuth from "./validation/accountAuth"
 
 export default {

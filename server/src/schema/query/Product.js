@@ -1,6 +1,6 @@
 import {GraphQLList, GraphQLID, GraphQLNonNull} from "graphql"
 
-import ProductModel  from "../../model/Product"
+import {Product as ProductModel}  from "declare-db"
 import ProductAccess from "../../access/Product"
 
 import CanError, {wrapExceptional} from "../GraphQLCanError"

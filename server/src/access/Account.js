@@ -1,6 +1,6 @@
-import Account     from "../model/Account"
-import User        from "../model/User"
-import Category    from "../model/Category"
+import {Account}     from "declare-db"
+import {User}        from "declare-db"
+import {Category}    from "declare-db"
 
 import accountAuth from "./validation/accountAuth"
 

@@ -1,8 +1,8 @@
-import Category  from "../model/Category"
-import Product   from "../model/Product"
-import Page      from "../model/Page"
-import Element   from "../model/Element"
-import InputType from "../model/InputType"
+import {Category}  from "declare-db"
+import {Product}   from "declare-db"
+import {Page}      from "declare-db"
+import {Element}   from "declare-db"
+import {InputType} from "declare-db"
 
 import accountAuth from "./validation/accountAuth"
 import {EntityRef} from "declare-common"

@@ -1,7 +1,7 @@
 import mongoose            from "mongoose"
 
-import CustomTest          from "../model/CustomTest"
-import Page                from "../model/Page"
+import {CustomTest}          from "declare-db"
+import {Page}                from "declare-db"
 import {executeCustomTest} from "declare-executor"
 import accountAuth         from "./validation/accountAuth"
 

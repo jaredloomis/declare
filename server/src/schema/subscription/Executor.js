@@ -1,7 +1,7 @@
 import {GraphQLList, GraphQLNonNull, GraphQLID} from "graphql"
 import WebSocket from "ws"
 
-import Report from "../../model/Report"
+import {Report} from "declare-db"
 
 /*
 const wss = new WebSocket.Server({

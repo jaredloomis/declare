@@ -2,7 +2,7 @@ import {
     GraphQLList, GraphQLString, GraphQLNonNull
 } from "graphql"
 
-import PageModel  from "../../model/Page"
+import {Page as PageModel}  from "declare-db"
 import PageAccess from "../../access/Page"
 import CanError, {wrapExceptional} from "../GraphQLCanError"
 

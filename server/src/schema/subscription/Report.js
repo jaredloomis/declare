@@ -1,7 +1,7 @@
 import {GraphQLList} from "graphql"
 
 import pubSub   from "../../pubSub"
-import Report   from "../../model/Report"
+import {Report}   from "declare-db"
 import CanError from "../GraphQLCanError"
 
 export default {

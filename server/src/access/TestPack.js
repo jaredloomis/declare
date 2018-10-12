@@ -1,5 +1,5 @@
-import TestPack    from "../model/TestPack"
-import Page        from "../model/Page"
+import {TestPack}    from "declare-db"
+import {Page}        from "declare-db"
 import accountAuth from "./validation/accountAuth"
 
 export default {

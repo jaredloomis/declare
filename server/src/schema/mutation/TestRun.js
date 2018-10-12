@@ -2,7 +2,7 @@ import {
     GraphQLID, GraphQLNonNull
 } from "graphql"
 
-import TestRunModel  from "../../model/TestRun"
+import {TestRun as TestRunModel}  from "declare-db"
 import TestRunAccess from "../../access/TestRun"
 
 import CanError, {wrapExceptional} from "../GraphQLCanError"

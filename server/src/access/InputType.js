@@ -1,4 +1,4 @@
-import InputType   from "../model/InputType"
+import {InputType}   from "declare-db"
 import accountAuth from "./validation/accountAuth"
 
 export default {

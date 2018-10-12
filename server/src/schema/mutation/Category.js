@@ -2,7 +2,7 @@ import {
     GraphQLID, GraphQLNonNull
 } from "graphql"
 
-import CategoryModel  from "../../model/Category"
+import {Category as CategoryModel}  from "declare-db"
 import CategoryAccess from "../../access/Category"
 
 import CanError, {wrapExceptional} from "../GraphQLCanError"

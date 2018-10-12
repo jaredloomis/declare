@@ -2,8 +2,8 @@ import {
     GraphQLString, GraphQLNonNull, GraphQLID
 } from "graphql"
 
-import Page           from "../../model/Page"
-import TestPackModel  from "../../model/TestPack"
+import {Page}           from "declare-db"
+import {TestPack as TestPackModel}  from "declare-db"
 import TestPackAccess from "../../access/TestPack"
 
 import CanError, {wrapExceptional} from "../GraphQLCanError"

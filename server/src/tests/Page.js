@@ -4,7 +4,7 @@ import {Map}       from "immutable"
 import {expect}    from "chai"
 import mongoose    from "mongoose"
 
-import Page from "../model/Page"
+import {Page} from "declare-db"
 import {development as dbConfig} from "../config/database"
 
 describe("Page", () => {

@@ -4,9 +4,9 @@
 // Usage: node assignOrphansToProduct.js [productID]
 import mongoose  from "../scriptDb"
 
-import Page      from "../../model/Page"
-import Element   from "../../model/Element"
-import InputType from "../../model/InputType"
+import {Page}      from "declare-db"
+import {Element}   from "declare-db"
+import {InputType} from "declare-db"
 
 const product = process.argv[2]
 console.log(`Assigning orphaned models to product "${product}".`)
