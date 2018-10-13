@@ -1,0 +1,26 @@
+{
+  "name": "declare-common",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "license": "All Rights Reserved",
+  "private": true,
+  "scripts": {
+    "prepublish": "npm run build",
+    "build": "gulp"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/plugin-transform-async-to-generator": "^7.1.0",
+    "@babel/plugin-transform-runtime": "^7.1.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-flow": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
+    "gulp": "^4.0.0",
+    "gulp-babel": "^8.0.0",
+    "gulp-eslint": "^5.0.0"
+  }
+}

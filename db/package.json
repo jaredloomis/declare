@@ -1,0 +1,29 @@
+{
+  "name": "declare-db",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "author": "Jared Loomis <jaredloomis@protonmail.com>",
+  "license": "All Rights Reserved",
+  "private": true,
+  "scripts": {
+    "prepublish": "npm run build",
+    "build": "gulp"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.1.2",
+    "declare-common": "file:../common",
+    "mongoose": "^5.3.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/preset-flow": "^7.0.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/plugin-transform-async-to-generator": "^7.1.0",
+    "@babel/plugin-transform-runtime": "^7.1.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-react": "^7.0.0",
+    "gulp": "^4.0.0",
+    "gulp-babel": "^8.0.0",
+    "gulp-eslint": "^5.0.0"
+  }
+}

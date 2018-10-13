@@ -1,7 +1,7 @@
 import {TestRun}        from "declare-db"
 import accountAuth    from "./validation/accountAuth"
 
-import executeTestRun from "declare-executor/TestRun"
+import executeTestRun from "declare-executor"
 
 export default {
     /*

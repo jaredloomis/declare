@@ -5,7 +5,7 @@ import {TestPackData}  from "declare-db"
 import {Report}        from "declare-db"
 import {Link}          from "declare-db"
 import {Category}      from "declare-db"
-import {executePack} from "declare-executor/index"
+import {executePack} from "declare-executor"
 import accountAuth   from "./validation/accountAuth"
 import {EntityRef}    from "declare-common"
 
