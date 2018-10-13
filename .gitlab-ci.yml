@@ -11,6 +11,13 @@ build_job:
     stage: build
     script:
         - npm install
-        - cd public
+        - cd common
         - npm install
-        - cd ..
+        - cd ../client
+        - npm install
+        - cd ../db
+        - npm install
+        - cd ../executor
+        - npm install
+        - cd ../server
+        - npm install

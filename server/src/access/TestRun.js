@@ -1,7 +1,7 @@
 import {TestRun}        from "declare-db"
-import accountAuth    from "./validation/accountAuth"
+import accountAuth      from "./validation/accountAuth"
 
-import executeTestRun from "declare-executor"
+import {executeTestRun} from "declare-executor"
 
 export default {
     /*
@@ -73,7 +73,8 @@ export default {
             validateEntity: true
         })
         const reportBatch = await executeTestRun(testRun)
-        testRun.reportBatches = (testRun.reportBatches || []).concat([reportBatch._id])
+        testRun.reportBatches = (testRun.reportBatches || [])
+            .concat([reportBatch._id])
         await testRun.save()
         return testRun
     }

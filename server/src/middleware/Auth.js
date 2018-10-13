@@ -1,5 +1,4 @@
-import {User}  from "declare-db"
-import {Token} from "declare-db"
+import {User, Token}  from "declare-db"
 
 export default async (ctx, next) => {
     if(ctx.request.header.token) {

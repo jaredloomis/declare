@@ -5,14 +5,15 @@ import Runner           from "./Runner"
 import Report           from "./Report"
 import SeleniumDriver   from "./SeleniumDriver"
 import {executeCustomTest} from "./CustomTest"
+import executeTestRun   from "./TestRun"
 import screenshot       from "./modules/screenshot"
 import destructive      from "./modules/destructive-input"
-const internalIDs = config.TestPack.internalIDs
+const {internalIDs} = config.TestPack
 
 export type Module = (runner: Runner, page: Page, values: any, data: any) => any
 
 export {
-    executeCustomTest, Report
+    executeCustomTest, Report, executeTestRun
 }
 
 export const executePack = async (pageID: string, packID: string) => {
@@ -23,12 +24,15 @@ export const executePack = async (pageID: string, packID: string) => {
     const datum  = tpData && tpData.filter(dat =>
         dat.testPack.toString() === packID
     )[0] || {}
+
     // Create Runner
     const driver = new SeleniumDriver({})
     const runner = new Runner(driver, "Screenshot", {})
     await runner.initNavigator()
+
     // Find module
     const module = findModule(internalID)
+
     // Run module
     if(module) {
         const result = await module(runner, page, datum.values, datum.data)
