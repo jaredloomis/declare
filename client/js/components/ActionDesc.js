@@ -1,7 +1,7 @@
 import React from "react"
 import {compose, setDisplayName} from "recompose"
 
-import {actionTypes} from "../../../common/config/Action"
+import {config}      from "declare-common"
 import Row           from "./base/Row"
 import Column        from "./base/Column"
 import TextInput     from "./base/TextInput"
@@ -10,6 +10,7 @@ import CodeBlock     from "./base/CodeBlock"
 import ElementQuickSelect from "../containers/ElementQuickSelect"
 import PageSelect    from "../containers/PageSelect"
 import withReduxState from "../containers/WithReduxState"
+const {actionTypes} = config.Action
 
 const ActionDesc = ({productID, actionType, values={}, elements, pages}) => {
     const props = {

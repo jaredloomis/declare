@@ -27,5 +27,6 @@ const modules = fs.readdirSync(__dirname, {withFileTypes: true})
     }))
 
 modules["Account"] = require("./Account")
+modules["pubSub"]  = require("./pubSub")
 
 module.exports = modules

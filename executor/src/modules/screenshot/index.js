@@ -3,7 +3,7 @@ import Promise  from "bluebird"
 import resemble from "node-resemble-js"
 import {Status} from "../../Report"
 import Runner   from "../../Runner"
-import {Assets} from "declare-common"
+import {Assets} from "declare-db"
 const {retrieveAsset} = Assets
 
 export default async (runner: Runner, page: any, values: any, data: any) => {

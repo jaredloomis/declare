@@ -9,7 +9,8 @@ import withReduxState    from "../WithReduxState"
 import withReduxDispatch from "../WithReduxDispatch"
 
 import {listCustomTests} from "../../actions/CustomTest"
-import {TEST_TYPE}       from "../../../../common/TestRun"
+import {TestRun}         from "declare-common"
+const {TEST_TYPE} = TestRun
 
 const SelectedTestList = ({tests, onDeselect, customTests}) => {
     return <div>

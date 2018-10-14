@@ -1,5 +1,5 @@
 import {Server, OPEN} from "ws"
-import pubSub         from "./pubSub"
+import {pubSub}       from "declare-db"
 
 module.exports = server => {
     const wss = new Server({server})

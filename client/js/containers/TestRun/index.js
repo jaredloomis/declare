@@ -24,12 +24,13 @@ import withReduxDispatch from "../WithReduxDispatch"
 import ReportBatch       from "../ReportBatch"
 import EnvironmentSelect from "../EnvironmentSelect"
 
-import {TEST_TYPE}       from "../../../../common/TestRun"
+import {TestRun as TestRunCommon} from "declare-common"
 import {
     fetchTestRun, updateTestRun, executeTestRun
 } from "../../actions/TestRun"
 import {listCustomTests}  from "../../actions/CustomTest"
 import {fetchReportBatch} from "../../actions/ReportBatch"
+const {TEST_TYPE} = TestRunCommon
 
 /**
  * == Props ==

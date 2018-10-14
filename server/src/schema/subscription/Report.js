@@ -1,8 +1,6 @@
-import {GraphQLList} from "graphql"
-
-import pubSub   from "../../pubSub"
-import {Report}   from "declare-db"
-import CanError from "../GraphQLCanError"
+import {GraphQLList}    from "graphql"
+import {Report, pubSub} from "declare-db"
+import CanError         from "../GraphQLCanError"
 
 export default {
     reports: {

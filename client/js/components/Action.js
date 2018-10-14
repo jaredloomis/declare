@@ -1,7 +1,7 @@
 import React from "react"
 import {withState, compose, setDisplayName} from "recompose"
 
-import {actionTypes} from "../../../common/config/Action"
+import {config}      from "declare-common"
 import Row           from "./base/Row"
 import Column        from "./base/Column"
 import Button        from "./base/Button"
@@ -12,6 +12,7 @@ import CodeEditor    from "./base/CodeEditor"
 import ElementQuickSelect from "../containers/ElementQuickSelect"
 import PageSelect    from "../containers/PageSelect"
 import {deepSet}     from "../lib/Deep"
+const {actionTypes} = config.Action
 
 const Action = ({onChange, onRemove, productID, actionType, values={}, setActionType, setValues}) => {
     const tyChange  = ty => {

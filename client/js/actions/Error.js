@@ -1,7 +1,8 @@
 import {
     ERROR_DISPLAY_MSG, ERROR_ACKNOWLEDGE
 } from "./Types"
-import {ErrorType} from "../../../common/Error"
+import {Error} from "declare-common"
+const {ErrorType} = Error
 
 export const displayErrorMsg = message => ({
     type: ERROR_DISPLAY_MSG,

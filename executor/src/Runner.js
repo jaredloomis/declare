@@ -1,10 +1,9 @@
 // @flow
-import {Page, Report as ReportModel} from "declare-db"
+import {Page, Assets, Report as ReportModel} from "declare-db"
 import type {DriverI}     from "./Driver"
 import type {Selector}    from "./Selector"
 import Report, {Step}     from "./Report"
 import type {StatusLabel} from "./Report"
-import {Assets}           from "declare-common"
 import Navigator          from "./Navigator"
 import {showSelector}     from "./Selector"
 const {Status}     = ReportModel

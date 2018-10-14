@@ -14,8 +14,9 @@ import ReportDestructive       from "../components/ReportDestructive"
 import Screenshot              from "./Screenshot"
 import {setBaselineScreenshot, fetchReport} from "../actions/Page"
 import {fetchAsset}            from "../actions/Asset"
-import {internalIDs} from "../../../common/config/TestPack"
+import {config}                from "declare-common"
 import {deepSet, deepGet} from "../lib/Deep"
+const {internalIDs} = config.TestPack
 
 import style from "../../style/Report.scss"
 import bulma from "../../style/bulma"

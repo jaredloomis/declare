@@ -1,12 +1,15 @@
-import mongoose    from "mongoose"
+import mongoose      from "mongoose"
 import {
     GraphQLObjectType, GraphQLList, GraphQLString,
     GraphQLID
 } from "graphql"
-import GraphQLJSON from "graphql-type-json"
-import createType  from "mongoose-schema-to-graphql"
+import GraphQLJSON   from "graphql-type-json"
+import createType    from "mongoose-schema-to-graphql"
 
-import {encodeVideo, Assets} from "declare-common"
+import encodeVideo   from "./encodeVideo"
+import {
+    retrieveAsset, storeAsset
+} from "./Assets"
 
 const ObjectId = mongoose.Schema.Types.ObjectId
 
@@ -110,7 +113,7 @@ reportSchema.methods.generateVideo = async function() {
     const screenshots = []
     for(const step of this.steps) {
         if(step.data && step.data.screenshot) {
-            screenshots.push(await Assets.retrieveAsset(step.data.screenshot))
+            screenshots.push(await retrieveAsset(step.data.screenshot))
         }
     }
    
@@ -119,7 +122,7 @@ reportSchema.methods.generateVideo = async function() {
 
     // Upload to cloud
     const key = `${this.name}-${this.startTime}-video.mp4`
-    await Assets.storeAsset(key, video)
+    await storeAsset(key, video)
     this.summary.video = key
 
     // Return key
