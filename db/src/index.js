@@ -1,21 +1,20 @@
-const Promise   = require("bluebird")
-const fs        = require("fs")
-const path      = require("path")
-const mongoose  = require("mongoose")
-const dbConfigs = require("./config")
+const Promise  = require("bluebird")
+const fs       = require("fs")
+const path     = require("path")
+const mongoose = require("mongoose")
+const dbConfig = require("./config").default
 
 // Use bluebird promises
 mongoose.Promise = Promise
 global.Promise   = Promise
 
 // Connect to db
-const rawEnv = process.env.NODE_ENV
-const envStr = rawEnv && rawEnv.length === 0 ? rawEnv : "development"
-const dbConf = dbConfigs[envStr]
-mongoose.connect(`mongodb://${dbConf.host}:${dbConf.port}/${dbConf.database}`)
+mongoose.connect(`mongodb://${dbConfig.host}:${dbConfig.port}/${dbConfig.database}`, {
+    useMongoClient: true
+})
 
-const db = mongoose.connection
 // Set up error logging
+const db = mongoose.connection
 db.on("error", err => console.error("Error from DB!", err))
 db.once("open", () => {})
 

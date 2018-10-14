@@ -4,10 +4,9 @@ import {spawn} from "child_process"
 const readFile = Promise.promisify(require("fs").readFile)
 const unlink   = Promise.promisify(require("fs").unlink)
 
-
 // TODO Avoid intermediate output.mp4 file - can ffmpeg stream the output?
 // : [Buffer] -> Promise Buffer
-export default frames => {
+module.exports = frames => {
     const fileName = "output.mp4"
 
     // Spawn ffmpeg process

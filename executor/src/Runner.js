@@ -1,12 +1,13 @@
 // @flow
-import {Page}                 from "declare-db"
-import type {DriverI}         from "./Driver"
-import type {Selector}        from "./Selector"
-import Report, {Step, Status} from "./Report"
-import type {StatusLabel}     from "./Report"
-import {Assets}               from "declare-common"
-import Navigator              from "./Navigator"
-import {showSelector}         from "./Selector"
+import {Page, Report as ReportModel} from "declare-db"
+import type {DriverI}     from "./Driver"
+import type {Selector}    from "./Selector"
+import Report, {Step}     from "./Report"
+import type {StatusLabel} from "./Report"
+import {Assets}           from "declare-common"
+import Navigator          from "./Navigator"
+import {showSelector}     from "./Selector"
+const {Status}     = ReportModel
 const {storeAsset} = Assets
 
 export type RunnerOptions = {}
@@ -197,9 +198,10 @@ export default class Runner {
      */
 
     async navigateTo(pageID: string): Promise<void> {
-        const page = await Page.findById(pageID)
+        let page
 
         try {
+            page      = await Page.findById(pageID)
             const ret = this.navigator.navigateTo(pageID)
 
             await this.log(

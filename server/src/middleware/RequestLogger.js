@@ -14,6 +14,7 @@ export default async (ctx, next) => {
     try {
         await next()
     } catch(ex) {
+        console.error(ex)
         logger.error(
         `-ERR-- ${ctx.method} ${ctx.url} ${ex}`, {
             exception: ex

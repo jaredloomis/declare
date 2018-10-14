@@ -3,9 +3,9 @@ import {createContext} from "rabbit.js"
 
 const context = createContext("amqp://localhost")
 
-export const EXCHANGE = "declare_events"
+const EXCHANGE = "declare_events"
 
-export default new Promise((resolve, reject) => {
+const pubSub = new Promise((resolve, reject) => {
     context.on("ready", () => {
         const pub = context.socket("PUBLISH", {
                         routing: "topic"
@@ -22,3 +22,7 @@ export default new Promise((resolve, reject) => {
         })
     })
 })
+
+module.exports = {
+    pubSub, EXCHANGE, context
+}

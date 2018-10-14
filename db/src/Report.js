@@ -91,6 +91,8 @@ reportSchema.statics.graphQL = createType({
     }
 })
 
+reportSchema.statics.Status = Status
+
 reportSchema.pre("save", function(next) {
     // Define .status
     for(let i = this.steps.length-1; i >= 0; --i) {

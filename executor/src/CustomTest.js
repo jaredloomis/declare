@@ -52,12 +52,13 @@ export const executeCustomTest = async (customTest, options={}) => {
     const reportModel = new Report(runner.report)
     await reportModel.generateVideo()
     await reportModel.save()
+
     // Add report to CustomTest, save
     customTest.reports = customTest.reports.concat([reportModel._id])
     await customTest.save()
 
     // Publish report creation event to PubSub system
-    pubSub.then(({pub}) =>
+    pubSub.pubSub.then(({pub}) =>
         pub.publish("report.created", JSON.stringify(reportModel), "utf8")
     )
 

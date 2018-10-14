@@ -1,11 +1,9 @@
 // @flow
-import {Element} from "declare-db"
-import common    from "declare-common"
-import Runner    from "./Runner"
-import {Status}  from "./Report"
-
-//console.log("COMMON", common)
-const {actionTypes} = common.config.Action
+import {Element, Report} from "declare-db"
+import {config}          from "declare-common"
+import Runner            from "./Runner"
+const {Status} = Report
+const {actionTypes} = config.Action
 
 export const runActions = async (runner: Runner, actions: any) => {
     for(const action of actions) {

@@ -1140,6 +1140,10 @@ bluebird@^3.4.6:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.0.tgz#791420d7f551eea2897453a8a77653f96606d67c"
 
+bluebird@^3.5.2:
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.2.tgz#1be0908e054a751754549c270489c1505d4ab15a"
+
 boom@2.x.x:
   version "2.10.1"
   resolved "https://registry.yarnpkg.com/boom/-/boom-2.10.1.tgz#39c8918ceff5799f83f9492a848f625add0c766f"
@@ -1757,6 +1761,7 @@ decamelize@^1.0.0, decamelize@^1.1.1:
   version "0.0.1"
   dependencies:
     "@babel/runtime" "^7.1.2"
+    bluebird "^3.5.2"
     declare-common "file:../../../../.cache/yarn/v2/common"
     declare-db "file:../../../../.cache/yarn/v2/db"
 
