@@ -1,5 +1,6 @@
 {
   "name": "declare",
+  "env": "production",
   "version": "0.0.1",
   "description": "Common package containing various configuration common to client and app",
   "main": "index.js",
