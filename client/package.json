@@ -71,12 +71,12 @@
   "scripts": {
     "prepublish": "npm run build",
     "dev": "webpack-dev-server --open --inline --hot",
-    "build": "npm run static && rm -rf dist/js && ./node_modules/webpack/bin/webpack.js",
+    "build": "npm run static && ./node_modules/webpack/bin/webpack.js",
     "static": "npm run headjs && npm run html && npm run style",
     "html": "mkdir -p dist/view && cp view/Main.html dist/view/Main.html",
     "style": "mkdir -p dist/style && ./node_modules/node-sass/bin/node-sass style/bulma.scss > dist/style/bulma.css",
-    "headjs": "cp node_modules/headjs/dist/1.0.0/head.load.min.js dist/js"
+    "headjs": "mkdir -p dist/js && cp node_modules/headjs/dist/1.0.0/head.load.min.js dist/js"
   },
-  "author": "Jared Loomis",
+  "author": "Jared Loomis <jaredloomis@protonmail.com>",
   "license": "All Rights Reserved"
 }
