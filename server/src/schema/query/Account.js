@@ -8,7 +8,7 @@ import {Account as AccountModel}  from "declare-db"
 import AccountAccess from "../../access/Account"
 
 console.log("AccountModel", AccountModel)
-console.log("gql", AccountModel.graphQL)
+console.log("gql", AccountModel.graphQL, typeof AccountModel.graphQL, JSON.stringify(AccountModel.graphQL))
 
 export default {
     accounts: {
