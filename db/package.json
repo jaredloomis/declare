@@ -12,9 +12,15 @@
   "dependencies": {
     "@babel/runtime": "^7.1.2",
     "aws-sdk": "^2.334.0",
+    "bcrypt": "^3.0.1",
     "bluebird": "^3.5.2",
     "declare-common": "file:../common",
-    "mongoose": "^4.6.3"
+    "graphql": "^14.0.2",
+    "graphql-type-json": "^0.2.1",
+    "mongoose": "^5.3.3",
+    "mongoose-schema-to-graphql": "^2.7.2",
+    "rabbit.js": "^0.4.4",
+    "stream-worker": "^2.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",

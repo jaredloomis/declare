@@ -18,12 +18,12 @@ const db = mongoose.connection
 db.on("error", err => console.error("Error from DB!", err))
 db.once("open", () => {})
 
-const modules = fs.readdirSync(__dirname, {withFileTypes: true})
-    .filter(file => !file.isDirectory() && file.name.indexOf(".") !== 0 && file.name.indexOf("index") !== 0 &&
-                    file.name.indexOf("config") !== 0)
+const modules = fs.readdirSync(__dirname)
+    .filter(file => !fs.lstatSync(path.join(__dirname, file)).isDirectory() && file.indexOf(".") !== 0 && file.indexOf("index") !== 0 &&
+                    file.indexOf("config") !== 0)
     .reduce((exp, file) => ({
         ...exp,
-        [file.name.split(".")[0]]: require(path.join(__dirname, file.name))
+        [file.split(".")[0]]: require(path.join(__dirname, file))
     }))
 
 modules["Account"] = require("./Account")
