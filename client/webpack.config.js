@@ -50,8 +50,6 @@ module.exports = {
             // Babel for all .js files
             {test: /\.js$/, exclude: /node_modules/,
              loader: "babel-loader"},
-            // TypeScript for .ts files
-            {test: /\.ts$/, loader: "ts-loader"},
             // Load .scss files, simulate CSS Modules
             {test: /\.scss$/,
              use: [
@@ -62,6 +60,7 @@ module.exports = {
                  }},
                  "sass-loader"
              ]},
+            // Load .css files normally
             {test: /\.css$/,
              use: ["style-loader", "css-loader"]
             },
@@ -74,12 +73,6 @@ module.exports = {
             {test: /\.(png|jpg|gif|svg|mp4|json|ttf|woff|woff2|eot)$/,
              loader: "file-loader"},
         ]
-    },
-    resolve: {
-        alias: {
-            // Use the standalone version of Vue
-            "vue$": "vue/dist/vue.common.js"
-        }
     },
     plugins
 }

@@ -57,7 +57,6 @@ export const executeCustomTest = async (customTest, options={}) => {
     await customTest.save()
 
     // Publish report creation event to PubSub system
-    console.log("pubSub", pubSub)
     pubSub.pubSub.then(({pub}) =>
         pub.publish("report.created", JSON.stringify(reportModel), "utf8")
     )

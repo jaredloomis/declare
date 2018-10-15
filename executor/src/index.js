@@ -16,6 +16,10 @@ export {
     executeCustomTest, Report, executeTestRun
 }
 
+export const lambdaHandler = async (event, context) => {
+    return JSON.stringify({event, context})
+}
+
 export const executePack = async (pageID: string, packID: string) => {
     // Collect data for module
     const {internalID} = await TestPack.findOne({_id: packID})

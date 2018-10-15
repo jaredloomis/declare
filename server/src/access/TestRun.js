@@ -1,7 +1,10 @@
+import AWS              from "aws-sdk"
 import {TestRun}        from "declare-db"
 import accountAuth      from "./validation/accountAuth"
-
 import {executeTestRun} from "declare-executor"
+
+AWS.config.region = "us-west-2"
+const lambda = new AWS.Lambda()
 
 export default {
     /*
@@ -72,10 +75,33 @@ export default {
             operation: "execute",
             validateEntity: true
         })
-        const reportBatch = await executeTestRun(testRun)
+
+        const lambdaParams = {
+            //ClientContext: "declareserver",
+            FunctionName: "executor",
+            //LogType: "Tail"
+        }
+
+        const invoke = new Promise((resolve, reject) =>
+            lambda.invoke(lambdaParams, (err, data) =>
+                err ? reject(err) : resolve(data)
+            )
+        )
+
+        try {
+            const ret = await invoke
+            console.log("INVOKE AWS", ret)
+        } catch(ex) {
+            console.log("ERROR INVOKING AWS 2", ex)
+        }
+
+        return testRun
+
+        /*
+        //const reportBatch = await executeTestRun(testRun)
         testRun.reportBatches = (testRun.reportBatches || [])
             .concat([reportBatch._id])
         await testRun.save()
-        return testRun
+        return testRun*/
     }
 }
