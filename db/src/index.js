@@ -9,9 +9,7 @@ mongoose.Promise = Promise
 global.Promise   = Promise
 
 // Connect to db
-mongoose.connect(`mongodb://${dbConfig.host}:${dbConfig.port}/${dbConfig.database}`, {
-    useMongoClient: true
-})
+mongoose.connect(`mongodb://${dbConfig.host}:${dbConfig.port}/${dbConfig.database}`)
 
 // Set up error logging
 const db = mongoose.connection

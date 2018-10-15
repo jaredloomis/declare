@@ -6,5 +6,5 @@ import rootSchema   from "../schema"
 module.exports = new Router()
     .all("/graphql", graphqlHTTP({
         schema: rootSchema,
-        graphiql: true
+        graphiql: process.env.NODE_ENV !== "production"
     }))
