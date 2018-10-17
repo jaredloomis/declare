@@ -2,7 +2,7 @@ import {
     GraphQLID, GraphQLNonNull, GraphQLList
 } from "graphql"
 
-import {CustomTest as CustomTestModel}  from "declare-db"
+import {CustomTest as CustomTestModel} from "declare-db"
 import CustomTestAccess from "../../access/CustomTest"
 import CanError         from "../GraphQLCanError"
 

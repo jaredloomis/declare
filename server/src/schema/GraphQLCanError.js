@@ -7,8 +7,8 @@ export default (baseType, opts={}) => {
     const name = (() => {
         if(opts.name)
             return opts.name
-        if(baseType._typeConfig)
-            return `${baseType._typeConfig.name}_CanError`
+        if(baseType.name)
+            return `${baseType.name}_CanError`
         return "CanError"
     })()
 

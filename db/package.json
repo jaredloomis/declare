@@ -15,8 +15,6 @@
     "bcrypt": "^3.0.1",
     "bluebird": "^3.5.2",
     "declare-common": "file:../common",
-    "graphql": "^14.0.2",
-    "graphql-type-json": "^0.2.1",
     "mongoose": "^5.3.3",
     "mongoose-schema-to-graphql": "^2.7.2",
     "rabbit.js": "^0.4.4",
@@ -33,5 +31,9 @@
     "gulp": "^4.0.0",
     "gulp-babel": "^8.0.0",
     "gulp-eslint": "^5.0.0"
+  },
+  "peerDependencies": {
+    "graphql": "14.0.2",
+    "graphql-type-json": "^0.2.1"
   }
 }

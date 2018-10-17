@@ -17,8 +17,11 @@ db.on("error", err => console.error("Error from DB!", err))
 db.once("open", () => {})
 
 const modules = fs.readdirSync(__dirname)
-    .filter(file => !fs.lstatSync(path.join(__dirname, file)).isDirectory() && file.indexOf(".") !== 0 && file.indexOf("index") !== 0 &&
-                    file.indexOf("config") !== 0)
+    .filter(file =>
+        !fs.lstatSync(path.join(__dirname, file)).isDirectory() &&
+        file.indexOf(".") !== 0 && file.indexOf("index") !== 0 &&
+        file.indexOf("config") !== 0
+    )
     .reduce((exp, file) => ({
         ...exp,
         [file.split(".")[0]]: require(path.join(__dirname, file))

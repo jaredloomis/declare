@@ -7,8 +7,8 @@ import CanError from "../GraphQLCanError"
 import {Account as AccountModel}  from "declare-db"
 import AccountAccess from "../../access/Account"
 
-console.log("AccountModel", AccountModel)
-console.log("gql", AccountModel.graphQL, typeof AccountModel.graphQL, JSON.stringify(AccountModel.graphQL))
+console.log("MODEL", AccountModel)
+console.log("GQL", AccountModel.graphQL, typeof AccountModel.graphQL, JSON.stringify(AccountModel.graphQL), Object.keys(AccountModel.graphQL))
 
 export default {
     accounts: {

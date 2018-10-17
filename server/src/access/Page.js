@@ -1,10 +1,7 @@
-import mongoose      from "mongoose"
-import {Page}          from "declare-db"
-import {TestPack}      from "declare-db"
-import {TestPackData}  from "declare-db"
-import {Report}        from "declare-db"
-import {Link}          from "declare-db"
-import {Category}      from "declare-db"
+import {
+    Page, TestPack, TestPackData,
+    Report, Link, Category, ObjectId
+} from "declare-db"
 import {executePack} from "declare-executor"
 import accountAuth   from "./validation/accountAuth"
 import {EntityRef}    from "declare-common"
@@ -49,9 +46,9 @@ export default {
         // Remove page from category(ies)
         await Category.update({
             itemRef: EntityRef.page,
-            items: {$in: [mongoose.Types.ObjectId(pageID)]}
+            items: {$in: [ObjectId(pageID)]}
         }, {
-            $pull: {items: mongoose.Types.ObjectId(pageID)}
+            $pull: {items: ObjectId(pageID)}
         })
 
         page.remove()

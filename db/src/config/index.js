@@ -10,8 +10,8 @@ export const production = {
 
 export const development = {
     driver     : "mongo",
-    host       : "localhost",
-    port       : "27017",
+    host       : "144.202.112.151",//"localhost",
+    port       : "80",
     username   : "root",
     password   : "",
     database   : "declare-dev",

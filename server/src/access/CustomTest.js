@@ -1,7 +1,6 @@
-import mongoose            from "mongoose"
-
-import {CustomTest}          from "declare-db"
-import {Page}                from "declare-db"
+import {
+    CustomTest, Page, ObjectId
+}  from "declare-db"
 import {executeCustomTest} from "declare-executor"
 import accountAuth         from "./validation/accountAuth"
 
@@ -63,7 +62,7 @@ export default {
 
         if(customTest.owner) {
             await Page.findByIdAndUpdate(customTest.owner,
-                {$pull: {customTests: mongoose.Types.ObjectId(id)}}
+                {$pull: {customTests: ObjectId(id)}}
             )
         }
         return CustomTest.findByIdAndRemove(id)
