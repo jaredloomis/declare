@@ -24,7 +24,7 @@ export default async (ctx, next) => {
     const end      = new Date()
     const elapsed  = end - start
     const afterMsg = `-${ctx.status}-> ${ctx.method} ${ctx.url} ${elapsed}ms`
-    const afterLog = ctx.status > 400 ? logger.error : logger.info
+    const afterLog = ctx.status >= 400 ? logger.error : logger.info
     afterLog(afterMsg, {
         body: ctx.body,
         headers: ctx.response.headers,

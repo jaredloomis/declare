@@ -37,6 +37,7 @@ export const wrapExceptional = async action => {
     try {
         return {data: await action()}
     } catch(ex) {
+        console.log("wrapExceptional caught exception:", ex)
         return {error: ex}
     }
 }

@@ -31,7 +31,7 @@ export default {
         // If they share an account, let 'em in, otherwise error
         // TODO per-user permissions in account
         if(commonAcct || (user && user.isSuperAdmin())) {
-            return ret
+            return ret.toJSON()
         } else {
             throw {
                 type: ErrorType.NotLoggedIn,

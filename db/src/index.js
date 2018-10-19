@@ -8,13 +8,26 @@ const dbConfig = require("./config").default
 mongoose.Promise = Promise
 global.Promise   = Promise
 
-// Connect to db
-mongoose.connect(`mongodb://${dbConfig.host}:${dbConfig.port}/${dbConfig.database}`)
+// Patch valueOf and toJSON function for ObjectIds to fix serialization
+mongoose.Types.ObjectId.prototype.valueOf = function() {
+    return this.toString()
+}
+mongoose.Types.ObjectId.prototype.toJSON = function() {
+    return this.toString()
+}
 
-// Set up error logging
+// Connect to db
+const mongoUri = `mongodb://${dbConfig.host}:${dbConfig.port}/${dbConfig.database}`
+mongoose.connect(mongoUri)
+
+// Set up logging
 const db = mongoose.connection
-db.on("error", err => console.error("Error from DB!", err))
-db.once("open", () => {})
+db.on("error", err => {
+    throw new Error({message: `Could not connect to db ${mongoUri}`, err})
+})
+db.once("open", () =>
+    console.log("Connection to MongoDB has been established")
+)
 
 const modules = fs.readdirSync(__dirname)
     .filter(file =>

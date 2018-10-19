@@ -64,6 +64,8 @@ export default {
             user:    user._id
         })
         await tokenModel.save()
-        return tokenModel
+        const ret = tokenModel.toObject()
+        console.log("TOKEN", ret)
+        return ret
     }
 }

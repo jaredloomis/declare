@@ -1,10 +1,9 @@
-import {Category}  from "declare-db"
-import {Product}   from "declare-db"
-import {Page}      from "declare-db"
-import {Element}   from "declare-db"
-import {InputType} from "declare-db"
+import {
+    Category, Product, Page, Element, InputType
+} from "declare-db"
 
 import accountAuth from "./validation/accountAuth"
+import cleanData   from "./validation/cleanData"
 import {EntityRef} from "declare-common"
 
 export default {

@@ -42,8 +42,6 @@
     "koa-static": "^3.0.0",
     "koa-websocket": "^4.0.0",
     "moment": "^2.15.0",
-    "mongodb": "^2.2.0",
-    "mongoose": "^4.6.3",
     "node-fetch": "^2.1.2",
     "node-resemble-js": "^0.2.0",
     "passport-local": "^1.0.0",
@@ -86,7 +84,6 @@
     "koa-graphql/express-graphql/graphql": "14.0.2",
     "declare-db/graphql": "14.0.2",
     "declare-executor/graphql": "14.0.2",
-    "declare-db/graphql": "14.0.2",
     "**/graphql": "14.0.2"
   }
 }

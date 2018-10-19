@@ -30,6 +30,17 @@ const tokenSchema = mongoose.Schema({
     }
 })
 
+const transform = (doc, ret, options) => {
+    Object.keys(ret).forEach(key => {
+        if(ret[key]._bsontype === "ObjectID")
+            ret[key] = ret[key].toString()
+    })
+    return ret
+}
+if(!tokenSchema.options.toObject) tokenSchema.options.toObject = {}
+tokenSchema.options.toObject.transform = transform
+tokenSchema.set("toObject", {transform})
+
 tokenSchema.statics.graphQL = new GraphQLObjectType({
     name: "Token",
     description: "A token used to grant temporary access to resources.",

@@ -15,7 +15,7 @@
     "bcrypt": "^3.0.1",
     "bluebird": "^3.5.2",
     "declare-common": "file:../common",
-    "mongoose": "^5.3.3",
+    "mongoose": "^5.3.4",
     "mongoose-schema-to-graphql": "^2.7.2",
     "rabbit.js": "^0.4.4",
     "stream-worker": "^2.0.1"

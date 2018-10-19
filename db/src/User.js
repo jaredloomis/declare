@@ -42,10 +42,17 @@ const userSchema = mongoose.Schema({
     }
 })
 
+userSchema.virtual("id").get(function() {
+    return this.toJSON()._id.toString()
+})
+
 userSchema.statics.graphQL = new GraphQLObjectType({
     name: "User",
     fields: {
         _id: {
+            type: new GraphQLNonNull(GraphQLID)
+        },
+        id: {
             type: new GraphQLNonNull(GraphQLID)
         },
         email: {
