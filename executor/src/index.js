@@ -1,6 +1,9 @@
 // @flow
+require("dotenv").config()
 import {config}         from "declare-common"
-import {Page, TestPack} from "declare-db"
+import {
+    Page, TestPack, TestRun
+} from "declare-db"
 import Runner           from "./Runner"
 import Report           from "./Report"
 import SeleniumDriver   from "./SeleniumDriver"
@@ -12,12 +15,17 @@ const {internalIDs} = config.TestPack
 
 export type Module = (runner: Runner, page: Page, values: any, data: any) => any
 
-export {
-    executeCustomTest, Report, executeTestRun
+async function handler_executeTestRun(event, context) {
+    const testRun = await TestRun.findById(event.testRunID)
+    if(!testRun)
+        throw new Error("Invalid TestRun specified.")
+    
+    return executeTestRun(testRun)
 }
 
-export const lambdaHandler = async (event, context) => {
-    return JSON.stringify({event, context})
+export {
+    executeCustomTest, Report, executeTestRun,
+    handler_executeTestRun
 }
 
 export const executePack = async (pageID: string, packID: string) => {

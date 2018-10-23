@@ -32,7 +32,6 @@
     "graphql-type-json": "^0.1.4",
     "immutable": "^3.8.1",
     "koa": "^2.0.0-alpha.7",
-    "koa-better-body": "^3.0.0",
     "koa-bodyparser": "^3.2.0",
     "koa-compress": "^3.0.0",
     "koa-convert": "^1.2.0",

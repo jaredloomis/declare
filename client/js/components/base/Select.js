@@ -13,9 +13,10 @@ const SelectBase = props => {
             !props.expanded
 
         if(expanded) {
+            /*XXX TODO
             window.addEventListener("mousedown", () => {
                 props.setExpanded(false)
-            })
+            })*/
         }
         props.setExpanded(expanded)
     }

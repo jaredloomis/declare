@@ -18,6 +18,6 @@ export const development = {
     autoReconnect : true
 }
 
-export default (process.env.NODE_ENV || "").indexOf("prod") === 0 ?
+export default process.env.NODE_ENV === "production" ?
     production :
     development

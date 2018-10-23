@@ -1,19 +1,32 @@
 {
   "name": "declare-executor",
   "version": "0.0.1",
-  "main": "dist/index.js",
+  "main": "index.js",
   "author": "Jared Loomis <jaredloomis@protonmail.com>",
   "license": "All Rights Reserved",
   "private": true,
   "scripts": {
     "prepublish": "npm run build",
-    "build": "gulp"
+    "build": "gulp",
+    "zip": "rm -f executor.zip && zip -r -9 executor.zip dist/ index.js node_modules/ package.json && du -h executor.zip",
+    "s3": "npm run zip && aws s3 cp executor.zip s3://declare-assets/executor.zip",
+    "lambda": "npm run s3 && aws lambda update-function-code --function-name executor --s3-bucket declare-assets --s3-key executor.zip --region us-west-2"
   },
   "dependencies": {
     "@babel/runtime": "^7.1.2",
     "bluebird": "^3.5.2",
     "declare-common": "file:../common",
-    "declare-db": "file:../db"
+    "declare-db": "file:../db",
+    "dotenv": "^6.1.0",
+    "graphql": "14.0.2",
+    "graphql-type-json": "^0.2.1",
+    "immutable": "^3.8.2",
+    "koa": "^2.5.3",
+    "koa-bodyparser": "^4.2.1",
+    "koa-router": "^7.4.0",
+    "node-resemble-js": "^0.2.0",
+    "seedrandom": "^2.4.4",
+    "selenium-webdriver": "^4.0.0-alpha.1"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
@@ -23,8 +36,15 @@
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.4",
+    "eslint-loader": "^2.1.1",
+    "eslint-plugin-flowtype": "^3.0.0",
+    "file-loader": "^2.0.0",
     "gulp": "^4.0.0",
     "gulp-babel": "^8.0.0",
-    "gulp-eslint": "^5.0.0"
+    "gulp-eslint": "^5.0.0",
+    "webpack": "^4.21.0",
+    "webpack-cli": "^3.1.2"
   }
 }

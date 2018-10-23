@@ -1,5 +1,5 @@
 import {
-    Page, CustomTest, Environment, Report, pubSub
+    Page, CustomTest, Environment, Report //, pubSub
 } from "declare-db"
 import Runner         from "./Runner"
 import SeleniumDriver from "./SeleniumDriver"
@@ -57,9 +57,9 @@ export const executeCustomTest = async (customTest, options={}) => {
     await customTest.save()
 
     // Publish report creation event to PubSub system
-    pubSub.pubSub.then(({pub}) =>
+    /*pubSub.pubSub.then(({pub}) =>
         pub.publish("report.created", JSON.stringify(reportModel), "utf8")
-    )
+    )*/
 
     // Return report
     return reportModel

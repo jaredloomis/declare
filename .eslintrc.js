@@ -50,7 +50,7 @@ module.exports = {
         }
     },
     rules,
-    "plugins": ["react", "flowtype"],
+    "plugins": ["flowtype"],
     "globals": {
         "$": false,
         "Materialize": false
