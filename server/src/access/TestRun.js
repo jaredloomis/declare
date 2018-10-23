@@ -91,7 +91,7 @@ export default {
 
         try {
             //const ret = await invoke
-            const ret = await fetch("45.32.83.234/ExecuteTestRun", {
+            const ret = await fetch("http://45.32.83.234:1234/ExecuteTestRun", {
                 method: "POST",
                 body: JSON.stringify({
                     testRunID: testRun._id
@@ -100,9 +100,9 @@ export default {
                     "Content-Type": "application/json"
                 }
             })
-            console.log("INVOKE AWS", ret)
+            console.log("INVOKE EXECUTORR", ret)
         } catch(ex) {
-            console.log("ERROR INVOKING AWS 2", ex)
+            console.log("ERROR INVOKING EXECUTOR", ex)
         }
 
         return testRun
