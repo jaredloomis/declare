@@ -1,3 +1,4 @@
+import fetch            from "node-fetch"
 import AWS              from "aws-sdk"
 import {TestRun}        from "declare-db"
 import accountAuth      from "./validation/accountAuth"
@@ -76,20 +77,29 @@ export default {
             validateEntity: true
         })
 
+            /*
         const lambdaParams = {
             //ClientContext: "declareserver",
             FunctionName: "executor",
             //LogType: "Tail"
         }
-
         const invoke = new Promise((resolve, reject) =>
             lambda.invoke(lambdaParams, (err, data) =>
                 err ? reject(err) : resolve(data)
             )
-        )
+        )*/
 
         try {
-            const ret = await invoke
+            //const ret = await invoke
+            const ret = await fetch("45.32.83.234/ExecuteTestRun", {
+                method: "POST",
+                body: JSON.stringify({
+                    testRunID: testRun._id
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
             console.log("INVOKE AWS", ret)
         } catch(ex) {
             console.log("ERROR INVOKING AWS 2", ex)

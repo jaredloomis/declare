@@ -1,9 +1,9 @@
 export const development = {
-    port: "1234"
+    port: process.env.PORT || "1234"
 }
 
 export const production = {
-    port: "80"
+    port: process.env.PORT || "80"
 }
 
 export default process.env.NODE_ENV === "production" ?
