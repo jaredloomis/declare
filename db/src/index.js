@@ -17,13 +17,17 @@ mongoose.Types.ObjectId.prototype.toJSON = function() {
 }
 
 // Connect to db
-const mongoUri = `mongodb://${dbConfig.host}:${dbConfig.port}/${dbConfig.database}`
+const mongoUri =
+    `mongodb://${dbConfig.username}:${dbConfig.password}@` +
+    `${dbConfig.host}:${dbConfig.port}/${dbConfig.database}` +
+    `?authSource=${dbConfig.authSource}`
 mongoose.connect(mongoUri)
 
 // Set up logging
 const db = mongoose.connection
 db.on("error", err => {
-    throw new Error({message: `Could not connect to db ${mongoUri}`, err})
+    console.log(err)
+    throw new Error(`Could not connect to db ${mongoUri}`)
 })
 db.once("open", () =>
     console.log("Connection to MongoDB has been established")

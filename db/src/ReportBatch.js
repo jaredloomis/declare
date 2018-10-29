@@ -57,7 +57,7 @@ reportBatchSchema.statics.graphQL = new GraphQLObjectType({
     }
 })
 
-reportBatchSchema.pre("save", async function(next) {
+reportBatchSchema.pre("save", async function() {
     // Set .startTime
     if(!this.startTime && this.reports.length) {
         const reportID = this.reports[0]
@@ -76,8 +76,6 @@ reportBatchSchema.pre("save", async function(next) {
             acc + (report.status === Status.PASS ? 1 : 0)
         , 0) / reports.length
     }
-
-    next()
 })
 
 module.exports = mongoose.model("ReportBatch", reportBatchSchema)
