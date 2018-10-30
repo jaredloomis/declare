@@ -20,7 +20,7 @@ const reportBatchSchema = mongoose.Schema({
         }]
     },
     startTime: {
-        type: Date
+        type: String
     },
     passPercentage: {
         type: Number
@@ -47,6 +47,7 @@ reportBatchSchema.statics.graphQL = new GraphQLObjectType({
         },
         startTime: {
             type: GraphQLString
+            //resolver: obj => obj.startTime.toISOString()
         },
         passPercentage: {
             type: GraphQLFloat

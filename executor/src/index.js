@@ -25,7 +25,7 @@ async function handler_executeTestRun(event, context) {
 
 export {
     executeCustomTest, Report, executeTestRun,
-    handler_executeTestRun
+    handler_executeTestRun, config
 }
 
 export const executePack = async (pageID: string, packID: string) => {

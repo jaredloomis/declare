@@ -2,7 +2,10 @@ import fetch            from "node-fetch"
 import AWS              from "aws-sdk"
 import {TestRun}        from "declare-db"
 import accountAuth      from "./validation/accountAuth"
-import {executeTestRun} from "declare-executor"
+import {
+    executeTestRun,
+    config as executorConfig
+} from "declare-executor"
 
 AWS.config.region = "us-west-2"
 const lambda = new AWS.Lambda()
