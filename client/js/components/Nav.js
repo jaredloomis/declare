@@ -10,7 +10,8 @@ const Nav = ({focusProduct, onSelectFocusProduct}) => <nav className={style.nav}
     <div className={style.content}>
     <div className={style.left}>
         <div className={style.navItem}>
-            <img src="/logo-blue.png" width="70" height="70" style={{width: "70px", height: "70px"}}/>
+            <img src="/assets/name-icon-outlined.png"
+                width="300" height="50" style={{width: "300px", height: "50px"}}/>
         </div>
         <div className={style.navItem}>
             <ProductSelect flat defaultValue={focusProduct}
