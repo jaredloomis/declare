@@ -80,21 +80,9 @@ export default {
             validateEntity: true
         })
 
-            /*
-        const lambdaParams = {
-            //ClientContext: "declareserver",
-            FunctionName: "executor",
-            //LogType: "Tail"
-        }
-        const invoke = new Promise((resolve, reject) =>
-            lambda.invoke(lambdaParams, (err, data) =>
-                err ? reject(err) : resolve(data)
-            )
-        )*/
-
         try {
-            //const ret = await invoke
-            const ret = await fetch("http://45.32.83.234:1234/ExecuteTestRun", {
+            console.log("TEST RUN:", testRun._id)
+            const ret = await fetch(`http://${executorConfig.uri}:${executorConfig.port}/ExecuteTestRun`, {
                 method: "POST",
                 body: JSON.stringify({
                     testRunID: testRun._id
@@ -103,7 +91,6 @@ export default {
                     "Content-Type": "application/json"
                 }
             })
-            console.log("INVOKE EXECUTORR", ret)
         } catch(ex) {
             console.log("ERROR INVOKING EXECUTOR", ex)
         }

@@ -1,8 +1,9 @@
 import Promise         from "bluebird"
 import {createContext} from "rabbit.js"
 
-    /*
-const context = createContext("amqp://localhost")
+import config          from "./config"
+
+const context = createContext(`amqp://${config.host}`)
 
 const EXCHANGE = "declare_events"
 
@@ -22,9 +23,9 @@ const pubSub = new Promise((resolve, reject) => {
             })
         })
     })
-})*/
+})
 
 module.exports = {
-    pubSub: null, EXCHANGE: null, context: null
-    //pubSub, EXCHANGE, context
+    //pubSub: null, EXCHANGE: null, context: null
+    pubSub, EXCHANGE, context
 }

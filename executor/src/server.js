@@ -36,6 +36,7 @@ router.post("/ExecuteTestRun", async ctx => {
     try {
         const {testRunID} = ctx.request.body
         const testRun = await TestRun.findById(testRunID)
+        console.log("TEST RUNS", await TestRun.find({}))
         const res = await executeTestRun(testRun)
         ctx.body = {
             status: true,

@@ -11,13 +11,13 @@ export const production = {
 
 export const development = {
     driver     : "mongo",
-    host       : "144.202.112.151",
-    port       : "80",
-    username   : "root",
-    password   : "lA0EGv7p6oXG7OWc",
+    host       : "localhost",
+    port       : "27017",
+//    username   : "root",
+//    password   : "lA0EGv7p6oXG7OWc",
     database   : "declare-dev",
     autoReconnect : true,
-    authSource:  "admin"
+//    authSource:  "admin"
 }
 
 export default process.env.NODE_ENV === "production" ?

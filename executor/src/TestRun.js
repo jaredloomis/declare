@@ -1,8 +1,8 @@
 import {
-    ReportBatch, TestRun as TestRunModel
+    ReportBatch, TestRun as TestRunModel, pubSub
 } from "declare-db"
-import {TestRun}           from "declare-common"
-import {executeCustomTest} from "./CustomTest"
+import {TestRun, realtimeMessage} from "declare-common"
+import {executeCustomTest}        from "./CustomTest"
 const {TEST_TYPE} = TestRun
 
 export default async (testRun={}, options={}) => {
@@ -30,6 +30,13 @@ export default async (testRun={}, options={}) => {
         batch._id
     ])
     await testRunModel.save()
+
+    // Publish test run execution event to PubSub system
+    pubSub.pubSub.then(({pub}) =>
+        pub.publish(realtimeMessage.Types.TEST_RUN_EXECUTION_COMPLETED, JSON.stringify({
+            testRunID: testRunModel._id
+        }), "utf8")
+    )
 
     return batch
 }

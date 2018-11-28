@@ -57,7 +57,7 @@ const reportSchema = mongoose.Schema({
                 type: String
             },
             time: {
-                type: Date
+                type: String
             },
             data: {
                 type: Object

@@ -1,6 +1,6 @@
 // @flow
 require("dotenv").config()
-import {config}         from "declare-common"
+import {config as commonConfig}   from "declare-common"
 import {
     Page, TestPack, TestRun
 } from "declare-db"
@@ -11,7 +11,8 @@ import {executeCustomTest} from "./CustomTest"
 import executeTestRun   from "./TestRun"
 import screenshot       from "./modules/screenshot"
 import destructive      from "./modules/destructive-input"
-const {internalIDs} = config.TestPack
+import config           from "./config/server"
+const {internalIDs} = commonConfig.TestPack
 
 export type Module = (runner: Runner, page: Page, values: any, data: any) => any
 
@@ -25,7 +26,8 @@ async function handler_executeTestRun(event, context) {
 
 export {
     executeCustomTest, Report, executeTestRun,
-    handler_executeTestRun, config
+    handler_executeTestRun,
+    config
 }
 
 export const executePack = async (pageID: string, packID: string) => {

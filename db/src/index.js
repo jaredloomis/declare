@@ -17,10 +17,14 @@ mongoose.Types.ObjectId.prototype.toJSON = function() {
 }
 
 // Connect to db
+const authUri  =
+    dbConfig.username ? `${dbConfig.username}:${dbConfig.password}@` : ""
+const hostUri  = `${dbConfig.host}:${dbConfig.port}`
+const authSrcUri =
+    dbConfig.authSource ?  `?authSource=${dbConfig.authSource}` : ""
 const mongoUri =
-    `mongodb://${dbConfig.username}:${dbConfig.password}@` +
-    `${dbConfig.host}:${dbConfig.port}/${dbConfig.database}` +
-    `?authSource=${dbConfig.authSource}`
+    `mongodb://${authUri}` +
+    `${hostUri}/${dbConfig.database}${authSrcUri}`
 mongoose.connect(mongoUri)
 
 // Set up logging

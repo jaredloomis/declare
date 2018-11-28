@@ -1,3 +1,4 @@
+require("dotenv").config()
 import fs            from "fs"
 import path          from "path"
 import http          from "http"
@@ -37,6 +38,24 @@ app.use(convert(session(app)))
 // Authentication
 app.use(authenticate)
 
+// Compression
+// XXX: needed? static uses compressed files if present
+app.use(compress())
+
+/*
+ * Routes
+ */
+
+// Root path "/" equals "/view/Main.html"
+app.use((ctx, next) => {
+    if(ctx.request.path === "" || ctx.request.path === "/") {
+        console.log(ctx.request.path)
+        ctx.request.path = "/view/Main.html"
+    }
+
+    return next()
+})
+
 // Static assets
 app.use(assets(path.join(__dirname, "..", "..", "client", "dist"), {
     // 1 week
@@ -46,14 +65,6 @@ app.use(assets(path.join(__dirname, "..", "..", "client", "dist"), {
     // GZip compression
     gzip: true
 }))
-
-// Compression
-// XXX: needed? static uses compressed files if present
-app.use(compress())
-
-/*
- * Routes
- */
 
 // Read all controllers and register their returned routes
 fs.readdirSync(path.join(__dirname, "controller"))
