@@ -76,7 +76,7 @@
     "html": "mkdir -p dist/view && cp view/Main.html dist/view/Main.html",
     "style": "mkdir -p dist/style && ./node_modules/node-sass/bin/node-sass style/bulma.scss > dist/style/bulma.css",
     "headjs": "mkdir -p dist/js && cp node_modules/headjs/dist/1.0.0/head.load.min.js dist/js",
-    "assets": "mkdir -p dist/assets && cp -r ../assets/dist/* dist/assets"
+    "assets": "mkdir -p dist/assets && cp -r ../assets/dist/* dist/assets && cp dist/assets/favicon.ico dist"
   },
   "author": "Jared Loomis <jaredloomis@protonmail.com>",
   "license": "All Rights Reserved"
