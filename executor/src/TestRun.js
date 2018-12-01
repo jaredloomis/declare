@@ -34,7 +34,9 @@ export default async (testRun={}, options={}) => {
     // Publish test run execution event to PubSub system
     pubSub.pubSub.then(({pub}) =>
         pub.publish(realtimeMessage.Types.TEST_RUN_EXECUTION_COMPLETED, JSON.stringify({
-            testRunID: testRunModel._id
+            type: realtimeMessage.Types.TEST_RUN_EXECUTION_COMPLETED,
+            testRunID: testRunModel._id,
+            batchID:   batch._id
         }), "utf8")
     )
 

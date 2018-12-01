@@ -5,17 +5,6 @@ const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPl
 
 const plugins = []
 
-// Add common chunk plugin
-plugins.push(new webpack.optimize.CommonsChunkPlugin({
-    name: "common",
-    filename: "common.js",
-    minChunks: (module, count) => {
-        const userRequest = module.userRequest
-        return userRequest &&
-               userRequest.indexOf("node_modules") >= 0
-    }
-}))
-
 // Add optimizations when in productions
 if(process.env.NODE_ENV === "production") {
     // UglifyJS plugin
@@ -33,6 +22,7 @@ if(process.env.NODE_ENV === "production") {
 //plugins.push(new BundleAnalyzerPlugin())
 
 module.exports = {
+    mode: process.env.NODE_ENV || "development",
     entry: {
         app: path.join(__dirname, "js", "Main.js")
     },
@@ -73,6 +63,19 @@ module.exports = {
             {test: /\.(png|jpg|gif|svg|mp4|json|ttf|woff|woff2|eot)$/,
              loader: "file-loader"},
         ]
+    },
+    optimization: {
+        runtimeChunk: "single",
+        splitChunks: {
+            chunks: "all",
+            maxInitialRequests: Infinity,
+            minSize: 0,
+            cacheGroups: {
+                vendor: {
+                    test: /[\\/]node_modules[\\/]/
+                }
+            }
+        }
     },
     plugins
 }

@@ -81,8 +81,7 @@ export default {
         })
 
         try {
-            console.log("TEST RUN:", testRun._id)
-            const ret = await fetch(`http://${executorConfig.uri}:${executorConfig.port}/ExecuteTestRun`, {
+            fetch(`http://${executorConfig.uri}:${executorConfig.port}/ExecuteTestRun`, {
                 method: "POST",
                 body: JSON.stringify({
                     testRunID: testRun._id

@@ -10,7 +10,10 @@
     "build": "gulp",
     "zip": "rm -f executor.zip && zip -r -9 executor.zip dist/ index.js node_modules/ package.json && du -h executor.zip",
     "s3": "npm run zip && aws s3 cp executor.zip s3://declare-assets/executor.zip",
-    "lambda": "npm run s3 && aws lambda update-function-code --function-name executor --s3-bucket declare-assets --s3-key executor.zip --region us-west-2"
+    "lambda": "npm run s3 && aws lambda update-function-code --function-name executor --s3-bucket declare-assets --s3-key executor.zip --region us-west-2",
+    "forever": "./node_modules/forever/bin/forever start dist/server.js",
+    "start": "npm run build && npm run forever",
+    "restart": "npm run build && ./node_modules/forever/bin/forever restart dist/server.js"
   },
   "dependencies": {
     "@babel/runtime": "^7.1.2",
@@ -41,6 +44,7 @@
     "eslint-loader": "^2.1.1",
     "eslint-plugin-flowtype": "^3.0.0",
     "file-loader": "^2.0.0",
+    "forever": "^0.15.3",
     "gulp": "^4.0.0",
     "gulp-babel": "^8.0.0",
     "gulp-eslint": "^5.0.0",

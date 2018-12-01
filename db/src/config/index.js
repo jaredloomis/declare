@@ -1,6 +1,6 @@
 export const production = {
     driver     : "mongo",
-    host       : "10.5.96.3",
+    host       : "144.202.112.151",
     port       : "80",
     username   : "root",
     password   : "lA0EGv7p6oXG7OWc",

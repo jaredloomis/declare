@@ -10,7 +10,8 @@ import products      from "./Product"
 import testRuns      from "./TestRun"
 import reportBatches from "./ReportBatch"
 import environments  from "./Environment"
+import realtime      from "./realtime"
 
 export default (state, event) =>
-    environments(reportBatches(testRuns(products(accounts(errors(users(categories(customTests(elements(inputTypes(pages(
-        state, event), event), event), event), event), event), event), event), event), event), event), event)
+    realtime(environments(reportBatches(testRuns(products(accounts(errors(users(categories(customTests(elements(inputTypes(pages(
+        state, event), event), event), event), event), event), event), event), event), event), event), event), event)
