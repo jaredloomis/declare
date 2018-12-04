@@ -9,6 +9,7 @@ module.exports = server => {
     })
 
     wss.on("connection", ws => {
+        console.log(`Listening for websockets on port ${config.port}...`)
         ws.on("message", msg => {
             ws.send(JSON.stringify({request: msg}))
         })

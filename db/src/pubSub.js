@@ -17,8 +17,10 @@ const pubSub = new Promise((resolve, reject) => {
                 })
 
         sub.pipe(process.stdout)
-        sub.connect(EXCHANGE, "#", () => {
-            pub.connect(EXCHANGE, () => {
+        sub.connect(EXCHANGE, "#", serr => {
+            if(serr) reject(serr)
+            pub.connect(EXCHANGE, perr => {
+                if(perr) reject(perr)
                 resolve({pub, sub})
             })
         })
