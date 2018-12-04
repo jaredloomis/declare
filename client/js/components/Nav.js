@@ -10,7 +10,7 @@ const Nav = ({focusProduct, onSelectFocusProduct}) => <nav className={style.nav}
     <div className={style.content}>
     <div className={style.left}>
         <div className={style.navItem}>
-            <img src="/assets/name-icon-outlined.png"
+            <img src="/assets/declare_logo_banner.png"
                 width="300" height="50" style={{width: "300px", height: "50px"}}/>
         </div>
         <div className={style.navItem}>
