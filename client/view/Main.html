@@ -9,11 +9,12 @@
     <script src="/js/head.load.min.js"></script>
     <script>
         // Load js lib
-        head.load("/js/vendor~app.js");
+        head.load("/js/vendor~app.js")(function() {
+            // Load runner
+            head.load("/js/runtime.js");
+        });
         // Load app
         head.load("/js/app.js");
-        // Load runner
-        head.load("/js/runtime.js");
     </script>
 </head>
 <body>

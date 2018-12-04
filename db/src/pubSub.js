@@ -10,11 +10,11 @@ const EXCHANGE = "declare_events"
 const pubSub = new Promise((resolve, reject) => {
     context.on("ready", () => {
         const pub = context.socket("PUBLISH", {
-                        routing: "topic"
-                    }),
+                    routing: "topic"
+                }),
               sub = context.socket("SUBSCRIBE", {
-                        routing: "topic"
-                    })
+                    routing: "topic"
+                })
 
         sub.pipe(process.stdout)
         sub.connect(EXCHANGE, "#", () => {
