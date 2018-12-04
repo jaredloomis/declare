@@ -11,7 +11,7 @@ const Nav = ({focusProduct, onSelectFocusProduct}) => <nav className={style.nav}
     <div className={style.left}>
         <div className={style.navItem}>
             <img src="/assets/declare_logo_banner.png"
-                width="300" height="50" style={{width: "300px", height: "50px"}}/>
+                width="300" height="60" style={{width: "300px", height: "60px"}}/>
         </div>
         <div className={style.navItem}>
             <ProductSelect flat defaultValue={focusProduct}
