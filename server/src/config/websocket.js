@@ -1,5 +1,5 @@
 export const production = {
-    port: process.env.WS_PORT || 81
+    port: process.env.WS_PORT || 3001
 }
 
 export const development = {

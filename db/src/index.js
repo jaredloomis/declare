@@ -25,6 +25,7 @@ const authSrcUri =
 const mongoUri =
     `mongodb://${authUri}` +
     `${hostUri}/${dbConfig.database}${authSrcUri}`
+console.log("Connecting to MongoDB", mongoUri)
 mongoose.connect(mongoUri)
 
 // Set up logging

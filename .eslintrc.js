@@ -27,7 +27,8 @@ const alwaysRules = {
     "no-labels": ["warn"],
     "no-loop-func": ["warn"],
     "yoda": ["warn", "never"],
-    "require-await": ["warn"]
+    "require-await": ["warn"],
+    "no-constant-condition": ["warn"]
 }
 
 const rules = Object.assign({},

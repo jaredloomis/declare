@@ -18,12 +18,8 @@ module.exports = server => {
         ws.on("error", err => {
             console.log("WebSocket error: ", err)
         })
-        pubSub.pubSub.then(({sub}) =>
-            sub.on("data", msg => {
-                if(ws && ws.readyState === WebSocket.OPEN) {
-                    ws.send(msg.toString("utf8"))
-                }
-            })
+        pubSub.subscribe(msg =>
+            ws.send(msg.content.toString("utf8"))
         )
     })
 }

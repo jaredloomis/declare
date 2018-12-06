@@ -21,6 +21,7 @@
   "dependencies": {
     "@babel/preset-flow": "^7.0.0",
     "@babel/runtime": "^7.1.2",
+    "amqplib": "^0.5.3",
     "aws-sdk": "^2.64.0",
     "bcrypt": "^3.0.1",
     "bluebird": "^3.4.6",
