@@ -22,7 +22,6 @@ const publish = async msg => {
         const ch   = await conn.createChannel()
         const ok   = await ch.assertQueue(queueName, {durable: false})
         const ok2  = await ch.assertExchange(queueName, "fanout", {durable: false})
-        console.log("exchange keys:", Object.keys(ok2))
         await ch.bindQueue(ok.queue, queueName)
         await ch.sendToQueue(queueName, Buffer.from(msg))
     } catch(ex) {
