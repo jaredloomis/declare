@@ -1,6 +1,6 @@
 import store from "../store"
 
-const socket = new WebSocket(`wss://${window.location.hostname}:80/websocket`)
+const socket = new WebSocket(`wss://${window.location.hostname}/websocket`)
 
 let listeners = []
 
