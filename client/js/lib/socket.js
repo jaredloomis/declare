@@ -1,6 +1,12 @@
 import store from "../store"
 
-const socket = new WebSocket(`wss://${window.location.hostname}/websocket`)
+const {protocol, path, port} = process.env.NODE_ENV === "production" ?
+    ({protocol: "wss", path: "/websocket", port: "443"}) :
+    ({protocol: "ws",  path: "",           port: "3001"})
+
+const socket = new WebSocket(
+    `${protocol}://${window.location.hostname}:${port}/${path}`
+)
 
 let listeners = []
 

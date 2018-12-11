@@ -7,7 +7,7 @@ const plugins = []
 
 // Add optimizations when in productions
 if(process.env.NODE_ENV === "production") {
-    // UglifyJS plugin
+    // UglifyJS plugin XXX BROKEN - UPDATE
     plugins.push(new webpack.optimize.UglifyJsPlugin({
         minimize: true,
         compress: {
@@ -17,6 +17,12 @@ if(process.env.NODE_ENV === "production") {
     // Prepack plugin - TODO
     //new PrepackWebpackPlugin({})
 }
+
+plugins.push(new webpack.DefinePlugin({
+    "process.env.NODE_ENV": JSON.stringify(
+        process.env.NODE_ENV || "development"
+    )
+}))
 
 // Analyze the bundle after building
 //plugins.push(new BundleAnalyzerPlugin())

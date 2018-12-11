@@ -1,15 +1,15 @@
-import amqp            from "amqplib"
-
-import config          from "./config"
-
-//const context = 
+import amqp   from "amqplib"
+import config from "./config"
 
 const queueName = "declare_events"
 
 const pubSub = (async () => {
     try {
-        console.log("RabbitMQ URL:", `amqp://admin:B3o8mFCcKq5sIB@${config.host}/${config.vhost}`)
-        return amqp.connect(`amqp://admin:B3o8mFCcKq5sIB@${config.host}/${config.vhost}`)
+        const uri =
+            `amqp://${config.pubsubUsername}:${config.pubsubPassword}@` +
+            `${config.host}/${config.vhost}`
+        console.log("RabbitMQ URL:", uri)
+        return amqp.connect(uri)
     } catch(ex) {
         console.warn("pubSub error:", ex)
         return ex
