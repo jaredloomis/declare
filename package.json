@@ -1,13 +1,18 @@
 {
-  "name": "declare",
+  "name": "Declare",
   "env": "production",
   "version": "0.0.1",
   "description": "Common package containing various configuration common to client and app",
   "main": "index.js",
-  "repository": "https://gitlab.com/jloomis/declare.git",
+  "repository": "https://github.com/jaredloomis/Declare",
   "author": "Jared Loomis <jaredloomis@protonmail.com>",
-  "license": "All Rights Reserved",
-  "private": true,
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "build": "bash ./scripts/build.sh",
+    "rebuild": "bash ./scripts/rebuild.sh",
+    "start": "yarn run build && cd executor && yarn run start && cd ../server && yarn run start"
+  },
   "dependencies": {
     "babel-plugin-transform-async-to-module-method": "^6.24.1",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",

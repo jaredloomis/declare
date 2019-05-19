@@ -63,6 +63,11 @@ export default class SeleniumDriver extends Driver {
         }
     }
 
+    async sendKeys(selector: Selector, value: string) {
+        const elem = await this.find(selector)
+        return elem.sendKeys(value)
+    }
+
     async setValue(selector: Selector, value: string) {
         const elem = await this.find(selector)
         await elem.clear()
@@ -87,9 +92,6 @@ export default class SeleniumDriver extends Driver {
     }
 
     async find(selector: Selector): Promise<Elem> {
-        /*const elemBy = this.toBy(selector)
-        await this.wait(until.elementLocated(elemBy))
-        return this.driver.findElement(elemBy)*/
         const elems = await this.findAll(selector)
         for(const elem of elems) {
             if(await elem.isDisplayed()) {
@@ -99,14 +101,28 @@ export default class SeleniumDriver extends Driver {
         return elems[0]
     }
 
+    async findSingle(selector: Selector): Promise<Elem> {
+        const elemBy = this.toBy(selector)
+        try {
+          await this.driver.wait(until.elementLocated(elemBy), 500)
+        } catch(ex) {
+          // the following will throw with a better exception
+        }
+        return this.driver.findElements(elemBy)
+    }
+
     async findAll(selector: Selector): Promise<Array<Elem>> {
         const elemBy = this.toBy(selector)
-        await this.wait(until.elementLocated(elemBy))
+        try {
+          await this.driver.wait(until.elementLocated(elemBy), 500)
+        } catch(ex) {
+          // the following will throw with a better exception
+        }
         return this.driver.findElements(elemBy)
     }
 
     executeScript(script: string, ...args: Array<any>): Promise<any> {
-        return this.driver.executeScript(script, args)
+        return this.driver.executeScript("\"use strict\";" + script, args)
     }
 
     wait(condition: any, message: string, timeout: ?number): Promise<any> {

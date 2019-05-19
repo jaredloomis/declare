@@ -96,6 +96,24 @@ export default class Runner {
         }
     }
 
+    async sendKeys(selector: Selector, keys: string) {
+        keys = this.expandVariables(keys)
+
+        try {
+            await this.driver.setValue(selector, keys)
+            await this.log(
+                Status.PASS,
+                `Set value of "${showSelector(selector)}" to ${keys}`
+            )
+        } catch(ex) {
+            await this.log(
+                Status.FAIL,
+                `Couldn't send keys "${keys}" to "${showSelector(selector)}"`,
+                {ex}
+            )
+        }
+    }
+
     async setValue(selector: Selector, value: string) {
         value = this.expandVariables(value)
 
@@ -245,6 +263,24 @@ export default class Runner {
     }
 
     /*
+     * Assertions
+     */
+
+    async assertElementExists(selector: Selector) {
+        this.assert(await this.driver.exists(selector),
+            `Element exists "${showSelector(selector)}"`,
+            `Element doesn't exist "${showSelector(selector)}"`
+        )
+    }
+
+    async assertTextPresent(text) {
+        this.assert(await this.driver.isTextPresent(text),
+            `Text is present "${text}"`,
+            `Text isn't present "${text}"`
+        )
+    }
+
+    /*
      * Variables
      */
 
@@ -300,7 +336,7 @@ export default class Runner {
 
     assert(condition: boolean, trueMsg: string, falseMsg: ?string, data: ?any) {
         const status  = condition ? Status.PASS : Status.FAIL
-        const message = !falseMsg ? trueMsg : (condition ? trueMsg : falseMsg)
+        const message = condition ? trueMsg : (falseMsg ? falseMsg : "Couldn't " + trueMsg)
         this.report.log(new Step("runner", status, message, data))
     }
 

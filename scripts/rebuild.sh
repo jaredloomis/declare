@@ -1,6 +1,8 @@
 #! /bin/bash
 
-#npm i yarn -g
+#
+# Due to caching of local packages, do a *really* hard rebuild.
+#
 
 yarn cache clean declare-common
 yarn cache clean declare-db
