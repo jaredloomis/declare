@@ -45,11 +45,12 @@ easily installed on any compute, whether in the cloud or on a physical machine.
 The "full" installation architecture of the application comprises two node types
 (running on EC2 instances, for example), with a third acting as a database.
 
+This document describes how to install all components on a single system.
+
 **Installing Dependencies**
 
 - `nginx` running as a service (`systemctl start nginx`)
 - `mongodb` running as a service (`systemctl start mongodb`)
-- `RabbitMQ` running as a service (`systemctl start rabbitmq` or `systemctl start rabbitmq-server`)
 - `node` installed and in `PATH`
 - `gulp` installed and in `PATH`
 - `yarn` installed and in `PATH`
@@ -67,6 +68,18 @@ $ yarn run start
 
 Your server is now running on port 3000!
 
+**Remote Installation**
+
+If you are running Declare on a cloud server, you need to set up
+an nginx reverse proxy to proxy requests coming from public port
+`80`, to your server running on port `3000`.
+
+```bash
+$ sudo bash scripts/register_nginx_proxy.sh
+```
+
+Now your server can receive outside requests.
+
 ### Server controls
 
 The server can be restarted or stopped
@@ -75,3 +88,23 @@ The server can be restarted or stopped
 $ yarn run restart
 $ yarn run stop
 ```
+
+# Technology Stack
+
+- [Node.js](https://nodejs.org/) handles all backend compute
+- [GraphQL](https://graphql.org/) is the client-server communication protocol
+
+- [React.js](https://reactjs.org/) for all frontend rendering
+- [Redux](https://redux.js.org/) to manage frontend state
+- [SASS](https://sass-lang.com/) and [Bulma](https://bulma.io/) keep things pretty
+
+- [Selenium](https://www.seleniumhq.org/) runs tests in a chrome browser
+- [nginx](https://www.nginx.org/) proxies requests from the outside world
+- [webpack](https://gulpjs.com/) is responsible for building the client
+- [gulp](https://gulpjs.com/) builds the server
+
+# Contribute
+
+I will graciously accept any contributions, and may be able to provide minimal
+compensation as an added plus (contact me). Please see the
+[public Trello board](https://trello.com/b/8rqPTLFl/declare).
