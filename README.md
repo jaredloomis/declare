@@ -1,12 +1,12 @@
 # Declare QA
 
-*SIMPLE LOGO*
+![Declare QA Logo](https://raw.githubusercontent.com/jaredloomis/declare/master/assets/dist/declare-logo-master-1.png)
 
 **Declare QA** makes it easy for anyone to create robust website tests without code!
 Declare's powerful visual interface handles the details of creating dependable tests, so
 you can focus on testing the functionality of your product.
 
-*SCREENSHOT*
+![Declare Screenshot Page List](https://raw.githubusercontent.com/jaredloomis/declare/master/assets/dist/screenshot_page_list.png)
 
 Most automated testing platforms provide little in the way of test maintenance tools. Tests
 break often and are time consuming to repair, wasting time that could be spent creating new
