@@ -49,6 +49,7 @@ export const executeCustomTest = async (customTest, options={}) => {
         options.executionName || customTest.name
     // Add to database after generating video
     const reportModel = new Report(runner.report)
+    await reportModel.save()
     await reportModel.generateVideo()
     await reportModel.save()
 

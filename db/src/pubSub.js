@@ -44,6 +44,5 @@ const subscribe = async handler => {
 }
 
 module.exports = {
-    //pubSub: null, EXCHANGE: null, context: null
     pubSub, queueName, publish, subscribe
 }

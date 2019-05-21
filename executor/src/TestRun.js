@@ -37,15 +37,6 @@ export default async (testRun={}, options={}) => {
         testRunID: testRunModel._id,
         batchID:   batch._id
     }))
-        /*
-    pubSub.pubSub.then(({pub}) =>
-        pub.publish(realtimeMessage.Types.TEST_RUN_EXECUTION_COMPLETED, JSON.stringify({
-            type: realtimeMessage.Types.TEST_RUN_EXECUTION_COMPLETED,
-            testRunID: testRunModel._id,
-            batchID:   batch._id
-        }), "utf8")
-    )
-    */
 
     return batch
 }

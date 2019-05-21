@@ -8,7 +8,7 @@ export default {
         subscribe: function*() {
             const t = true
             while(t) {
-                yield pubSub.then(({sub}) =>
+                yield pubSub.pubSub.then(({sub}) =>
                     new Promise((resolve, reject) =>
                         sub.once("data", resolve)
                     )

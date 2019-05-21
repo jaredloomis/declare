@@ -9,7 +9,7 @@ export const qa = {
 }
 
 export const production = {
-    uri:  process.env.EXECUTOR_URI  || qa.uri,//"10.5.96.4",
+    uri:  process.env.EXECUTOR_URI  || qa.uri,
     port: process.env.EXECUTOR_PORT || "80"
 }
 

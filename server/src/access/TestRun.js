@@ -1,14 +1,10 @@
 import fetch            from "node-fetch"
-import AWS              from "aws-sdk"
 import {TestRun}        from "declare-db"
 import accountAuth      from "./validation/accountAuth"
 import {
     executeTestRun,
     config as executorConfig
 } from "declare-executor"
-
-AWS.config.region = "us-west-2"
-const lambda = new AWS.Lambda()
 
 export default {
     /*
@@ -95,12 +91,5 @@ export default {
         }
 
         return testRun
-
-        /*
-        //const reportBatch = await executeTestRun(testRun)
-        testRun.reportBatches = (testRun.reportBatches || [])
-            .concat([reportBatch._id])
-        await testRun.save()
-        return testRun*/
     }
 }
