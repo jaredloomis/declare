@@ -11,7 +11,9 @@
   "scripts": {
     "build": "bash ./scripts/build.sh",
     "rebuild": "bash ./scripts/rebuild.sh",
-    "start": "yarn run build && cd executor && yarn run start && cd ../server && yarn run start"
+    "start": "yarn run build && cd executor && yarn run start && cd ../server && yarn run start",
+    "restart": "yarn run build && cd executor && yarn run restart && cd ../server && yarn run restart",
+    "stop": "yarn run build && cd executor && yarn run stop && cd ../server && yarn run stop"
   },
   "dependencies": {
     "babel-plugin-transform-async-to-module-method": "^6.24.1",

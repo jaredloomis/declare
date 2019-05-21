@@ -6,6 +6,8 @@
 Declare's powerful visual interface handles the details of creating dependable tests, so
 you can focus on testing the functionality of your product.
 
+**Demo:** [declare.jaredloomis.com](http://declare.jaredloomis.com/#SignUp)
+
 Most automated testing platforms provide little in the way of test maintenance tools. Tests
 break often and are time consuming to repair, wasting time that could be spent creating new
 tests. This leads to many automation projects falling into a cycle of perpetual maintenance,
@@ -35,58 +37,41 @@ are grouped by page for automatic organization.
 Declare's saved elements make test maintenance a snap! Element selectors are stored in an
 organized list, which is customizable to allow for increased clarity.
 
-# Installation
+# Simple Installation
 
-The typical installation architecture of the application spans two remote servers
-(EC2 instances, for example), with a third acting as a database. This is optional; all 3
-components may be installed on a single machine.
+Declare can be installed on multiple nodes as a distributed system, but can be
+easily installed on any compute, whether in the cloud or on a physical machine.
 
-## Declare Common
+The "full" installation architecture of the application comprises two node types
+(running on EC2 instances, for example), with a third acting as a database.
 
-Declare Common contains code shared amongst Declare's components. For any component requiring
-Declare Common, ensure the `common` folder is in the same folder as the component, and build the
-common code.
+**Installing Dependencies**
 
-```
-| common
-| | src
-| | dist
-| component
-| | src
-| | ...
-```
+- `nginx` running as a service (`systemctl start nginx`)
+- `mongodb` running as a service (`systemctl start mongodb`)
+- `RabbitMQ` running as a service (`systemctl start rabbitmq` or `systemctl start rabbitmq-server`)
+- `node` installed and in `PATH`
+- `gulp` installed and in `PATH`
+- `yarn` installed and in `PATH`
 
-Build the common code by executing `yarn run build` in the `common` directory.
+**Running the server**
 
-## Declare DB
-
-The DB component is also shared code. Install with `yarn run build` if needed.
-
-## Declare Server
-
-**Dependencies:**
-
-- `Node.js`
-- `RabbitMQ` running on standard port
-- `gulp` installed globally
-- `yarn` installed globally
-
-To start the server, install its dependencies, build the code, and run it.
+Download the source code from git, then run the server!
+This may take a few minutes to download additional dependencies.
 
 ```bash
-$ cd server
-$ yarn             # Install dependencies & build
-$ yarn run start   # Start server with forever
+$ git clone https://github.com/jaredloomis/declare
+$ cd declare
+$ yarn run start
+```
 
-# The server can be restarted or stopped
+Your server is now running on port 3000!
+
+### Server controls
+
+The server can be restarted or stopped
+
+```bash
 $ yarn run restart
 $ yarn run stop
 ```
-
-## Test Executor
-
-TODO
-
-## React Frontend
-
-TODO
