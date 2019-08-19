@@ -6,7 +6,7 @@
 Declare's powerful visual interface handles the details of creating dependable tests, so
 you can focus on testing the functionality of your product.
 
-**Demo:** [declare.jaredloomis.com](http://declare.jaredloomis.com/#SignUp)
+**Implementation Details Slideshow:** [Google Docs](https://docs.google.com/presentation/d/15bFoPJEJzJWeDyA1zzsxqcS4AooK2U5TPgiYnaC0LHM/edit?usp=sharing)
 
 Most automated testing platforms provide little in the way of test maintenance tools. Tests
 break often and are time consuming to repair, wasting time that could be spent creating new
