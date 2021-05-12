@@ -12,7 +12,7 @@
     "apollo-link-ws": "^1.0.8",
     "bluebird": "^3.5.2",
     "bulma": "^0.7.1",
-    "codemirror": "^5.40.2",
+    "codemirror": "^5.58.2",
     "feather-icons": "^4.7.3",
     "graphql": "^14.0.2",
     "graphql-tag": "^2.10.0",
