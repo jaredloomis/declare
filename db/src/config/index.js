@@ -8,8 +8,8 @@ export const production = {
     authSource:  "admin",
     autoReconnect : true,
     vhost: "declaredb",
-    pubsubUsername: "admin",
-    pubsubPassword: "B3o8mFCcKq5sIB"
+    pubsubUsername: "guest",
+    pubsubPassword: "guest"
 }
 
 export const development = {
@@ -21,8 +21,8 @@ export const development = {
     database   : "declare-dev",
     autoReconnect : true,
     vhost: "declaredb",
-    pubsubUsername: "admin",
-    pubsubPassword: "1234"
+    pubsubUsername: "guest",
+    pubsubPassword: "guest"
 //    authSource:  "admin"
 }
 
