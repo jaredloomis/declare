@@ -46,18 +46,18 @@ app.use(compress())
  * Routes
  */
 
-// Root path "/" equals "/view/Main.html"
+// Root path "/" equals "/index.html"
 app.use((ctx, next) => {
     if(ctx.request.path === "" || ctx.request.path === "/") {
         console.log(ctx.request.path)
-        ctx.request.path = "/view/Main.html"
+        ctx.request.path = "/index.html"
     }
 
     return next()
 })
 
 // Static assets
-app.use(assets(path.join(__dirname, "..", "..", "client", "dist"), {
+app.use(assets(path.join(__dirname, "..", "..", "new-client", "dist"), {
     // 1 week
     maxage: 3000,
     // Brotli compression

@@ -30,7 +30,7 @@ const parseLiteralISO8601 = ast => {
 }
 
 const DateTime = new GraphQLScalarType({
-    name: "DateTime",
+    name: "ISODateTime",
     description: "An ISO-8601 encoded UTC date string.",
     serialize: serializeISO8601,
     parseValue: parseISO8601,

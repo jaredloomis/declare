@@ -4,6 +4,7 @@ import config from "./config"
 const queueName = "declare_events"
 
 const pubSub = (async () => {
+    /*
     try {
         const uri =
             `amqp://${config.pubsubUsername}:${config.pubsubPassword}@` +
@@ -13,10 +14,12 @@ const pubSub = (async () => {
     } catch(ex) {
         console.warn("pubSub error:", ex)
         return ex
-    }
+    }*/
+    return {}
 })()
 
 const publish = async msg => {
+    /*
     try {
         const conn = await pubSub
         const ch   = await conn.createChannel()
@@ -26,10 +29,11 @@ const publish = async msg => {
         await ch.sendToQueue(queueName, Buffer.from(msg))
     } catch(ex) {
         console.warn(ex)
-    }
+    }*/
 }
 
 const subscribe = async handler => {
+    /*
     try {
         const conn = await pubSub
         process.once("SIGINT", () => conn.close())
@@ -40,7 +44,7 @@ const subscribe = async handler => {
         ch.consume(queueName, handler, {noAck: true})
     } catch(ex) {
         console.warn(ex)
-    }
+    }*/
 }
 
 module.exports = {

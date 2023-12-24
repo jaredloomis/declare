@@ -1,18 +1,30 @@
 #! /bin/bash
 
-START_DIR="$(pwd)"
-cd $(dirname $0)/..
+dir=$(realpath $(dirname $0)/..)
+cd $dir
+yarn="$dir/node_modules/yarn/bin/yarn"
 
-yarn
+#if ! [ -x "$(command -v nvm)" ]; then
+#  source /usr/share/nvm/init-nvm.sh
+#fi
+
+. $dir/scripts/clean.sh
+
+#nvm use 10
+
+npm i
 cd common
-yarn
+$yarn
 cd ../db
-yarn
+$yarn
 cd ../executor
-yarn
+$yarn
 cd ../server
-yarn
-cd ../client
-yarn
+$yarn
+#cd ../client
+#$yarn
 
-cd $START_DIR
+#nvm use 18
+cd ../new-client
+$yarn
+$yarn build

@@ -2,7 +2,7 @@ import fs   from "fs"
 import path from "path"
 import {
     GraphQLObjectType, GraphQLList, GraphQLString,
-    GraphQLID, GraphQLNonNull, GraphQLSchema
+    GraphQLID, GraphQLNonNull, GraphQLSchema,
 } from "graphql"
 
 const queryFields = fs.readdirSync(path.join(__dirname, "query"))

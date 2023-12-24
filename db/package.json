@@ -12,7 +12,7 @@
   "dependencies": {
     "@babel/runtime": "^7.1.2",
     "aws-sdk": "^2.334.0",
-    "bcrypt": "^3.0.1",
+    "bcrypt": "^5.1.1",
     "bluebird": "^3.5.2",
     "declare-common": "file:../common",
     "mongoose": "^5.3.4",
@@ -28,6 +28,7 @@
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
+    "del": "^7.1.0",
     "gulp": "^4.0.0",
     "gulp-babel": "^8.0.0",
     "gulp-eslint": "^5.0.0"
