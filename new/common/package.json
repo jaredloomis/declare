@@ -1,0 +1,15 @@
+{
+  "name": "declare-common",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "All Rights Reserved",
+  "private": true,
+  "dependencies": {
+    "graphql": "^16.8.1"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.0",
+    "@parcel/watcher": "^2.3.0",
+    "typescript": "^5.3.3"
+  }
+}

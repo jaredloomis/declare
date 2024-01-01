@@ -1,0 +1,93 @@
+scalar DateTime
+scalar JSON
+
+type Query {
+  account(id: Int!): Account
+  user(id: Int!): User
+}
+
+type Mutation {
+  createAccount(name: String!): Account!
+  createUser(email: String!, password: String!, accountId: Int!): User
+  login(email: String!, password: String!): String
+  createCollection(name: String!): Collection
+  createTest(name: String!, steps: JSON!, collectionId: Int!): Test
+  executeTest(testId: Int!): Boolean
+}
+
+type Subscription {
+  executeTest(testId: Int!): Report
+  report: Report!
+}
+
+type Account {
+  id: Int!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+
+  users: [User!]!
+  collections: [Collection!]!
+  suites: [Suite!]!
+  tests: [Test!]!
+}
+
+type Collection {
+  id: Int!
+  name: String!
+  createdAt: DateTime!
+  createdBy: Int!
+  updatedAt: DateTime!
+  updatedBy: Int!
+  accountId: Int!
+
+  tests: [Test!]!
+}
+
+type Report {
+  id: Int!
+  testId: Int!
+  status: String!
+  duration: Int!
+  startTime: DateTime!
+  endTime: DateTime!
+  
+  stepResults: JSON!
+}
+
+type Suite {
+  id: Int!
+  name: String!
+  createdAt: DateTime!
+  createdBy: Int!
+  updatedAt: DateTime!
+  updatedBy: Int!
+  accountId: Int!
+
+  tests: [Test!]!
+}
+
+type Test {
+  id: Int!
+  name: String!
+  createdAt: DateTime!
+  createdBy: Int!
+  updatedAt: DateTime!
+  updatedBy: Int!
+  accountId: Int!
+  collectionId: Int!
+
+  #suiteId: Int!
+  steps: JSON
+  reports: [Report!]!
+}
+
+type User {
+  id: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  accountId: Int!
+
+  email: String!
+  password: String!
+}

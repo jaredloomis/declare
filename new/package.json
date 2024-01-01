@@ -1,0 +1,10 @@
+{
+  "name": "declare-new",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Jared Loomis <jaredloomis@protonmail.com>",
+  "license": "All Rights Reserved",
+  "private": true,
+  "workspaces": ["server", "client"],
+  "packageManager": "yarn@1.22.19"
+}

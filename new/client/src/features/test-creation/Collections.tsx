@@ -1,0 +1,130 @@
+import React, { useState } from "react";
+import { gql, useQuery, useMutation, useApolloClient } from "@apollo/client";
+import { Link } from "react-router-dom";
+import { authUserAtom } from "../auth/store";
+import { useAtom } from "jotai";
+import { loadable } from "jotai/utils";
+import { Collection, User } from "../../gql/graphql";
+import { Table } from "../../components/Table";
+import { Spinner } from "../../components/Spinner";
+import { Card } from "../../components/Card";
+import { TextInput } from "../../components/TextInput";
+import { Button } from "../../components/Button";
+
+const GET_COLLECTIONS_QUERY = gql`
+  query GetCollections($accountId: Int!) {
+    account(id: $accountId) {
+      collections {
+        id
+        name
+        tests {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
+
+const CREATE_COLLECTION_MUTATION = gql`
+  mutation CreateCollection($name: String!) {
+    createCollection(name: $name) {
+      id
+      name
+    }
+  }
+`;
+
+interface TestCollectionProps {
+  collection: Collection;
+}
+
+function TestCollection({ collection }: TestCollectionProps) {
+  const apollo = useApolloClient();
+  const [testName, setTestName] = useState<string>("");
+  const handleCreateTest = () => {
+    apollo.mutate({
+      mutation: gql`
+        mutation CreateTest($collectionId: Int!, $name: String!, $steps: JSON!) {
+          createTest(collectionId: $collectionId, name: $name, steps: $steps) {
+            id
+            name
+          }
+        }
+      `,
+      variables: {
+        collectionId: collection.id,
+        name: testName,
+        steps: [],
+      },
+      refetchQueries: ["GetCollections"],
+    });
+  };
+
+  return (
+    <div className="mb-8">
+      <h2 className="text-2xl mb-4">{collection.name}</h2>
+      <Table columns={["Test Name"]}>
+        {collection.tests.map(test => (
+          <Table.Row key={test.id}>
+            <Table.Cell>
+              <Link to={`/test/${test.id}`}>{test.name}</Link>
+            </Table.Cell>
+          </Table.Row>
+        ))}
+      </Table>
+
+      <TextInput label="Test Name" onValueChange={setTestName}/>
+      <Button color="success" size="large" onClick={handleCreateTest}>
+        Create Test
+      </Button>
+    </div>
+  );
+}
+
+export function Tests() {
+  const [name, setName] = useState<string>();
+  const [user, _] = useAtom(loadable(authUserAtom));
+  const collectionsRes = useQuery(GET_COLLECTIONS_QUERY, {
+    variables: {
+      accountId: user.state == "hasData" ? user.data?.accountId : undefined,
+    },
+  });
+  const [createCollection, creationResult] = useMutation(
+    CREATE_COLLECTION_MUTATION,
+    {
+      refetchQueries: ["GetCollections"],
+    },
+  );
+  const handleCreateCollection = (event: any) => {
+    event.preventDefault();
+    createCollection({ variables: { name } });
+  };
+
+  if (collectionsRes.loading) {
+    return <Spinner />;
+  }
+
+  if (collectionsRes.error) {
+    return <span>Error: {collectionsRes.error.message}</span>;
+  }
+
+  return (
+    <>
+      <h1 className="text-3xl pb-10">Tests</h1>
+      {collectionsRes.data.account.collections.map((collection: Collection) => (
+        <TestCollection collection={collection} key={collection.id} />
+      ))}
+      <div>
+        <Card>
+          <form onSubmit={handleCreateCollection}>
+            <TextInput label="Collection Name" onChange={setName} />
+            <Button color="success" size="large">
+              Create Collection
+            </Button>
+          </form>
+        </Card>
+      </div>
+    </>
+  );
+}
