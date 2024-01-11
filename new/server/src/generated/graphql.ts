@@ -6,6 +6,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -22,12 +23,49 @@ export type Account = {
   __typename?: 'Account';
   collections: Array<Collection>;
   createdAt: Scalars['DateTime']['output'];
+  elements: Array<Element>;
   id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   suites: Array<Suite>;
   tests: Array<Test>;
   updatedAt: Scalars['DateTime']['output'];
   users: Array<User>;
+};
+
+export type AssertExistsStep = {
+  __typename?: 'AssertExistsStep';
+  elementId: Scalars['Int']['output'];
+  stepType: Scalars['String']['output'];
+  /**
+   * If true, the element must be visible as well as being present in the DOM.
+   * default: false.
+   */
+  visible?: Maybe<Scalars['Boolean']['output']>;
+};
+
+/**
+ * Asserts that the given javascript code evaluates to true when executed
+ * in the test browser.
+ */
+export type AssertJavascriptStep = {
+  __typename?: 'AssertJavascriptStep';
+  code: Scalars['String']['output'];
+  stepType: Scalars['String']['output'];
+};
+
+export type AssertTextStep = {
+  __typename?: 'AssertTextStep';
+  elementId: Scalars['Int']['output'];
+  exactMatch?: Maybe<Scalars['Boolean']['output']>;
+  invert?: Maybe<Scalars['Boolean']['output']>;
+  stepType: Scalars['String']['output'];
+  text: Scalars['String']['output'];
+};
+
+export type ClickStep = {
+  __typename?: 'ClickStep';
+  elementId: Scalars['Int']['output'];
+  stepType: Scalars['String']['output'];
 };
 
 export type Collection = {
@@ -42,19 +80,48 @@ export type Collection = {
   updatedBy: Scalars['Int']['output'];
 };
 
+export type Element = {
+  __typename?: 'Element';
+  accountId: Scalars['Int']['output'];
+  collectionId: Scalars['Int']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  createdBy: Scalars['Int']['output'];
+  id: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+  selector: Scalars['String']['output'];
+  selectorType: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  updatedBy: Scalars['Int']['output'];
+};
+
+export type ExecuteJavascriptStep = {
+  __typename?: 'ExecuteJavascriptStep';
+  code: Scalars['String']['output'];
+  stepType: Scalars['String']['output'];
+};
+
+export type GoToStep = {
+  __typename?: 'GoToStep';
+  stepType: Scalars['String']['output'];
+  url: Scalars['String']['output'];
+};
+
+export type ImportTestStep = {
+  __typename?: 'ImportTestStep';
+  stepType: Scalars['String']['output'];
+  testId: Scalars['Int']['output'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
-  createAccount: Account;
   createCollection?: Maybe<Collection>;
+  createElement?: Maybe<Element>;
   createTest?: Maybe<Test>;
   createUser?: Maybe<User>;
   executeTest?: Maybe<Scalars['Boolean']['output']>;
   login?: Maybe<Scalars['String']['output']>;
-};
-
-
-export type MutationCreateAccountArgs = {
-  name: Scalars['String']['input'];
+  signup: Account;
+  updateTest?: Maybe<Test>;
 };
 
 
@@ -63,10 +130,18 @@ export type MutationCreateCollectionArgs = {
 };
 
 
+export type MutationCreateElementArgs = {
+  collectionId: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
+  selector: Scalars['String']['input'];
+  selectorType: Scalars['String']['input'];
+};
+
+
 export type MutationCreateTestArgs = {
   collectionId: Scalars['Int']['input'];
   name: Scalars['String']['input'];
-  steps: Scalars['JSON']['input'];
+  steps: Array<Scalars['JSON']['input']>;
 };
 
 
@@ -87,14 +162,34 @@ export type MutationLoginArgs = {
   password: Scalars['String']['input'];
 };
 
+
+export type MutationSignupArgs = {
+  accountName: Scalars['String']['input'];
+  adminEmail: Scalars['String']['input'];
+  adminPassword: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateTestArgs = {
+  id: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
+  steps: Array<Scalars['JSON']['input']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   account?: Maybe<Account>;
+  test?: Maybe<Test>;
   user?: Maybe<User>;
 };
 
 
 export type QueryAccountArgs = {
+  id: Scalars['Int']['input'];
+};
+
+
+export type QueryTestArgs = {
   id: Scalars['Int']['input'];
 };
 
@@ -110,8 +205,40 @@ export type Report = {
   id: Scalars['Int']['output'];
   startTime: Scalars['DateTime']['output'];
   status: Scalars['String']['output'];
-  stepResults: Scalars['JSON']['output'];
+  stepResults: Array<TestStepResult>;
   testId: Scalars['Int']['output'];
+};
+
+export type SendTextStep = {
+  __typename?: 'SendTextStep';
+  elementId: Scalars['Int']['output'];
+  stepType: Scalars['String']['output'];
+  text: Scalars['String']['output'];
+};
+
+export type SetVariableElement = {
+  __typename?: 'SetVariableElement';
+  elementId: Scalars['Int']['output'];
+};
+
+export type SetVariableJavascript = {
+  __typename?: 'SetVariableJavascript';
+  code: Scalars['String']['output'];
+};
+
+/** Set a variable which can be used in later steps like so: {{variable_name}}. */
+export type SetVariableStep = {
+  __typename?: 'SetVariableStep';
+  name: Scalars['String']['output'];
+  stepType: Scalars['String']['output'];
+  value: SetVariableStepValue;
+};
+
+export type SetVariableStepValue = SetVariableElement | SetVariableJavascript | SetVariableString;
+
+export type SetVariableString = {
+  __typename?: 'SetVariableString';
+  string: Scalars['String']['output'];
 };
 
 export type Subscription = {
@@ -146,10 +273,20 @@ export type Test = {
   id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   reports: Array<Report>;
-  steps?: Maybe<Scalars['JSON']['output']>;
-  suiteId: Scalars['Int']['output'];
+  steps: Array<TestStep>;
   updatedAt: Scalars['DateTime']['output'];
   updatedBy: Scalars['Int']['output'];
+};
+
+export type TestStep = AssertExistsStep | AssertJavascriptStep | AssertTextStep | ClickStep | ExecuteJavascriptStep | GoToStep | SendTextStep;
+
+export type TestStepResult = {
+  __typename?: 'TestStepResult';
+  endTime: Scalars['DateTime']['output'];
+  error?: Maybe<Scalars['String']['output']>;
+  screenshot?: Maybe<Scalars['String']['output']>;
+  startTime: Scalars['DateTime']['output'];
+  status: Scalars['String']['output'];
 };
 
 export type User = {
@@ -158,7 +295,6 @@ export type User = {
   createdAt: Scalars['DateTime']['output'];
   email: Scalars['String']['output'];
   id: Scalars['Int']['output'];
-  password: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
 };
 
@@ -229,53 +365,119 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
   info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
+/** Mapping of union types */
+export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
+  SetVariableStepValue: ( SetVariableElement ) | ( SetVariableJavascript ) | ( SetVariableString );
+  TestStep: ( AssertExistsStep ) | ( AssertJavascriptStep ) | ( AssertTextStep ) | ( ClickStep ) | ( ExecuteJavascriptStep ) | ( GoToStep ) | ( SendTextStep );
+};
 
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Account: ResolverTypeWrapper<Account>;
+  AssertExistsStep: ResolverTypeWrapper<AssertExistsStep>;
+  AssertJavascriptStep: ResolverTypeWrapper<AssertJavascriptStep>;
+  AssertTextStep: ResolverTypeWrapper<AssertTextStep>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  ClickStep: ResolverTypeWrapper<ClickStep>;
   Collection: ResolverTypeWrapper<Collection>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
+  Element: ResolverTypeWrapper<Element>;
+  ExecuteJavascriptStep: ResolverTypeWrapper<ExecuteJavascriptStep>;
+  GoToStep: ResolverTypeWrapper<GoToStep>;
+  ImportTestStep: ResolverTypeWrapper<ImportTestStep>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   Report: ResolverTypeWrapper<Report>;
+  SendTextStep: ResolverTypeWrapper<SendTextStep>;
+  SetVariableElement: ResolverTypeWrapper<SetVariableElement>;
+  SetVariableJavascript: ResolverTypeWrapper<SetVariableJavascript>;
+  SetVariableStep: ResolverTypeWrapper<Omit<SetVariableStep, 'value'> & { value: ResolversTypes['SetVariableStepValue'] }>;
+  SetVariableStepValue: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['SetVariableStepValue']>;
+  SetVariableString: ResolverTypeWrapper<SetVariableString>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Subscription: ResolverTypeWrapper<{}>;
   Suite: ResolverTypeWrapper<Suite>;
-  Test: ResolverTypeWrapper<Test>;
+  Test: ResolverTypeWrapper<Omit<Test, 'steps'> & { steps: Array<ResolversTypes['TestStep']> }>;
+  TestStep: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['TestStep']>;
+  TestStepResult: ResolverTypeWrapper<TestStepResult>;
   User: ResolverTypeWrapper<User>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Account: Account;
+  AssertExistsStep: AssertExistsStep;
+  AssertJavascriptStep: AssertJavascriptStep;
+  AssertTextStep: AssertTextStep;
   Boolean: Scalars['Boolean']['output'];
+  ClickStep: ClickStep;
   Collection: Collection;
   DateTime: Scalars['DateTime']['output'];
+  Element: Element;
+  ExecuteJavascriptStep: ExecuteJavascriptStep;
+  GoToStep: GoToStep;
+  ImportTestStep: ImportTestStep;
   Int: Scalars['Int']['output'];
   JSON: Scalars['JSON']['output'];
   Mutation: {};
   Query: {};
   Report: Report;
+  SendTextStep: SendTextStep;
+  SetVariableElement: SetVariableElement;
+  SetVariableJavascript: SetVariableJavascript;
+  SetVariableStep: Omit<SetVariableStep, 'value'> & { value: ResolversParentTypes['SetVariableStepValue'] };
+  SetVariableStepValue: ResolversUnionTypes<ResolversParentTypes>['SetVariableStepValue'];
+  SetVariableString: SetVariableString;
   String: Scalars['String']['output'];
   Subscription: {};
   Suite: Suite;
-  Test: Test;
+  Test: Omit<Test, 'steps'> & { steps: Array<ResolversParentTypes['TestStep']> };
+  TestStep: ResolversUnionTypes<ResolversParentTypes>['TestStep'];
+  TestStepResult: TestStepResult;
   User: User;
 };
 
 export type AccountResolvers<ContextType = any, ParentType extends ResolversParentTypes['Account'] = ResolversParentTypes['Account']> = {
   collections?: Resolver<Array<ResolversTypes['Collection']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  elements?: Resolver<Array<ResolversTypes['Element']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   suites?: Resolver<Array<ResolversTypes['Suite']>, ParentType, ContextType>;
   tests?: Resolver<Array<ResolversTypes['Test']>, ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AssertExistsStepResolvers<ContextType = any, ParentType extends ResolversParentTypes['AssertExistsStep'] = ResolversParentTypes['AssertExistsStep']> = {
+  elementId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  stepType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  visible?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AssertJavascriptStepResolvers<ContextType = any, ParentType extends ResolversParentTypes['AssertJavascriptStep'] = ResolversParentTypes['AssertJavascriptStep']> = {
+  code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  stepType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AssertTextStepResolvers<ContextType = any, ParentType extends ResolversParentTypes['AssertTextStep'] = ResolversParentTypes['AssertTextStep']> = {
+  elementId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  exactMatch?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  invert?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  stepType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ClickStepResolvers<ContextType = any, ParentType extends ResolversParentTypes['ClickStep'] = ResolversParentTypes['ClickStep']> = {
+  elementId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  stepType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -295,21 +497,56 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
   name: 'DateTime';
 }
 
+export type ElementResolvers<ContextType = any, ParentType extends ResolversParentTypes['Element'] = ResolversParentTypes['Element']> = {
+  accountId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  collectionId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  createdBy?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  selector?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  selectorType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  updatedBy?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ExecuteJavascriptStepResolvers<ContextType = any, ParentType extends ResolversParentTypes['ExecuteJavascriptStep'] = ResolversParentTypes['ExecuteJavascriptStep']> = {
+  code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  stepType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GoToStepResolvers<ContextType = any, ParentType extends ResolversParentTypes['GoToStep'] = ResolversParentTypes['GoToStep']> = {
+  stepType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ImportTestStepResolvers<ContextType = any, ParentType extends ResolversParentTypes['ImportTestStep'] = ResolversParentTypes['ImportTestStep']> = {
+  stepType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  testId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['JSON'], any> {
   name: 'JSON';
 }
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  createAccount?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<MutationCreateAccountArgs, 'name'>>;
   createCollection?: Resolver<Maybe<ResolversTypes['Collection']>, ParentType, ContextType, RequireFields<MutationCreateCollectionArgs, 'name'>>;
+  createElement?: Resolver<Maybe<ResolversTypes['Element']>, ParentType, ContextType, RequireFields<MutationCreateElementArgs, 'collectionId' | 'name' | 'selector' | 'selectorType'>>;
   createTest?: Resolver<Maybe<ResolversTypes['Test']>, ParentType, ContextType, RequireFields<MutationCreateTestArgs, 'collectionId' | 'name' | 'steps'>>;
   createUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'accountId' | 'email' | 'password'>>;
   executeTest?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationExecuteTestArgs, 'testId'>>;
   login?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
+  signup?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<MutationSignupArgs, 'accountName' | 'adminEmail' | 'adminPassword'>>;
+  updateTest?: Resolver<Maybe<ResolversTypes['Test']>, ParentType, ContextType, RequireFields<MutationUpdateTestArgs, 'id' | 'name' | 'steps'>>;
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   account?: Resolver<Maybe<ResolversTypes['Account']>, ParentType, ContextType, RequireFields<QueryAccountArgs, 'id'>>;
+  test?: Resolver<Maybe<ResolversTypes['Test']>, ParentType, ContextType, RequireFields<QueryTestArgs, 'id'>>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
 };
 
@@ -319,8 +556,41 @@ export type ReportResolvers<ContextType = any, ParentType extends ResolversParen
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   startTime?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   status?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  stepResults?: Resolver<ResolversTypes['JSON'], ParentType, ContextType>;
+  stepResults?: Resolver<Array<ResolversTypes['TestStepResult']>, ParentType, ContextType>;
   testId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SendTextStepResolvers<ContextType = any, ParentType extends ResolversParentTypes['SendTextStep'] = ResolversParentTypes['SendTextStep']> = {
+  elementId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  stepType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SetVariableElementResolvers<ContextType = any, ParentType extends ResolversParentTypes['SetVariableElement'] = ResolversParentTypes['SetVariableElement']> = {
+  elementId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SetVariableJavascriptResolvers<ContextType = any, ParentType extends ResolversParentTypes['SetVariableJavascript'] = ResolversParentTypes['SetVariableJavascript']> = {
+  code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SetVariableStepResolvers<ContextType = any, ParentType extends ResolversParentTypes['SetVariableStep'] = ResolversParentTypes['SetVariableStep']> = {
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  stepType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  value?: Resolver<ResolversTypes['SetVariableStepValue'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SetVariableStepValueResolvers<ContextType = any, ParentType extends ResolversParentTypes['SetVariableStepValue'] = ResolversParentTypes['SetVariableStepValue']> = {
+  __resolveType: TypeResolveFn<'SetVariableElement' | 'SetVariableJavascript' | 'SetVariableString', ParentType, ContextType>;
+};
+
+export type SetVariableStringResolvers<ContextType = any, ParentType extends ResolversParentTypes['SetVariableString'] = ResolversParentTypes['SetVariableString']> = {
+  string?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -349,10 +619,22 @@ export type TestResolvers<ContextType = any, ParentType extends ResolversParentT
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   reports?: Resolver<Array<ResolversTypes['Report']>, ParentType, ContextType>;
-  steps?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
-  suiteId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  steps?: Resolver<Array<ResolversTypes['TestStep']>, ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   updatedBy?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TestStepResolvers<ContextType = any, ParentType extends ResolversParentTypes['TestStep'] = ResolversParentTypes['TestStep']> = {
+  __resolveType: TypeResolveFn<'AssertExistsStep' | 'AssertJavascriptStep' | 'AssertTextStep' | 'ClickStep' | 'ExecuteJavascriptStep' | 'GoToStep' | 'SendTextStep', ParentType, ContextType>;
+};
+
+export type TestStepResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['TestStepResult'] = ResolversParentTypes['TestStepResult']> = {
+  endTime?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  screenshot?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  startTime?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -361,22 +643,37 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = any> = {
   Account?: AccountResolvers<ContextType>;
+  AssertExistsStep?: AssertExistsStepResolvers<ContextType>;
+  AssertJavascriptStep?: AssertJavascriptStepResolvers<ContextType>;
+  AssertTextStep?: AssertTextStepResolvers<ContextType>;
+  ClickStep?: ClickStepResolvers<ContextType>;
   Collection?: CollectionResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
+  Element?: ElementResolvers<ContextType>;
+  ExecuteJavascriptStep?: ExecuteJavascriptStepResolvers<ContextType>;
+  GoToStep?: GoToStepResolvers<ContextType>;
+  ImportTestStep?: ImportTestStepResolvers<ContextType>;
   JSON?: GraphQLScalarType;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Report?: ReportResolvers<ContextType>;
+  SendTextStep?: SendTextStepResolvers<ContextType>;
+  SetVariableElement?: SetVariableElementResolvers<ContextType>;
+  SetVariableJavascript?: SetVariableJavascriptResolvers<ContextType>;
+  SetVariableStep?: SetVariableStepResolvers<ContextType>;
+  SetVariableStepValue?: SetVariableStepValueResolvers<ContextType>;
+  SetVariableString?: SetVariableStringResolvers<ContextType>;
   Subscription?: SubscriptionResolvers<ContextType>;
   Suite?: SuiteResolvers<ContextType>;
   Test?: TestResolvers<ContextType>;
+  TestStep?: TestStepResolvers<ContextType>;
+  TestStepResult?: TestStepResultResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };
 

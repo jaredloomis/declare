@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import { gql, useQuery, useMutation, useApolloClient } from "@apollo/client";
 import { Link } from "react-router-dom";
-import { authUserAtom } from "../auth/store";
-import { useAtom } from "jotai";
-import { loadable } from "jotai/utils";
 import { Collection, User } from "../../gql/graphql";
 import { Table } from "../../components/Table";
 import { Spinner } from "../../components/Spinner";
 import { Card } from "../../components/Card";
 import { TextInput } from "../../components/TextInput";
 import { Button } from "../../components/Button";
+import { useAuthStore } from "../../authStore";
 
 const GET_COLLECTIONS_QUERY = gql`
   query GetCollections($accountId: Int!) {
@@ -45,7 +43,7 @@ function TestCollection({ collection }: TestCollectionProps) {
   const handleCreateTest = () => {
     apollo.mutate({
       mutation: gql`
-        mutation CreateTest($collectionId: Int!, $name: String!, $steps: JSON!) {
+        mutation CreateTest($collectionId: Int!, $name: String!, $steps: [JSON!]!) {
           createTest(collectionId: $collectionId, name: $name, steps: $steps) {
             id
             name
@@ -82,12 +80,12 @@ function TestCollection({ collection }: TestCollectionProps) {
   );
 }
 
-export function Tests() {
+export function TestList() {
   const [name, setName] = useState<string>();
-  const [user, _] = useAtom(loadable(authUserAtom));
+  const auth = useAuthStore();
   const collectionsRes = useQuery(GET_COLLECTIONS_QUERY, {
     variables: {
-      accountId: user.state == "hasData" ? user.data?.accountId : undefined,
+      accountId: auth.user?.accountId,
     },
   });
   const [createCollection, creationResult] = useMutation(
@@ -118,7 +116,7 @@ export function Tests() {
       <div>
         <Card>
           <form onSubmit={handleCreateCollection}>
-            <TextInput label="Collection Name" onChange={setName} />
+            <TextInput label="Collection Name" onValueChange={setName} />
             <Button color="success" size="large">
               Create Collection
             </Button>

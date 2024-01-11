@@ -1,0 +1,8 @@
+*.swp
+dist/
+node_modules/
+.vscode
+logs/
+.parcel-cache
+.turbo
+build/

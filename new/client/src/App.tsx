@@ -1,28 +1,21 @@
 import React, { useEffect } from "react";
-import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
-import { useAtom } from "jotai";
+import { Route, Routes, useNavigate, useLocation, useParams } from "react-router-dom";
 
 import { Navigation } from "./features/navigation/Navigation";
 import { NotFound } from "./components/NotFound";
 import { Sidebar } from "./features/navigation/Sidebar";
-import { Tests } from "./features/test-creation/Collections";
+import { TestList } from "./features/test-creation/TestList";
 import { LogIn } from "./features/auth/LogIn";
-import { authTokenAtom } from "./features/auth/store";
+import { useAuthStore } from "./authStore";
+import { getUser } from "./features/auth/api";
+import { parseJwt } from "./features/auth/jwt_util";
+import { TestView } from "./features/test-creation/TestView";
+import { TestEdit } from "./features/test-creation/TestEdit";
 
 export function App() {
-  const [token, _] = useAtom(authTokenAtom);
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  // Redirect if not logged in
-  useEffect(() => {
-    if (!token && location.pathname !== "/login") {
-      navigate("/login");
-    }
-  }, [token, location.pathname]);
-
   return (
     <>
+      <Auth />
       <Navigation />
       <div className="h-full">
         <div className="flex h-full min-h-full">
@@ -30,10 +23,12 @@ export function App() {
           <div className="flex-1 h-screen">
             <div className="container mx-auto p-10">
               <Routes>
-                <Route path="/" Component={NotFound} />
+                <Route index Component={NotFound} />
                 <Route path="/login" Component={LogIn} />
-                <Route path="/tests" Component={Tests} />
+                <Route path="/tests" Component={TestList} />
                 <Route path="/suites" Component={NotFound} />
+                <Route path="/test/:id/edit" Component={TestEditContainer} />
+                <Route path="/test/:id" Component={TestViewContainer} />
                 <Route path="*" Component={NotFound} />
               </Routes>
             </div>
@@ -42,4 +37,46 @@ export function App() {
       </div>
     </>
   );
+}
+
+function TestViewContainer(props: any) {
+  const { id } = useParams();
+  return <TestView testId={parseInt(id!)} />;
+}
+
+function TestEditContainer(props: any) {
+  const { id } = useParams();
+  return <TestEdit testId={parseInt(id!)} />;
+}
+
+function Auth(props: any) {
+  const auth = useAuthStore();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Redirect if not logged in
+  useEffect(() => {
+    if(location.pathname !== "/login") {
+      if(!auth.user && !auth.token) {
+        navigate("/login");
+      } else if(auth.token) {
+        (async () => {
+          try {
+            const data = parseJwt(auth.token!);
+            if(!data) {
+              throw new Error("Invalid token");
+            }
+
+            const user = await getUser(data.id);
+            auth.setUser(user);
+          } catch (error) {
+            navigate("/login");
+          }
+
+        })();
+      }
+    }
+  }, [auth.user, location.pathname]);
+
+  return props.children;
 }

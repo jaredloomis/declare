@@ -1,17 +1,27 @@
 scalar DateTime
 scalar JSON
 
+##########
+# Roots #
+#########
+
 type Query {
   account(id: Int!): Account
   user(id: Int!): User
+  test(id: Int!): Test
 }
 
 type Mutation {
-  createAccount(name: String!): Account!
-  createUser(email: String!, password: String!, accountId: Int!): User
   login(email: String!, password: String!): String
+
+  signup(accountName: String!, adminEmail: String!, adminPassword: String!): Account!
+  createUser(email: String!, password: String!, accountId: Int!): User
   createCollection(name: String!): Collection
-  createTest(name: String!, steps: JSON!, collectionId: Int!): Test
+  createElement(name: String!, selector: String!, selectorType: String!, collectionId: Int!): Element
+  createTest(name: String!, steps: [JSON!]!, collectionId: Int!): Test
+
+  updateTest(id: Int!, name: String!, steps: [JSON!]!): Test
+
   executeTest(testId: Int!): Boolean
 }
 
@@ -19,6 +29,10 @@ type Subscription {
   executeTest(testId: Int!): Report
   report: Report!
 }
+
+##############
+# Core types #
+##############
 
 type Account {
   id: Int!
@@ -30,6 +44,7 @@ type Account {
   collections: [Collection!]!
   suites: [Suite!]!
   tests: [Test!]!
+  elements: [Element!]!
 }
 
 type Collection {
@@ -52,7 +67,7 @@ type Report {
   startTime: DateTime!
   endTime: DateTime!
   
-  stepResults: JSON!
+  stepResults: [TestStepResult!]!
 }
 
 type Suite {
@@ -77,8 +92,7 @@ type Test {
   accountId: Int!
   collectionId: Int!
 
-  #suiteId: Int!
-  steps: JSON
+  steps: [TestStep!]!
   reports: [Report!]!
 }
 
@@ -89,5 +103,112 @@ type User {
   accountId: Int!
 
   email: String!
-  password: String!
+}
+
+type Element {
+  id: Int!
+  createdAt: DateTime!
+  createdBy: Int!
+  updatedAt: DateTime!
+  updatedBy: Int!
+  accountId: Int!
+  collectionId: Int!
+
+  name: String!
+  selector: String!
+  selectorType: String!
+}
+
+##############
+# Test Steps #
+##############
+
+union TestStep = ClickStep | SendTextStep | ExecuteJavascriptStep | GoToStep
+  | AssertExistsStep | AssertTextStep | AssertJavascriptStep
+
+type ClickStep {
+  stepType: String!
+  elementId: Int!
+}
+
+type SendTextStep {
+  stepType: String!
+  elementId: Int!
+  text: String!
+}
+
+type ExecuteJavascriptStep {
+  stepType: String!
+  code: String!
+}
+
+type GoToStep {
+  stepType: String!
+  url: String!
+}
+
+# type RefreshStep -- no args
+
+type AssertExistsStep {
+  stepType: String!
+  elementId: Int!
+
+  """
+  If true, the element must be visible as well as being present in the DOM.
+  default: false.
+  """
+  visible: Boolean
+}
+
+type AssertTextStep {
+  stepType: String!
+  elementId: Int!
+  text: String!
+  invert: Boolean
+  exactMatch: Boolean
+}
+
+"""
+Asserts that the given javascript code evaluates to true when executed
+in the test browser.
+"""
+type AssertJavascriptStep {
+  stepType: String!
+  code: String!
+}
+
+"""
+Set a variable which can be used in later steps like so: {{variable_name}}.
+"""
+type SetVariableStep {
+  stepType: String!
+  name: String!
+  value: SetVariableStepValue!
+}
+
+union SetVariableStepValue = SetVariableString | SetVariableJavascript | SetVariableElement
+
+type SetVariableString {
+  string: String!
+}
+
+type SetVariableJavascript {
+  code: String!
+}
+
+type SetVariableElement {
+  elementId: Int!
+}
+
+type ImportTestStep {
+  stepType: String!
+  testId: Int!
+}
+
+type TestStepResult {
+  status: String!
+  startTime: DateTime!
+  endTime: DateTime!
+  error: String
+  screenshot: String
 }

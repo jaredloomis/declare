@@ -13,56 +13,57 @@ model account {
   created_at DateTime     @default(now()) @db.Timestamp(6)
   updated_at DateTime     @default(now()) @db.Timestamp(6)
   collection collection[]
+  element    element[]
   suite      suite[]
   test       test[]
   user_info  user_info[]
-  element    element[]
 }
 
 model collection {
-  id                                         Int       @id @default(autoincrement())
-  account_id                                 Int
-  name                                       String
-  created_at                                 DateTime  @default(now()) @db.Timestamp(6)
-  created_by                                 Int
-  updated_at                                 DateTime  @default(now()) @db.Timestamp(6)
-  updated_by                                 Int
-  account                                    account   @relation(fields: [account_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user_info_collection_created_byTouser_info user_info @relation("collection_created_byTouser_info", fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user_info_collection_updated_byTouser_info user_info @relation("collection_updated_byTouser_info", fields: [updated_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  test                                       test[]
-  element                                    element[]
+  id            Int       @id @default(autoincrement())
+  account_id    Int
+  name          String
+  created_at    DateTime  @default(now()) @db.Timestamp(6)
+  created_by_id Int
+  updated_at    DateTime  @default(now()) @db.Timestamp(6)
+  updated_by_id Int
+  account       account   @relation(fields: [account_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  created_by    user_info @relation("created_by", fields: [created_by_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updated_by    user_info @relation("updated_by", fields: [updated_by_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  element       element[]
+  test          test[]
 }
 
 model report {
-  id                                     Int       @id @default(autoincrement())
-  test_id                                Int
-  status                                 String
-  duration                               Int
-  start_time                             DateTime  @db.Timestamp(6)
-  end_time                               DateTime  @db.Timestamp(6)
-  step_results                           Json
-  created_at                             DateTime  @default(now()) @db.Timestamp(6)
-  created_by                             Int
-  updated_at                             DateTime  @default(now()) @db.Timestamp(6)
-  updated_by                             Int
-  user_info_report_created_byTouser_info user_info @relation("report_created_byTouser_info", fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  test                                   test      @relation(fields: [test_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user_info_report_updated_byTouser_info user_info @relation("report_updated_byTouser_info", fields: [updated_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id            Int       @id @default(autoincrement())
+  test_id       Int
+  status        String
+  duration      Int
+  start_time    DateTime  @db.Timestamp(6)
+  end_time      DateTime  @db.Timestamp(6)
+  step_results  Json
+  created_at    DateTime  @default(now()) @db.Timestamp(6)
+  created_by_id Int
+  updated_at    DateTime  @default(now()) @db.Timestamp(6)
+  updated_by_id Int
+  test          test      @relation(fields: [test_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  created_by    user_info @relation("created_by", fields: [created_by_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updated_by    user_info @relation("updated_by", fields: [updated_by_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model suite {
-  id                                    Int          @id @default(autoincrement())
-  account_id                            Int
-  name                                  String
-  created_at                            DateTime     @default(now()) @db.Timestamp(6)
-  created_by                            Int
-  updated_at                            DateTime     @default(now()) @db.Timestamp(6)
-  updated_by                            Int
-  account                               account      @relation(fields: [account_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user_info_suite_created_byTouser_info user_info    @relation("suite_created_byTouser_info", fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user_info_suite_updated_byTouser_info user_info    @relation("suite_updated_byTouser_info", fields: [updated_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  suite_test                            suite_test[]
+  id            Int          @id @default(autoincrement())
+  account_id    Int
+  name          String
+  created_at    DateTime     @default(now()) @db.Timestamp(6)
+  created_by_id Int
+  updated_at    DateTime     @default(now()) @db.Timestamp(6)
+  updated_by_id Int
+  account       account      @relation(fields: [account_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  created_by    user_info    @relation("created_by", fields: [created_by_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updated_by    user_info    @relation("updated_by", fields: [updated_by_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  suite_test    suite_test[]
+  test_run      test_run[]
 }
 
 model suite_test {
@@ -75,52 +76,81 @@ model suite_test {
 }
 
 model test {
-  id                                   Int          @id @default(autoincrement())
-  account_id                           Int
-  collection_id                        Int
-  name                                 String
-  steps                                Json
-  created_at                           DateTime     @default(now()) @db.Timestamp(6)
-  created_by                           Int
-  updated_at                           DateTime     @default(now()) @db.Timestamp(6)
-  updated_by                           Int
-  report                               report[]
-  suite_test                           suite_test[]
-  account                              account      @relation(fields: [account_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  collection                           collection   @relation(fields: [collection_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user_info_test_created_byTouser_info user_info    @relation("test_created_byTouser_info", fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user_info_test_updated_byTouser_info user_info    @relation("test_updated_byTouser_info", fields: [updated_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id            Int          @id @default(autoincrement())
+  account_id    Int
+  collection_id Int
+  name          String
+  steps         Json
+  created_at    DateTime     @default(now()) @db.Timestamp(6)
+  created_by_id Int
+  updated_at    DateTime     @default(now()) @db.Timestamp(6)
+  updated_by_id Int
+  report        report[]
+  suite_test    suite_test[]
+  account       account      @relation(fields: [account_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  collection    collection   @relation(fields: [collection_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  created_by    user_info    @relation("created_by", fields: [created_by_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updated_by    user_info    @relation("updated_by", fields: [updated_by_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model user_info {
-  id                                          Int          @id @default(autoincrement())
-  account_id                                  Int
-  email                                       String
-  password                                    String
-  is_admin                                    Boolean      @default(false)
-  created_at                                  DateTime     @default(now()) @db.Timestamp(6)
-  updated_at                                  DateTime     @default(now()) @db.Timestamp(6)
-  collection_collection_created_byTouser_info collection[] @relation("collection_created_byTouser_info")
-  collection_collection_updated_byTouser_info collection[] @relation("collection_updated_byTouser_info")
-  report_report_created_byTouser_info         report[]     @relation("report_created_byTouser_info")
-  report_report_updated_byTouser_info         report[]     @relation("report_updated_byTouser_info")
-  suite_suite_created_byTouser_info           suite[]      @relation("suite_created_byTouser_info")
-  suite_suite_updated_byTouser_info           suite[]      @relation("suite_updated_byTouser_info")
-  test_test_created_byTouser_info             test[]       @relation("test_created_byTouser_info")
-  test_test_updated_byTouser_info             test[]       @relation("test_updated_byTouser_info")
-  account                                     account      @relation(fields: [account_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id                    Int          @id @default(autoincrement())
+  account_id            Int
+  email                 String
+  password              String
+  is_admin              Boolean      @default(false)
+  created_at            DateTime     @default(now()) @db.Timestamp(6)
+  updated_at            DateTime     @default(now()) @db.Timestamp(6)
+  collection_created_by collection[] @relation("created_by")
+  collection_updated_by collection[] @relation("updated_by")
+  report_created_by     report[]     @relation("created_by")
+  report_updated_by     report[]     @relation("updated_by")
+  suite_created_by      suite[]      @relation("created_by")
+  suite_updated_by      suite[]      @relation("updated_by")
+  test_created_by       test[]       @relation("created_by")
+  test_updated_by       test[]       @relation("updated_by")
+  test_run_created_by   test_run[]   @relation("created_by")
+  account               account      @relation(fields: [account_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model element {
   id            Int        @id @default(autoincrement())
   account_id    Int
-  collection_id Int
   created_at    DateTime   @default(now()) @db.Timestamp(6)
   created_by    Int
   updated_at    DateTime   @default(now()) @db.Timestamp(6)
   updated_by    Int
   selector_type String
   selector      String
-  collection    collection @relation(fields: [collection_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  name          String
+  collection_id Int
+  collection    collection @relation(fields: [collection_id], references: [id], onDelete: Cascade, map: "collection_id")
   account       account    @relation(fields: [account_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model environment {
+  id         Int        @id @default(autoincrement())
+  name       String
+  created_at DateTime   @default(now()) @db.Timestamp(6)
+  created_by Int
+  updated_at DateTime   @default(now()) @db.Timestamp(6)
+  updated_by Int
+  variables  Json
+  test_run   test_run[]
+}
+
+model test_run {
+  id             Int         @id @default(autoincrement())
+  test_id        Int
+  environment_id Int
+  status         String
+  duration       Int
+  start_time     DateTime    @db.Timestamp(6)
+  end_time       DateTime    @db.Timestamp(6)
+  step_results   Json
+  created_at     DateTime    @default(now()) @db.Timestamp(6)
+  created_by_id  Int
+  suite          suite       @relation(fields: [test_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  environment    environment @relation(fields: [environment_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  created_by     user_info   @relation("created_by", fields: [created_by_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }

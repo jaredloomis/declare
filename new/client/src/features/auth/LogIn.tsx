@@ -1,24 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { Button, Checkbox, Label, TextInput, Alert } from "flowbite-react";
-import { useAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
 
 import { getUser, login } from "./api";
-import { authTokenAtom, authUserAtom } from "./store";
+import { TextInput } from "../../components/TextInput";
+import { Button } from "../../components/Button";
+import { Alert } from "../../components/Alert";
+import { Label } from "../../components/Label";
+import { useAuthStore } from "../../authStore";
+import { parseJwt } from "./jwt_util";
 
 export function LogIn() {
   const [error, setError] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [token, setToken] = useAtom(authTokenAtom);
+  const auth = useAuthStore();
   const navigate = useNavigate();
 
   const handleSubmit = async (event: any) => {
     try {
       event.preventDefault();
       const token = await login(username, password);
+      auth.setToken(token);
+      const { id } = parseJwt(token);
+      const user = await getUser(id);
+      auth.setUser(user);
       setError(false);
-      setToken(token);
       navigate("/");
     } catch (error) {
       setError(true);
@@ -27,12 +33,13 @@ export function LogIn() {
 
   // Redirect if logged in
   useEffect(() => {
-    if (token) {
+    if(auth.user) {
       return navigate("/");
     }
-  }, [token]);
+  }, [auth.user]);
 
-  return (
+  return (<>
+    <h1 className="text-3xl font-bold">Log in</h1>
     <form className="flex max-w-md flex-col gap-4" onSubmit={handleSubmit}>
       {error && (
         <Alert color="failure">Invalid username or password. Try again.</Alert>
@@ -42,11 +49,11 @@ export function LogIn() {
           <Label htmlFor="username" value="Username / Email" />
         </div>
         <TextInput
-          id="username"
-          type="username"
-          placeholder="name@declare.com"
+          id="email"
+          label="Email"
+          placeholder="name@declareqa.com"
           required
-          onChange={ev => setUsername(ev?.target.value)}
+          onValueChange={setUsername}
         />
       </div>
       <div>
@@ -55,6 +62,7 @@ export function LogIn() {
         </div>
         <TextInput
           id="password"
+          label="Password"
           type="password"
           required
           onChange={ev => setPassword(ev?.target.value)}
@@ -62,5 +70,5 @@ export function LogIn() {
       </div>
       <Button type="submit">Submit</Button>
     </form>
-  );
+  </>);
 }

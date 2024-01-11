@@ -59,7 +59,20 @@ export interface DatabaseToAPIAdapter {
   identifierMap: any;
 }
 
+export const Element: DatabaseToAPIAdapter = {
+  identifierMap: {
+    selector_type: "selectorType",
+    ...caseAdaptions,
+  },
+};
+
 export const User: DatabaseToAPIAdapter = {
+  identifierMap: {
+    ...caseAdaptions,
+  },
+};
+
+export const Report: DatabaseToAPIAdapter = {
   identifierMap: {
     ...caseAdaptions,
   },
@@ -67,7 +80,14 @@ export const User: DatabaseToAPIAdapter = {
 
 export const Test: DatabaseToAPIAdapter = {
   identifierMap: {
-    report: "reports",
+    ...caseAdaptions,
+    report: { name: "reports", adapter: Report },
+  },
+};
+
+export const Suite: DatabaseToAPIAdapter = {
+  identifierMap: {
+    suite_test: { name: "tests", adapter: Test },
     ...caseAdaptions,
   },
 };
@@ -84,19 +104,7 @@ export const Account: DatabaseToAPIAdapter = {
     user_info: { name: "users", adapter: User },
     collection: { name: "collections", adapter: Collection },
     suite: "suites",
-    ...caseAdaptions,
-  },
-};
-
-export const Suite: DatabaseToAPIAdapter = {
-  identifierMap: {
-    suite_test: { name: "tests", adapter: Test },
-    ...caseAdaptions,
-  },
-};
-
-export const Report: DatabaseToAPIAdapter = {
-  identifierMap: {
+    element: { name: "elements", adapter: Element },
     ...caseAdaptions,
   },
 };
