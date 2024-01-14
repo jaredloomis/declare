@@ -1,12 +1,10 @@
-import { JwtPayload, verify } from "jsonwebtoken";
-import bcrypt from "bcrypt";
-import { prisma } from "./schema";
-import { User } from "./generated/graphql";
-import { User as UserAdapter, convertObj } from "./adapter";
+import { JwtPayload, verify } from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+import { prisma } from './schema';
+import { User } from './generated/graphql';
+import { User as UserAdapter, convertObj } from 'declare-server-common/src/adapter';
 
-export async function authenticateUser(
-  token: string,
-): Promise<User | undefined> {
+export async function authenticateUser(token: string): Promise<User | undefined> {
   if (!token) {
     return undefined;
   }
@@ -18,19 +16,17 @@ export async function authenticateUser(
       } else {
         prisma.user_info
           .findUnique({ where: { id: (decoded as JwtPayload).id } })
-          .then(user => resolve(convertObj(user, UserAdapter) as User));
+          .then(user => resolve(convertObj(user, UserAdapter) as User))
+          .catch(() => resolve(undefined));
       }
-    }),
+    })
   );
 }
 
-export async function checkPassword(
-  providedPassword: string,
-  dbPassword: string,
-): Promise<boolean> {
+export function checkPassword(providedPassword: string, dbPassword: string): Promise<boolean> {
   return bcrypt.compare(providedPassword, dbPassword);
 }
 
-export async function hashPassword(password: string): Promise<string> {
+export function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, 10);
 }

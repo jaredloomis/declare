@@ -1,17 +1,17 @@
 {
-  "name": "new-server",
+  "name": "declare-server",
   "version": "1.0.0",
   "main": "dist/index.js",
   "author": "Jared Loomis <jaredloomis@protonmail.com>",
   "license": "All Rights Reserved",
   "private": true,
   "scripts": {
-    "dev": "graphql-codegen --config codegen.ts && prisma generate && prisma db push && prisma migrate dev && nodemon src/index.ts",
-    "build": "graphql-codegen --config codegen.ts && prisma generate && prisma db push && prisma migrate dev && tsc",
+    "dev": "nodemon src/index.ts",
+    "build": "graphql-codegen --config codegen.ts && tsc",
     "start": "node dist/index.js",
-    "clean": "rm -rf dist .parcel-cache node_modules",
-    "format": "prettier src --write --arrow-parens avoid",
-    "prisma": "prisma"
+    "clean": "rm -rf .parcel-cache node_modules graphql.schema.json",
+    "format": "prettier src --write",
+    "prisma-build": "prisma generate && prisma db push && prisma migrate dev"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.0",
@@ -23,12 +23,13 @@
     "@types/jsonwebtoken": "^9.0.5",
     "@types/node": "^20.10.5",
     "@types/selenium-webdriver": "^4.1.21",
+    "nodemon": "^3.0.2",
     "prisma": "^5.7.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@apollo/server": "^4.9.5",
+    "@apollo/server": "^4.10.0",
     "@graphql-tools/schema": "^10.0.2",
     "@prisma/client": "^5.7.1",
     "bcrypt": "^5.1.1",
@@ -41,6 +42,7 @@
     "handlebars": "^4.7.8",
     "jsonwebtoken": "^9.0.2",
     "selenium-webdriver": "^4.16.0",
+    "server-common": "link:../server-common",
     "ws": "^8.16.0"
   }
 }

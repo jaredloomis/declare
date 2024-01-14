@@ -6,3 +6,7 @@ logs/
 .parcel-cache
 .turbo
 build/
+.env
+generated/
+gql/
+graphql.schema.json

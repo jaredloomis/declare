@@ -1,11 +1,8 @@
-import React from "react";
-import { Color } from "./color";
+import React from 'react';
+import { Color } from './color';
 
 export interface AlertProps
-  extends React.DetailedHTMLProps<
-    React.ButtonHTMLAttributes<HTMLSpanElement>,
-    HTMLSpanElement
-  > {
+  extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLSpanElement>, HTMLSpanElement> {
   color?: Color;
 }
 

@@ -1,12 +1,9 @@
-import React from "react";
-import { Color } from "./color";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import { Color } from './color';
+import { useNavigate } from 'react-router-dom';
 
 interface ButtonProps
-  extends React.DetailedHTMLProps<
-    React.ButtonHTMLAttributes<HTMLButtonElement>,
-    HTMLButtonElement
-  > {
+  extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
   children?: React.ReactNode;
   onClick?: () => any;
   color?: Color;
@@ -14,7 +11,7 @@ interface ButtonProps
   to?: string;
 }
 
-type ButtonSize = "xlarge" | "large" | "medium" | "small" | "xsmall";
+type ButtonSize = 'xlarge' | 'large' | 'medium' | 'small' | 'xsmall';
 
 export function Button({ children, onClick, ...props }: ButtonProps) {
   const navigate = useNavigate();

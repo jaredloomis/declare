@@ -1,18 +1,16 @@
-import { ApolloServer, BaseContext } from "@apollo/server";
-import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
-import { createServer } from "http";
-import express from "express";
-import { WebSocketServer } from "ws";
-import { useServer } from "graphql-ws/lib/use/ws";
-import { expressMiddleware } from "@apollo/server/express4";
-import { schema, prisma } from "./schema";
-import cors from "cors";
-import { authenticateUser } from "./auth";
-import { Context, ErrorMessage } from "graphql-ws";
-import { GraphQLError } from "graphql";
-import * as dotenv from "dotenv";
-
-dotenv.config();
+import { ApolloServer, BaseContext } from '@apollo/server';
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+import { createServer } from 'http';
+import express from 'express';
+import { WebSocketServer } from 'ws';
+import { useServer } from 'graphql-ws/lib/use/ws';
+import { expressMiddleware } from '@apollo/server/express4';
+import { schema, prisma } from './schema';
+import cors from 'cors';
+import { authenticateUser } from './auth';
+import { Context, ErrorMessage } from 'graphql-ws';
+import { GraphQLError } from 'graphql';
+import 'dotenv/config';
 
 interface DeclareContext extends BaseContext {
   user: any;
@@ -25,7 +23,7 @@ const httpServer = createServer(app);
 // WebSocket server
 const wsServer = new WebSocketServer({
   server: httpServer,
-  path: "/graphql",
+  path: '/graphql',
 });
 
 // GraphQL Subscriptions server (over WebSocket)
@@ -33,25 +31,19 @@ const serverCleanup = useServer(
   {
     schema,
     context: async (ctx: any) => {
-      const authHeader =
-        ctx.connectionParams.authorization ||
-        ctx.connectionParams.Authorization;
+      const authHeader = ctx.connectionParams.authorization || ctx.connectionParams.Authorization;
       if (authHeader) {
-        const token = authHeader.split(" ")[1] || "";
+        const token = authHeader.split(' ')[1] || '';
         const user = await authenticateUser(token);
         return { user };
       }
       return { user: null };
     },
-    onError: (
-      ctx: Context,
-      message: ErrorMessage,
-      errors: readonly GraphQLError[],
-    ) => {
+    onError: (ctx: Context, message: ErrorMessage, errors: readonly GraphQLError[]) => {
       return errors;
     },
   },
-  wsServer,
+  wsServer
 );
 
 // GraphQL HTTP server
@@ -76,22 +68,20 @@ const apolloServer = new ApolloServer<DeclareContext>({
 // Start servers
 apolloServer.start().then(() => {
   app.use(
-    "/graphql",
+    '/graphql',
     cors<cors.CorsRequest>(),
     express.json(),
     expressMiddleware<DeclareContext>(apolloServer, {
       context: async ({ req }) => {
-        const user = await authenticateUser(
-          req.headers.authorization?.split(" ")[1] || "",
-        );
+        const user = await authenticateUser(req.headers.authorization?.split(' ')[1] || '');
         return {
           user,
         };
       },
-    }),
+    })
   );
 
-  app.use(express.static("../client/dist"));
+  app.use(express.static('../client/dist'));
 
   const PORT = process.env.PORT || 4000;
   httpServer.listen(PORT, () => {

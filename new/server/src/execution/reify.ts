@@ -1,7 +1,7 @@
-import { convertObj } from "../adapter";
-import { prisma } from "../schema";
-import { Element as ElementAdapter, Test as TestAdapter } from "../adapter";
-import { Test, TestStep, Element } from "../generated/graphql";
+import { convertObj, Element as ElementAdapter, Test as TestAdapter } from 'declare-server-common/src/adapter';
+import { prisma } from '../schema';
+import { Test, TestStep, Element } from '../generated/graphql';
+import { ReifiedTest } from 'server-common/src/reified-test';
 
 export interface ReifiedTestStep extends Omit<TestStep, 'args'> {
   args: ReifiedTestStepArguments;
@@ -12,47 +12,62 @@ export interface ReifiedTestStepArguments extends Omit<Omit<TestStep, 'elementId
   test?: Test;
 }
 
-export async function reifyTestSteps(steps: TestStep[]): Promise<ReifiedTestStep[]> {
+const MAX_IMPORT_DEPTH = 10;
+
+export async function reifyTestSteps(steps: TestStep[], seenTestIds: string[] = []): Promise<ReifiedTestStep[]> {
+  if (seenTestIds.length > MAX_IMPORT_DEPTH) {
+    throw new Error('Depth of imports exceeds maximum of 10');
+  }
+
   // Fetch all elements used in test
   const elementIds = steps
-    .map((step: TestStep) => (step as any).elementId || (step as any).value?.elementId )
+    .map((step: TestStep) => (step as any).elementId || (step as any).value?.elementId)
     .filter(elementId => !!elementId);
-  const elements: Element[] = await prisma.element.findMany({
-    where: {
-      id: {
-        in: elementIds,
+  const elements: Element[] = await prisma.element
+    .findMany({
+      where: {
+        id: {
+          in: elementIds,
+        },
       },
-    }
-  }).then(elements =>
-    elements.map(element => convertObj(element, ElementAdapter))
-  );
+    })
+    .then(elements => elements.map(element => convertObj(element, ElementAdapter)));
 
   // Fetch all tests used in test
-  // TODO allow nested imports
-  const testIds = steps
-    .map((step: TestStep) => (step as any).testId)
-    .filter(testId => !!testId);
-  const tests: Test[] = await prisma.test.findMany({
-    where: {
-      id: {
-        in: testIds,
+  const testIds = steps.map((step: TestStep) => (step as any).testId).filter(testId => !!testId);
+
+  if (intersection(seenTestIds, testIds).length > 0) {
+    throw new Error('Circular import detected');
+  }
+
+  const tests: ReifiedTest[] = await prisma.test
+    .findMany({
+      where: {
+        id: {
+          in: testIds,
+        },
       },
-    }
-  }).then(tests =>
-    tests.map(test => convertObj(test, TestAdapter))
-  );
+    })
+    .then(tests => tests.map(test => convertObj(test, TestAdapter)))
+    .then(tests =>
+      Promise.all(
+        tests.map(test => {
+          return reifyTest(test, seenTestIds.concat(test.id));
+        })
+      )
+    );
 
   // Reify elementId -> element, testId -> test, etc.
   const reifiedSteps: ReifiedTestStep[] = steps.map((step: TestStep) => {
-    if((step as any).elementId) {
+    if ((step as any).elementId) {
       (step as any).element = elements.find(element => element.id === (step as any).elementId);
       (step as any).elementId = undefined;
-    } else if((step as any).value?.elementId) {
+    } else if ((step as any).value?.elementId) {
       (step as any).value.element = elements.find(element => element.id === (step as any).value.elementId);
       (step as any).value.elementId = undefined;
     }
 
-    if((step as any).testId) {
+    if ((step as any).testId) {
       (step as any).test = tests.find(test => test.id === (step as any).testId);
       (step as any).testId = undefined;
     }
@@ -60,4 +75,23 @@ export async function reifyTestSteps(steps: TestStep[]): Promise<ReifiedTestStep
   });
 
   return reifiedSteps;
+}
+
+export async function reifyTest(test: Test, seenTestIds: string[] = []): Promise<ReifiedTest> {
+  return {
+    ...test,
+    steps: await reifyTestSteps(test.steps, seenTestIds),
+  };
+}
+
+function intersection<T>(a: T[], b: T[]): T[] {
+  let t;
+  if (b.length > a.length) (t = b), (b = a), (a = t);
+  return a
+    .filter(function (e) {
+      return b.indexOf(e) > -1;
+    })
+    .filter(function (e, i, c) {
+      return c.indexOf(e) === i;
+    });
 }

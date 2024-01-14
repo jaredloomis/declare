@@ -1,0 +1,28 @@
+{
+  "name": "declare-server-common",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "author": "Jared Loomis <jaredloomis@protonmail.com>",
+  "license": "All Rights Reserved",
+  "private": true,
+  "scripts": {
+    "build": "graphql-codegen --config codegen.ts && tsc",
+    "start": "node dist/index.js",
+    "clean": "rm -rf dist .parcel-cache node_modules graphql.schema.json",
+    "format": "prettier src --write --arrow-parens avoid"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "5.0.0",
+    "@graphql-codegen/introspection": "4.0.0",
+    "@graphql-codegen/typescript": "4.0.1",
+    "@graphql-codegen/typescript-resolvers": "4.0.1",
+    "@types/amqplib": "^0.10.4",
+    "@types/node": "^20.10.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@graphql-tools/schema": "^10.0.2",
+    "amqplib": "^0.10.3"
+  }
+}

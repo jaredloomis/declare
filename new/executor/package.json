@@ -1,0 +1,31 @@
+{
+  "name": "declare-executor",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "author": "Jared Loomis <jaredloomis@protonmail.com>",
+  "license": "All Rights Reserved",
+  "private": true,
+  "scripts": {
+    "dev": "nodemon src/index.ts",
+    "build": "graphql-codegen --config codegen.ts && tsc",
+    "start": "node dist/index.js",
+    "clean": "rm -rf dist .parcel-cache node_modules",
+    "format": "prettier src --write"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "5.0.0",
+    "@graphql-codegen/introspection": "4.0.0",
+    "@graphql-codegen/typescript": "4.0.1",
+    "@graphql-codegen/typescript-resolvers": "4.0.1",
+    "@types/node": "^20.10.5",
+    "@types/selenium-webdriver": "^4.1.21",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@graphql-tools/schema": "^10.0.2",
+    "handlebars": "^4.7.8",
+    "selenium-webdriver": "^4.16.0",
+    "server-common": "link:../server-common"
+  }
+}

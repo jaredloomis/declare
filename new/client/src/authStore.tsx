@@ -8,15 +8,15 @@ export interface AuthStore {
   setToken: (token: string | undefined) => void;
 }
 
-export const useAuthStore = create<AuthStore>((set) => ({
+export const useAuthStore = create<AuthStore>(set => ({
   user: undefined,
-  token: localStorage.getItem("declare_token") || undefined,
+  token: localStorage.getItem('declare_token') || undefined,
   setUser: (user: any | undefined) => set({ user }),
   setToken: (token: string | undefined) => {
-    if(!token) {
-      localStorage.removeItem("declare_token");
+    if (!token) {
+      localStorage.removeItem('declare_token');
     } else {
-      localStorage.setItem("declare_token", token);
+      localStorage.setItem('declare_token', token);
     }
     set({ token });
   },

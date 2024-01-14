@@ -1,8 +1,1 @@
-export type Color =
-  | "success"
-  | "failure"
-  | "warning"
-  | "primary"
-  | "secondary"
-  | "tertiary"
-  | "gray";
+export type Color = 'success' | 'failure' | 'warning' | 'primary' | 'secondary' | 'tertiary' | 'gray';

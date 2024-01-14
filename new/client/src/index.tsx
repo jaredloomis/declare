@@ -1,13 +1,14 @@
-import React from "react";
-import { createRoot } from "react-dom/client";
-import { ApolloProvider } from "@apollo/client";
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import { ApolloProvider } from '@apollo/client';
 
-import { App } from "./App";
-import { HashRouter } from "react-router-dom";
+import { App } from './App';
+import { HashRouter } from 'react-router-dom';
 
-import { client } from "./graphql.ts";
+import { client } from './graphql';
+import './i18n';
 
-const container = document.getElementById("app");
+const container = document.getElementById('app');
 const root = createRoot(container!);
 root.render(
   <HashRouter>
@@ -16,5 +17,5 @@ root.render(
         <App />
       </ApolloProvider>
     </React.StrictMode>
-  </HashRouter>,
+  </HashRouter>
 );

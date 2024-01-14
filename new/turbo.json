@@ -1,10 +1,13 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalDotEnv": [".env"],
   "pipeline": {
     "build": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "outputs": ["dist"]
     },
     "dev": {
+      "dependsOn": ["^build", "build"],
       "cache": false,
       "persistent": true
     },

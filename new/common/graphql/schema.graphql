@@ -1,28 +1,32 @@
+###########
+# Scalars #
+###########
+
 scalar DateTime
 scalar JSON
 
-##########
+#########
 # Roots #
 #########
 
 type Query {
-  account(id: Int!): Account
-  user(id: Int!): User
-  test(id: Int!): Test
+  account(id: Int!): Account!
+  user(id: Int!): User!
+  test(id: Int!): Test!
 }
 
 type Mutation {
-  login(email: String!, password: String!): String
-
+  login(email: String!, password: String!): String!
   signup(accountName: String!, adminEmail: String!, adminPassword: String!): Account!
-  createUser(email: String!, password: String!, accountId: Int!): User
-  createCollection(name: String!): Collection
-  createElement(name: String!, selector: String!, selectorType: String!, collectionId: Int!): Element
-  createTest(name: String!, steps: [JSON!]!, collectionId: Int!): Test
 
-  updateTest(id: Int!, name: String!, steps: [JSON!]!): Test
+  createUser(user: UserInput!): User!
+  createCollection(collection: CollectionCreateInput!): Collection!
+  createElement(element: ElementCreateInput!): Element!
+  createTest(test: TestCreateInput!): Test!
 
-  executeTest(testId: Int!): Boolean
+  updateTest(id: Int!, test: TestUpdateInput!): Test!
+
+  executeTest(testId: Int!): Boolean!
 }
 
 type Subscription {
@@ -59,15 +63,8 @@ type Collection {
   tests: [Test!]!
 }
 
-type Report {
-  id: Int!
-  testId: Int!
-  status: String!
-  duration: Int!
-  startTime: DateTime!
-  endTime: DateTime!
-  
-  stepResults: [TestStepResult!]!
+input CollectionCreateInput {
+  name: String!
 }
 
 type Suite {
@@ -80,6 +77,10 @@ type Suite {
   accountId: Int!
 
   tests: [Test!]!
+}
+
+input SuiteInput {
+  name: String!
 }
 
 type Test {
@@ -96,6 +97,18 @@ type Test {
   reports: [Report!]!
 }
 
+input TestCreateInput {
+  collectionId: Int!
+  name: String!
+  steps: [TestStepInput!]!
+}
+
+input TestUpdateInput {
+  collectionId: Int
+  name: String
+  steps: [TestStepInput!]
+}
+
 type User {
   id: Int!
   createdAt: DateTime!
@@ -103,6 +116,11 @@ type User {
   accountId: Int!
 
   email: String!
+}
+
+input UserInput {
+  email: String!
+  password: String!
 }
 
 type Element {
@@ -119,12 +137,33 @@ type Element {
   selectorType: String!
 }
 
+input ElementCreateInput {
+  collectionId: Int!
+  name: String!
+  selector: String!
+  selectorType: String!
+}
+
 ##############
 # Test Steps #
 ##############
 
-union TestStep = ClickStep | SendTextStep | ExecuteJavascriptStep | GoToStep
+union TestStep = ClickStep | SendTextStep | ExecuteJavascriptStep | GoToStep | RefreshStep
   | AssertExistsStep | AssertTextStep | AssertJavascriptStep
+
+input TestStepInput {
+  stepType: String!
+  elementId: Int
+  text: String
+  code: String
+  url: String
+  visible: Boolean
+  invert: Boolean
+  exactMatch: Boolean
+  name: String
+  value: SetVariableStepValueInput
+  testId: Int
+}
 
 type ClickStep {
   stepType: String!
@@ -147,7 +186,9 @@ type GoToStep {
   url: String!
 }
 
-# type RefreshStep -- no args
+type RefreshStep {
+  stepType: String!
+}
 
 type AssertExistsStep {
   stepType: String!
@@ -188,6 +229,12 @@ type SetVariableStep {
 
 union SetVariableStepValue = SetVariableString | SetVariableJavascript | SetVariableElement
 
+input SetVariableStepValueInput {
+  string: String
+  code: String
+  elementId: Int
+}
+
 type SetVariableString {
   string: String!
 }
@@ -205,10 +252,31 @@ type ImportTestStep {
   testId: Int!
 }
 
-type TestStepResult {
+##########
+# Report #
+##########
+
+type Report {
+  id: Int!
+  testId: Int!
   status: String!
   startTime: DateTime!
   endTime: DateTime!
-  error: String
+  
+  stepResults: [TestStepResult!]!
+}
+
+type TestStepResult {
+  status: TestStepStatus!
+  endTime: DateTime!
+  message: String!
   screenshot: String
+  error: String
+}
+
+enum TestStepStatus {
+  PASS
+  FAIL
+  ERROR
+  NONE
 }

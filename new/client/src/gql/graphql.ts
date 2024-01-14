@@ -79,6 +79,10 @@ export type Collection = {
   updatedBy: Scalars['Int']['output'];
 };
 
+export type CollectionCreateInput = {
+  name: Scalars['String']['input'];
+};
+
 export type Element = {
   __typename?: 'Element';
   accountId: Scalars['Int']['output'];
@@ -91,6 +95,13 @@ export type Element = {
   selectorType: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
   updatedBy: Scalars['Int']['output'];
+};
+
+export type ElementCreateInput = {
+  collectionId: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
+  selector: Scalars['String']['input'];
+  selectorType: Scalars['String']['input'];
 };
 
 export type ExecuteJavascriptStep = {
@@ -113,41 +124,34 @@ export type ImportTestStep = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createCollection?: Maybe<Collection>;
-  createElement?: Maybe<Element>;
-  createTest?: Maybe<Test>;
-  createUser?: Maybe<User>;
-  executeTest?: Maybe<Scalars['Boolean']['output']>;
-  login?: Maybe<Scalars['String']['output']>;
+  createCollection: Collection;
+  createElement: Element;
+  createTest: Test;
+  createUser: User;
+  executeTest: Scalars['Boolean']['output'];
+  login: Scalars['String']['output'];
   signup: Account;
-  updateTest?: Maybe<Test>;
+  updateTest: Test;
 };
 
 
 export type MutationCreateCollectionArgs = {
-  name: Scalars['String']['input'];
+  collection: CollectionCreateInput;
 };
 
 
 export type MutationCreateElementArgs = {
-  collectionId: Scalars['Int']['input'];
-  name: Scalars['String']['input'];
-  selector: Scalars['String']['input'];
-  selectorType: Scalars['String']['input'];
+  element: ElementCreateInput;
 };
 
 
 export type MutationCreateTestArgs = {
-  collectionId: Scalars['Int']['input'];
-  name: Scalars['String']['input'];
-  steps: Array<Scalars['JSON']['input']>;
+  test: TestCreateInput;
 };
 
 
 export type MutationCreateUserArgs = {
-  accountId: Scalars['Int']['input'];
-  email: Scalars['String']['input'];
-  password: Scalars['String']['input'];
+  user: UserInput;
 };
 
 
@@ -171,15 +175,14 @@ export type MutationSignupArgs = {
 
 export type MutationUpdateTestArgs = {
   id: Scalars['Int']['input'];
-  name: Scalars['String']['input'];
-  steps: Array<Scalars['JSON']['input']>;
+  test: TestUpdateInput;
 };
 
 export type Query = {
   __typename?: 'Query';
-  account?: Maybe<Account>;
-  test?: Maybe<Test>;
-  user?: Maybe<User>;
+  account: Account;
+  test: Test;
+  user: User;
 };
 
 
@@ -197,9 +200,13 @@ export type QueryUserArgs = {
   id: Scalars['Int']['input'];
 };
 
+export type RefreshStep = {
+  __typename?: 'RefreshStep';
+  stepType: Scalars['String']['output'];
+};
+
 export type Report = {
   __typename?: 'Report';
-  duration: Scalars['Int']['output'];
   endTime: Scalars['DateTime']['output'];
   id: Scalars['Int']['output'];
   startTime: Scalars['DateTime']['output'];
@@ -235,6 +242,12 @@ export type SetVariableStep = {
 
 export type SetVariableStepValue = SetVariableElement | SetVariableJavascript | SetVariableString;
 
+export type SetVariableStepValueInput = {
+  code?: InputMaybe<Scalars['String']['input']>;
+  elementId?: InputMaybe<Scalars['Int']['input']>;
+  string?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type SetVariableString = {
   __typename?: 'SetVariableString';
   string: Scalars['String']['output'];
@@ -263,6 +276,10 @@ export type Suite = {
   updatedBy: Scalars['Int']['output'];
 };
 
+export type SuiteInput = {
+  name: Scalars['String']['input'];
+};
+
 export type Test = {
   __typename?: 'Test';
   accountId: Scalars['Int']['output'];
@@ -277,15 +294,48 @@ export type Test = {
   updatedBy: Scalars['Int']['output'];
 };
 
-export type TestStep = AssertExistsStep | AssertJavascriptStep | AssertTextStep | ClickStep | ExecuteJavascriptStep | GoToStep | SendTextStep;
+export type TestCreateInput = {
+  collectionId: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
+  steps: Array<TestStepInput>;
+};
+
+export type TestStep = AssertExistsStep | AssertJavascriptStep | AssertTextStep | ClickStep | ExecuteJavascriptStep | GoToStep | RefreshStep | SendTextStep;
+
+export type TestStepInput = {
+  code?: InputMaybe<Scalars['String']['input']>;
+  elementId?: InputMaybe<Scalars['Int']['input']>;
+  exactMatch?: InputMaybe<Scalars['Boolean']['input']>;
+  invert?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  stepType: Scalars['String']['input'];
+  testId?: InputMaybe<Scalars['Int']['input']>;
+  text?: InputMaybe<Scalars['String']['input']>;
+  url?: InputMaybe<Scalars['String']['input']>;
+  value?: InputMaybe<SetVariableStepValueInput>;
+  visible?: InputMaybe<Scalars['Boolean']['input']>;
+};
 
 export type TestStepResult = {
   __typename?: 'TestStepResult';
   endTime: Scalars['DateTime']['output'];
   error?: Maybe<Scalars['String']['output']>;
+  message: Scalars['String']['output'];
   screenshot?: Maybe<Scalars['String']['output']>;
-  startTime: Scalars['DateTime']['output'];
-  status: Scalars['String']['output'];
+  status: TestStepStatus;
+};
+
+export enum TestStepStatus {
+  Error = 'ERROR',
+  Fail = 'FAIL',
+  None = 'NONE',
+  Pass = 'PASS'
+}
+
+export type TestUpdateInput = {
+  collectionId?: InputMaybe<Scalars['Int']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  steps?: InputMaybe<Array<TestStepInput>>;
 };
 
 export type User = {
@@ -297,48 +347,58 @@ export type User = {
   updatedAt: Scalars['DateTime']['output'];
 };
 
+export type UserInput = {
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+};
+
+export type CreateElementMutationVariables = Exact<{
+  element: ElementCreateInput;
+}>;
+
+
+export type CreateElementMutation = { __typename?: 'Mutation', createElement: { __typename?: 'Element', id: number, name: string } };
+
 export type ElementsQueryVariables = Exact<{
   accountId: Scalars['Int']['input'];
 }>;
 
 
-export type ElementsQuery = { __typename?: 'Query', account?: { __typename?: 'Account', elements: Array<{ __typename?: 'Element', id: number, name: string, selector: string, selectorType: string }> } | null };
+export type ElementsQuery = { __typename?: 'Query', account: { __typename?: 'Account', elements: Array<{ __typename?: 'Element', id: number, name: string, selector: string, selectorType: string }> } };
 
-export type UpdateTestMutationVariables = Exact<{
-  id: Scalars['Int']['input'];
-  name: Scalars['String']['input'];
-  steps: Array<Scalars['JSON']['input']> | Scalars['JSON']['input'];
+export type CollectionsQueryVariables = Exact<{
+  accountId: Scalars['Int']['input'];
 }>;
 
 
-export type UpdateTestMutation = { __typename?: 'Mutation', updateTest?: { __typename?: 'Test', id: number } | null };
+export type CollectionsQuery = { __typename?: 'Query', account: { __typename?: 'Account', collections: Array<{ __typename?: 'Collection', id: number, name: string }> } };
+
+export type UpdateTestMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+  test: TestUpdateInput;
+}>;
+
+
+export type UpdateTestMutation = { __typename?: 'Mutation', updateTest: { __typename?: 'Test', id: number } };
 
 export type GetCollectionsQueryVariables = Exact<{
   accountId: Scalars['Int']['input'];
 }>;
 
 
-export type GetCollectionsQuery = { __typename?: 'Query', account?: { __typename?: 'Account', collections: Array<{ __typename?: 'Collection', id: number, name: string, tests: Array<{ __typename?: 'Test', id: number, name: string }> }> } | null };
-
-export type CreateCollectionMutationVariables = Exact<{
-  name: Scalars['String']['input'];
-}>;
-
-
-export type CreateCollectionMutation = { __typename?: 'Mutation', createCollection?: { __typename?: 'Collection', id: number, name: string } | null };
+export type GetCollectionsQuery = { __typename?: 'Query', account: { __typename?: 'Account', collections: Array<{ __typename?: 'Collection', id: number, name: string, tests: Array<{ __typename?: 'Test', id: number, name: string }> }> } };
 
 export type CreateTestMutationVariables = Exact<{
-  collectionId: Scalars['Int']['input'];
-  name: Scalars['String']['input'];
-  steps: Array<Scalars['JSON']['input']> | Scalars['JSON']['input'];
+  test: TestCreateInput;
 }>;
 
 
-export type CreateTestMutation = { __typename?: 'Mutation', createTest?: { __typename?: 'Test', id: number, name: string } | null };
+export type CreateTestMutation = { __typename?: 'Mutation', createTest: { __typename?: 'Test', id: number, name: string } };
 
 
+export const CreateElementDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateElement"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"element"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ElementCreateInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createElement"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"element"},"value":{"kind":"Variable","name":{"kind":"Name","value":"element"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<CreateElementMutation, CreateElementMutationVariables>;
 export const ElementsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Elements"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"accountId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"account"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"accountId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"elements"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"selector"}},{"kind":"Field","name":{"kind":"Name","value":"selectorType"}}]}}]}}]}}]} as unknown as DocumentNode<ElementsQuery, ElementsQueryVariables>;
-export const UpdateTestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateTest"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"steps"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"Argument","name":{"kind":"Name","value":"steps"},"value":{"kind":"Variable","name":{"kind":"Name","value":"steps"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<UpdateTestMutation, UpdateTestMutationVariables>;
+export const CollectionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Collections"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"accountId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"account"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"accountId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"collections"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<CollectionsQuery, CollectionsQueryVariables>;
+export const UpdateTestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"UpdateTest"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"test"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"TestUpdateInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"test"},"value":{"kind":"Variable","name":{"kind":"Name","value":"test"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<UpdateTestMutation, UpdateTestMutationVariables>;
 export const GetCollectionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCollections"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"accountId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"account"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"accountId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"collections"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"tests"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]} as unknown as DocumentNode<GetCollectionsQuery, GetCollectionsQueryVariables>;
-export const CreateCollectionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateCollection"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createCollection"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<CreateCollectionMutation, CreateCollectionMutationVariables>;
-export const CreateTestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateTest"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"collectionId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"steps"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"JSON"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createTest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"collectionId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"collectionId"}}},{"kind":"Argument","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}},{"kind":"Argument","name":{"kind":"Name","value":"steps"},"value":{"kind":"Variable","name":{"kind":"Name","value":"steps"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<CreateTestMutation, CreateTestMutationVariables>;
+export const CreateTestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateTest"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"test"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"TestCreateInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createTest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"test"},"value":{"kind":"Variable","name":{"kind":"Name","value":"test"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<CreateTestMutation, CreateTestMutationVariables>;

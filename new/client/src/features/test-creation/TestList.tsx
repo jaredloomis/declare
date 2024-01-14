@@ -1,13 +1,14 @@
-import React, { useState } from "react";
-import { gql, useQuery, useMutation, useApolloClient } from "@apollo/client";
-import { Link } from "react-router-dom";
-import { Collection, User } from "../../gql/graphql";
-import { Table } from "../../components/Table";
-import { Spinner } from "../../components/Spinner";
-import { Card } from "../../components/Card";
-import { TextInput } from "../../components/TextInput";
-import { Button } from "../../components/Button";
-import { useAuthStore } from "../../authStore";
+import React, { useState } from 'react';
+import { gql, useQuery, useMutation, useApolloClient } from '@apollo/client';
+import { Link } from 'react-router-dom';
+import { Collection, User } from '../../gql/graphql';
+import { Table } from '../../components/Table';
+import { Spinner } from '../../components/Spinner';
+import { Card } from '../../components/Card';
+import { TextInput } from '../../components/TextInput';
+import { Button } from '../../components/Button';
+import { useAuthStore } from '../../authStore';
+import { CREATE_COLLECTION_MUTATION } from './api';
 
 const GET_COLLECTIONS_QUERY = gql`
   query GetCollections($accountId: Int!) {
@@ -24,45 +25,38 @@ const GET_COLLECTIONS_QUERY = gql`
   }
 `;
 
-const CREATE_COLLECTION_MUTATION = gql`
-  mutation CreateCollection($name: String!) {
-    createCollection(name: $name) {
-      id
-      name
-    }
-  }
-`;
-
 interface TestCollectionProps {
   collection: Collection;
 }
 
 function TestCollection({ collection }: TestCollectionProps) {
   const apollo = useApolloClient();
-  const [testName, setTestName] = useState<string>("");
+  const [testName, setTestName] = useState<string>('');
   const handleCreateTest = () => {
     apollo.mutate({
       mutation: gql`
-        mutation CreateTest($collectionId: Int!, $name: String!, $steps: [JSON!]!) {
-          createTest(collectionId: $collectionId, name: $name, steps: $steps) {
+        mutation CreateTest($test: TestCreateInput!) {
+          createTest(test: $test) {
             id
             name
           }
         }
       `,
       variables: {
-        collectionId: collection.id,
-        name: testName,
-        steps: [],
+        test: {
+          collectionId: collection.id,
+          name: testName,
+          steps: [],
+        },
       },
-      refetchQueries: ["GetCollections"],
+      refetchQueries: ['GetCollections'],
     });
   };
 
   return (
-    <div className="mb-8">
-      <h2 className="text-2xl mb-4">{collection.name}</h2>
-      <Table columns={["Test Name"]}>
+    <div className='mb-8'>
+      <h2 className='text-2xl mb-4'>{collection.name}</h2>
+      <Table columns={['Test Name']}>
         {collection.tests.map(test => (
           <Table.Row key={test.id}>
             <Table.Cell>
@@ -72,8 +66,8 @@ function TestCollection({ collection }: TestCollectionProps) {
         ))}
       </Table>
 
-      <TextInput label="Test Name" onValueChange={setTestName}/>
-      <Button color="success" size="large" onClick={handleCreateTest}>
+      <TextInput label='Test Name' onValueChange={setTestName} />
+      <Button color='success' size='large' onClick={handleCreateTest}>
         Create Test
       </Button>
     </div>
@@ -88,15 +82,12 @@ export function TestList() {
       accountId: auth.user?.accountId,
     },
   });
-  const [createCollection, creationResult] = useMutation(
-    CREATE_COLLECTION_MUTATION,
-    {
-      refetchQueries: ["GetCollections"],
-    },
-  );
+  const [createCollection] = useMutation(CREATE_COLLECTION_MUTATION, {
+    refetchQueries: ['GetCollections'],
+  });
   const handleCreateCollection = (event: any) => {
     event.preventDefault();
-    createCollection({ variables: { name } });
+    createCollection({ variables: { collection: { name } } });
   };
 
   if (collectionsRes.loading) {
@@ -109,15 +100,15 @@ export function TestList() {
 
   return (
     <>
-      <h1 className="text-3xl pb-10">Tests</h1>
+      <h1 className='text-3xl pb-10'>Tests</h1>
       {collectionsRes.data.account.collections.map((collection: Collection) => (
         <TestCollection collection={collection} key={collection.id} />
       ))}
       <div>
         <Card>
           <form onSubmit={handleCreateCollection}>
-            <TextInput label="Collection Name" onValueChange={setName} />
-            <Button color="success" size="large">
+            <TextInput label='Collection Name' onValueChange={setName} />
+            <Button color='success' size='large'>
               Create Collection
             </Button>
           </form>

@@ -1,0 +1,14 @@
+{
+  "test": {
+    "edit": {
+      "save-test": "Save Test",
+      "test-steps-heading": "Steps",
+      "stepType-click": "Click",
+      "add-step": "Add Step"
+    },
+    "stepType": {
+      "click": "Click",
+      "sendText": "Assign"
+    }
+  }
+}

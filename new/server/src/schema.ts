@@ -2,18 +2,17 @@
  * GraphQL schema & resolvers
  */
 
-import fs from "fs";
-import { makeExecutableSchema } from "@graphql-tools/schema";
-import { DateTimeTypeDefinition, JSONDefinition } from "graphql-scalars";
-import { PrismaClient } from "@prisma/client";
-import jwt from "jsonwebtoken";
-import { BaseContext } from "@apollo/server";
-import { PubSub } from "graphql-subscriptions";
+import fs from 'fs';
+import { makeExecutableSchema } from '@graphql-tools/schema';
+import { DateTimeTypeDefinition, JSONDefinition } from 'graphql-scalars';
+import { PrismaClient } from '@prisma/client';
+import jwt from 'jsonwebtoken';
+import { BaseContext } from '@apollo/server';
+import { PubSub } from 'graphql-subscriptions';
 
-import { LocalTestExecutor } from "./execution/executor";
-import { SeleniumEngine } from "./execution/engine";
-import { checkPassword, hashPassword } from "./auth";
-import { User } from "./generated/graphql";
+import { PubSubTestExecutionDelegator } from './execution/delegator';
+import { checkPassword, hashPassword } from './auth';
+import { User } from './generated/graphql';
 import {
   Account as AccountAdapter,
   invConvertObj,
@@ -23,13 +22,13 @@ import {
   User as UserAdapter,
   Report as ReportAdapter,
   Element as ElementAdapter,
-} from "./adapter";
+} from 'server-common/src/adapter';
 
 // TODO create a pubsub backed by some external system:
-// redis, postgres, rabbitmq, zeromq, kafka, etc.
-const pubsub = new PubSub();
+// redis streams, postgres, or rabbitmq
+const subscriptionPubsub = new PubSub();
 
-const typeDefs = fs.readFileSync("../common/graphql/schema.graphql", "utf8");
+const typeDefs = fs.readFileSync('../common/graphql/schema.graphql', 'utf8');
 
 export const prisma = new PrismaClient();
 
@@ -49,13 +48,11 @@ type QueryResolverFn = (obj: QueryResolverFnArgs) => Promise<any>;
 function preprocessSelectionSet(selectionSet: any) {
   const ret: any = {};
   for (const selection of selectionSet.selections) {
-    if (!selection.name || selection.name.value.indexOf("__") === 0) {
+    if (!selection.name || selection.name.value.indexOf('__') === 0) {
       continue;
     }
     if (selection.selectionSet && Object.keys(prisma.test.fields).indexOf(selection.name.value) === -1) {
-      ret[selection.name.value] = preprocessSelectionSet(
-        selection.selectionSet,
-      );
+      ret[selection.name.value] = preprocessSelectionSet(selection.selectionSet);
     } else {
       ret[selection.name.value] = true;
     }
@@ -66,7 +63,7 @@ function preprocessSelectionSet(selectionSet: any) {
 function postprocessSelectionSet(selectionSet: any) {
   const ret: any = {};
   for (const [key, value] of Object.entries(selectionSet)) {
-    if (typeof value === "object") {
+    if (typeof value === 'object') {
       ret[key] = { select: postprocessSelectionSet(value) };
     } else {
       ret[key] = value;
@@ -76,17 +73,12 @@ function postprocessSelectionSet(selectionSet: any) {
 }
 
 function createSelect(adapter: DatabaseToAPIAdapter, info: any) {
-  const selectFields = preprocessSelectionSet(
-    info.operation.selectionSet.selections[0].selectionSet,
-  );
+  const selectFields = preprocessSelectionSet(info.operation.selectionSet.selections[0].selectionSet);
   const invMap = invConvertObj(selectFields, adapter);
   return postprocessSelectionSet(invMap);
 }
 
-function createResolver(
-  adapter: DatabaseToAPIAdapter,
-  queryFn: QueryResolverFn,
-) {
+function createResolver(adapter: DatabaseToAPIAdapter, queryFn: QueryResolverFn) {
   return async (obj: any, args: any, ctx: any, info: any) => {
     const select = createSelect(adapter, info);
     const retObj = await queryFn({ obj, args, ctx, info, select });
@@ -97,25 +89,22 @@ function createResolver(
 
 const resolvers = {
   Query: {
-    account: createResolver(
-      AccountAdapter,
-      async ({ args, info, select, ctx }) => {
-        if (!ctx.user || ctx.user.accountId !== args.id) {
-          throw new Error("Not authorized");
-        }
+    account: createResolver(AccountAdapter, async ({ args, info, select, ctx }) => {
+      if (!ctx.user || ctx.user.accountId !== args.id) {
+        throw new Error('Not authorized');
+      }
 
-        const ret = await prisma.account.findUnique({
-          where: {
-            id: args.id,
-          },
-          select,
-        });
-        return ret;
-      },
-    ),
+      const ret = await prisma.account.findUnique({
+        where: {
+          id: args.id,
+        },
+        select,
+      });
+      return ret;
+    }),
     user: createResolver(UserAdapter, async ({ args, info, select, ctx }) => {
       if (!ctx.user || ctx.user.accountId !== args.id) {
-        throw new Error("Not authorized");
+        throw new Error('Not authorized');
       }
 
       return prisma.user_info.findUnique({
@@ -128,7 +117,7 @@ const resolvers = {
     }),
     test: createResolver(TestAdapter, async ({ args, info, select, ctx }) => {
       if (!ctx.user) {
-        throw new Error("Not authorized");
+        throw new Error('Not authorized');
       }
 
       const ret = await prisma.test.findUnique({
@@ -151,24 +140,24 @@ const resolvers = {
               email: args.adminEmail,
               password: await hashPassword(args.adminPassword),
               is_admin: true,
-            }
-          }
+            },
+          },
         },
         select,
       });
     }),
     createUser: async (obj: any, args: any, ctx: DeclareContext) => {
-      if (!ctx.user || ctx.user.accountId !== args.accountId) {
-        throw new Error("Not authorized");
+      if (!ctx.user) {
+        throw new Error('Not authorized');
       }
 
       return prisma.user_info.create({
         data: {
-          email: args.email,
-          password: await hashPassword(args.password),
+          email: args.user.email,
+          password: await hashPassword(args.user.password),
           account: {
             connect: {
-              id: args.accountId,
+              id: ctx.user.accountId,
             },
           },
         },
@@ -176,12 +165,12 @@ const resolvers = {
     },
     createCollection: async (obj: any, args: any, ctx: DeclareContext) => {
       if (!ctx.user) {
-        throw new Error("Not authorized");
+        throw new Error('Not authorized');
       }
 
       return prisma.collection.create({
         data: {
-          name: args.name,
+          name: args.collection.name,
           account: {
             connect: {
               id: ctx.user.accountId,
@@ -202,25 +191,25 @@ const resolvers = {
     },
     createTest: async (obj: any, args: any, ctx: DeclareContext) => {
       if (!ctx.user) {
-        throw new Error("Not authorized");
+        throw new Error('Not authorized');
       }
 
       // Check if collection belongs to user
       const collection = await prisma.collection.findFirst({
         where: {
-          id: args.collectionId,
+          id: args.test.collectionId,
           account_id: ctx.user?.accountId,
         },
       });
       if (!collection) {
-        throw new Error("Not authorized or collection does not exist");
+        throw new Error('Not authorized or collection does not exist');
       }
 
       // Create test
       const test = await prisma.test.create({
         data: {
-          name: args.name,
-          steps: args.steps,
+          name: args.test.name,
+          steps: args.test.steps,
           account: {
             connect: {
               id: ctx.user!.accountId,
@@ -228,7 +217,7 @@ const resolvers = {
           },
           collection: {
             connect: {
-              id: args.collectionId,
+              id: args.test.collectionId,
             },
           },
           created_by: {
@@ -246,28 +235,28 @@ const resolvers = {
 
       return test;
     },
-    createElement: createResolver(ElementAdapter, async ({obj, args, ctx, select}) => {
+    createElement: createResolver(ElementAdapter, async ({ obj, args, ctx, select }) => {
       if (!ctx.user) {
-        throw new Error("Not authorized");
+        throw new Error('Not authorized');
       }
 
       // Check if collection belongs to user
       const collection = await prisma.collection.findFirst({
         where: {
-          id: args.collectionId,
+          id: args.element.collectionId,
           account_id: ctx.user?.accountId,
         },
       });
       if (!collection) {
-        throw new Error("Not authorized or collection does not exist");
+        throw new Error('Not authorized or collection does not exist');
       }
 
       // Create element
       const element = await prisma.element.create({
         data: {
-          name: args.name,
-          selector: args.selector,
-          selector_type: args.selectorType,
+          name: args.element.name,
+          selector: args.element.selector,
+          selector_type: args.element.selectorType,
           account: {
             connect: {
               id: ctx.user!.accountId,
@@ -275,7 +264,7 @@ const resolvers = {
           },
           collection: {
             connect: {
-              id: args.collectionId,
+              id: args.element.collectionId,
             },
           },
           created_by: ctx.user!.id,
@@ -286,9 +275,9 @@ const resolvers = {
 
       return element;
     }),
-    updateTest: createResolver(TestAdapter, async ({obj, args, ctx, select}) => {
+    updateTest: createResolver(TestAdapter, async ({ obj, args, ctx, select }) => {
       if (!ctx.user) {
-        throw new Error("Not authorized");
+        throw new Error('Not authorized');
       }
 
       const test = await prisma.test.update({
@@ -297,8 +286,8 @@ const resolvers = {
           account_id: ctx.user?.accountId,
         },
         data: {
-          name: args.name,
-          steps: args.steps,
+          name: args.test.name,
+          steps: args.test.steps,
           updated_by: {
             connect: {
               id: ctx.user!.id,
@@ -310,7 +299,7 @@ const resolvers = {
       });
 
       if (!test) {
-        throw new Error("Not authorized or test does not exist");
+        throw new Error('Not authorized or test does not exist');
       }
 
       return test;
@@ -323,20 +312,20 @@ const resolvers = {
       });
 
       if (!user) {
-        return null;
+        throw new Error('Not authorized');
       }
 
       if (!(await checkPassword(args.password, user.password))) {
-        return null;
+        throw new Error('Not authorized');
       }
 
       return jwt.sign({ id: user.id }, process.env.JWT_SECRET!, {
-        expiresIn: "1d",
+        expiresIn: '2d',
       });
     },
     executeTest: async (obj: any, args: any, ctx: DeclareContext) => {
       if (!ctx.user) {
-        throw new Error("Not authorized");
+        throw new Error('Not authorized');
       }
 
       const test = await prisma.test.findFirst({
@@ -347,36 +336,22 @@ const resolvers = {
       });
 
       if (!test) {
-        throw new Error("Not authorized or test does not exist");
+        throw new Error('Not authorized or test does not exist');
       }
 
-      new LocalTestExecutor(new SeleniumEngine())
-        .executeTest(convertObj(test, TestAdapter))
-        .then(async (report: any) => {
-          report.id = undefined;
-          report.user_info_report_created_byTouser_info = { connect: { id: ctx.user?.id } };
-          report.test = { connect: { id: test.id } };
-          report.test_id = undefined;
-          report.user_info_report_updated_byTouser_info = { connect: { id: ctx.user?.id } };
-          const dbReport = await prisma.report.create({ data: invConvertObj(report, ReportAdapter) });
-          pubsub.publish("TEST_COMPLETED", { report: convertObj(dbReport, ReportAdapter) });
-        });
+      await new PubSubTestExecutionDelegator().executeTest(convertObj(test, TestAdapter));
 
       return true;
     },
   },
   Subscription: {
     report: {
-      subscribe: async function* (
-        obj: any,
-        args: any,
-        ctx: DeclareContext | any,
-      ) {
+      subscribe: async function* (obj: any, args: any, ctx: DeclareContext | any) {
         if (!ctx.user) {
-          throw new Error("Not authorized");
+          throw new Error('Not authorized');
         }
 
-        const iter = pubsub.asyncIterator(["TEST_COMPLETED"]);
+        const iter = subscriptionPubsub.asyncIterator(['TEST_COMPLETED']);
 
         while (true) {
           const { report } = (await iter.next()).value;
@@ -386,10 +361,10 @@ const resolvers = {
     },
   },
   TestStep: {
-    __resolveType: ({ stepType } : any) => {
-      return stepType.charAt(0).toUpperCase() + stepType.slice(1) + "Step";
+    __resolveType: ({ stepType }: any) => {
+      return stepType.charAt(0).toUpperCase() + stepType.slice(1) + 'Step';
     },
-  }
+  },
 };
 
 export const schema = makeExecutableSchema({

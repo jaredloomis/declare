@@ -1,28 +1,40 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export function testStepDescription(step: any): string {
   return {
-    'click': 'Click',
+    click: 'Click',
   }[step.stepType as string]!;
 }
 
 export const TEST_QUERY = gql`
-query GetTest ($id: Int!) {
-  test(id: $id) {
-    id name
-    steps {
-      ... on ClickStep {
-        stepType
-        elementId
+  query GetTest($id: Int!) {
+    test(id: $id) {
+      id
+      name
+      steps {
+        ... on ClickStep {
+          stepType
+          elementId
+        }
+        ... on SendTextStep {
+          stepType
+          elementId
+          text
+        }
       }
-      ... on SendTextStep {
-        stepType
-        elementId
-        text
+      reports {
+        id
+        testId
+        startTime
       }
-    }
-    reports {
-      id testId startTime
     }
   }
-}`;
+`;
+
+export const CREATE_COLLECTION_MUTATION = gql`
+  mutation CreateCollection($collection: CollectionCreateInput!) {
+    createElement(element: $element) {
+      id
+    }
+  }
+`;

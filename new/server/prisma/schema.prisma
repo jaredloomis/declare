@@ -38,7 +38,6 @@ model report {
   id            Int       @id @default(autoincrement())
   test_id       Int
   status        String
-  duration      Int
   start_time    DateTime  @db.Timestamp(6)
   end_time      DateTime  @db.Timestamp(6)
   step_results  Json
