@@ -1,0 +1,15 @@
+{
+  "possibleTypes": {
+    "SetVariableStepValue": ["SetVariableElement", "SetVariableJavascript", "SetVariableString"],
+    "TestStep": [
+      "AssertExistsStep",
+      "AssertJavascriptStep",
+      "AssertTextStep",
+      "ClickStep",
+      "ExecuteJavascriptStep",
+      "GoToStep",
+      "RefreshStep",
+      "SendTextStep"
+    ]
+  }
+}

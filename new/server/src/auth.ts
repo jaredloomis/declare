@@ -1,6 +1,6 @@
 import { JwtPayload, verify } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import { prisma } from './schema';
+import { prisma } from './client';
 import { User } from './generated/graphql';
 import { User as UserAdapter, convertObj } from 'declare-server-common/src/adapter';
 

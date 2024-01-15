@@ -5,7 +5,6 @@
 import fs from 'fs';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { DateTimeTypeDefinition, JSONDefinition } from 'graphql-scalars';
-import { PrismaClient } from '@prisma/client';
 import jwt from 'jsonwebtoken';
 import { BaseContext } from '@apollo/server';
 import { PubSub } from 'graphql-subscriptions';
@@ -23,14 +22,14 @@ import {
   Report as ReportAdapter,
   Element as ElementAdapter,
 } from 'server-common/src/adapter';
+import { prismaSelect } from './select';
+import { prisma } from './client';
 
 // TODO create a pubsub backed by some external system:
-// redis streams, postgres, or rabbitmq
+// Probably just a transient pubsub like redis (does rabbitmq support transient/non-durable messages)
 const subscriptionPubsub = new PubSub();
 
 const typeDefs = fs.readFileSync('../common/graphql/schema.graphql', 'utf8');
-
-export const prisma = new PrismaClient();
 
 export interface DeclareContext extends BaseContext {
   user: User | undefined;
@@ -45,42 +44,9 @@ type QueryResolverFnArgs = {
 };
 type QueryResolverFn = (obj: QueryResolverFnArgs) => Promise<any>;
 
-function preprocessSelectionSet(selectionSet: any) {
-  const ret: any = {};
-  for (const selection of selectionSet.selections) {
-    if (!selection.name || selection.name.value.indexOf('__') === 0) {
-      continue;
-    }
-    if (selection.selectionSet && Object.keys(prisma.test.fields).indexOf(selection.name.value) === -1) {
-      ret[selection.name.value] = preprocessSelectionSet(selection.selectionSet);
-    } else {
-      ret[selection.name.value] = true;
-    }
-  }
-  return ret;
-}
-
-function postprocessSelectionSet(selectionSet: any) {
-  const ret: any = {};
-  for (const [key, value] of Object.entries(selectionSet)) {
-    if (typeof value === 'object') {
-      ret[key] = { select: postprocessSelectionSet(value) };
-    } else {
-      ret[key] = value;
-    }
-  }
-  return ret;
-}
-
-function createSelect(adapter: DatabaseToAPIAdapter, info: any) {
-  const selectFields = preprocessSelectionSet(info.operation.selectionSet.selections[0].selectionSet);
-  const invMap = invConvertObj(selectFields, adapter);
-  return postprocessSelectionSet(invMap);
-}
-
 function createResolver(adapter: DatabaseToAPIAdapter, queryFn: QueryResolverFn) {
   return async (obj: any, args: any, ctx: any, info: any) => {
-    const select = createSelect(adapter, info);
+    const select = prismaSelect(adapter, info);
     const retObj = await queryFn({ obj, args, ctx, info, select });
     const ret = convertObj(retObj, adapter);
     return ret;
@@ -119,6 +85,8 @@ const resolvers = {
       if (!ctx.user) {
         throw new Error('Not authorized');
       }
+
+      console.log(info.fragments)
 
       const ret = await prisma.test.findUnique({
         where: {

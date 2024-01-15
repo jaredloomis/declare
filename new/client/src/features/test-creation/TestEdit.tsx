@@ -1,5 +1,5 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
-import React, { Component, ReactNode, useEffect } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import { Select } from '../../components/Select';
 import { Spinner } from '../../components/Spinner';
 import { Heading } from '../../components/Heading';
@@ -9,6 +9,7 @@ import { ClickStep, TestStep } from '../../gql/graphql';
 import { ElementSelect } from '../element/ElementSelect';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { CORE_TEST_FIELDS } from './api';
 
 const objectMap = (obj: any, fn: any) => Object.fromEntries(Object.entries(obj).map(([k, v], i) => [k, fn(v, k, i)]));
 
@@ -80,17 +81,18 @@ function ClickStepEdit({ step, onChange }: ClickStepEditProps) {
   );
 }
 
-export interface TestEditProps {
-  testId: number;
-}
-
 const UPDATE_TEST_MUTATION = gql`
+  ${CORE_TEST_FIELDS}
   mutation UpdateTest($id: Int!, $test: TestUpdateInput!) {
     updateTest(id: $id, test: $test) {
-      id
+      ...CoreTestFields
     }
   }
 `;
+
+export interface TestEditProps {
+  testId: number;
+}
 
 export function TestEdit({ testId }: TestEditProps) {
   const { t } = useTranslation();
@@ -130,8 +132,8 @@ export function TestEdit({ testId }: TestEditProps) {
     setSteps(newSteps);
   };
 
-  const handleSave = () => {
-    updateTestMutation({
+  const handleSave = async () => {
+    await updateTestMutation({
       variables: {
         test: {
           name,

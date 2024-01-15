@@ -1,4 +1,4 @@
-import { gql, useMutation, useQuery } from '@apollo/client';
+import { gql, useQuery } from '@apollo/client';
 import React from 'react';
 import { Select, SelectProps } from '../../components/Select';
 import { useAuthStore } from '../../authStore';
@@ -39,12 +39,12 @@ export function ElementSelect({ ...props }: ElementSelectProps) {
 
   return (
     <div>
+      <Select creatable options={options} onCreateOption={() => setCreateInProgress(true)} {...props} />
       {createInProgress && (
-        <Modal>
-          <ElementCreate />
+        <Modal onClose={() => setCreateInProgress(false)}>
+          <ElementCreate onSuccess={() => setCreateInProgress(false)}/>
         </Modal>
       )}
-      <Select creatable options={options} onCreateOption={() => setCreateInProgress(true)} {...props} />
     </div>
   );
 }

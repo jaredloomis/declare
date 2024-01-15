@@ -1,5 +1,5 @@
 import { convertObj, Element as ElementAdapter, Test as TestAdapter } from 'declare-server-common/src/adapter';
-import { prisma } from '../schema';
+import { prisma } from '../client';
 import { Test, TestStep, Element } from '../generated/graphql';
 import { ReifiedTest } from 'server-common/src/reified-test';
 

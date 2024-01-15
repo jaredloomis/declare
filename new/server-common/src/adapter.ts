@@ -3,7 +3,7 @@
  * and the GraphQL schema.
  */
 
-export const invConvertObj = (obj: any, adapter: DatabaseToAPIAdapter) => {
+export const invConvertObj: any = (obj: any, adapter: DatabaseToAPIAdapter) => {
   const newObj: any = {};
   Object.entries(obj).forEach(([key, value]: [string, any]) => {
     const entry: [string, any] | undefined = Object.entries(adapter.identifierMap).find(

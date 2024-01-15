@@ -7,6 +7,4 @@ logs/
 .turbo
 build/
 .env
-generated/
-gql/
 graphql.schema.json

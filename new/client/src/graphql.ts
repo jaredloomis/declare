@@ -12,9 +12,13 @@ const headerLink = setContext((request, previousContext) => ({
 
 const removeTypenameLink = removeTypenameFromVariables();
 
+import introspectionResult from './gql/fragments.json'
+
 export const client = new ApolloClient({
   uri: graphqlUrl,
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    possibleTypes: introspectionResult.possibleTypes,
+  }),
   link: headerLink.concat(removeTypenameLink).concat(
     new HttpLink({
       uri: graphqlUrl,

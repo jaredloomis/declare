@@ -6,22 +6,29 @@ export function testStepDescription(step: any): string {
   }[step.stepType as string]!;
 }
 
+export const CORE_TEST_FIELDS = gql`
+  fragment CoreTestFields on Test {
+    id
+    name
+    steps {
+      ... on ClickStep {
+        stepType
+        elementId
+      }
+      ... on SendTextStep {
+        stepType
+        elementId
+        text
+      }
+    }
+  }
+`;
+
 export const TEST_QUERY = gql`
+  ${CORE_TEST_FIELDS}
   query GetTest($id: Int!) {
     test(id: $id) {
-      id
-      name
-      steps {
-        ... on ClickStep {
-          stepType
-          elementId
-        }
-        ... on SendTextStep {
-          stepType
-          elementId
-          text
-        }
-      }
+      ...CoreTestFields
       reports {
         id
         testId
@@ -33,7 +40,7 @@ export const TEST_QUERY = gql`
 
 export const CREATE_COLLECTION_MUTATION = gql`
   mutation CreateCollection($collection: CollectionCreateInput!) {
-    createElement(element: $element) {
+    createCollection(collection: $collection) {
       id
     }
   }

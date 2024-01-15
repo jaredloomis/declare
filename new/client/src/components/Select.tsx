@@ -16,7 +16,7 @@ export interface SelectProps
 }
 
 export const Select = forwardRef(function Select(
-  { onValueChange, onChange, control, creatable, value, defaultValue, ...props }: SelectProps,
+  { onValueChange, onChange, control, creatable, value, defaultValue, name, ...props }: SelectProps,
   ref: React.ForwardedRef<any>
 ) {
   const innerValue = props.options?.find((v: any) => v.value === value);
@@ -49,7 +49,7 @@ export const Select = forwardRef(function Select(
   if(control) {
     selectElement = <Controller
         control={control}
-        name='collection'
+        name={name!}
         render={({ field: { onChange, onBlur, value, ref } }) => (
           <SelectComponent {...innerProps} ref={ref} onChange={onChange} onBlur={onBlur} value={value} />
         )}

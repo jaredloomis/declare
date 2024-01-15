@@ -588,7 +588,7 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "CollectionInput",
+        "name": "CollectionCreateInput",
         "description": null,
         "fields": null,
         "inputFields": [
@@ -796,7 +796,7 @@
       },
       {
         "kind": "INPUT_OBJECT",
-        "name": "ElementInput",
+        "name": "ElementCreateInput",
         "description": null,
         "fields": null,
         "inputFields": [
@@ -1035,7 +1035,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "CollectionInput",
+                    "name": "CollectionCreateInput",
                     "ofType": null
                   }
                 },
@@ -1068,7 +1068,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "INPUT_OBJECT",
-                    "name": "ElementInput",
+                    "name": "ElementCreateInput",
                     "ofType": null
                   }
                 },

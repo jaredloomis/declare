@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 
 interface TextInputProps
   extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
@@ -6,12 +6,12 @@ interface TextInputProps
   onValueChange?: (value: string) => any;
 }
 
-export function TextInput({ label, onValueChange, ...props }: TextInputProps) {
+export const TextInput = forwardRef(function TextInput({ label, onValueChange, ...props }: TextInputProps, ref: React.ForwardedRef<any>) {
   const labelElement = label && <label>{label}</label>;
   return (
     <div>
       {labelElement}
-      <input type='text' onChange={ev => onValueChange && onValueChange(ev.target.value)} {...props} />
+      <input type='text' onChange={ev => onValueChange && onValueChange(ev.target.value)} ref={ref} {...props} />
     </div>
   );
-}
+});
