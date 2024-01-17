@@ -1,13 +1,23 @@
 {
   "test": {
-    "edit": {
-      "save-test": "Save Test",
-      "test-steps-heading": "Steps",
-      "add-step": "Add Step"
-    },
+    "save": "Save Test",
+    "steps-heading": "Steps",
+    "add-step": "Add Step",
+    "delete-step": "Delete Step",
+    "add-step-above": "Add Step Above",
     "stepType": {
       "click": "Click",
-      "sendText": "Assign"
+      "sendText": "Assign",
+      "assertExists": "Assert Exists",
+      "executeJavascript": "Execute Javascript",
+      "refresh": "Refresh",
+      "assertText": "Assert Text",
+      "setVariable": "Set Variable",
+      "importTest": "Import Test",
+      "goTo": "Go To URL"
     }
+  },
+  "element": {
+    "create": "Create Element"
   }
 }

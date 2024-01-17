@@ -9,7 +9,8 @@
       "ExecuteJavascriptStep",
       "GoToStep",
       "RefreshStep",
-      "SendTextStep"
+      "SendTextStep",
+      "SetVariableStep"
     ]
   }
 }

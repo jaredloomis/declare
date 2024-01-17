@@ -104,5 +104,6 @@ export const Account: DatabaseToAPIAdapter = {
     suite: 'suites',
     element: { name: 'elements', adapter: Element },
     ...caseAdaptions,
+    test: { name: 'tests', adapter: Test },
   },
 };

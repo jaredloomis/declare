@@ -10,7 +10,7 @@ scalar JSON
 #########
 
 type Query {
-  account(id: Int!): Account!
+  account: Account!
   user(id: Int!): User!
   test(id: Int!): Test!
 }
@@ -149,7 +149,7 @@ input ElementCreateInput {
 ##############
 
 union TestStep = ClickStep | SendTextStep | ExecuteJavascriptStep | GoToStep | RefreshStep
-  | AssertExistsStep | AssertTextStep | AssertJavascriptStep
+  | AssertExistsStep | AssertTextStep | AssertJavascriptStep | SetVariableStep | ImportTestStep
 
 input TestStepInput {
   stepType: String!

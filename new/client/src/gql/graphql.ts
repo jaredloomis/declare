@@ -177,10 +177,6 @@ export type Query = {
   user: User;
 };
 
-export type QueryAccountArgs = {
-  id: Scalars['Int']['input'];
-};
-
 export type QueryTestArgs = {
   id: Scalars['Int']['input'];
 };
@@ -296,7 +292,8 @@ export type TestStep =
   | ExecuteJavascriptStep
   | GoToStep
   | RefreshStep
-  | SendTextStep;
+  | SendTextStep
+  | SetVariableStep;
 
 export type TestStepInput = {
   code?: InputMaybe<Scalars['String']['input']>;
@@ -381,9 +378,7 @@ export type CreateElementMutation = {
   createElement: { __typename?: 'Element'; id: number; name: string };
 };
 
-export type ElementsQueryVariables = Exact<{
-  accountId: Scalars['Int']['input'];
-}>;
+export type ElementsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type ElementsQuery = {
   __typename?: 'Query';
@@ -391,15 +386,6 @@ export type ElementsQuery = {
     __typename?: 'Account';
     elements: Array<{ __typename?: 'Element'; id: number; name: string; selector: string; selectorType: string }>;
   };
-};
-
-export type CollectionsQueryVariables = Exact<{
-  accountId: Scalars['Int']['input'];
-}>;
-
-export type CollectionsQuery = {
-  __typename?: 'Query';
-  account: { __typename?: 'Account'; collections: Array<{ __typename?: 'Collection'; id: number; name: string }> };
 };
 
 export type UpdateTestMutationVariables = Exact<{
@@ -410,23 +396,6 @@ export type UpdateTestMutationVariables = Exact<{
 export type UpdateTestMutation = {
   __typename?: 'Mutation';
   updateTest: { __typename?: 'Test' } & { ' $fragmentRefs'?: { CoreTestFieldsFragment: CoreTestFieldsFragment } };
-};
-
-export type GetCollectionsQueryVariables = Exact<{
-  accountId: Scalars['Int']['input'];
-}>;
-
-export type GetCollectionsQuery = {
-  __typename?: 'Query';
-  account: {
-    __typename?: 'Account';
-    collections: Array<{
-      __typename?: 'Collection';
-      id: number;
-      name: string;
-      tests: Array<{ __typename?: 'Test'; id: number; name: string }>;
-    }>;
-  };
 };
 
 export type CreateTestMutationVariables = Exact<{
@@ -443,14 +412,23 @@ export type CoreTestFieldsFragment = {
   id: number;
   name: string;
   steps: Array<
-    | { __typename?: 'AssertExistsStep' }
+    | { __typename?: 'AssertExistsStep'; stepType: string; elementId: number; visible?: boolean | null }
     | { __typename?: 'AssertJavascriptStep' }
-    | { __typename?: 'AssertTextStep' }
+    | { __typename?: 'AssertTextStep'; stepType: string; elementId: number; text: string }
     | { __typename?: 'ClickStep'; stepType: string; elementId: number }
-    | { __typename?: 'ExecuteJavascriptStep' }
-    | { __typename?: 'GoToStep' }
-    | { __typename?: 'RefreshStep' }
+    | { __typename?: 'ExecuteJavascriptStep'; stepType: string; code: string }
+    | { __typename?: 'GoToStep'; stepType: string; url: string }
+    | { __typename?: 'RefreshStep'; stepType: string }
     | { __typename?: 'SendTextStep'; stepType: string; elementId: number; text: string }
+    | {
+        __typename?: 'SetVariableStep';
+        stepType: string;
+        name: string;
+        value:
+          | { __typename?: 'SetVariableElement'; elementId: number }
+          | { __typename?: 'SetVariableJavascript'; code: string }
+          | { __typename?: 'SetVariableString'; string: string };
+      }
   >;
 } & { ' $fragmentName'?: 'CoreTestFieldsFragment' };
 
@@ -462,8 +440,31 @@ export type GetTestQuery = {
   __typename?: 'Query';
   test: {
     __typename?: 'Test';
+    collectionId: number;
     reports: Array<{ __typename?: 'Report'; id: number; testId: number; startTime: any }>;
   } & { ' $fragmentRefs'?: { CoreTestFieldsFragment: CoreTestFieldsFragment } };
+};
+
+export type TestsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type TestsQuery = {
+  __typename?: 'Query';
+  account: { __typename?: 'Account'; tests: Array<{ __typename?: 'Test'; id: number; name: string }> };
+};
+
+export type CollectionsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type CollectionsQuery = {
+  __typename?: 'Query';
+  account: {
+    __typename?: 'Account';
+    collections: Array<{
+      __typename?: 'Collection';
+      id: number;
+      name: string;
+      tests: Array<{ __typename?: 'Test'; id: number; name: string }>;
+    }>;
+  };
 };
 
 export type CreateCollectionMutationVariables = Exact<{
@@ -495,6 +496,17 @@ export const CoreTestFieldsFragmentDoc = {
               selections: [
                 {
                   kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'GoToStep' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'stepType' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
                   typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ClickStep' } },
                   selectionSet: {
                     kind: 'SelectionSet',
@@ -513,6 +525,96 @@ export const CoreTestFieldsFragmentDoc = {
                       { kind: 'Field', name: { kind: 'Name', value: 'stepType' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'elementId' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'text' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'AssertExistsStep' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'stepType' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'elementId' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'visible' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ExecuteJavascriptStep' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'stepType' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'RefreshStep' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [{ kind: 'Field', name: { kind: 'Name', value: 'stepType' } }],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'AssertTextStep' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'stepType' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'elementId' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'text' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'SetVariableStep' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'stepType' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'value' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'InlineFragment',
+                              typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'SetVariableString' } },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [{ kind: 'Field', name: { kind: 'Name', value: 'string' } }],
+                              },
+                            },
+                            {
+                              kind: 'InlineFragment',
+                              typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'SetVariableElement' } },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [{ kind: 'Field', name: { kind: 'Name', value: 'elementId' } }],
+                              },
+                            },
+                            {
+                              kind: 'InlineFragment',
+                              typeCondition: {
+                                kind: 'NamedType',
+                                name: { kind: 'Name', value: 'SetVariableJavascript' },
+                              },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [{ kind: 'Field', name: { kind: 'Name', value: 'code' } }],
+                              },
+                            },
+                          ],
+                        },
+                      },
                     ],
                   },
                 },
@@ -715,26 +817,12 @@ export const ElementsDocument = {
       kind: 'OperationDefinition',
       operation: 'query',
       name: { kind: 'Name', value: 'Elements' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'accountId' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
-        },
-      ],
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'account' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'id' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'accountId' } },
-              },
-            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
@@ -759,55 +847,6 @@ export const ElementsDocument = {
     },
   ],
 } as unknown as DocumentNode<ElementsQuery, ElementsQueryVariables>;
-export const CollectionsDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'Collections' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'accountId' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'account' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'id' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'accountId' } },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'collections' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<CollectionsQuery, CollectionsQueryVariables>;
 export const UpdateTestDocument = {
   kind: 'Document',
   definitions: [
@@ -870,6 +909,17 @@ export const UpdateTestDocument = {
               selections: [
                 {
                   kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'GoToStep' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'stepType' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
                   typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ClickStep' } },
                   selectionSet: {
                     kind: 'SelectionSet',
@@ -891,60 +941,90 @@ export const UpdateTestDocument = {
                     ],
                   },
                 },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<UpdateTestMutation, UpdateTestMutationVariables>;
-export const GetCollectionsDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'GetCollections' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'accountId' } },
-          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'account' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'id' },
-                value: { kind: 'Variable', name: { kind: 'Name', value: 'accountId' } },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
                 {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'collections' },
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'AssertExistsStep' } },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'stepType' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'elementId' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'visible' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ExecuteJavascriptStep' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'stepType' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'RefreshStep' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [{ kind: 'Field', name: { kind: 'Name', value: 'stepType' } }],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'AssertTextStep' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'stepType' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'elementId' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'text' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'SetVariableStep' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'stepType' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'tests' },
+                        name: { kind: 'Name', value: 'value' },
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [
-                            { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                            { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                            {
+                              kind: 'InlineFragment',
+                              typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'SetVariableString' } },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [{ kind: 'Field', name: { kind: 'Name', value: 'string' } }],
+                              },
+                            },
+                            {
+                              kind: 'InlineFragment',
+                              typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'SetVariableElement' } },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [{ kind: 'Field', name: { kind: 'Name', value: 'elementId' } }],
+                              },
+                            },
+                            {
+                              kind: 'InlineFragment',
+                              typeCondition: {
+                                kind: 'NamedType',
+                                name: { kind: 'Name', value: 'SetVariableJavascript' },
+                              },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [{ kind: 'Field', name: { kind: 'Name', value: 'code' } }],
+                              },
+                            },
                           ],
                         },
                       },
@@ -958,7 +1038,7 @@ export const GetCollectionsDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<GetCollectionsQuery, GetCollectionsQueryVariables>;
+} as unknown as DocumentNode<UpdateTestMutation, UpdateTestMutationVariables>;
 export const CreateTestDocument = {
   kind: 'Document',
   definitions: [
@@ -1030,6 +1110,7 @@ export const GetTestDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'FragmentSpread', name: { kind: 'Name', value: 'CoreTestFields' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'collectionId' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'reports' },
@@ -1065,6 +1146,17 @@ export const GetTestDocument = {
               selections: [
                 {
                   kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'GoToStep' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'stepType' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
                   typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ClickStep' } },
                   selectionSet: {
                     kind: 'SelectionSet',
@@ -1086,6 +1178,96 @@ export const GetTestDocument = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'AssertExistsStep' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'stepType' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'elementId' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'visible' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ExecuteJavascriptStep' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'stepType' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'code' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'RefreshStep' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [{ kind: 'Field', name: { kind: 'Name', value: 'stepType' } }],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'AssertTextStep' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'stepType' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'elementId' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'text' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'SetVariableStep' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'stepType' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'value' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'InlineFragment',
+                              typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'SetVariableString' } },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [{ kind: 'Field', name: { kind: 'Name', value: 'string' } }],
+                              },
+                            },
+                            {
+                              kind: 'InlineFragment',
+                              typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'SetVariableElement' } },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [{ kind: 'Field', name: { kind: 'Name', value: 'elementId' } }],
+                              },
+                            },
+                            {
+                              kind: 'InlineFragment',
+                              typeCondition: {
+                                kind: 'NamedType',
+                                name: { kind: 'Name', value: 'SetVariableJavascript' },
+                              },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [{ kind: 'Field', name: { kind: 'Name', value: 'code' } }],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -1094,6 +1276,87 @@ export const GetTestDocument = {
     },
   ],
 } as unknown as DocumentNode<GetTestQuery, GetTestQueryVariables>;
+export const TestsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'Tests' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'account' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'tests' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<TestsQuery, TestsQueryVariables>;
+export const CollectionsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'Collections' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'account' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'collections' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'tests' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CollectionsQuery, CollectionsQueryVariables>;
 export const CreateCollectionDocument = {
   kind: 'Document',
   definitions: [

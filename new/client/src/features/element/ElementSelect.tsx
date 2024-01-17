@@ -1,14 +1,13 @@
 import { gql, useQuery } from '@apollo/client';
 import React from 'react';
 import { Select, SelectProps } from '../../components/Select';
-import { useAuthStore } from '../../authStore';
 import { Spinner } from '../../components/Spinner';
 import { Modal } from '../../components/Modal';
 import { ElementCreate } from './ElementCreate';
 
 const ELEMENTS_QUERY = gql`
-  query Elements($accountId: Int!) {
-    account(id: $accountId) {
+  query Elements {
+    account {
       elements {
         id
         name
@@ -19,13 +18,14 @@ const ELEMENTS_QUERY = gql`
   }
 `;
 
-export interface ElementSelectProps extends SelectProps {}
+export interface ElementSelectProps extends SelectProps {
+  collectionId?: number;
+}
 
-export function ElementSelect({ ...props }: ElementSelectProps) {
-  const auth = useAuthStore();
-  const elements = useQuery(ELEMENTS_QUERY, {
-    variables: { accountId: auth.user?.accountId },
-  });
+export function ElementSelect({ collectionId, ...props }: ElementSelectProps) {
+  const [selectedElement, setSelectedElement] = React.useState<number | undefined>(undefined);
+  const [searchText, setSearchText] = React.useState<string | undefined>('');
+  const elements = useQuery(ELEMENTS_QUERY);
   const [createInProgress, setCreateInProgress] = React.useState<boolean>(false);
 
   const options = elements.data?.account?.elements?.map((e: any) => ({
@@ -33,16 +33,41 @@ export function ElementSelect({ ...props }: ElementSelectProps) {
     label: e.name,
   }));
 
+  const defaultValues = {
+    name: searchText,
+    selector: searchText,
+    collectionId: collectionId,
+  };
+
+  const handleCreateBegin = (input: string) => {
+    setCreateInProgress(true);
+    setSearchText(input);
+  };
+
+  const handleCreateSuccess = (element: any) => {
+    setCreateInProgress(false);
+    setSearchText('');
+    setSelectedElement(element.id);
+    elements.refetch();
+  };
+
   if (!options) {
     return <Spinner />;
   }
 
   return (
     <div>
-      <Select creatable options={options} onCreateOption={() => setCreateInProgress(true)} {...props} />
+      <Select
+        creatable
+        options={options}
+        onCreateOption={handleCreateBegin}
+        value={selectedElement}
+        onValueChange={setSelectedElement}
+        {...props}
+      />
       {createInProgress && (
         <Modal onClose={() => setCreateInProgress(false)}>
-          <ElementCreate onSuccess={() => setCreateInProgress(false)}/>
+          <ElementCreate defaultValues={defaultValues} onSuccess={handleCreateSuccess} />
         </Modal>
       )}
     </div>

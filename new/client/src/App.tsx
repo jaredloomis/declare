@@ -4,15 +4,14 @@ import { Route, Routes, useNavigate, useLocation, useParams } from 'react-router
 import { Navigation } from './features/navigation/Navigation';
 import { NotFound } from './components/NotFound';
 import { Sidebar } from './features/navigation/Sidebar';
-import { TestList } from './features/test-creation/TestList';
-import { LogIn } from './features/auth/LogIn';
 import { useAuthStore } from './authStore';
 import { getUser } from './features/auth/api';
 import { parseJwt } from './features/auth/jwt_util';
-import { TestView } from './features/test-creation/TestView';
-import { TestEdit } from './features/test-creation/TestEdit';
-import { SignUp } from './features/auth/SignUp';
 import { Spinner } from './components/Spinner';
+
+const LazyLogIn = React.lazy(() => import('./features/auth/LogIn'));
+const LazySignUp = React.lazy(() => import('./features/auth/SignUp'));
+const LazyTestList = React.lazy(() => import('./features/test-creation/TestList'));
 
 export function App() {
   return (
@@ -27,9 +26,9 @@ export function App() {
               <div className='container mx-auto p-10'>
                 <Routes>
                   <Route index Component={NotFound} />
-                  <Route path='/login' Component={LogIn} />
-                  <Route path='/signup' Component={SignUp} />
-                  <Route path='/tests' Component={TestList} />
+                  <Route path='/login' Component={LazyLogIn} />
+                  <Route path='/signup' Component={LazySignUp} />
+                  <Route path='/tests' Component={LazyTestList} />
                   <Route path='/suites' Component={NotFound} />
                   <Route path='/test/:id/edit' Component={TestEditContainer} />
                   <Route path='/test/:id' Component={TestViewContainer} />
@@ -44,14 +43,18 @@ export function App() {
   );
 }
 
+const _LazyTestView = import('./features/test-creation/TestView');
+const LazyTestView = React.lazy(() => _LazyTestView);
 function TestViewContainer() {
   const { id } = useParams();
-  return <TestView testId={parseInt(id!)} />;
+  return <LazyTestView testId={parseInt(id!)} />;
 }
 
+const _LazyTestEdit = import('./features/test-creation/TestEdit');
+const LazyTestEdit = React.lazy(() => _LazyTestEdit);
 function TestEditContainer() {
   const { id } = useParams();
-  return <TestEdit testId={parseInt(id!)} />;
+  return <LazyTestEdit testId={parseInt(id!)} />;
 }
 
 function Auth(props: any) {

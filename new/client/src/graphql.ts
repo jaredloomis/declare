@@ -12,7 +12,7 @@ const headerLink = setContext((request, previousContext) => ({
 
 const removeTypenameLink = removeTypenameFromVariables();
 
-import introspectionResult from './gql/fragments.json'
+import introspectionResult from './gql/fragments.json';
 
 export const client = new ApolloClient({
   uri: graphqlUrl,

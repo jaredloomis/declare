@@ -8,15 +8,16 @@ datasource db {
 }
 
 model account {
-  id         Int          @id @default(autoincrement())
-  name       String
-  created_at DateTime     @default(now()) @db.Timestamp(6)
-  updated_at DateTime     @default(now()) @db.Timestamp(6)
-  collection collection[]
-  element    element[]
-  suite      suite[]
-  test       test[]
-  user_info  user_info[]
+  id          Int           @id @default(autoincrement())
+  name        String
+  created_at  DateTime      @default(now()) @db.Timestamp(6)
+  updated_at  DateTime      @default(now()) @db.Timestamp(6)
+  collection  collection[]
+  element     element[]
+  suite       suite[]
+  test        test[]
+  user_info   user_info[]
+  environment environment[]
 }
 
 model collection {
@@ -129,12 +130,14 @@ model element {
 
 model environment {
   id         Int        @id @default(autoincrement())
+  account_id Int
   name       String
   created_at DateTime   @default(now()) @db.Timestamp(6)
   created_by Int
   updated_at DateTime   @default(now()) @db.Timestamp(6)
   updated_by Int
   variables  Json
+  account    account    @relation(fields: [account_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   test_run   test_run[]
 }
 

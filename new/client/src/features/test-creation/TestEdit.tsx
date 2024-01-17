@@ -1,84 +1,196 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
-import React, { ReactNode, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Select } from '../../components/Select';
 import { Spinner } from '../../components/Spinner';
 import { Heading } from '../../components/Heading';
 import { TEST_QUERY } from './api';
 import { Button } from '../../components/Button';
-import { ClickStep, TestStep } from '../../gql/graphql';
+import { Test, TestStep } from '../../gql/graphql';
 import { ElementSelect } from '../element/ElementSelect';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { CORE_TEST_FIELDS } from './api';
+import { TextInput } from '../../components/TextInput';
+import { Checkbox } from '../../components/Checkbox';
+import { TestSelect } from './TestSelect';
 
-const objectMap = (obj: any, fn: any) => Object.fromEntries(Object.entries(obj).map(([k, v], i) => [k, fn(v, k, i)]));
+const TestEditContext = React.createContext<{ test: Test | undefined }>({ test: undefined });
+
+const STEP_FIELDS: Record<string, Record<string, string | [string, string]>> = {
+  goTo: {
+    url: ['text', 'URL'],
+  },
+  click: {
+    elementId: 'element',
+  },
+  sendText: {
+    elementId: 'element',
+    text: ['text', 'Text'],
+  },
+  executeJavascript: {
+    code: ['text', 'JavaScript code'],
+  },
+  refresh: {},
+  assertExists: {
+    elementId: 'element',
+    visible: ['boolean', 'Visible'],
+  },
+  assertText: {
+    elementId: 'element',
+    text: ['text', 'Text'],
+  },
+  setVariable: {
+    name: ['text', 'Name'],
+    value: ['variable', 'Value'],
+  },
+  importTest: {
+    testId: ['test', 'Test'],
+  },
+};
 
 interface KeyedTestStep extends Omit<TestStep, 'stepType'> {
   key: number;
   stepType: string | undefined;
 }
 
-interface TestEditStepProps {
-  step: KeyedTestStep;
+interface StepParamsProps {
   i: number;
-  onChange?: (step: KeyedTestStep) => void;
-}
-
-const STEP_ARGUMENTS: Record<string, (props: any) => ReactNode> = {
-  click: ClickStepEdit,
-};
-
-function TestEditStep({ i, onChange, ...props }: TestEditStepProps) {
-  const { t } = useTranslation();
-  const [step, setStep] = React.useState<KeyedTestStep>(props.step);
-  const options = Object.values(
-    objectMap(STEP_ARGUMENTS, (v: any, k: any) => ({
-      value: k,
-      label: t(`test.stepType.${k}`),
-    }))
-  );
-
-  useEffect(() => {
-    if (step && onChange) {
-      onChange(step);
-    }
-  }, [step]);
-
-  const argsElement =
-    step.stepType &&
-    {
-      click: <ClickStepEdit step={step} onChange={newStep => setStep({ ...step, ...newStep })} />,
-    }[step.stepType];
-
-  const handleTypeChange = (newStepType: string | null) => setStep({ ...step, stepType: newStepType || undefined });
-
-  return (
-    <div key={step.key}>
-      <span>#{i + 1}</span>
-      <Select options={options} defaultValue={step.stepType} onValueChange={handleTypeChange} />
-      {argsElement}
-    </div>
-  );
-}
-
-interface StepComponentProps {
   step: KeyedTestStep;
   onChange: (step: KeyedTestStep) => void;
+  onDelete: () => void;
+  onAddAbove: () => void;
+  fields?: Record<string, string | [string, string]>;
 }
 
-interface ClickStepEditProps extends StepComponentProps {
-  step: KeyedTestStep;
-}
+const FieldEdit = React.forwardRef(function FieldEdit({ type, name, ...props }: any, ref: React.ForwardedRef<any>) {
+  const { t } = useTranslation();
 
-function ClickStepEdit({ step, onChange }: ClickStepEditProps) {
-  const clickStep = step as unknown as ClickStep;
-  const handleChange = (elementId: number) => onChange({ ...step, elementId } as unknown as KeyedTestStep);
+  if (type === 'text') {
+    return (
+      <TextInput
+        name={name}
+        label={props.label}
+        onValueChange={props.onChange}
+        onBlur={props.onBlur}
+        ref={ref}
+        defaultValue={props.defaultValue}
+        key={props.key}
+      />
+    );
+  } else if (type === 'element') {
+    return (
+      <ElementSelect
+        name={name}
+        label={props.label}
+        collectionId={props.collectionId}
+        defaultValue={props.defaultValue}
+        onValueChange={props.onChange}
+        key={props.key}
+      />
+    );
+  } else if (type === 'boolean') {
+    return (
+      <Checkbox
+        name={name}
+        label={props.label}
+        onValueChange={props.onChange}
+        onBlur={props.onBlur}
+        defaultValue={props.defaultValue}
+        key={props.key}
+      />
+    );
+  } else if (type === 'variable') {
+    const defaultType = props.defaultValue?.code ? 'code' : props.defaultValue?.elementId ? 'elementId' : 'string';
+    const typeOptions = { string: 'Text', code: 'Return from JavaScript', elementId: 'Extract from Element' };
+    const [variableType, setVariableType] = useState(defaultType);
+    const handleChange = (name: string) => (newValue: string | number) => {
+      props.onChange({ string: undefined, code: undefined, elementId: undefined, [name]: newValue });
+    };
+    const valueInput = {
+      string: (
+        <TextInput label='Text' defaultValue={props.defaultValue?.string} onValueChange={handleChange(variableType)} />
+      ),
+      code: (
+        <TextInput
+          label='JavaScript code'
+          defaultValue={props.defaultValue?.code}
+          onValueChange={handleChange(variableType)}
+        />
+      ),
+      elementId: (
+        <ElementSelect
+          label='Element'
+          defaultValue={props.defaultValue?.elementId}
+          collectionId={props.collectionId}
+          onValueChange={handleChange(variableType)}
+        />
+      ),
+    }[variableType];
 
-  return (
-    <>
-      <ElementSelect defaultValue={clickStep.elementId} onValueChange={handleChange} />
-    </>
-  );
+    return (
+      <div key={props.key}>
+        <Select
+          label={'Variable Type'}
+          defaultValue={defaultType}
+          onValueChange={setVariableType}
+          options={Object.entries(typeOptions).map(([value, label]) => ({ value, label }))}
+        />
+        {valueInput}
+      </div>
+    );
+  } else if (type === 'test') {
+    return (
+      <TestSelect
+        name={name}
+        label={props.label}
+        collectionId={props.collectionId}
+        defaultValue={props.defaultValue}
+        onValueChange={props.onChange}
+        key={props.key}
+      />
+    );
+  } else {
+    return <span key={name}>Unknown field type!</span>;
+  }
+});
+
+function TestEditStep({ i, fields, onChange, onDelete, onAddAbove, step }: StepParamsProps) {
+  const { t } = useTranslation();
+  const stepTypeOptions = Object.keys(STEP_FIELDS).map(k => ({
+    value: k,
+    label: t(`test.stepType.${k}`),
+  }));
+  const { test } = useContext(TestEditContext);
+
+  const handleStepChange = (name: string) => (newValue: any) => onChange({ ...step, [name]: newValue });
+
+  const handleTypeChange = (newStepType: string | null) => onChange({ ...step, stepType: newStepType || undefined });
+
+  const fieldElements =
+    fields &&
+    Object.entries(fields).map(([name, spec]) => {
+      const [type, label] = Array.isArray(spec) ? spec : [spec, undefined];
+      const props = {
+        step,
+        type,
+        label,
+        collectionId: test?.collectionId,
+        defaultValue: (step as any)[name],
+        key: name,
+        onChange: handleStepChange(name),
+      };
+      return <FieldEdit {...props} />;
+    });
+
+  return (<div>
+    <Button onClick={onAddAbove}>{t('test.add-step-above')}</Button>
+    <Button onClick={onDelete}>{t('test.delete-step')}</Button>
+    <form>
+      <span>#{i + 1}</span>
+      <Select options={stepTypeOptions} defaultValue={step.stepType} onValueChange={handleTypeChange} />
+      {fieldElements}
+    </form>
+  </div>);
 }
 
 const UPDATE_TEST_MUTATION = gql`
@@ -94,7 +206,7 @@ export interface TestEditProps {
   testId: number;
 }
 
-export function TestEdit({ testId }: TestEditProps) {
+export default function TestEdit({ testId }: TestEditProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -103,27 +215,9 @@ export function TestEdit({ testId }: TestEditProps) {
   const testRes = useQuery(TEST_QUERY, {
     variables: { id: testId },
   });
-  const [updateTestMutation, updateTestRes] = useMutation(UPDATE_TEST_MUTATION, {
+  const [updateTestMutation] = useMutation(UPDATE_TEST_MUTATION, {
     variables: { id: testId, name, steps },
   });
-
-  // Initialize state from query result
-  useEffect(() => {
-    if (testRes.data?.test) {
-      setName(testRes.data.test.name);
-      // Add key to each step to allow React to track them
-      setSteps(
-        testRes.data.test.steps.map((step: any) => ({
-          ...step,
-          key: Math.random(),
-        }))
-      );
-    }
-  }, [testRes.data]);
-
-  if (testRes.loading) {
-    return <Spinner />;
-  }
 
   const handleChange = (key: number) => (step: KeyedTestStep) => {
     const index = steps.findIndex(s => s.key === key);
@@ -144,19 +238,45 @@ export function TestEdit({ testId }: TestEditProps) {
     navigate(`/test/${testId}`);
   };
 
+  // Initialize state from query result
+  useEffect(() => {
+    if (testRes.data?.test) {
+      setName(testRes.data.test.name);
+      // Add key to each step to allow React to track them
+      const steps = testRes.data.test.steps.map((step: any) => ({ ...step, key: Math.random() }));
+      setSteps(steps);
+    }
+  }, [testRes.data]);
+
+  if (testRes.loading) {
+    return <Spinner />;
+  }
+
   return (
-    <>
+    <TestEditContext.Provider value={{ test: testRes?.data?.test }}>
       <div>
         <Heading size='xlarge'>{name}</Heading>
-        <Button onClick={handleSave}>{t('test.edit.save-test')}</Button>
+        <Button onClick={handleSave}>{t('test.save')}</Button>
       </div>
-      <Heading size='large'>{t('test.edit.test-steps-heading')}</Heading>
-      {steps.map((step: any, i) => (
-        <TestEditStep step={step} i={i} key={step.key} onChange={handleChange(step.key)} />
+      <Heading size='large'>{t('test.steps-heading')}</Heading>
+      {steps.map((step, i) => (
+        <TestEditStep
+          key={step.key}
+          i={i}
+          step={step}
+          fields={STEP_FIELDS[step.stepType || '']}
+          onChange={handleChange(step.key)}
+          onDelete={() => setSteps(steps.filter(s => s.key !== step.key))}
+          onAddAbove={() => {
+            const newSteps = [...steps];
+            newSteps.splice(i, 0, { stepType: undefined, key: Math.random() });
+            setSteps(newSteps);
+          }}
+        />
       ))}
       <Button onClick={() => setSteps([...steps, { stepType: undefined, key: Math.random() }])}>
-        {t('test.edit.add-step')}
+        {t('test.add-step')}
       </Button>
-    </>
+    </TestEditContext.Provider>
   );
 }

@@ -1,33 +1,37 @@
 import React from 'react';
-import { Sidebar as FbSidebar } from 'flowbite-react';
 import { HiChartPie, HiDocumentText, HiCog, HiPlay } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 
 export function Sidebar() {
   return (
     <div className='border-r border-r-gray-200'>
-      <FbSidebar aria-label='Navigation Sidebar'>
-        <FbSidebar.Items>
-          <FbSidebar.ItemGroup>
+      <nav aria-label='Navigation Sidebar'>
+        <ul>
+          <li>
             <Link to='/'>
-              <FbSidebar.Item icon={HiChartPie}>Dashboard</FbSidebar.Item>
+              <HiChartPie /> Dashboard
             </Link>
+          </li>
+
+          <li>
             <Link to='/tests'>
-              <FbSidebar.Item icon={HiCog} label='Pro' labelColor='dark'>
-                Tests
-              </FbSidebar.Item>
+              <HiCog /> Tests
             </Link>
+          </li>
+
+          <li>
             <Link to='/suites'>
-              <FbSidebar.Item icon={HiPlay} label='3'>
-                Suites
-              </FbSidebar.Item>
+              <HiPlay /> Suites
             </Link>
+          </li>
+
+          <li>
             <Link to='/reports'>
-              <FbSidebar.Item icon={HiDocumentText}>Reports</FbSidebar.Item>
+              <HiDocumentText /> Reports
             </Link>
-          </FbSidebar.ItemGroup>
-        </FbSidebar.Items>
-      </FbSidebar>
+          </li>
+        </ul>
+      </nav>
     </div>
   );
 }

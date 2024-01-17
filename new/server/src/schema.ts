@@ -11,15 +11,13 @@ import { PubSub } from 'graphql-subscriptions';
 
 import { PubSubTestExecutionDelegator } from './execution/delegator';
 import { checkPassword, hashPassword } from './auth';
-import { User } from './generated/graphql';
+import { SetVariableStepValue, User } from './generated/graphql';
 import {
   Account as AccountAdapter,
-  invConvertObj,
   DatabaseToAPIAdapter,
   convertObj,
   Test as TestAdapter,
   User as UserAdapter,
-  Report as ReportAdapter,
   Element as ElementAdapter,
 } from 'server-common/src/adapter';
 import { prismaSelect } from './select';
@@ -56,13 +54,13 @@ function createResolver(adapter: DatabaseToAPIAdapter, queryFn: QueryResolverFn)
 const resolvers = {
   Query: {
     account: createResolver(AccountAdapter, async ({ args, info, select, ctx }) => {
-      if (!ctx.user || ctx.user.accountId !== args.id) {
+      if (!ctx.user) {
         throw new Error('Not authorized');
       }
 
       const ret = await prisma.account.findUnique({
         where: {
-          id: args.id,
+          id: ctx.user.accountId,
         },
         select,
       });
@@ -85,8 +83,6 @@ const resolvers = {
       if (!ctx.user) {
         throw new Error('Not authorized');
       }
-
-      console.log(info.fragments)
 
       const ret = await prisma.test.findUnique({
         where: {
@@ -331,6 +327,23 @@ const resolvers = {
   TestStep: {
     __resolveType: ({ stepType }: any) => {
       return stepType.charAt(0).toUpperCase() + stepType.slice(1) + 'Step';
+    },
+  },
+  SetVariableStepValue: {
+    __resolveType: (step: SetVariableStepValue) => {
+      const val = step as any;
+      const isString = !!val.string;
+      const isElement = !!val.elementId;
+      const isCode = !!val.code;
+      if (isString && !isElement && !isCode) {
+        return 'SetVariableString';
+      } else if (isElement && !isString && !isCode) {
+        return 'SetVariableElement';
+      } else if (isCode && !isString && !isElement) {
+        return 'SetVariableJavascript';
+      } else {
+        throw new Error('Invalid SetVariableStep: ' + JSON.stringify(step));
+      }
     },
   },
 };

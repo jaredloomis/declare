@@ -1,7 +1,6 @@
 {
   "name": "declare-executor",
   "version": "1.0.0",
-  "main": "dist/index.js",
   "author": "Jared Loomis <jaredloomis@protonmail.com>",
   "license": "All Rights Reserved",
   "private": true,

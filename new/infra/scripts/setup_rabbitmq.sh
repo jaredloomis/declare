@@ -19,6 +19,8 @@ rabbitmqctl start_app
 # Delete guest user
 rabbitmqctl delete_user guest
 
+# Enable rabbitmq_management plugin
+rabbitmq-plugins enable rabbitmq_management
 # Download rabbitmqadmin
 wget http://127.0.0.1:15672/cli/rabbitmqadmin
 chmod +x rabbitmqadmin

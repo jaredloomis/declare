@@ -10,13 +10,13 @@ export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string; }
-  String: { input: string; output: string; }
-  Boolean: { input: boolean; output: boolean; }
-  Int: { input: number; output: number; }
-  Float: { input: number; output: number; }
-  DateTime: { input: any; output: any; }
-  JSON: { input: any; output: any; }
+  ID: { input: string; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
+  DateTime: { input: any; output: any };
+  JSON: { input: any; output: any };
 };
 
 export type Account = {
@@ -135,44 +135,36 @@ export type Mutation = {
   updateTest: Test;
 };
 
-
 export type MutationCreateCollectionArgs = {
   collection: CollectionCreateInput;
 };
-
 
 export type MutationCreateElementArgs = {
   element: ElementCreateInput;
 };
 
-
 export type MutationCreateTestArgs = {
   test: TestCreateInput;
 };
-
 
 export type MutationCreateUserArgs = {
   user: UserInput;
 };
 
-
 export type MutationExecuteTestArgs = {
   testId: Scalars['Int']['input'];
 };
-
 
 export type MutationLoginArgs = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
 };
 
-
 export type MutationSignupArgs = {
   accountName: Scalars['String']['input'];
   adminEmail: Scalars['String']['input'];
   adminPassword: Scalars['String']['input'];
 };
-
 
 export type MutationUpdateTestArgs = {
   id: Scalars['Int']['input'];
@@ -186,16 +178,9 @@ export type Query = {
   user: User;
 };
 
-
-export type QueryAccountArgs = {
-  id: Scalars['Int']['input'];
-};
-
-
 export type QueryTestArgs = {
   id: Scalars['Int']['input'];
 };
-
 
 export type QueryUserArgs = {
   id: Scalars['Int']['input'];
@@ -260,7 +245,6 @@ export type Subscription = {
   report: Report;
 };
 
-
 export type SubscriptionExecuteTestArgs = {
   testId: Scalars['Int']['input'];
 };
@@ -301,7 +285,15 @@ export type TestCreateInput = {
   steps: Array<TestStepInput>;
 };
 
-export type TestStep = AssertExistsStep | AssertJavascriptStep | AssertTextStep | ClickStep | ExecuteJavascriptStep | GoToStep | RefreshStep | SendTextStep;
+export type TestStep =
+  | AssertExistsStep
+  | AssertJavascriptStep
+  | AssertTextStep
+  | ClickStep
+  | ExecuteJavascriptStep
+  | GoToStep
+  | RefreshStep
+  | SendTextStep;
 
 export type TestStepInput = {
   code?: InputMaybe<Scalars['String']['input']>;
@@ -330,7 +322,7 @@ export enum TestStepStatus {
   Error = 'ERROR',
   Fail = 'FAIL',
   None = 'NONE',
-  Pass = 'PASS'
+  Pass = 'PASS',
 }
 
 export type TestUpdateInput = {
@@ -353,15 +345,14 @@ export type UserInput = {
   password: Scalars['String']['input'];
 };
 
-
-
 export type ResolverTypeWrapper<T> = Promise<T> | T;
-
 
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
+export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
+  | ResolverFn<TResult, TParent, TContext, TArgs>
+  | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
@@ -408,7 +399,11 @@ export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
   info: GraphQLResolveInfo
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<T = {}, TContext = {}> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
+export type IsTypeOfResolverFn<T = {}, TContext = {}> = (
+  obj: T,
+  context: TContext,
+  info: GraphQLResolveInfo
+) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
@@ -422,10 +417,17 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping of union types */
 export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
-  SetVariableStepValue: ( SetVariableElement ) | ( SetVariableJavascript ) | ( SetVariableString );
-  TestStep: ( AssertExistsStep ) | ( AssertJavascriptStep ) | ( AssertTextStep ) | ( ClickStep ) | ( ExecuteJavascriptStep ) | ( GoToStep ) | ( RefreshStep ) | ( SendTextStep );
+  SetVariableStepValue: SetVariableElement | SetVariableJavascript | SetVariableString;
+  TestStep:
+    | AssertExistsStep
+    | AssertJavascriptStep
+    | AssertTextStep
+    | ClickStep
+    | ExecuteJavascriptStep
+    | GoToStep
+    | RefreshStep
+    | SendTextStep;
 };
-
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
@@ -452,7 +454,9 @@ export type ResolversTypes = {
   SendTextStep: ResolverTypeWrapper<SendTextStep>;
   SetVariableElement: ResolverTypeWrapper<SetVariableElement>;
   SetVariableJavascript: ResolverTypeWrapper<SetVariableJavascript>;
-  SetVariableStep: ResolverTypeWrapper<Omit<SetVariableStep, 'value'> & { value: ResolversTypes['SetVariableStepValue'] }>;
+  SetVariableStep: ResolverTypeWrapper<
+    Omit<SetVariableStep, 'value'> & { value: ResolversTypes['SetVariableStepValue'] }
+  >;
   SetVariableStepValue: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['SetVariableStepValue']>;
   SetVariableStepValueInput: SetVariableStepValueInput;
   SetVariableString: ResolverTypeWrapper<SetVariableString>;
@@ -514,7 +518,10 @@ export type ResolversParentTypes = {
   UserInput: UserInput;
 };
 
-export type AccountResolvers<ContextType = any, ParentType extends ResolversParentTypes['Account'] = ResolversParentTypes['Account']> = {
+export type AccountResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Account'] = ResolversParentTypes['Account'],
+> = {
   collections?: Resolver<Array<ResolversTypes['Collection']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   elements?: Resolver<Array<ResolversTypes['Element']>, ParentType, ContextType>;
@@ -527,20 +534,29 @@ export type AccountResolvers<ContextType = any, ParentType extends ResolversPare
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AssertExistsStepResolvers<ContextType = any, ParentType extends ResolversParentTypes['AssertExistsStep'] = ResolversParentTypes['AssertExistsStep']> = {
+export type AssertExistsStepResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['AssertExistsStep'] = ResolversParentTypes['AssertExistsStep'],
+> = {
   elementId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   stepType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   visible?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AssertJavascriptStepResolvers<ContextType = any, ParentType extends ResolversParentTypes['AssertJavascriptStep'] = ResolversParentTypes['AssertJavascriptStep']> = {
+export type AssertJavascriptStepResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['AssertJavascriptStep'] = ResolversParentTypes['AssertJavascriptStep'],
+> = {
   code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   stepType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AssertTextStepResolvers<ContextType = any, ParentType extends ResolversParentTypes['AssertTextStep'] = ResolversParentTypes['AssertTextStep']> = {
+export type AssertTextStepResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['AssertTextStep'] = ResolversParentTypes['AssertTextStep'],
+> = {
   elementId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   exactMatch?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   invert?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
@@ -549,13 +565,19 @@ export type AssertTextStepResolvers<ContextType = any, ParentType extends Resolv
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ClickStepResolvers<ContextType = any, ParentType extends ResolversParentTypes['ClickStep'] = ResolversParentTypes['ClickStep']> = {
+export type ClickStepResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['ClickStep'] = ResolversParentTypes['ClickStep'],
+> = {
   elementId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   stepType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type CollectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Collection'] = ResolversParentTypes['Collection']> = {
+export type CollectionResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Collection'] = ResolversParentTypes['Collection'],
+> = {
   accountId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   createdBy?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -571,7 +593,10 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
   name: 'DateTime';
 }
 
-export type ElementResolvers<ContextType = any, ParentType extends ResolversParentTypes['Element'] = ResolversParentTypes['Element']> = {
+export type ElementResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Element'] = ResolversParentTypes['Element'],
+> = {
   accountId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   collectionId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
@@ -585,19 +610,28 @@ export type ElementResolvers<ContextType = any, ParentType extends ResolversPare
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ExecuteJavascriptStepResolvers<ContextType = any, ParentType extends ResolversParentTypes['ExecuteJavascriptStep'] = ResolversParentTypes['ExecuteJavascriptStep']> = {
+export type ExecuteJavascriptStepResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['ExecuteJavascriptStep'] = ResolversParentTypes['ExecuteJavascriptStep'],
+> = {
   code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   stepType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type GoToStepResolvers<ContextType = any, ParentType extends ResolversParentTypes['GoToStep'] = ResolversParentTypes['GoToStep']> = {
+export type GoToStepResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['GoToStep'] = ResolversParentTypes['GoToStep'],
+> = {
   stepType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ImportTestStepResolvers<ContextType = any, ParentType extends ResolversParentTypes['ImportTestStep'] = ResolversParentTypes['ImportTestStep']> = {
+export type ImportTestStepResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['ImportTestStep'] = ResolversParentTypes['ImportTestStep'],
+> = {
   stepType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   testId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -607,29 +641,71 @@ export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
   name: 'JSON';
 }
 
-export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  createCollection?: Resolver<ResolversTypes['Collection'], ParentType, ContextType, RequireFields<MutationCreateCollectionArgs, 'collection'>>;
-  createElement?: Resolver<ResolversTypes['Element'], ParentType, ContextType, RequireFields<MutationCreateElementArgs, 'element'>>;
+export type MutationResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
+> = {
+  createCollection?: Resolver<
+    ResolversTypes['Collection'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationCreateCollectionArgs, 'collection'>
+  >;
+  createElement?: Resolver<
+    ResolversTypes['Element'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationCreateElementArgs, 'element'>
+  >;
   createTest?: Resolver<ResolversTypes['Test'], ParentType, ContextType, RequireFields<MutationCreateTestArgs, 'test'>>;
   createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'user'>>;
-  executeTest?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationExecuteTestArgs, 'testId'>>;
-  login?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
-  signup?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<MutationSignupArgs, 'accountName' | 'adminEmail' | 'adminPassword'>>;
-  updateTest?: Resolver<ResolversTypes['Test'], ParentType, ContextType, RequireFields<MutationUpdateTestArgs, 'id' | 'test'>>;
+  executeTest?: Resolver<
+    ResolversTypes['Boolean'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationExecuteTestArgs, 'testId'>
+  >;
+  login?: Resolver<
+    ResolversTypes['String'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationLoginArgs, 'email' | 'password'>
+  >;
+  signup?: Resolver<
+    ResolversTypes['Account'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationSignupArgs, 'accountName' | 'adminEmail' | 'adminPassword'>
+  >;
+  updateTest?: Resolver<
+    ResolversTypes['Test'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdateTestArgs, 'id' | 'test'>
+  >;
 };
 
-export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  account?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<QueryAccountArgs, 'id'>>;
+export type QueryResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
+> = {
+  account?: Resolver<ResolversTypes['Account'], ParentType, ContextType>;
   test?: Resolver<ResolversTypes['Test'], ParentType, ContextType, RequireFields<QueryTestArgs, 'id'>>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
 };
 
-export type RefreshStepResolvers<ContextType = any, ParentType extends ResolversParentTypes['RefreshStep'] = ResolversParentTypes['RefreshStep']> = {
+export type RefreshStepResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['RefreshStep'] = ResolversParentTypes['RefreshStep'],
+> = {
   stepType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ReportResolvers<ContextType = any, ParentType extends ResolversParentTypes['Report'] = ResolversParentTypes['Report']> = {
+export type ReportResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Report'] = ResolversParentTypes['Report'],
+> = {
   endTime?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   startTime?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
@@ -639,45 +715,79 @@ export type ReportResolvers<ContextType = any, ParentType extends ResolversParen
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type SendTextStepResolvers<ContextType = any, ParentType extends ResolversParentTypes['SendTextStep'] = ResolversParentTypes['SendTextStep']> = {
+export type SendTextStepResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['SendTextStep'] = ResolversParentTypes['SendTextStep'],
+> = {
   elementId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   stepType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type SetVariableElementResolvers<ContextType = any, ParentType extends ResolversParentTypes['SetVariableElement'] = ResolversParentTypes['SetVariableElement']> = {
+export type SetVariableElementResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['SetVariableElement'] = ResolversParentTypes['SetVariableElement'],
+> = {
   elementId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type SetVariableJavascriptResolvers<ContextType = any, ParentType extends ResolversParentTypes['SetVariableJavascript'] = ResolversParentTypes['SetVariableJavascript']> = {
+export type SetVariableJavascriptResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['SetVariableJavascript'] = ResolversParentTypes['SetVariableJavascript'],
+> = {
   code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type SetVariableStepResolvers<ContextType = any, ParentType extends ResolversParentTypes['SetVariableStep'] = ResolversParentTypes['SetVariableStep']> = {
+export type SetVariableStepResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['SetVariableStep'] = ResolversParentTypes['SetVariableStep'],
+> = {
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   stepType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   value?: Resolver<ResolversTypes['SetVariableStepValue'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type SetVariableStepValueResolvers<ContextType = any, ParentType extends ResolversParentTypes['SetVariableStepValue'] = ResolversParentTypes['SetVariableStepValue']> = {
-  __resolveType: TypeResolveFn<'SetVariableElement' | 'SetVariableJavascript' | 'SetVariableString', ParentType, ContextType>;
+export type SetVariableStepValueResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['SetVariableStepValue'] = ResolversParentTypes['SetVariableStepValue'],
+> = {
+  __resolveType: TypeResolveFn<
+    'SetVariableElement' | 'SetVariableJavascript' | 'SetVariableString',
+    ParentType,
+    ContextType
+  >;
 };
 
-export type SetVariableStringResolvers<ContextType = any, ParentType extends ResolversParentTypes['SetVariableString'] = ResolversParentTypes['SetVariableString']> = {
+export type SetVariableStringResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['SetVariableString'] = ResolversParentTypes['SetVariableString'],
+> = {
   string?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = {
-  executeTest?: SubscriptionResolver<Maybe<ResolversTypes['Report']>, "executeTest", ParentType, ContextType, RequireFields<SubscriptionExecuteTestArgs, 'testId'>>;
-  report?: SubscriptionResolver<ResolversTypes['Report'], "report", ParentType, ContextType>;
+export type SubscriptionResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription'],
+> = {
+  executeTest?: SubscriptionResolver<
+    Maybe<ResolversTypes['Report']>,
+    'executeTest',
+    ParentType,
+    ContextType,
+    RequireFields<SubscriptionExecuteTestArgs, 'testId'>
+  >;
+  report?: SubscriptionResolver<ResolversTypes['Report'], 'report', ParentType, ContextType>;
 };
 
-export type SuiteResolvers<ContextType = any, ParentType extends ResolversParentTypes['Suite'] = ResolversParentTypes['Suite']> = {
+export type SuiteResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Suite'] = ResolversParentTypes['Suite'],
+> = {
   accountId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   createdBy?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -689,7 +799,10 @@ export type SuiteResolvers<ContextType = any, ParentType extends ResolversParent
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TestResolvers<ContextType = any, ParentType extends ResolversParentTypes['Test'] = ResolversParentTypes['Test']> = {
+export type TestResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Test'] = ResolversParentTypes['Test'],
+> = {
   accountId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   collectionId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
@@ -703,11 +816,28 @@ export type TestResolvers<ContextType = any, ParentType extends ResolversParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TestStepResolvers<ContextType = any, ParentType extends ResolversParentTypes['TestStep'] = ResolversParentTypes['TestStep']> = {
-  __resolveType: TypeResolveFn<'AssertExistsStep' | 'AssertJavascriptStep' | 'AssertTextStep' | 'ClickStep' | 'ExecuteJavascriptStep' | 'GoToStep' | 'RefreshStep' | 'SendTextStep', ParentType, ContextType>;
+export type TestStepResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['TestStep'] = ResolversParentTypes['TestStep'],
+> = {
+  __resolveType: TypeResolveFn<
+    | 'AssertExistsStep'
+    | 'AssertJavascriptStep'
+    | 'AssertTextStep'
+    | 'ClickStep'
+    | 'ExecuteJavascriptStep'
+    | 'GoToStep'
+    | 'RefreshStep'
+    | 'SendTextStep',
+    ParentType,
+    ContextType
+  >;
 };
 
-export type TestStepResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['TestStepResult'] = ResolversParentTypes['TestStepResult']> = {
+export type TestStepResultResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['TestStepResult'] = ResolversParentTypes['TestStepResult'],
+> = {
   endTime?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   error?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -716,7 +846,10 @@ export type TestStepResultResolvers<ContextType = any, ParentType extends Resolv
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+export type UserResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User'],
+> = {
   accountId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -755,4 +888,3 @@ export type Resolvers<ContextType = any> = {
   TestStepResult?: TestStepResultResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };
-

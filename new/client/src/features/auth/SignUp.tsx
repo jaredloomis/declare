@@ -8,7 +8,7 @@ import { Alert } from '../../components/Alert';
 import { Label } from '../../components/Label';
 import { useAuthStore } from '../../authStore';
 
-export function SignUp() {
+export default function SignUp() {
   const [error, setError] = useState<boolean>(false);
   const [accountName, setAccountName] = useState<string>('');
   const [username, setUsername] = useState<string>('');

@@ -6,6 +6,9 @@ dotenv.config({
   path: '../.env',
 });
 
+const { RABBITMQ_USERNAME, RABBITMQ_PASSWORD, RABBITMQ_HOST, RABBITMQ_PORT, RABBITMQ_VHOST } = process.env;
+const url = `amqp://${RABBITMQ_USERNAME}:${RABBITMQ_PASSWORD}@${RABBITMQ_HOST}:${RABBITMQ_PORT}/${RABBITMQ_VHOST}`;
+
 let _conn: amqplib.Connection | undefined = undefined;
 
 export async function publish<T>(queue: string, message: T): Promise<boolean> {
@@ -40,7 +43,6 @@ export async function subscribe<T>(
 
 async function createConn(): Promise<amqplib.Connection> {
   if (!_conn) {
-    const url = `amqp://${process.env.RABBITMQ_USERNAME}:${process.env.RABBITMQ_PASSWORD}@0.0.0.0:5672/${process.env.RABBITMQ_VHOST}`;
     _conn = await amqplib.connect(url);
   }
   return _conn;

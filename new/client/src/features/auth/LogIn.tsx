@@ -9,7 +9,7 @@ import { Label } from '../../components/Label';
 import { useAuthStore } from '../../authStore';
 import { parseJwt } from './jwt_util';
 
-export function LogIn() {
+export default function LogIn() {
   const [error, setError] = useState<boolean>(false);
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');

@@ -26,7 +26,7 @@ export interface TestProps {
   testId: number;
 }
 
-export function TestView({ testId }: TestProps) {
+export default function TestView({ testId }: TestProps) {
   const testRes = useQuery(TEST_QUERY, {
     variables: { id: testId },
   });
@@ -61,3 +61,5 @@ export function TestView({ testId }: TestProps) {
     </>
   );
 }
+
+//export default TestView;

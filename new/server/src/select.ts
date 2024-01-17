@@ -1,4 +1,4 @@
-import { DatabaseToAPIAdapter, invConvertObj } from "server-common/src/adapter";
+import { DatabaseToAPIAdapter, invConvertObj } from 'server-common/src/adapter';
 
 function preprocessSelectionSet(selectionSet: any, fragments: any) {
   let ret: any = {};
@@ -9,8 +9,7 @@ function preprocessSelectionSet(selectionSet: any, fragments: any) {
     }
 
     // Resolve fragments
-    console.log('WASABI\n\n\n\n', JSON.stringify(selection, null, 2))
-    if(selection.name.value.charAt(0) === selection.name.value.charAt(0).toUpperCase()) {
+    if (selection.name.value.charAt(0) === selection.name.value.charAt(0).toUpperCase()) {
       ret = preprocessSelectionSet(fragments[selection.name.value].selectionSet, fragments);
       continue;
     }

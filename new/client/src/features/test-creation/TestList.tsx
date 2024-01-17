@@ -1,29 +1,14 @@
 import React, { useState } from 'react';
 import { gql, useQuery, useMutation, useApolloClient } from '@apollo/client';
 import { Link } from 'react-router-dom';
-import { Collection, User } from '../../gql/graphql';
+
+import { Collection } from '../../gql/graphql';
 import { Table } from '../../components/Table';
 import { Spinner } from '../../components/Spinner';
 import { Card } from '../../components/Card';
 import { TextInput } from '../../components/TextInput';
 import { Button } from '../../components/Button';
-import { useAuthStore } from '../../authStore';
-import { CREATE_COLLECTION_MUTATION } from './api';
-
-const GET_COLLECTIONS_QUERY = gql`
-  query GetCollections($accountId: Int!) {
-    account(id: $accountId) {
-      collections {
-        id
-        name
-        tests {
-          id
-          name
-        }
-      }
-    }
-  }
-`;
+import { COLLECTIONS_QUERY, CREATE_COLLECTION_MUTATION } from './api';
 
 interface TestCollectionProps {
   collection: Collection;
@@ -32,8 +17,8 @@ interface TestCollectionProps {
 function TestCollection({ collection }: TestCollectionProps) {
   const apollo = useApolloClient();
   const [testName, setTestName] = useState<string>('');
-  const handleCreateTest = () => {
-    apollo.mutate({
+  const handleCreateTest = async () => {
+    await apollo.mutate({
       mutation: gql`
         mutation CreateTest($test: TestCreateInput!) {
           createTest(test: $test) {
@@ -49,8 +34,9 @@ function TestCollection({ collection }: TestCollectionProps) {
           steps: [],
         },
       },
-      refetchQueries: ['GetCollections'],
+      refetchQueries: ['Collections'],
     });
+    setTestName('');
   };
 
   return (
@@ -74,20 +60,16 @@ function TestCollection({ collection }: TestCollectionProps) {
   );
 }
 
-export function TestList() {
-  const [name, setName] = useState<string>();
-  const auth = useAuthStore();
-  const collectionsRes = useQuery(GET_COLLECTIONS_QUERY, {
-    variables: {
-      accountId: auth.user?.accountId,
-    },
-  });
+export default function TestList() {
+  const [name, setName] = useState<string>('');
+  const collectionsRes = useQuery(COLLECTIONS_QUERY);
   const [createCollection] = useMutation(CREATE_COLLECTION_MUTATION, {
-    refetchQueries: ['GetCollections'],
+    refetchQueries: ['Collections'],
   });
   const handleCreateCollection = (event: any) => {
     event.preventDefault();
     createCollection({ variables: { collection: { name } } });
+    setName('');
   };
 
   if (collectionsRes.loading) {
@@ -107,7 +89,7 @@ export function TestList() {
       <div>
         <Card>
           <form onSubmit={handleCreateCollection}>
-            <TextInput label='Collection Name' onValueChange={setName} />
+            <TextInput label='Collection Name' value={name} onValueChange={setName} />
             <Button color='success' size='large'>
               Create Collection
             </Button>

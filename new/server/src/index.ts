@@ -50,6 +50,8 @@ const serverCleanup = useServer(
 // GraphQL HTTP server
 const apolloServer = new ApolloServer<DeclareContext>({
   schema,
+  // Disable introspection in production
+  introspection: process.env.NODE_ENV !== 'production',
   plugins: [
     // Proper shutdown for the HTTP server.
     ApolloServerPluginDrainHttpServer({ httpServer }),

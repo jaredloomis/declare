@@ -187,11 +187,6 @@ export type Query = {
 };
 
 
-export type QueryAccountArgs = {
-  id: Scalars['Int']['input'];
-};
-
-
 export type QueryTestArgs = {
   id: Scalars['Int']['input'];
 };
@@ -301,7 +296,7 @@ export type TestCreateInput = {
   steps: Array<TestStepInput>;
 };
 
-export type TestStep = AssertExistsStep | AssertJavascriptStep | AssertTextStep | ClickStep | ExecuteJavascriptStep | GoToStep | RefreshStep | SendTextStep;
+export type TestStep = AssertExistsStep | AssertJavascriptStep | AssertTextStep | ClickStep | ExecuteJavascriptStep | GoToStep | RefreshStep | SendTextStep | SetVariableStep;
 
 export type TestStepInput = {
   code?: InputMaybe<Scalars['String']['input']>;
@@ -423,7 +418,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping of union types */
 export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
   SetVariableStepValue: ( SetVariableElement ) | ( SetVariableJavascript ) | ( SetVariableString );
-  TestStep: ( AssertExistsStep ) | ( AssertJavascriptStep ) | ( AssertTextStep ) | ( ClickStep ) | ( ExecuteJavascriptStep ) | ( GoToStep ) | ( RefreshStep ) | ( SendTextStep );
+  TestStep: ( AssertExistsStep ) | ( AssertJavascriptStep ) | ( AssertTextStep ) | ( ClickStep ) | ( ExecuteJavascriptStep ) | ( GoToStep ) | ( RefreshStep ) | ( SendTextStep ) | ( Omit<SetVariableStep, 'value'> & { value: RefType['SetVariableStepValue'] } );
 };
 
 
@@ -619,7 +614,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  account?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<QueryAccountArgs, 'id'>>;
+  account?: Resolver<ResolversTypes['Account'], ParentType, ContextType>;
   test?: Resolver<ResolversTypes['Test'], ParentType, ContextType, RequireFields<QueryTestArgs, 'id'>>;
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
 };
@@ -704,7 +699,7 @@ export type TestResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type TestStepResolvers<ContextType = any, ParentType extends ResolversParentTypes['TestStep'] = ResolversParentTypes['TestStep']> = {
-  __resolveType: TypeResolveFn<'AssertExistsStep' | 'AssertJavascriptStep' | 'AssertTextStep' | 'ClickStep' | 'ExecuteJavascriptStep' | 'GoToStep' | 'RefreshStep' | 'SendTextStep', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'AssertExistsStep' | 'AssertJavascriptStep' | 'AssertTextStep' | 'ClickStep' | 'ExecuteJavascriptStep' | 'GoToStep' | 'RefreshStep' | 'SendTextStep' | 'SetVariableStep', ParentType, ContextType>;
 };
 
 export type TestStepResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['TestStepResult'] = ResolversParentTypes['TestStepResult']> = {
