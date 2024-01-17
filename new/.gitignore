@@ -8,3 +8,5 @@ logs/
 build/
 .env
 graphql.schema.json
+# Yarn
+.yarn/
