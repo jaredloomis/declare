@@ -8,6 +8,7 @@ import { ElementCreate } from './ElementCreate';
 const ELEMENTS_QUERY = gql`
   query Elements {
     account {
+      id
       elements {
         id
         name
@@ -22,7 +23,7 @@ export interface ElementSelectProps extends SelectProps {
   collectionId?: number;
 }
 
-export function ElementSelect({ collectionId, ...props }: ElementSelectProps) {
+export function ElementSelect({ collectionId, onValueChange, onChange, ...props }: ElementSelectProps) {
   const [selectedElement, setSelectedElement] = React.useState<number | undefined>(undefined);
   const [searchText, setSearchText] = React.useState<string | undefined>('');
   const elements = useQuery(ELEMENTS_QUERY);
@@ -39,16 +40,25 @@ export function ElementSelect({ collectionId, ...props }: ElementSelectProps) {
     collectionId: collectionId,
   };
 
+  const handleChange = (option: any, meta: any) => {
+    const value = option.value;
+    setSelectedElement(value);
+    onValueChange && onValueChange(value);
+    onChange && onChange(option, meta);
+  };
+
   const handleCreateBegin = (input: string) => {
     setCreateInProgress(true);
     setSearchText(input);
   };
 
   const handleCreateSuccess = (element: any) => {
+    elements.refetch();
     setCreateInProgress(false);
     setSearchText('');
     setSelectedElement(element.id);
-    elements.refetch();
+    onValueChange && onValueChange(element.id);
+    onChange && onChange({ value: element.id, label: element.name }, undefined);
   };
 
   if (!options) {
@@ -62,7 +72,7 @@ export function ElementSelect({ collectionId, ...props }: ElementSelectProps) {
         options={options}
         onCreateOption={handleCreateBegin}
         value={selectedElement}
-        onValueChange={setSelectedElement}
+        onChange={handleChange}
         {...props}
       />
       {createInProgress && (

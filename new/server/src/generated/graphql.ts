@@ -129,6 +129,7 @@ export type Mutation = {
   createElement: Element;
   createTest: Test;
   createUser: User;
+  deleteTest: Scalars['Boolean']['output'];
   executeTest: Scalars['Boolean']['output'];
   login: Scalars['String']['output'];
   signup: Account;
@@ -153,6 +154,11 @@ export type MutationCreateTestArgs = {
 
 export type MutationCreateUserArgs = {
   user: UserInput;
+};
+
+
+export type MutationDeleteTestArgs = {
+  id: Scalars['Int']['input'];
 };
 
 
@@ -296,13 +302,14 @@ export type TestCreateInput = {
   steps: Array<TestStepInput>;
 };
 
-export type TestStep = AssertExistsStep | AssertJavascriptStep | AssertTextStep | ClickStep | ExecuteJavascriptStep | GoToStep | RefreshStep | SendTextStep | SetVariableStep;
+export type TestStep = AssertExistsStep | AssertJavascriptStep | AssertTextStep | ClickStep | ExecuteJavascriptStep | GoToStep | ImportTestStep | RefreshStep | SendTextStep | SetVariableStep | WaitStep;
 
 export type TestStepInput = {
   code?: InputMaybe<Scalars['String']['input']>;
   elementId?: InputMaybe<Scalars['Int']['input']>;
   exactMatch?: InputMaybe<Scalars['Boolean']['input']>;
   invert?: InputMaybe<Scalars['Boolean']['input']>;
+  milliseconds?: InputMaybe<Scalars['Int']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   stepType: Scalars['String']['input'];
   testId?: InputMaybe<Scalars['Int']['input']>;
@@ -346,6 +353,12 @@ export type User = {
 export type UserInput = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
+};
+
+export type WaitStep = {
+  __typename?: 'WaitStep';
+  milliseconds: Scalars['Int']['output'];
+  stepType: Scalars['String']['output'];
 };
 
 
@@ -418,7 +431,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping of union types */
 export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
   SetVariableStepValue: ( SetVariableElement ) | ( SetVariableJavascript ) | ( SetVariableString );
-  TestStep: ( AssertExistsStep ) | ( AssertJavascriptStep ) | ( AssertTextStep ) | ( ClickStep ) | ( ExecuteJavascriptStep ) | ( GoToStep ) | ( RefreshStep ) | ( SendTextStep ) | ( Omit<SetVariableStep, 'value'> & { value: RefType['SetVariableStepValue'] } );
+  TestStep: ( AssertExistsStep ) | ( AssertJavascriptStep ) | ( AssertTextStep ) | ( ClickStep ) | ( ExecuteJavascriptStep ) | ( GoToStep ) | ( ImportTestStep ) | ( RefreshStep ) | ( SendTextStep ) | ( Omit<SetVariableStep, 'value'> & { value: RefType['SetVariableStepValue'] } ) | ( WaitStep );
 };
 
 
@@ -464,6 +477,7 @@ export type ResolversTypes = {
   TestUpdateInput: TestUpdateInput;
   User: ResolverTypeWrapper<User>;
   UserInput: UserInput;
+  WaitStep: ResolverTypeWrapper<WaitStep>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -507,6 +521,7 @@ export type ResolversParentTypes = {
   TestUpdateInput: TestUpdateInput;
   User: User;
   UserInput: UserInput;
+  WaitStep: WaitStep;
 };
 
 export type AccountResolvers<ContextType = any, ParentType extends ResolversParentTypes['Account'] = ResolversParentTypes['Account']> = {
@@ -607,6 +622,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createElement?: Resolver<ResolversTypes['Element'], ParentType, ContextType, RequireFields<MutationCreateElementArgs, 'element'>>;
   createTest?: Resolver<ResolversTypes['Test'], ParentType, ContextType, RequireFields<MutationCreateTestArgs, 'test'>>;
   createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'user'>>;
+  deleteTest?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteTestArgs, 'id'>>;
   executeTest?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationExecuteTestArgs, 'testId'>>;
   login?: Resolver<ResolversTypes['String'], ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
   signup?: Resolver<ResolversTypes['Account'], ParentType, ContextType, RequireFields<MutationSignupArgs, 'accountName' | 'adminEmail' | 'adminPassword'>>;
@@ -699,7 +715,7 @@ export type TestResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type TestStepResolvers<ContextType = any, ParentType extends ResolversParentTypes['TestStep'] = ResolversParentTypes['TestStep']> = {
-  __resolveType: TypeResolveFn<'AssertExistsStep' | 'AssertJavascriptStep' | 'AssertTextStep' | 'ClickStep' | 'ExecuteJavascriptStep' | 'GoToStep' | 'RefreshStep' | 'SendTextStep' | 'SetVariableStep', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'AssertExistsStep' | 'AssertJavascriptStep' | 'AssertTextStep' | 'ClickStep' | 'ExecuteJavascriptStep' | 'GoToStep' | 'ImportTestStep' | 'RefreshStep' | 'SendTextStep' | 'SetVariableStep' | 'WaitStep', ParentType, ContextType>;
 };
 
 export type TestStepResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['TestStepResult'] = ResolversParentTypes['TestStepResult']> = {
@@ -717,6 +733,12 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type WaitStepResolvers<ContextType = any, ParentType extends ResolversParentTypes['WaitStep'] = ResolversParentTypes['WaitStep']> = {
+  milliseconds?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  stepType?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -749,5 +771,6 @@ export type Resolvers<ContextType = any> = {
   TestStep?: TestStepResolvers<ContextType>;
   TestStepResult?: TestStepResultResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
+  WaitStep?: WaitStepResolvers<ContextType>;
 };
 

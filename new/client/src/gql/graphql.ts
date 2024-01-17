@@ -128,6 +128,7 @@ export type Mutation = {
   createElement: Element;
   createTest: Test;
   createUser: User;
+  deleteTest: Scalars['Boolean']['output'];
   executeTest: Scalars['Boolean']['output'];
   login: Scalars['String']['output'];
   signup: Account;
@@ -148,6 +149,10 @@ export type MutationCreateTestArgs = {
 
 export type MutationCreateUserArgs = {
   user: UserInput;
+};
+
+export type MutationDeleteTestArgs = {
+  id: Scalars['Int']['input'];
 };
 
 export type MutationExecuteTestArgs = {
@@ -291,15 +296,18 @@ export type TestStep =
   | ClickStep
   | ExecuteJavascriptStep
   | GoToStep
+  | ImportTestStep
   | RefreshStep
   | SendTextStep
-  | SetVariableStep;
+  | SetVariableStep
+  | WaitStep;
 
 export type TestStepInput = {
   code?: InputMaybe<Scalars['String']['input']>;
   elementId?: InputMaybe<Scalars['Int']['input']>;
   exactMatch?: InputMaybe<Scalars['Boolean']['input']>;
   invert?: InputMaybe<Scalars['Boolean']['input']>;
+  milliseconds?: InputMaybe<Scalars['Int']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   stepType: Scalars['String']['input'];
   testId?: InputMaybe<Scalars['Int']['input']>;
@@ -345,6 +353,12 @@ export type UserInput = {
   password: Scalars['String']['input'];
 };
 
+export type WaitStep = {
+  __typename?: 'WaitStep';
+  milliseconds: Scalars['Int']['output'];
+  stepType: Scalars['String']['output'];
+};
+
 export type LoginMutationVariables = Exact<{
   username: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -384,6 +398,7 @@ export type ElementsQuery = {
   __typename?: 'Query';
   account: {
     __typename?: 'Account';
+    id: number;
     elements: Array<{ __typename?: 'Element'; id: number; name: string; selector: string; selectorType: string }>;
   };
 };
@@ -397,6 +412,12 @@ export type UpdateTestMutation = {
   __typename?: 'Mutation';
   updateTest: { __typename?: 'Test' } & { ' $fragmentRefs'?: { CoreTestFieldsFragment: CoreTestFieldsFragment } };
 };
+
+export type DeleteTestMutationVariables = Exact<{
+  id: Scalars['Int']['input'];
+}>;
+
+export type DeleteTestMutation = { __typename?: 'Mutation'; deleteTest: boolean };
 
 export type CreateTestMutationVariables = Exact<{
   test: TestCreateInput;
@@ -418,6 +439,7 @@ export type CoreTestFieldsFragment = {
     | { __typename?: 'ClickStep'; stepType: string; elementId: number }
     | { __typename?: 'ExecuteJavascriptStep'; stepType: string; code: string }
     | { __typename?: 'GoToStep'; stepType: string; url: string }
+    | { __typename?: 'ImportTestStep'; stepType: string; testId: number }
     | { __typename?: 'RefreshStep'; stepType: string }
     | { __typename?: 'SendTextStep'; stepType: string; elementId: number; text: string }
     | {
@@ -429,6 +451,7 @@ export type CoreTestFieldsFragment = {
           | { __typename?: 'SetVariableJavascript'; code: string }
           | { __typename?: 'SetVariableString'; string: string };
       }
+    | { __typename?: 'WaitStep'; stepType: string; milliseconds: number }
   >;
 } & { ' $fragmentName'?: 'CoreTestFieldsFragment' };
 
@@ -449,7 +472,7 @@ export type TestsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type TestsQuery = {
   __typename?: 'Query';
-  account: { __typename?: 'Account'; tests: Array<{ __typename?: 'Test'; id: number; name: string }> };
+  account: { __typename?: 'Account'; id: number; tests: Array<{ __typename?: 'Test'; id: number; name: string }> };
 };
 
 export type CollectionsQueryVariables = Exact<{ [key: string]: never }>;
@@ -458,6 +481,7 @@ export type CollectionsQuery = {
   __typename?: 'Query';
   account: {
     __typename?: 'Account';
+    id: number;
     collections: Array<{
       __typename?: 'Collection';
       id: number;
@@ -502,6 +526,17 @@ export const CoreTestFieldsFragmentDoc = {
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'stepType' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'WaitStep' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'stepType' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'milliseconds' } },
                     ],
                   },
                 },
@@ -615,6 +650,17 @@ export const CoreTestFieldsFragmentDoc = {
                           ],
                         },
                       },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImportTestStep' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'stepType' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'testId' } },
                     ],
                   },
                 },
@@ -826,6 +872,7 @@ export const ElementsDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'elements' },
@@ -915,6 +962,17 @@ export const UpdateTestDocument = {
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'stepType' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'WaitStep' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'stepType' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'milliseconds' } },
                     ],
                   },
                 },
@@ -1031,6 +1089,17 @@ export const UpdateTestDocument = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImportTestStep' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'stepType' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'testId' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -1039,6 +1108,39 @@ export const UpdateTestDocument = {
     },
   ],
 } as unknown as DocumentNode<UpdateTestMutation, UpdateTestMutationVariables>;
+export const DeleteTestDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'DeleteTest' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'deleteTest' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<DeleteTestMutation, DeleteTestMutationVariables>;
 export const CreateTestDocument = {
   kind: 'Document',
   definitions: [
@@ -1157,6 +1259,17 @@ export const GetTestDocument = {
                 },
                 {
                   kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'WaitStep' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'stepType' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'milliseconds' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'InlineFragment',
                   typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ClickStep' } },
                   selectionSet: {
                     kind: 'SelectionSet',
@@ -1268,6 +1381,17 @@ export const GetTestDocument = {
                     ],
                   },
                 },
+                {
+                  kind: 'InlineFragment',
+                  typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'ImportTestStep' } },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'stepType' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'testId' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -1292,6 +1416,7 @@ export const TestsDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'tests' },
@@ -1327,6 +1452,7 @@ export const CollectionsDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'collections' },

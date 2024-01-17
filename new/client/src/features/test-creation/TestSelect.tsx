@@ -23,12 +23,7 @@ export function TestSelect({ collectionId, ...props }: TestSelectProps) {
 
   return (
     <div>
-      <Select
-        options={options}
-        value={selectedTest}
-        onValueChange={setSelectedTest}
-        {...props}
-      />
+      <Select options={options} value={selectedTest} onValueChange={setSelectedTest} {...props} />
     </div>
   );
 }

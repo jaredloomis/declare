@@ -5,8 +5,14 @@
   "author": "Jared Loomis <jaredloomis@protonmail.com>",
   "license": "All Rights Reserved",
   "private": true,
-  "workspaces": ["server", "client", "common", "server-common", "executor"],
-  "packageManager": "yarn@1.22.19",
+  "workspaces": [
+    "server",
+    "client",
+    "common",
+    "server-common",
+    "executor"
+  ],
+  "packageManager": "yarn@4.0.2",
   "scripts": {
     "clean": "rm -rf node_modules"
   }

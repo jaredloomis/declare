@@ -25,6 +25,7 @@ type Mutation {
   createTest(test: TestCreateInput!): Test!
 
   updateTest(id: Int!, test: TestUpdateInput!): Test!
+  deleteTest(id: Int!): Boolean!
 
   executeTest(testId: Int!): Boolean!
 }
@@ -150,6 +151,7 @@ input ElementCreateInput {
 
 union TestStep = ClickStep | SendTextStep | ExecuteJavascriptStep | GoToStep | RefreshStep
   | AssertExistsStep | AssertTextStep | AssertJavascriptStep | SetVariableStep | ImportTestStep
+  | WaitStep
 
 input TestStepInput {
   stepType: String!
@@ -163,6 +165,7 @@ input TestStepInput {
   name: String
   value: SetVariableStepValueInput
   testId: Int
+  milliseconds: Int
 }
 
 type ClickStep {
@@ -250,6 +253,11 @@ type SetVariableElement {
 type ImportTestStep {
   stepType: String!
   testId: Int!
+}
+
+type WaitStep {
+  stepType: String!
+  milliseconds: Int!
 }
 
 ##########

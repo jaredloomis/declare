@@ -1,6 +1,10 @@
 import { DatabaseToAPIAdapter, invConvertObj } from 'server-common/src/adapter';
 
 function preprocessSelectionSet(selectionSet: any, fragments: any) {
+  if (!selectionSet?.selections) {
+    return true;
+  }
+
   let ret: any = {};
   for (const selection of selectionSet.selections) {
     // Built-in fields (ignore)

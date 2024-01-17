@@ -15,6 +15,10 @@ export const CORE_TEST_FIELDS = gql`
         stepType
         url
       }
+      ... on WaitStep {
+        stepType
+        milliseconds
+      }
       ... on ClickStep {
         stepType
         elementId

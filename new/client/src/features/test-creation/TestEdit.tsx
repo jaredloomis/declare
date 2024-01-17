@@ -1,5 +1,8 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
 import React, { useContext, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 import { Select } from '../../components/Select';
 import { Spinner } from '../../components/Spinner';
 import { Heading } from '../../components/Heading';
@@ -7,16 +10,19 @@ import { TEST_QUERY } from './api';
 import { Button } from '../../components/Button';
 import { Test, TestStep } from '../../gql/graphql';
 import { ElementSelect } from '../element/ElementSelect';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { CORE_TEST_FIELDS } from './api';
 import { TextInput } from '../../components/TextInput';
 import { Checkbox } from '../../components/Checkbox';
 import { TestSelect } from './TestSelect';
+import { Editable } from '../../components/Editable';
+import { Modal } from '../../components/Modal';
 
 const TestEditContext = React.createContext<{ test: Test | undefined }>({ test: undefined });
 
 const STEP_FIELDS: Record<string, Record<string, string | [string, string]>> = {
+  wait: {
+    milliseconds: ['number', 'Time (ms)'],
+  },
   goTo: {
     url: ['text', 'URL'],
   },
@@ -48,26 +54,25 @@ const STEP_FIELDS: Record<string, Record<string, string | [string, string]>> = {
   },
 };
 
-interface KeyedTestStep extends Omit<TestStep, 'stepType'> {
-  key: number;
-  stepType: string | undefined;
-}
-
-interface StepParamsProps {
-  i: number;
-  step: KeyedTestStep;
-  onChange: (step: KeyedTestStep) => void;
-  onDelete: () => void;
-  onAddAbove: () => void;
-  fields?: Record<string, string | [string, string]>;
-}
-
 const FieldEdit = React.forwardRef(function FieldEdit({ type, name, ...props }: any, ref: React.ForwardedRef<any>) {
   const { t } = useTranslation();
 
   if (type === 'text') {
     return (
       <TextInput
+        name={name}
+        label={props.label}
+        onValueChange={props.onChange}
+        onBlur={props.onBlur}
+        ref={ref}
+        defaultValue={props.defaultValue}
+        key={props.key}
+      />
+    );
+  } else if (type === 'number') {
+    return (
+      <TextInput
+        number
         name={name}
         label={props.label}
         onValueChange={props.onChange}
@@ -101,25 +106,29 @@ const FieldEdit = React.forwardRef(function FieldEdit({ type, name, ...props }: 
     );
   } else if (type === 'variable') {
     const defaultType = props.defaultValue?.code ? 'code' : props.defaultValue?.elementId ? 'elementId' : 'string';
-    const typeOptions = { string: 'Text', code: 'Return from JavaScript', elementId: 'Extract from Element' };
+    const typeOptions = {
+      string: t('test.stepType.setVariable-type.text.select-option'),
+      code: t('test.stepType.setVariable-type.javascript.select-option'),
+      elementId: t('test.stepType.setVariable-type.element.select-option'),
+    };
     const [variableType, setVariableType] = useState(defaultType);
     const handleChange = (name: string) => (newValue: string | number) => {
       props.onChange({ string: undefined, code: undefined, elementId: undefined, [name]: newValue });
     };
     const valueInput = {
       string: (
-        <TextInput label='Text' defaultValue={props.defaultValue?.string} onValueChange={handleChange(variableType)} />
+        <TextInput label={t('test.stepType.setVariable-type.text.input-label')} defaultValue={props.defaultValue?.string} onValueChange={handleChange(variableType)} />
       ),
       code: (
         <TextInput
-          label='JavaScript code'
+          label={t('test.stepType.setVariable-type.javascript.input-label')}
           defaultValue={props.defaultValue?.code}
           onValueChange={handleChange(variableType)}
         />
       ),
       elementId: (
         <ElementSelect
-          label='Element'
+          label={t('test.stepType.setVariable-type.element.input-label')}
           defaultValue={props.defaultValue?.elementId}
           collectionId={props.collectionId}
           onValueChange={handleChange(variableType)}
@@ -130,7 +139,7 @@ const FieldEdit = React.forwardRef(function FieldEdit({ type, name, ...props }: 
     return (
       <div key={props.key}>
         <Select
-          label={'Variable Type'}
+          label={t('test.stepType.setVariable-type-select-label')}
           defaultValue={defaultType}
           onValueChange={setVariableType}
           options={Object.entries(typeOptions).map(([value, label]) => ({ value, label }))}
@@ -141,7 +150,6 @@ const FieldEdit = React.forwardRef(function FieldEdit({ type, name, ...props }: 
   } else if (type === 'test') {
     return (
       <TestSelect
-        name={name}
         label={props.label}
         collectionId={props.collectionId}
         defaultValue={props.defaultValue}
@@ -150,11 +158,26 @@ const FieldEdit = React.forwardRef(function FieldEdit({ type, name, ...props }: 
       />
     );
   } else {
-    return <span key={name}>Unknown field type!</span>;
+    console.error(`Unknown field type: ${type}`);
+    return <span key={name}>Unknown field type: {type}</span>;
   }
 });
 
-function TestEditStep({ i, fields, onChange, onDelete, onAddAbove, step }: StepParamsProps) {
+interface KeyedTestStep extends Omit<TestStep, 'stepType'> {
+  key: number;
+  stepType: string | undefined;
+}
+
+interface StepParamsProps {
+  i: number;
+  step: KeyedTestStep;
+  fields?: Record<string, string | [string, string]>;
+  onChange: (step: KeyedTestStep) => void;
+  onDelete: () => void;
+  onAddAbove: () => void;
+}
+
+function TestEditStep({ i, fields, step, onChange, onDelete, onAddAbove }: StepParamsProps) {
   const { t } = useTranslation();
   const stepTypeOptions = Object.keys(STEP_FIELDS).map(k => ({
     value: k,
@@ -182,15 +205,17 @@ function TestEditStep({ i, fields, onChange, onDelete, onAddAbove, step }: StepP
       return <FieldEdit {...props} />;
     });
 
-  return (<div>
-    <Button onClick={onAddAbove}>{t('test.add-step-above')}</Button>
-    <Button onClick={onDelete}>{t('test.delete-step')}</Button>
-    <form>
-      <span>#{i + 1}</span>
-      <Select options={stepTypeOptions} defaultValue={step.stepType} onValueChange={handleTypeChange} />
-      {fieldElements}
-    </form>
-  </div>);
+  return (
+    <div>
+      <Button onClick={onAddAbove}>{t('test.add-step-above')}</Button>
+      <Button onClick={onDelete}>{t('test.delete-step')}</Button>
+      <form>
+        <span>#{i + 1}</span>
+        <Select options={stepTypeOptions} defaultValue={step.stepType} onValueChange={handleTypeChange} />
+        {fieldElements}
+      </form>
+    </div>
+  );
 }
 
 const UPDATE_TEST_MUTATION = gql`
@@ -199,6 +224,12 @@ const UPDATE_TEST_MUTATION = gql`
     updateTest(id: $id, test: $test) {
       ...CoreTestFields
     }
+  }
+`;
+
+const DELETE_TEST_MUTATION = gql`
+  mutation DeleteTest($id: Int!) {
+    deleteTest(id: $id)
   }
 `;
 
@@ -212,12 +243,19 @@ export default function TestEdit({ testId }: TestEditProps) {
 
   const [name, setName] = React.useState<string>('');
   const [steps, setSteps] = React.useState<KeyedTestStep[]>([]);
+  const [deleteInProgress, setDeleteInProgress] = React.useState(false);
+
   const testRes = useQuery(TEST_QUERY, {
     variables: { id: testId },
   });
   const [updateTestMutation] = useMutation(UPDATE_TEST_MUTATION, {
-    variables: { id: testId, name, steps },
+    variables: { id: testId },
   });
+  const [deleteTestMutation] = useMutation(DELETE_TEST_MUTATION, {
+    variables: { id: testId },
+    refetchQueries: ['Tests', 'Collections'],
+  });
+  const test = testRes.data?.test;
 
   const handleChange = (key: number) => (step: KeyedTestStep) => {
     const index = steps.findIndex(s => s.key === key);
@@ -238,15 +276,23 @@ export default function TestEdit({ testId }: TestEditProps) {
     navigate(`/test/${testId}`);
   };
 
-  // Initialize state from query result
+  const handleDelete = async () => {
+    setDeleteInProgress(false);
+    await deleteTestMutation();
+    navigate(`/collection/${test.collectionId}`);
+  };
+
   useEffect(() => {
+    // Initialize state from query result
     if (testRes.data?.test) {
-      setName(testRes.data.test.name);
+      setName(test.name);
       // Add key to each step to allow React to track them
-      const steps = testRes.data.test.steps.map((step: any) => ({ ...step, key: Math.random() }));
+      const steps = test.steps.map((step: any) => ({ ...step, key: Math.random() }));
       setSteps(steps);
+    } else if (testRes.error) {
+      navigate('/404');
     }
-  }, [testRes.data]);
+  }, [testRes]);
 
   if (testRes.loading) {
     return <Spinner />;
@@ -255,8 +301,11 @@ export default function TestEdit({ testId }: TestEditProps) {
   return (
     <TestEditContext.Provider value={{ test: testRes?.data?.test }}>
       <div>
-        <Heading size='xlarge'>{name}</Heading>
+        <Heading size='xlarge'>
+          <Editable edit={<TextInput defaultValue={name} onValueChange={name => setName(name as string)} />}>{name}</Editable>
+        </Heading>
         <Button onClick={handleSave}>{t('test.save')}</Button>
+        <Button onClick={() => setDeleteInProgress(true)}>{t('test.delete')}</Button>
       </div>
       <Heading size='large'>{t('test.steps-heading')}</Heading>
       {steps.map((step, i) => (
@@ -277,6 +326,13 @@ export default function TestEdit({ testId }: TestEditProps) {
       <Button onClick={() => setSteps([...steps, { stepType: undefined, key: Math.random() }])}>
         {t('test.add-step')}
       </Button>
+      {deleteInProgress && (
+        <Modal>
+          <p>{t('test.delete-confirmation')}</p>
+          <Button onClick={() => setDeleteInProgress(false)}>{t('test.delete-cancel')}</Button>
+          <Button onClick={handleDelete}>{t('test.delete-confirm')}</Button>
+        </Modal>
+      )}
     </TestEditContext.Provider>
   );
 }

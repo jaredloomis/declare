@@ -31,13 +31,11 @@ export function ElementCreate({ defaultValues, onSuccess }: ElementCreateProps) 
   defaultValues = defaultValues || {};
   defaultValues.selectorType = defaultValues?.selectorType || selectorType.CSS;
   const { t } = useTranslation();
-  const { register, handleSubmit, control } = useForm({ defaultValues });
   const [createElementMutation] = useMutation(CREATE_ELEMENT_MUTATION);
+  const [element, setElement] = React.useState<any>(defaultValues);
+  const setField = (field: string) => (value: any) => setElement({ ...element, [field]: value });
 
-  const submit = async (element: any) => {
-    element.collectionId = element.collectionId.value;
-    //element.collection = undefined;
-    element.selectorType = element.selectorType.value;
+  const submit = async () => {
     const res = await createElementMutation({ variables: { element } });
     if (res?.data?.createElement) {
       element.id = res.data.createElement.id;
@@ -48,17 +46,16 @@ export function ElementCreate({ defaultValues, onSuccess }: ElementCreateProps) 
   const selectorTypeOptions = Object.values(selectorType).map(v => ({ value: v, label: v }));
 
   return (
-    <form onSubmit={handleSubmit(submit)}>
+    <div>
       <CollectionSelect
-        {...register('collectionId')}
+        onValueChange={setField('collectionId')}
         defaultValue={defaultValues?.collectionId}
-        control={control}
         label='Collection'
       />
-      <TextInput {...register('name')} label='Name' />
-      <Select {...register('selectorType')} control={control} options={selectorTypeOptions} label='Selector Type' />
-      <TextInput {...register('selector')} label='Selector' />
-      <Button type='submit'>{t('element.create')}</Button>
-    </form>
+      <TextInput onValueChange={setField('name')} defaultValue={defaultValues.name} label='Name' />
+      <Select onValueChange={setField('selectorType')} defaultValue={defaultValues.selectorType} options={selectorTypeOptions} label='Selector Type' />
+      <TextInput onValueChange={setField('selector')} defaultValue={defaultValues.selector} label='Selector' />
+      <Button onClick={submit}>{t('element.create')}</Button>
+    </div>
   );
 }

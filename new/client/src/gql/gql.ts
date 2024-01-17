@@ -21,19 +21,20 @@ const documents = {
     types.GetUserDocument,
   '\n  mutation CreateElement($element: ElementCreateInput!) {\n    createElement(element: $element) {\n      id\n      name\n    }\n  }\n':
     types.CreateElementDocument,
-  '\n  query Elements {\n    account {\n      elements {\n        id\n        name\n        selector\n        selectorType\n      }\n    }\n  }\n':
+  '\n  query Elements {\n    account {\n      id\n      elements {\n        id\n        name\n        selector\n        selectorType\n      }\n    }\n  }\n':
     types.ElementsDocument,
   '\n  \n  mutation UpdateTest($id: Int!, $test: TestUpdateInput!) {\n    updateTest(id: $id, test: $test) {\n      ...CoreTestFields\n    }\n  }\n':
     types.UpdateTestDocument,
+  '\n  mutation DeleteTest($id: Int!) {\n    deleteTest(id: $id)\n  }\n': types.DeleteTestDocument,
   '\n        mutation CreateTest($test: TestCreateInput!) {\n          createTest(test: $test) {\n            id\n            name\n          }\n        }\n      ':
     types.CreateTestDocument,
-  '\n  fragment CoreTestFields on Test {\n    id\n    name\n    steps {\n      ... on GoToStep {\n        stepType\n        url\n      }\n      ... on ClickStep {\n        stepType\n        elementId\n      }\n      ... on SendTextStep {\n        stepType\n        elementId\n        text\n      }\n      ... on AssertExistsStep {\n        stepType\n        elementId\n        visible\n      }\n      ... on ExecuteJavascriptStep {\n        stepType\n        code\n      }\n      ... on RefreshStep {\n        stepType\n      }\n      ... on AssertTextStep {\n        stepType\n        elementId\n        text\n      }\n      ... on SetVariableStep {\n        stepType\n        name\n        value {\n          ... on SetVariableString {\n            string\n          }\n          ... on SetVariableElement {\n            elementId\n          }\n          ... on SetVariableJavascript {\n            code\n          }\n        }\n      }\n    }\n  }\n':
+  '\n  fragment CoreTestFields on Test {\n    id\n    name\n    steps {\n      ... on GoToStep {\n        stepType\n        url\n      }\n      ... on WaitStep {\n        stepType\n        milliseconds\n      }\n      ... on ClickStep {\n        stepType\n        elementId\n      }\n      ... on SendTextStep {\n        stepType\n        elementId\n        text\n      }\n      ... on AssertExistsStep {\n        stepType\n        elementId\n        visible\n      }\n      ... on ExecuteJavascriptStep {\n        stepType\n        code\n      }\n      ... on RefreshStep {\n        stepType\n      }\n      ... on AssertTextStep {\n        stepType\n        elementId\n        text\n      }\n      ... on SetVariableStep {\n        stepType\n        name\n        value {\n          ... on SetVariableString {\n            string\n          }\n          ... on SetVariableElement {\n            elementId\n          }\n          ... on SetVariableJavascript {\n            code\n          }\n        }\n      }\n      ... on ImportTestStep {\n        stepType\n        testId\n      }\n    }\n  }\n':
     types.CoreTestFieldsFragmentDoc,
   '\n  \n  query GetTest($id: Int!) {\n    test(id: $id) {\n      ...CoreTestFields\n      collectionId\n      reports {\n        id\n        testId\n        startTime\n      }\n    }\n  }\n':
     types.GetTestDocument,
-  '\n  query Tests {\n    account {\n      tests {\n        id\n        name\n      }\n    }\n  }\n':
+  '\n  query Tests {\n    account {\n      id\n      tests {\n        id\n        name\n      }\n    }\n  }\n':
     types.TestsDocument,
-  '\n  query Collections {\n    account {\n      collections {\n        id\n        name\n        tests {\n          id\n          name\n        }\n      }\n    }\n  }\n':
+  '\n  query Collections {\n    account {\n      id\n      collections {\n        id\n        name\n        tests {\n          id\n          name\n        }\n      }\n    }\n  }\n':
     types.CollectionsDocument,
   '\n  mutation CreateCollection($collection: CollectionCreateInput!) {\n    createCollection(collection: $collection) {\n      id\n    }\n  }\n':
     types.CreateCollectionDocument,
@@ -81,8 +82,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  query Elements {\n    account {\n      elements {\n        id\n        name\n        selector\n        selectorType\n      }\n    }\n  }\n'
-): (typeof documents)['\n  query Elements {\n    account {\n      elements {\n        id\n        name\n        selector\n        selectorType\n      }\n    }\n  }\n'];
+  source: '\n  query Elements {\n    account {\n      id\n      elements {\n        id\n        name\n        selector\n        selectorType\n      }\n    }\n  }\n'
+): (typeof documents)['\n  query Elements {\n    account {\n      id\n      elements {\n        id\n        name\n        selector\n        selectorType\n      }\n    }\n  }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -93,14 +94,20 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
+  source: '\n  mutation DeleteTest($id: Int!) {\n    deleteTest(id: $id)\n  }\n'
+): (typeof documents)['\n  mutation DeleteTest($id: Int!) {\n    deleteTest(id: $id)\n  }\n'];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
   source: '\n        mutation CreateTest($test: TestCreateInput!) {\n          createTest(test: $test) {\n            id\n            name\n          }\n        }\n      '
 ): (typeof documents)['\n        mutation CreateTest($test: TestCreateInput!) {\n          createTest(test: $test) {\n            id\n            name\n          }\n        }\n      '];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  fragment CoreTestFields on Test {\n    id\n    name\n    steps {\n      ... on GoToStep {\n        stepType\n        url\n      }\n      ... on ClickStep {\n        stepType\n        elementId\n      }\n      ... on SendTextStep {\n        stepType\n        elementId\n        text\n      }\n      ... on AssertExistsStep {\n        stepType\n        elementId\n        visible\n      }\n      ... on ExecuteJavascriptStep {\n        stepType\n        code\n      }\n      ... on RefreshStep {\n        stepType\n      }\n      ... on AssertTextStep {\n        stepType\n        elementId\n        text\n      }\n      ... on SetVariableStep {\n        stepType\n        name\n        value {\n          ... on SetVariableString {\n            string\n          }\n          ... on SetVariableElement {\n            elementId\n          }\n          ... on SetVariableJavascript {\n            code\n          }\n        }\n      }\n    }\n  }\n'
-): (typeof documents)['\n  fragment CoreTestFields on Test {\n    id\n    name\n    steps {\n      ... on GoToStep {\n        stepType\n        url\n      }\n      ... on ClickStep {\n        stepType\n        elementId\n      }\n      ... on SendTextStep {\n        stepType\n        elementId\n        text\n      }\n      ... on AssertExistsStep {\n        stepType\n        elementId\n        visible\n      }\n      ... on ExecuteJavascriptStep {\n        stepType\n        code\n      }\n      ... on RefreshStep {\n        stepType\n      }\n      ... on AssertTextStep {\n        stepType\n        elementId\n        text\n      }\n      ... on SetVariableStep {\n        stepType\n        name\n        value {\n          ... on SetVariableString {\n            string\n          }\n          ... on SetVariableElement {\n            elementId\n          }\n          ... on SetVariableJavascript {\n            code\n          }\n        }\n      }\n    }\n  }\n'];
+  source: '\n  fragment CoreTestFields on Test {\n    id\n    name\n    steps {\n      ... on GoToStep {\n        stepType\n        url\n      }\n      ... on WaitStep {\n        stepType\n        milliseconds\n      }\n      ... on ClickStep {\n        stepType\n        elementId\n      }\n      ... on SendTextStep {\n        stepType\n        elementId\n        text\n      }\n      ... on AssertExistsStep {\n        stepType\n        elementId\n        visible\n      }\n      ... on ExecuteJavascriptStep {\n        stepType\n        code\n      }\n      ... on RefreshStep {\n        stepType\n      }\n      ... on AssertTextStep {\n        stepType\n        elementId\n        text\n      }\n      ... on SetVariableStep {\n        stepType\n        name\n        value {\n          ... on SetVariableString {\n            string\n          }\n          ... on SetVariableElement {\n            elementId\n          }\n          ... on SetVariableJavascript {\n            code\n          }\n        }\n      }\n      ... on ImportTestStep {\n        stepType\n        testId\n      }\n    }\n  }\n'
+): (typeof documents)['\n  fragment CoreTestFields on Test {\n    id\n    name\n    steps {\n      ... on GoToStep {\n        stepType\n        url\n      }\n      ... on WaitStep {\n        stepType\n        milliseconds\n      }\n      ... on ClickStep {\n        stepType\n        elementId\n      }\n      ... on SendTextStep {\n        stepType\n        elementId\n        text\n      }\n      ... on AssertExistsStep {\n        stepType\n        elementId\n        visible\n      }\n      ... on ExecuteJavascriptStep {\n        stepType\n        code\n      }\n      ... on RefreshStep {\n        stepType\n      }\n      ... on AssertTextStep {\n        stepType\n        elementId\n        text\n      }\n      ... on SetVariableStep {\n        stepType\n        name\n        value {\n          ... on SetVariableString {\n            string\n          }\n          ... on SetVariableElement {\n            elementId\n          }\n          ... on SetVariableJavascript {\n            code\n          }\n        }\n      }\n      ... on ImportTestStep {\n        stepType\n        testId\n      }\n    }\n  }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -111,14 +118,14 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  query Tests {\n    account {\n      tests {\n        id\n        name\n      }\n    }\n  }\n'
-): (typeof documents)['\n  query Tests {\n    account {\n      tests {\n        id\n        name\n      }\n    }\n  }\n'];
+  source: '\n  query Tests {\n    account {\n      id\n      tests {\n        id\n        name\n      }\n    }\n  }\n'
+): (typeof documents)['\n  query Tests {\n    account {\n      id\n      tests {\n        id\n        name\n      }\n    }\n  }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: '\n  query Collections {\n    account {\n      collections {\n        id\n        name\n        tests {\n          id\n          name\n        }\n      }\n    }\n  }\n'
-): (typeof documents)['\n  query Collections {\n    account {\n      collections {\n        id\n        name\n        tests {\n          id\n          name\n        }\n      }\n    }\n  }\n'];
+  source: '\n  query Collections {\n    account {\n      id\n      collections {\n        id\n        name\n        tests {\n          id\n          name\n        }\n      }\n    }\n  }\n'
+): (typeof documents)['\n  query Collections {\n    account {\n      id\n      collections {\n        id\n        name\n        tests {\n          id\n          name\n        }\n      }\n    }\n  }\n'];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

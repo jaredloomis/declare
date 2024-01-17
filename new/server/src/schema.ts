@@ -42,11 +42,11 @@ type QueryResolverFnArgs = {
 };
 type QueryResolverFn = (obj: QueryResolverFnArgs) => Promise<any>;
 
-function createResolver(adapter: DatabaseToAPIAdapter, queryFn: QueryResolverFn) {
+function createResolver(adapter: DatabaseToAPIAdapter | null, queryFn: QueryResolverFn) {
   return async (obj: any, args: any, ctx: any, info: any) => {
-    const select = prismaSelect(adapter, info);
+    const select = adapter ? prismaSelect(adapter, info) : undefined;
     const retObj = await queryFn({ obj, args, ctx, info, select });
-    const ret = convertObj(retObj, adapter);
+    const ret = adapter ? convertObj(retObj, adapter) : retObj;
     return ret;
   };
 }
@@ -267,6 +267,25 @@ const resolvers = {
       }
 
       return test;
+    }),
+    deleteTest: createResolver(null, async ({ obj, args, ctx, select }) => {
+      if (!ctx.user) {
+        throw new Error('Not authorized');
+      }
+
+      const test = await prisma.test.delete({
+        where: {
+          id: args.id,
+          account_id: ctx.user?.accountId,
+        },
+        select,
+      });
+
+      if (!test) {
+        throw new Error('Not authorized or test does not exist');
+      }
+
+      return !!test;
     }),
     login: async (obj: any, args: any) => {
       const user = await prisma.user_info.findFirst({
