@@ -53,7 +53,7 @@ function TestCollection({ collection }: TestCollectionProps) {
       </Table>
 
       <TextInput label='Test Name' onValueChange={setTestName} />
-      <Button color='success' size='large' onClick={handleCreateTest}>
+      <Button color='success' size='lg' onClick={handleCreateTest}>
         Create Test
       </Button>
     </div>
@@ -90,7 +90,7 @@ export default function TestList() {
         <Card>
           <form onSubmit={handleCreateCollection}>
             <TextInput label='Collection Name' value={name} onValueChange={setName} />
-            <Button color='success' size='large'>
+            <Button color='success' size='lg'>
               Create Collection
             </Button>
           </form>

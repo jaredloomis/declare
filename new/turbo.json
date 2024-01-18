@@ -1,14 +1,16 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDotEnv": [".env"],
-  "globalDependencies": ["./common/graphql/schema.graphql", ".prettierrc", "tsconfig.json"],
+  "globalDependencies": ["common/graphql/schema.graphql", "tsconfig.json"],
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist"]
+      "outputs": ["dist/**", "src/generated/**", "src/gql/**"],
+      "inputs": ["src/**/*.{ts,tsx,json,graphql}"]
     },
     "dev": {
       "dependsOn": ["^build", "build"],
+      "outputs": ["dist/**", "src/generated/**", "src/gql/**"],
+      "inputs": ["src/**/*.{ts,tsx,json,graphql}"],
       "cache": false,
       "persistent": true
     },

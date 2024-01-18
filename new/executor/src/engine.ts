@@ -17,7 +17,7 @@ import {
   Test,
   TestStepStatus,
 } from './generated/graphql';
-import { ReifiedTest, ReifiedTestStep } from 'server-common/src/reified-test';
+import { ReifiedTest, ReifiedTestStep } from 'declare-server-common/src/reified-test';
 import { TestStepResult } from './generated/graphql';
 
 export class TestExecutionFailure extends Error {}

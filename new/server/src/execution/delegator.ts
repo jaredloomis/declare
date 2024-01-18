@@ -1,7 +1,7 @@
 import { Test } from '../generated/graphql';
 import { reifyTest } from './reify';
-import { TEST_EXECUTION_CHANNEL, TestExecutionMessage, publish } from 'server-common/src/pubsub';
-import { ReifiedTest } from 'server-common/src/reified-test';
+import { TEST_EXECUTION_CHANNEL, TestExecutionMessage, publish } from 'declare-server-common/src/pubsub';
+import { ReifiedTest } from 'declare-server-common/src/reified-test';
 
 interface TestExecutionDelegator {
   executeTest: (test: Test) => Promise<void>;

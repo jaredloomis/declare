@@ -1,7 +1,7 @@
 import { convertObj, Element as ElementAdapter, Test as TestAdapter } from 'declare-server-common/src/adapter';
 import { prisma } from '../client';
-import { Test, TestStep, Element } from '../generated/graphql';
-import { ReifiedTest } from 'server-common/src/reified-test';
+import { Test, TestStep, Element, Report } from '../generated/graphql';
+import { ReifiedTest } from 'declare-server-common/src/reified-test';
 
 export interface ReifiedTestStep extends Omit<TestStep, 'args'> {
   args: ReifiedTestStepArguments;
@@ -14,7 +14,7 @@ export interface ReifiedTestStepArguments extends Omit<Omit<TestStep, 'elementId
 
 const MAX_IMPORT_DEPTH = 10;
 
-export async function reifyTestSteps(steps: TestStep[], seenTestIds: string[] = []): Promise<ReifiedTestStep[]> {
+export async function reifyTestSteps(steps: TestStep[], seenTestIds: number[] = []): Promise<ReifiedTestStep[]> {
   if (seenTestIds.length > MAX_IMPORT_DEPTH) {
     throw new Error('Depth of imports exceeds maximum of 10');
   }
@@ -31,7 +31,7 @@ export async function reifyTestSteps(steps: TestStep[], seenTestIds: string[] = 
         },
       },
     })
-    .then(elements => elements.map(element => convertObj(element, ElementAdapter)));
+    .then((elements: any[]) => elements.map((element: any) => convertObj(element, ElementAdapter)));
 
   // Fetch all tests used in test
   const testIds = steps.map((step: TestStep) => (step as any).testId).filter(testId => !!testId);
@@ -48,11 +48,11 @@ export async function reifyTestSteps(steps: TestStep[], seenTestIds: string[] = 
         },
       },
     })
-    .then(tests => tests.map(test => convertObj(test, TestAdapter)))
-    .then(tests =>
+    .then((tests: any[]) => tests.map((test: any) => convertObj(test, TestAdapter)))
+    .then((tests: any[]) =>
       Promise.all(
-        tests.map(test => {
-          return reifyTest(test, seenTestIds.concat(test.id));
+        tests.map((test: Test) => {
+          return reifyTest(test, seenTestIds.concat([test.id]));
         })
       )
     );
@@ -77,7 +77,7 @@ export async function reifyTestSteps(steps: TestStep[], seenTestIds: string[] = 
   return reifiedSteps;
 }
 
-export async function reifyTest(test: Test, seenTestIds: string[] = []): Promise<ReifiedTest> {
+export async function reifyTest(test: Test, seenTestIds: number[] = []): Promise<ReifiedTest> {
   return {
     ...test,
     steps: await reifyTestSteps(test.steps, seenTestIds),

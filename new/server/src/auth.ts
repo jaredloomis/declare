@@ -16,7 +16,7 @@ export async function authenticateUser(token: string): Promise<User | undefined>
       } else {
         prisma.user_info
           .findUnique({ where: { id: (decoded as JwtPayload).id } })
-          .then(user => resolve(convertObj(user, UserAdapter) as User))
+          .then((user: any) => resolve(convertObj(user, UserAdapter) as User))
           .catch(() => resolve(undefined));
       }
     })

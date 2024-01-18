@@ -75,7 +75,7 @@ const FieldEdit = React.forwardRef(function FieldEdit({ type, name, ...props }: 
         number
         name={name}
         label={props.label}
-        onValueChange={props.onChange}
+        onValueChange={val => props.onChange(parseInt(val))}
         onBlur={props.onBlur}
         ref={ref}
         defaultValue={props.defaultValue}

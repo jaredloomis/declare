@@ -889,7 +889,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.12.0, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.22.5, @babel/runtime@npm:^7.23.2, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
+"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.12.0, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.13.10, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.22.5, @babel/runtime@npm:^7.23.2, @babel/runtime@npm:^7.23.5, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
   version: 7.23.8
   resolution: "@babel/runtime@npm:7.23.8"
   dependencies:
@@ -3298,6 +3298,46 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@radix-ui/react-compose-refs@npm:1.0.1":
+  version: 1.0.1
+  resolution: "@radix-ui/react-compose-refs@npm:1.0.1"
+  dependencies:
+    "@babel/runtime": "npm:^7.13.10"
+  peerDependencies:
+    "@types/react": "*"
+    react: ^16.8 || ^17.0 || ^18.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: be06f8dab35b5a1bffa7a5982fb26218ddade1acb751288333e3b89d7b4a7dfb5a6371be83876dac0ec2ebe0866d295e8618b778608e1965342986ea448040ec
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-icons@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "@radix-ui/react-icons@npm:1.3.0"
+  peerDependencies:
+    react: ^16.x || ^17.x || ^18.x
+  checksum: 581657680e43fd13ff06e01f963e3afa94671d4ce6c3fb126e2c70c993ab8650faa55286974032dbccfecca4db57308fb66d53771d765887e03600cddee84ae5
+  languageName: node
+  linkType: hard
+
+"@radix-ui/react-slot@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "@radix-ui/react-slot@npm:1.0.2"
+  dependencies:
+    "@babel/runtime": "npm:^7.13.10"
+    "@radix-ui/react-compose-refs": "npm:1.0.1"
+  peerDependencies:
+    "@types/react": "*"
+    react: ^16.8 || ^17.0 || ^18.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 3af6ea4891e6fa8091e666802adffe7718b3cd390a10fa9229a5f40f8efded9f3918ea01b046103d93923d41cc32119505ebb6bde76cad07a87b6cf4f2119347
+  languageName: node
+  linkType: hard
+
 "@remix-run/router@npm:1.14.2":
   version: 1.14.2
   resolution: "@remix-run/router@npm:1.14.2"
@@ -4478,7 +4518,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"autoprefixer@npm:^10.4.16":
+"autoprefixer@npm:^10.4.17":
   version: 10.4.17
   resolution: "autoprefixer@npm:10.4.17"
   dependencies:
@@ -4948,6 +4988,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"class-variance-authority@npm:^0.7.0":
+  version: 0.7.0
+  resolution: "class-variance-authority@npm:0.7.0"
+  dependencies:
+    clsx: "npm:2.0.0"
+  checksum: e11c57edf4bf50ef1c97bae41d68885afbaaedba26c48b7cc5dfb033390fed7012147e9532168d8c4f3497fce4dff15e20e6e60b8c9c9a4b0fe26b0e804513db
+  languageName: node
+  linkType: hard
+
 "clean-stack@npm:^2.0.0":
   version: 2.2.0
   resolution: "clean-stack@npm:2.2.0"
@@ -5048,6 +5097,20 @@ __metadata:
   version: 2.1.2
   resolution: "clone@npm:2.1.2"
   checksum: ed0601cd0b1606bc7d82ee7175b97e68d1dd9b91fd1250a3617b38d34a095f8ee0431d40a1a611122dcccb4f93295b4fdb94942aa763392b5fe44effa50c2d5e
+  languageName: node
+  linkType: hard
+
+"clsx@npm:2.0.0":
+  version: 2.0.0
+  resolution: "clsx@npm:2.0.0"
+  checksum: c09f43b3144a0b7826b6b11b6a111b2c7440831004eecc02d333533c5e58ef0aa5f2dce071d3b25fbb8c8ea97b45df96c74bcc1d51c8c2027eb981931107b0cd
+  languageName: node
+  linkType: hard
+
+"clsx@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "clsx@npm:2.1.0"
+  checksum: c09c00ad14f638366ca814097e6cab533dfa1972a358da5b557be487168acbb25b4c1395e89ffa842a8a61ba87a462d2b4885bc9d4f8410b598f3cb339599cdb
   languageName: node
   linkType: hard
 
@@ -5436,9 +5499,13 @@ __metadata:
     "@headlessui/react": "npm:^1.7.17"
     "@heroicons/react": "npm:^2.1.1"
     "@parcel/resolver-default": "npm:^2.10.3"
+    "@radix-ui/react-icons": "npm:^1.3.0"
+    "@radix-ui/react-slot": "npm:^1.0.2"
     "@types/react": "npm:^18.2.45"
     "@types/react-dom": "npm:^18.2.18"
-    autoprefixer: "npm:^10.4.16"
+    autoprefixer: "npm:^10.4.17"
+    class-variance-authority: "npm:^0.7.0"
+    clsx: "npm:^2.1.0"
     graphql: "npm:^16.8.1"
     graphql-tag: "npm:^2.12.6"
     i18next: "npm:^23.7.16"
@@ -5453,7 +5520,9 @@ __metadata:
     react-icons: "npm:^5.0.1"
     react-router-dom: "npm:^6.21.1"
     react-select: "npm:^5.8.0"
+    tailwind-merge: "npm:^2.2.0"
     tailwindcss: "npm:^3.4.0"
+    tailwindcss-animate: "npm:^1.0.7"
     typescript: "npm:^5.3.3"
     webpack: "npm:^5.89.0"
     webpack-cli: "npm:^5.1.4"
@@ -5485,10 +5554,11 @@ __metadata:
     "@graphql-tools/schema": "npm:^10.0.2"
     "@types/node": "npm:^20.10.5"
     "@types/selenium-webdriver": "npm:^4.1.21"
+    declare-server-common: "workspace:*"
     graphql: "npm:^16.8.1"
     handlebars: "npm:^4.7.8"
+    nodemon: "npm:^3.0.3"
     selenium-webdriver: "npm:^4.16.0"
-    server-common: "link:../server-common"
     ts-node: "npm:^10.9.2"
     typescript: "npm:^5.3.3"
   languageName: unknown
@@ -5500,7 +5570,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"declare-server-common@workspace:server-common":
+"declare-server-common@workspace:*, declare-server-common@workspace:server-common":
   version: 0.0.0-use.local
   resolution: "declare-server-common@workspace:server-common"
   dependencies:
@@ -5512,9 +5582,10 @@ __metadata:
     "@types/amqplib": "npm:^0.10.4"
     "@types/node": "npm:^20.10.5"
     amqplib: "npm:^0.10.3"
-    graphql: "npm:^16.8.1"
     ts-node: "npm:^10.9.2"
     typescript: "npm:^5.3.3"
+  peerDependencies:
+    graphql: ^16.8.1
   languageName: unknown
   linkType: soft
 
@@ -5536,6 +5607,7 @@ __metadata:
     "@types/selenium-webdriver": "npm:^4.1.21"
     bcrypt: "npm:^5.1.1"
     cors: "npm:^2.8.5"
+    declare-server-common: "workspace:*"
     express: "npm:^4.18.2"
     graphql: "npm:^16.8.1"
     graphql-scalars: "npm:^1.22.4"
@@ -5546,7 +5618,6 @@ __metadata:
     nodemon: "npm:^3.0.2"
     prisma: "npm:^5.7.1"
     selenium-webdriver: "npm:^4.16.0"
-    server-common: "link:../server-common"
     ts-node: "npm:^10.9.2"
     typescript: "npm:^5.3.3"
     ws: "npm:^8.16.0"
@@ -8386,7 +8457,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nodemon@npm:^3.0.2":
+"nodemon@npm:^3.0.2, nodemon@npm:^3.0.3":
   version: 3.0.3
   resolution: "nodemon@npm:3.0.3"
   dependencies:
@@ -9749,18 +9820,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"server-common@link:../server-common::locator=declare-executor%40workspace%3Aexecutor":
-  version: 0.0.0-use.local
-  resolution: "server-common@link:../server-common::locator=declare-executor%40workspace%3Aexecutor"
-  languageName: node
-  linkType: soft
-
-"server-common@link:../server-common::locator=declare-server%40workspace%3Aserver":
-  version: 0.0.0-use.local
-  resolution: "server-common@link:../server-common::locator=declare-server%40workspace%3Aserver"
-  languageName: node
-  linkType: soft
-
 "set-blocking@npm:^2.0.0":
   version: 2.0.0
   resolution: "set-blocking@npm:2.0.0"
@@ -10244,6 +10303,24 @@ __metadata:
   version: 4.0.0
   resolution: "symbol-observable@npm:4.0.0"
   checksum: 5e9a3ab08263a6be8cbee76587ad5880dcc62a47002787ed5ebea56b1eb30dc87da6f0183d67e88286806799fbe21c69077fbd677be4be2188e92318d6c6f31d
+  languageName: node
+  linkType: hard
+
+"tailwind-merge@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "tailwind-merge@npm:2.2.0"
+  dependencies:
+    "@babel/runtime": "npm:^7.23.5"
+  checksum: 41476d686af101c770401f4db509ffea9ec13bf99fd18185903dd86df2b71b3f512d9373b0f2785cb9e9abf093f39373327a29e9b3dde643b9daf7062f77c4ba
+  languageName: node
+  linkType: hard
+
+"tailwindcss-animate@npm:^1.0.7":
+  version: 1.0.7
+  resolution: "tailwindcss-animate@npm:1.0.7"
+  peerDependencies:
+    tailwindcss: "*"
+  checksum: ec7dbd1631076b97d66a1fbaaa06e0725fccfa63119221e8d87a997b02dcede98ad88bb1ef6665b968f5d260fcefb10592e0299ca70208d365b37761edf5e19a
   languageName: node
   linkType: hard
 

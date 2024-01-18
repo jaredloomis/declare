@@ -1,6 +1,6 @@
 import { Report, TestStepResult, TestStepStatus } from './generated/graphql';
 import { SeleniumEngine, TestEngine, TestExecutionFailure } from './engine';
-import { ReifiedTest } from 'server-common/src/reified-test';
+import { ReifiedTest } from 'declare-server-common/src/reified-test';
 
 interface TestExecutor {
   executeTest: (test: ReifiedTest) => Promise<Report>;

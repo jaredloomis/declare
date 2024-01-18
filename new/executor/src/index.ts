@@ -1,4 +1,4 @@
-import { subscribe, TEST_EXECUTION_CHANNEL, TestExecutionMessage } from 'server-common/src/pubsub';
+import { subscribe, TEST_EXECUTION_CHANNEL, TestExecutionMessage } from 'declare-server-common/src/pubsub';
 import { LocalTestExecutor } from './executor';
 import 'dotenv/config';
 

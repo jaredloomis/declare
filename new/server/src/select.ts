@@ -1,4 +1,4 @@
-import { DatabaseToAPIAdapter, invConvertObj } from 'server-common/src/adapter';
+import { DatabaseToAPIAdapter, invConvertObj } from 'declare-server-common/src/adapter';
 
 function preprocessSelectionSet(selectionSet: any, fragments: any) {
   if (!selectionSet?.selections) {

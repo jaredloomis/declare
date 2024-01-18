@@ -1,9 +1,10 @@
 import React, { forwardRef } from 'react';
+import { Input, InputProps } from 'shadcn/Input';
 
 interface TextInputProps
-  extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
+  extends InputProps {
   label?: string;
-  onValueChange?: (value: string | number) => any;
+  onValueChange?: (value: string) => any;
   number?: boolean;
 }
 
@@ -15,13 +16,13 @@ export const TextInput = forwardRef(function TextInput(
 
   const handleChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     onChange && onChange(ev);
-    onValueChange && onValueChange(number ? parseInt(ev.target.value) : ev.target.value);
+    onValueChange && onValueChange(ev.target.value);
   };
 
   return (
     <div>
       {labelElement}
-      <input type={number ? 'number' : 'text'} onChange={handleChange} ref={ref} {...props} />
+      <Input type={number ? 'number' : 'text'} onChange={handleChange} ref={ref} {...props} />
     </div>
   );
 });

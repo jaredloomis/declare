@@ -19,7 +19,7 @@ import {
   Test as TestAdapter,
   User as UserAdapter,
   Element as ElementAdapter,
-} from 'server-common/src/adapter';
+} from 'declare-server-common/src/adapter';
 import { prismaSelect } from './select';
 import { prisma } from './client';
 

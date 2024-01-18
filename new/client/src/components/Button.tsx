@@ -1,17 +1,15 @@
 import React from 'react';
 import { Color } from './color';
 import { useNavigate } from 'react-router-dom';
+import { Button as ShadcnButton, ButtonProps as ShadcnButtonProps } from 'shadcn/Button';
 
 interface ButtonProps
-  extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
+  extends ShadcnButtonProps {
   children?: React.ReactNode;
   onClick?: () => any;
-  color?: Color;
-  size?: ButtonSize;
+//  color?: Color;
   to?: string;
 }
-
-type ButtonSize = 'xlarge' | 'large' | 'medium' | 'small' | 'xsmall';
 
 export function Button({ children, onClick, ...props }: ButtonProps) {
   const navigate = useNavigate();
@@ -26,8 +24,8 @@ export function Button({ children, onClick, ...props }: ButtonProps) {
   };
 
   return (
-    <button onClick={handleClick} {...props}>
+    <ShadcnButton onClick={handleClick} {...props}>
       {children}
-    </button>
+    </ShadcnButton>
   );
 }

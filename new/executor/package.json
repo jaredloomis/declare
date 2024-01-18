@@ -19,13 +19,14 @@
     "@types/node": "^20.10.5",
     "@types/selenium-webdriver": "^4.1.21",
     "graphql": "^16.8.1",
+    "nodemon": "^3.0.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   },
   "dependencies": {
     "@graphql-tools/schema": "^10.0.2",
+    "declare-server-common": "workspace:*",
     "handlebars": "^4.7.8",
-    "selenium-webdriver": "^4.16.0",
-    "server-common": "link:../server-common"
+    "selenium-webdriver": "^4.16.0"
   }
 }
